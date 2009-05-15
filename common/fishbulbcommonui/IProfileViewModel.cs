@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace Fishbulb.Common.UI
 {
@@ -12,7 +13,7 @@ namespace Fishbulb.Common.UI
 	}
 	
 	
-    public interface IProfileViewModel
+    public interface IProfileViewModel: INotifyPropertyChanged
     {
         /// <summary>
         /// specifies the view to generate for this viewmodel
