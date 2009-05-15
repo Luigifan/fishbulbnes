@@ -36,12 +36,6 @@ public partial class MainWindow {
     
     private Gtk.Label GtkLabel3;
     
-    private Gtk.Frame frame4;
-    
-    private Gtk.Alignment GtkAlignment3;
-    
-    private Gtk.Label GtkLabel2;
-    
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
         // Widget MainWindow
@@ -58,7 +52,6 @@ public partial class MainWindow {
         this.GtkAlignment.LeftPadding = ((uint)(12));
         // Container child GtkAlignment.Gtk.Container+ContainerChild
         this.hbox1 = new Gtk.HBox();
-        this.hbox1.Name = "hbox1";
         this.hbox1.Spacing = 6;
         // Container child hbox1.Gtk.Box+BoxChild
         this.btnLoadRom = new Gtk.Button();
@@ -96,7 +89,7 @@ public partial class MainWindow {
         this.vpaned1 = new Gtk.VPaned();
         this.vpaned1.CanFocus = true;
         this.vpaned1.Name = "vpaned1";
-        this.vpaned1.Position = 77;
+        this.vpaned1.Position = 58;
         // Container child vpaned1.Gtk.Paned+PanedChild
         this.frame3 = new Gtk.Frame();
         this.frame3.Name = "frame3";
@@ -121,26 +114,11 @@ public partial class MainWindow {
         this.vpaned1.Add(this.frame3);
         Gtk.Paned.PanedChild w7 = ((Gtk.Paned.PanedChild)(this.vpaned1[this.frame3]));
         w7.Resize = false;
-        // Container child vpaned1.Gtk.Paned+PanedChild
-        this.frame4 = new Gtk.Frame();
-        this.frame4.Name = "frame4";
-        this.frame4.ShadowType = ((Gtk.ShadowType)(0));
-        // Container child frame4.Gtk.Container+ContainerChild
-        this.GtkAlignment3 = new Gtk.Alignment(0F, 0F, 1F, 1F);
-        this.GtkAlignment3.Name = "GtkAlignment3";
-        this.GtkAlignment3.LeftPadding = ((uint)(12));
-        this.frame4.Add(this.GtkAlignment3);
-        this.GtkLabel2 = new Gtk.Label();
-        this.GtkLabel2.Name = "GtkLabel2";
-        this.GtkLabel2.LabelProp = Mono.Unix.Catalog.GetString("<b>frame3</b>");
-        this.GtkLabel2.UseMarkup = true;
-        this.frame4.LabelWidget = this.GtkLabel2;
-        this.vpaned1.Add(this.frame4);
         this.hbox1.Add(this.vpaned1);
-        Gtk.Box.BoxChild w10 = ((Gtk.Box.BoxChild)(this.hbox1[this.vpaned1]));
-        w10.Position = 2;
-        w10.Expand = false;
-        w10.Fill = false;
+        Gtk.Box.BoxChild w8 = ((Gtk.Box.BoxChild)(this.hbox1[this.vpaned1]));
+        w8.Position = 2;
+        w8.Expand = false;
+        w8.Fill = false;
         this.GtkAlignment.Add(this.hbox1);
         this.frame1.Add(this.GtkAlignment);
         this.Add(this.frame1);

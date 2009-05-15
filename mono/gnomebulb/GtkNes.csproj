@@ -48,15 +48,15 @@
     <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
       <Package>tao-opengl</Package>
     </Reference>
-    <Reference Include="GLWidget, Version=1.0.3042.25084, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\openglwidget\GLWidget.dll</HintPath>
-    </Reference>
     <Reference Include="Tao.OpenAl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a7579dda88828311">
       <Package>tao-openal</Package>
     </Reference>
     <Reference Include="Tao.FreeGlut, Version=2.4.0.1, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
       <Package>tao-freeglut</Package>
+    </Reference>
+    <Reference Include="GLWidget, Version=1.0.3042.25084, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\GLWidget.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="MainWindow.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
@@ -79,11 +78,11 @@
     <Compile Include="NesGL.cs" />
     <Compile Include="Planetoid.cs" />
     <Compile Include="OpenALInlineWavStreamer.cs" />
-    <Compile Include="UIComposition\GridInstigator.cs" />
+    <Compile Include="MainWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\6502\CPU6502.csproj">
+    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502</Name>
     </ProjectReference>
@@ -95,8 +94,5 @@
   </ProjectExtensions>
   <ItemGroup>
     <None Include="OpenGLNESViewer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UIComposition\" />
   </ItemGroup>
 </Project>
