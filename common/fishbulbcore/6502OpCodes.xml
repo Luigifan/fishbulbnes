@@ -1,0 +1,630 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Instructions>
+  <Instruction Name="ADC" Description="Add with carry" Flags="SVZC">
+    <Opcode Hex="$69" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$65" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$75" Length="2" Timing="4" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$6D" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$7D" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteX" ></Opcode>
+    <Opcode Hex="$79" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteY" ></Opcode>
+    <Opcode Hex="$61" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$71" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" ></Opcode>
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     ADC #$44      $69  2   2
+    Zero Page     ADC $44       $65  2   3
+    Zero Page,X   ADC $44,X     $75  2   4
+    Absolute      ADC $4400     $6D  3   4
+    Absolute,X    ADC $4400,X   $7D  3   4+
+    Absolute,Y    ADC $4400,Y   $79  3   4+
+    Indirect,X    ADC ($44,X)   $61  2   6
+    Indirect,Y    ADC ($44),Y   $71  2   5+
+
+    + add 1 cycle if page boundary crossed
+  </Instruction>
+  <Instruction Name="AND" Description="And with Accumulator" Flags="SZ" >
+    <Opcode Hex="$29" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$25" Length="2" Timing="2" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$35" Length="2" Timing="3" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$2D" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$3D" Length="3" Timing="4" Mode="AbsoluteX" ></Opcode>
+    <Opcode Hex="$39" Length="3" Timing="4" Mode="AbsoluteY" ></Opcode>
+    <Opcode Hex="$21" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$31" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" ></Opcode>
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     AND #$44      $29  2   2
+    Zero Page     AND $44       $25  2   2
+    Zero Page,X   AND $44,X     $35  2   3
+    Absolute      AND $4400     $2D  3   4
+    Absolute,X    AND $4400,X   $3D  3   4+
+    Absolute,Y    AND $4400,Y   $39  3   4+
+    Indirect,X    AND ($44,X)   $21  2   6
+    Indirect,Y    AND ($44),Y   $31  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+
+  </Instruction>
+  <Instruction Name="ASL" Description="Arithmetic shift one bit left, memory or accumulator" Flags="SZC">
+    <Opcode Hex="$0A" Length="1" Timing="2" Mode="Accumulator" ></Opcode>
+    <Opcode Hex="$06" Length="2" Timing="5" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$16" Length="2" Timing="6" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$0E" Length="3" Timing="6" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$1E" Length="3" Timing="7" Mode="AbsoluteX" ></Opcode>
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Accumulator   ASL A         $0A  1   2
+    Zero Page     ASL $44       $06  2   5
+    Zero Page,X   ASL $44,X     $16  2   6
+    Absolute      ASL $4400     $0E  3   6
+    Absolute,X    ASL $4400,X   $1E  3   7
+
+
+    ASL shifts all bits left one position. 0 is shifted into bit 0 and the original bit 7 is shifted into the Carry.
+  </Instruction>
+  <!--<Instruction Name="BBR" Description="Branch on Bit Reset">
+
+  </Instruction>
+  <Instruction Name="BBS" Description="Branch of Bit Set"></Instruction>-->
+  <Instruction Name="BCC" Description="Branch on Carry Clear (Pc=0)">
+    <Opcode Hex="$90" Length="2" Timing="2" Mode="Relative" ></Opcode>
+
+    BCC (Branch on Carry Clear)    $90
+
+  </Instruction>
+  <Instruction Name="BCS" Description="Branch on Carry Set (Pc=1)">
+    <Opcode Hex="$B0" Length="2" Timing="2" Mode="Relative" />
+    BCS (Branch on Carry Set)      $B0
+
+  </Instruction>
+  <Instruction Name="BEQ" Description="Branch if EQual (Pz=1)">
+    <Opcode Hex="$F0" Length="2" Timing="2" Mode="Relative" />
+    BEQ (Branch on EQual)          $F0
+
+  </Instruction>
+  <Instruction Name="BIT" Description=" BIt Test" >
+    <Opcode Hex="$24" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$2C" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+
+    Affects Flags: N V Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     BIT $44       $24  2   3
+    Absolute      BIT $4400     $2C  3   4
+
+
+    BIT sets the Z flag as though the value in the address tested were ANDed with the accumulator. The S and V flags are set to match bits 7 and 6 respectively in the value stored at the tested address.
+    BIT is often used to skip one or two following bytes as in:
+
+
+    CLOSE1 LDX #$10   If entered here, we
+    .BYTE $2C  effectively perform
+    CLOSE2 LDX #$20   a BIT test on $20A2,
+    .BYTE $2C  another one on $30A2,
+    CLOSE3 LDX #$30   and end up with the X
+    CLOSEX LDA #12    register still at $10
+    STA ICCOM,X upon arrival here.
+
+  </Instruction>
+  <Instruction Name="BMI" Description=" Branch if result MInus (Pn=1)" >
+    <Opcode Hex="$30" Length="2" Timing="2" Mode="Relative" />
+    BMI (Branch on MInus)          $30
+  </Instruction>
+  
+  <Instruction Name="BNE" Description=" Branch if Not Equal (Pz=0)" >
+    <Opcode Hex="$D0" Length="2" Timing="2" Mode="Relative" />
+    BNE (Branch on Not Equal)      $D0
+  </Instruction>
+  <Instruction Name="BPL" Description="Branch if result PLus (Pn=0)" >
+    <Opcode Hex="$10" Length="2" Timing="2" Mode="Relative" />
+    BPL (Branch on PLus)           $10
+
+  </Instruction>
+  <!--<Instruction Name="BRA" Description="BRanch Always" ></Instruction>-->
+  <Instruction Name="BRK" Description=" BReaK instruction" >
+    <Opcode Hex="$00" Length="1" Timing="7" Mode="Implicit" Flags="B"></Opcode>
+    Affects Flags: B
+
+    MODE           SYNTAX       HEX LEN TIM
+    Implied       BRK           $00  1   7
+
+
+    BRK causes a non-maskable interrupt and increments the program counter by one. Therefore an RTI will go to the address of the BRK +2 so that BRK may be used to replace a two-byte instruction for debugging and the subsequent RTI will be correct.
+  </Instruction>
+  <Instruction Name="BVC" Description=" Branch on oVerflow Clear (Pv=0)" >
+    <Opcode Hex="$50" Length="2" Timing="2" Mode="Relative" />
+    BVC (Branch on oVerflow Clear) $50
+  </Instruction>
+  <Instruction Name="BVS" Description="Branch on oVerflow Set (Pv=1)" >
+    <Opcode Hex="$70" Length="2" Timing="2" Mode="Relative" />
+    BVS (Branch on oVerflow Set)   $70
+  </Instruction>
+  <Instruction Name="CLC" Description="CLear Cary flag" >
+    <Opcode Hex="$18" Length="1" Timing="2" Mode="Implicit" Flags="C"></Opcode>
+    CLC (CLear Carry)              $18
+    Time 2
+    Length 1
+  </Instruction>
+  <Instruction Name="CLD" Description="CLear Decimal mode" >
+    <Opcode Hex="$D8" Length="1" Timing="2" Mode="Implicit" Flags="D"></Opcode>
+    CLD (CLear Decimal)            $D8
+  </Instruction>
+  <Instruction Name="CLI" Description="CLear Interrupt disable bit" >
+    <Opcode Hex="$58" Length="1" Timing="2" Mode="Implicit" Flags="D"></Opcode>
+    CLI (CLear Interrupt)          $58
+  </Instruction>
+  <Instruction Name="CLV" Description="CLear oVerflow flag" >
+    <Opcode Hex="$B8" Length="1" Timing="2" Mode="Implicit" Flags="V"></Opcode>
+    CLV (CLear oVerflow)           $B8
+  </Instruction>
+  <Instruction Name="CMP" Description="CoMPare memory and accumulator" >
+    <Opcode Hex="$C9" Length="2" Timing="2" Mode="Immediate" />
+    <Opcode Hex="$C5" Length="2" Timing="2" Mode="ZeroPage" />
+    <Opcode Hex="$D5" Length="2" Timing="4" Mode="ZeroPageX" />
+    <Opcode Hex="$CD" Length="3" Timing="4" Mode="Absolute" />
+    <Opcode Hex="$DD" Length="3" Timing="4" Mode="AbsoluteX" />
+    <Opcode Hex="$D9" Length="3" Timing="4" Mode="AbsoluteY" />
+    <Opcode Hex="$C1" Length="2" Timing="6" Mode="IndirectX" />
+    <Opcode Hex="$D1" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" />    
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     CMP #$44      $C9  2   2
+    Zero Page     CMP $44       $C5  2   3
+    Zero Page,X   CMP $44,X     $D5  2   4
+    Absolute      CMP $4400     $CD  3   4
+    Absolute,X    CMP $4400,X   $DD  3   4+
+    Absolute,Y    CMP $4400,Y   $D9  3   4+
+    Indirect,X    CMP ($44,X)   $C1  2   6
+    Indirect,Y    CMP ($44),Y   $D1  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+
+    Compare sets flags as if a subtraction had been carried out. 
+    If the value in the accumulator is equal or greater than the compared value, the Carry will be set. 
+    The equal (Z) and sign (S) flags will be set based on equality or lack thereof and the sign (i.e. A>=$80) of the accumulator.
+  </Instruction>
+  <Instruction Name="CPX" Description="ComPare memory and X register" >
+    <Opcode Hex="$E0" Length="2" Timing="2" Mode="Immediate" />
+    <Opcode Hex="$E4" Length="2" Timing="3" Mode="ZeroPage" />
+    <Opcode Hex="$EC" Length="3" Timing="4" Mode="Absolute" />
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     CPX #$44      $E0  2   2
+    Zero Page     CPX $44       $E4  2   3
+    Absolute      CPX $4400     $EC  3   4
+
+
+    Operation and flag results are identical to equivalent mode accumulator CMP ops.
+  </Instruction>
+  <Instruction Name="CPY" Description=" ComPare memory and Y register" >
+    <Opcode Hex="$C0" Length="2" Timing="2" Mode="Immediate" />
+    <Opcode Hex="$C4" Length="2" Timing="3" Mode="ZeroPage" />
+    <Opcode Hex="$CC" Length="3" Timing="4" Mode="Absolute" />
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     CPY #$44      $C0  2   2
+    Zero Page     CPY $44       $C4  2   3
+    Absolute      CPY $4400     $CC  3   4
+
+
+    Operation and flag results are identical to equivalent mode accumulator CMP ops.
+  </Instruction>
+  <Instruction Name="DEC" Description=" DECrement memory or accumulate by one" >
+    <Opcode Hex="$C6" Length="2" Timing="5" Mode="ZeroPage" />
+    <Opcode Hex="$D6" Length="2" Timing="6" Mode="ZeroPageX" />
+    <Opcode Hex="$CE" Length="3" Timing="6" Mode="Absolute" />
+    <Opcode Hex="$DE" Length="3" Timing="7" Mode="AbsoluteX" />
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     DEC $44       $C6  2   5
+    Zero Page,X   DEC $44,X     $D6  2   6
+    Absolute      DEC $4400     $CE  3   6
+    Absolute,X    DEC $4400,X   $DE  3   7
+
+  </Instruction>
+  <Instruction Name="DEX" Description=" DEcrement X by one" >
+    <Opcode Hex="$CA" Length="1" Timing="2" Mode="Implicit" Flags="D"/>
+  </Instruction>
+  <Instruction Name="DEY" Description=" DEcrement Y by one" >
+    <Opcode Hex="$88" Length="1" Timing="2" Mode="Implicit" Flags="D"/>
+  </Instruction>
+  <Instruction Name="EOR" Description="Exclusive OR memory with accumulate" >
+    <Opcode Hex="$49" Length="2" Timing="2" Mode="Immediate" />
+    <Opcode Hex="$45" Length="2" Timing="2" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$55" Length="2" Timing="3" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$4D" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$5D" Length="3" Timing="4" Mode="AbsoluteX" ExtraTiming="IfCrossedPageBoundary:1" ></Opcode>
+    <Opcode Hex="$59" Length="3" Timing="4" Mode="AbsoluteY" ExtraTiming="IfCrossedPageBoundary:1"  ></Opcode>
+    <Opcode Hex="$41" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$51" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" ></Opcode>
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     EOR #$44      $49  2   2
+    Zero Page     EOR $44       $45  2   3
+    Zero Page,X   EOR $44,X     $55  2   4
+    Absolute      EOR $4400     $4D  3   4
+    Absolute,X    EOR $4400,X   $5D  3   4+
+    Absolute,Y    EOR $4400,Y   $59  3   4+
+    Indirect,X    EOR ($44,X)   $41  2   6
+    Indirect,Y    EOR ($44),Y   $51  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+  </Instruction>
+  <Instruction Name="INC" Description=" INCrement memory or accumulate by one" >
+    <Opcode Hex="$E6" Length="2" Timing="5" Mode="ZeroPage" Flags="D"></Opcode>
+    <Opcode Hex="$F6" Length="2" Timing="6" Mode="ZeroPageX" Flags="D"></Opcode>
+    <Opcode Hex="$EE" Length="3" Timing="6" Mode="Absolute" Flags="D"></Opcode>
+    <Opcode Hex="$FE" Length="3" Timing="7" Mode="AbsoluteY" Flags="D"></Opcode>
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     INC $44       $E6  2   5
+    Zero Page,X   INC $44,X     $F6  2   6
+    Absolute      INC $4400     $EE  3   6
+    Absolute,X    INC $4400,X   $FE  3   7
+
+  </Instruction>
+  <Instruction Name="INX" Description=" INcrement X register by one" >
+    <Opcode Hex="$E8" Length="1" Timing="2" Mode="Implicit" Flags="D"></Opcode>
+  </Instruction>
+  <Instruction Name="INY" Description=" INcrement Y register by one" >
+    <Opcode Hex="$C8" Length="1" Timing="2" Mode="Implicit" Flags="D"></Opcode>
+
+  </Instruction>
+  <Instruction Name="JMP" Description=" JuMP to new location" >
+    <Opcode Hex="$4C" Length="3" Timing="3" Mode="Absolute" Flags="D"></Opcode>
+    <Opcode Hex="$6C" Length="3" Timing="5" Mode="Indirect" Flags="D"></Opcode>
+    Affects Flags: none
+
+    MODE           SYNTAX       HEX LEN TIM
+    Absolute      JMP $5597     $4C  3   3
+    Indirect      JMP ($5597)   $6C  3   5
+
+  </Instruction>
+  <Instruction Name="JSR" Description=" Jump to new location Saving Return (Jump to SubRoutine)" >
+    <Opcode Hex="$20" Length="3" Timing="6" Mode="Absolute" Flags="D"></Opcode>
+    Affects Flags: none
+
+    MODE           SYNTAX       HEX LEN TIM
+    Absolute      JSR $5597     $20  3   6
+
+
+    JSR pushes the address-1 of the next operation on to the stack before transferring program control to the following address. Subroutines are normally terminated by a RTS op code.
+  </Instruction>
+  <Instruction Name="LDA" Description=" LoaD Accumulator with memory" Flags="SZ" >
+    <Opcode Hex="$A9" Length="2" Timing="2" Mode="Immediate" />
+    <Opcode Hex="$A5" Length="2" Timing="3" Mode="ZeroPage" />
+    <Opcode Hex="$B5" Length="2" Timing="4" Mode="ZeroPageX" />
+    <Opcode Hex="$AD" Length="3" Timing="4" Mode="Absolute" />
+    <Opcode Hex="$BD" Length="3" Timing="4" Mode="AbsoluteX" ExtraTiming="IfCrossedPageBoundary:1" />
+    <Opcode Hex="$B9" Length="3" Timing="4" Mode="AbsoluteY" ExtraTiming="IfCrossedPageBoundary:1" />
+    <Opcode Hex="$A1" Length="2" Timing="6" Mode="IndirectX" />
+    <Opcode Hex="$B1" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" />
+    
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     LDA #$44      $A9  2   2
+    Zero Page     LDA $44       $A5  2   3
+    Zero Page,X   LDA $44,X     $B5  2   4
+    Absolute      LDA $4400     $AD  3   4
+
+    Absolute,X    LDA $4400,X   $BD  3   4+
+    Absolute,Y    LDA $4400,Y   $B9  3   4+
+    Indirect,X    LDA ($44,X)   $A1  2   6
+    Indirect,Y    LDA ($44),Y   $B1  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+  </Instruction>
+  <Instruction Name="LDX" Description=" LoaD the X register with memory" Flags="SZ">
+    <Opcode Hex="$A2" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$A6" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$B6" Length="2" Timing="4" Mode="ZeroPageY" ></Opcode>
+    <Opcode Hex="$AE" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$BE" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteY" ></Opcode>
+
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     LDX #$44      $A2  2   2
+    Zero Page     LDX $44       $A6  2   3
+    Zero Page,Y   LDX $44,Y     $B6  2   4
+    Absolute      LDX $4400     $AE  3   4
+    Absolute,Y    LDX $4400,Y   $BE  3   4+
+
+    + add 1 cycle if page boundary crossed
+
+
+
+
+  </Instruction>
+  <Instruction Name="LDY" Description=" LoaD the Y register with memory" >
+    <Opcode Hex="$A0" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$A4" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$B4" Length="2" Timing="4" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$AC" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$BC" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteX" ></Opcode>
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     LDY #$44      $A0  2   2
+    Zero Page     LDY $44       $A4  2   3
+    Zero Page,X   LDY $44,X     $B4  2   4
+    Absolute      LDY $4400     $AC  3   4
+    Absolute,X    LDY $4400,X   $BC  3   4+
+
+    + add 1 cycle if page boundary crossed
+
+  </Instruction>
+  <Instruction Name="LSR" Description=" Logical Shift one bit Right memory or accumulator" >
+    <Opcode Hex="$4A" Length="1" Timing="2" Mode="Accumulator" ></Opcode>
+    <Opcode Hex="$46" Length="2" Timing="5" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$56" Length="2" Timing="6" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$4E" Length="3" Timing="6" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$5E" Length="3" Timing="6" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteX" ></Opcode>
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Accumulator   LSR A         $4A  1   2
+    Zero Page     LSR $44       $46  2   5
+    Zero Page,X   LSR $44,X     $56  2   6
+    Absolute      LSR $4400     $4E  3   6
+    Absolute,X    LSR $4400,X   $5E  3   7
+
+
+    LSR shifts all bits right one position. 0 is shifted into bit 7 and the original bit 0 is shifted into the Carry.
+  </Instruction>
+  <Instruction Name="NOP" Description=" No OPeration" >
+    <Opcode Hex="$EA" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    <Opcode Hex="$03" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    Affects Flags: none
+
+    MODE           SYNTAX       HEX LEN TIM
+    Implied       NOP           $EA  1   2
+
+    NOP is used to reserve space for future modifications or effectively REM out existing code.
+  </Instruction>
+  <Instruction Name="ORA" Description=" 'OR' memory with Accumulator" >
+    <Opcode Hex="$09" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$05" Length="2" Timing="2" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$15" Length="2" Timing="3" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$0D" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$1D" Length="3" Timing="4" Mode="AbsoluteX" ></Opcode>
+    <Opcode Hex="$19" Length="3" Timing="4" Mode="AbsoluteY" ></Opcode>
+    <Opcode Hex="$01" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$11" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" ></Opcode>
+    Affects Flags: S Z
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     ORA #$44      $09  2   2
+    Zero Page     ORA $44       $05  2   2
+    Zero Page,X   ORA $44,X     $15  2   3
+    Absolute      ORA $4400     $0D  3   4
+    Absolute,X    ORA $4400,X   $1D  3   4+
+    Absolute,Y    ORA $4400,Y   $19  3   4+
+    Indirect,X    ORA ($44,X)   $01  2   6
+    Indirect,Y    ORA ($44),Y   $11  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+  </Instruction>
+  <Instruction Name="PHA" Description=" PusH Accumulator on stack" >
+    <Opcode Hex="$48" Length="1" Timing="3" Mode="Implicit" ></Opcode>
+    PHA (PusH Accumulator)          $48  3
+
+  </Instruction>
+  <Instruction Name="PHP" Description=" PusH Processor status on stack" >
+    <Opcode Hex="$08" Length="1" Timing="3" Mode="Implicit" ></Opcode>
+    PHP (PusH Processor status)     $08  3
+
+  </Instruction>
+  <!--<Instruction Name="PHX" Description=" PusH X register on stack" >
+    
+  </Instruction>
+  <Instruction Name="PHY" Description=" PusH Y register on stack" ></Instruction>-->
+  <Instruction Name="PLA" Description=" PuLl Accumulator from stack" >
+    <Opcode Hex="$68" Length="1" Timing="3" Mode="Implicit" ></Opcode>
+    PLA (PuLl Accumulator)          $68  4
+  </Instruction>
+  
+  <Instruction Name="PLP" Description=" PuLl Processor status from stack" >
+    <Opcode Hex="$28" Length="1" Timing="3" Mode="Implicit" ></Opcode>
+    PLP (PuLl Processor status)     $28  4
+  </Instruction>
+  <!--<Instruction Name="PLX" Description=" PuLl X register from stack" ></Instruction>
+  <Instruction Name="PLY" Description=" PuLl Y register from stack" ></Instruction>-->
+  <!--<Instruction Name="RMB" Description=" Reset Memory Bit" ></Instruction>-->
+  <Instruction Name="ROL" Description=" ROtate one bit Left memory oR accumulator" >
+    <Opcode Hex="$2A" Length="1" Timing="2" Mode="Accumulator" />
+    <Opcode Hex="$26" Length="2" Timing="5" Mode="ZeroPage" />
+    <Opcode Hex="$36" Length="2" Timing="6" Mode="ZeroPageX" />
+    <Opcode Hex="$2E" Length="3" Timing="6" Mode="Absolute" />
+    <Opcode Hex="$3E" Length="3" Timing="7" Mode="AbsoluteX" />
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Accumulator   ROL A         $2A  1   2
+    Zero Page     ROL $44       $26  2   5
+    Zero Page,X   ROL $44,X     $36  2   6
+    Absolute      ROL $4400     $2E  3   6
+    Absolute,X    ROL $4400,X   $3E  3   7
+
+
+    ROL shifts all bits left one position. The Carry is shifted into bit 0 and the original bit 7 is shifted into the Carry.
+  </Instruction>
+  <Instruction Name="ROR" Description=" ROtate one bit Right memory or accumulator" >
+    <Opcode Hex="$6A" Length="1" Timing="2" Mode="Accumulator" />
+    <Opcode Hex="$66" Length="2" Timing="5" Mode="ZeroPage" />
+    <Opcode Hex="$76" Length="2" Timing="6" Mode="ZeroPageX" />
+    <Opcode Hex="$6E" Length="3" Timing="6" Mode="Absolute" />
+    <Opcode Hex="$7E" Length="3" Timing="7" Mode="AbsoluteX" />
+    Affects Flags: S Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Accumulator   ROR A         $6A  1   2
+    Zero Page     ROR $44       $66  2   5
+    Zero Page,X   ROR $44,X     $76  2   6
+    Absolute      ROR $4400     $6E  3   6
+    Absolute,X    ROR $4400,X   $7E  3   7
+
+
+    ROR shifts all bits right one position. The Carry is shifted into bit 7 and the original bit 0 is shifted into the Carry.
+  </Instruction>
+  <Instruction Name="RTI" Description=" ReTurn from Interrupt" >
+    <Opcode Hex="$40" Length="1" Timing="6" Mode="Implicit" ></Opcode>
+    Affects Flags: all
+
+    MODE           SYNTAX       HEX LEN TIM
+    Implied       RTI           $40  1   6
+
+
+    RTI retrieves the Processor Status Word (flags) and the Program Counter from the stack in that order (interrupts push the PC first and then the PSW).
+
+    Note that unlike RTS, the return address on the stack is the actual address rather than the address-1.
+  </Instruction>
+  <Instruction Name="RTS" Description=" ReTurn from Subroutine" >
+    <Opcode Hex="$60" Length="1" Timing="6" Mode="Implicit" ></Opcode>
+    Affects Flags: none
+
+    MODE           SYNTAX       HEX LEN TIM
+    Implied       RTS           $60  1   6
+
+
+    RTS pulls the top two bytes off the stack (low byte first) and transfers program control to that address+1. It is used, as expected, to exit a subroutine invoked via JSR which pushed the address-1.
+
+
+
+  </Instruction>
+  <Instruction Name="SBC" Description=" SuBtract memory from accumulator with borrow (Carry bit)" >
+    <Opcode Hex="$E9" Length="2" Timing="2" Mode="Immediate" ></Opcode>
+    <Opcode Hex="$E5" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$F5" Length="2" Timing="4" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$ED" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$FD" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteX" ></Opcode>
+    <Opcode Hex="$F9" Length="3" Timing="4" ExtraTiming="IfCrossedPageBoundary:1" Mode="AbsoluteY" ></Opcode>
+    <Opcode Hex="$E1" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$F1" Length="2" Timing="5" ExtraTiming="IfCrossedPageBoundary:1" Mode="IndirectY" ></Opcode>
+    Affects Flags: S V Z C
+
+    MODE           SYNTAX       HEX LEN TIM
+    Immediate     SBC #$44      $E9  2   2
+    Zero Page     SBC $44       $E5  2   3
+    Zero Page,X   SBC $44,X     $F5  2   4
+    Absolute      SBC $4400     $ED  3   4
+    Absolute,X    SBC $4400,X   $FD  3   4+
+    Absolute,Y    SBC $4400,Y   $F9  3   4+
+    Indirect,X    SBC ($44,X)   $E1  2   6
+    Indirect,Y    SBC ($44),Y   $F1  2   5+
+
+    + add 1 cycle if page boundary crossed
+
+
+    SBC results are dependant on the setting of the decimal flag. In decimal mode, subtraction is carried out on the assumption that the values involved are packed BCD (Binary Coded Decimal).
+
+    There is no way to subtract without the carry which works as an inverse borrow. 
+    i.e, to subtract you set the carry before the operation. 
+    If the carry is cleared by the operation, it indicates a borrow occurred.
+  </Instruction>
+  <Instruction Name="SEC" Description=" SEt Carry" >
+    <Opcode Hex="$38" Length="1" Timing="2" Mode="Implicit" />
+    SEC (SEt Carry)                $38
+    Time 2
+  </Instruction>
+  <Instruction Name="SED" Description=" SEt Decimal mode" >
+    <Opcode Hex="$F8" Length="1" Timing="2" Mode="Implicit" />
+    SED (SEt Decimal)              $F8
+  </Instruction>
+  <Instruction Name="SEI" Description=" SEt Interrupt disable status" >
+    <Opcode Hex="$78" Length="1" Timing="2" Mode="Implicit" />
+    SEI (SEt Interrupt)            $78
+  </Instruction>
+  <!--<Instruction Name="SMB" Description=" Set Memory Bit" ></Instruction>-->
+  <Instruction Name="STA" Description=" STore Accumulator in memory" >
+    <Opcode Hex="$85" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$95" Length="2" Timing="4" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$8D" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    <Opcode Hex="$9D" Length="3" Timing="5" Mode="AbsoluteX" ></Opcode>
+    <Opcode Hex="$99" Length="3" Timing="5" Mode="AbsoluteY" ></Opcode>
+    <Opcode Hex="$81" Length="2" Timing="6" Mode="IndirectX" ></Opcode>
+    <Opcode Hex="$91" Length="2" Timing="6" Mode="IndirectY" ></Opcode>
+    Affects Flags: none
+
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     STA $44       $85  2   3
+    Zero Page,X   STA $44,X     $95  2   4
+    Absolute      STA $4400     $8D  3   4
+    Absolute,X    STA $4400,X   $9D  3   5
+    Absolute,Y    STA $4400,Y   $99  3   5
+    Indirect,X    STA ($44,X)   $81  2   6
+    Indirect,Y    STA ($44),Y   $91  2   6
+
+  </Instruction>
+  <!--<Instruction Name="STP" Description=" SToP mode" ></Instruction>-->
+  <Instruction Name="STX" Description=" STore the X register in memory" >
+    <Opcode Hex="$86" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$96" Length="2" Timing="4" Mode="ZeroPageY" ></Opcode>
+    <Opcode Hex="$8E" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     STX $44       $86  2   3
+    Zero Page,Y   STX $44,Y     $96  2   4
+    Absolute      STX $4400     $8E  3   4
+  </Instruction>
+  <Instruction Name="STY" Description=" STore the Y register in memory" >
+    <Opcode Hex="$84" Length="2" Timing="3" Mode="ZeroPage" ></Opcode>
+    <Opcode Hex="$94" Length="2" Timing="4" Mode="ZeroPageX" ></Opcode>
+    <Opcode Hex="$8C" Length="3" Timing="4" Mode="Absolute" ></Opcode>
+    MODE           SYNTAX       HEX LEN TIM
+    Zero Page     STY $44       $84  2   3
+    Zero Page,X   STY $44,X     $94  2   4
+    Absolute      STY $4400     $8C  3   4
+
+  </Instruction>
+  <!--<Instruction Name="STZ" Description=" STore Zero in memory" >
+    6510 inst
+  </Instruction>-->
+  <Instruction Name="TAX" Description=" Transfer the Accumulator to the X register" >
+    <Opcode Hex="$AA" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+
+    Affect Flags: S Z
+
+    These instructions are implied mode, have a length of one byte and require two machine cycles.
+
+    MNEMONIC                 HEX
+    TAX (Transfer A to X)    $AA
+    
+  </Instruction>
+  <Instruction Name="TAY" Description=" Transfer the Accumulator to the Y register" >
+    <Opcode Hex="$A8" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    TAY (Transfer A to Y)    $A8
+  </Instruction>
+  <Instruction Name="TSX" Description=" Transfer the Stack pointer to the X register" >
+    <Opcode Hex="$BA" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    TSX (Transfer Stack ptr to X)   $BA  2
+  </Instruction>
+  <Instruction Name="TXA" Description=" Transfer the X register to the Accumulator" >
+    <Opcode Hex="$8A" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    TXA (Transfer X to A)    $8A
+  </Instruction>
+  
+  <Instruction Name="TXS" Description=" Transfer the X register to the Stack pointer register" >
+    <Opcode Hex="$9A" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    TXS (Transfer X to Stack ptr)   $9A  2
+
+  </Instruction>
+  <Instruction Name="TYA" Description=" Transfer Y register to the Accumulator" >
+    <Opcode Hex="$98" Length="1" Timing="2" Mode="Implicit" ></Opcode>
+    TYA (Transfer Y to A)    $98
+
+  </Instruction>
+  <!--<Instruction Name="WAI" Description=" WAit for Interrupt" ></Instruction>-->
+</Instructions>

@@ -1,0 +1,45 @@
+﻿2A03 emulation
+	6502 core
+	Accurate clock critical for PPU integration
+	Accurate memory read/write timing
+	Instruction set data bound to xml for disassembly/help
+	flat memory with I/O "hooks" --"mapper 0" 
+	
+	** score
+	
+presentation: silverlight assembler/disassembler
+	** score
+	
+milestone: can execute and debug code
+	** score
+	
+rom decoding and memory setup
+	simple bankswitching mappers
+	** score
+	
+milestone: can execute and debug nes code against mocked 2C02, input
+	** score
+	
+2C02 emulation
+	milestone: render basic frames to bitmap
+	** score
+	milestone: render to silverlight panel
+	** score
+
+nes showdown, stage 1	
+(focus on donkey kong)
+thread out machine execution, callbacks for rendering and input
+
+run real time (implement frame/pixel skipping)
+	-optimization of cpu engine
+		-externalize debugging features
+	-codegen switch statement to replace delegate silliness
+	
+input device emulation
+
+sound
+	?? TBI: stream nes sound channels to wav files? investigate nsf players approaches
+stage 2	
+(focus on other carts)
+perfect(tm) timing
+
