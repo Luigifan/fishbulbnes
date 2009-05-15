@@ -33,7 +33,7 @@ namespace NES.CPU.Machine.ROMLoader
 
             using (FileStream stream = File.Open(fileName, FileMode.Open))
             {
-                _cart = LoadROM(ppu, new BinaryReader(stream));
+                _cart = LoadROM(ppu, stream);
             }
             return _cart;
         }
@@ -49,8 +49,17 @@ namespace NES.CPU.Machine.ROMLoader
             ZipEntry entry = zipStream.GetNextEntry();
             if (entry.Name.IndexOf(".nes") > 0)
             {
-                
-                _cart = LoadROM(ppu, new BinaryReader(zipStream));
+ 				Console.WriteLine ("Loading " + entry.Name + " " + entry.Size.ToString() + " bytes");
+				byte[] data;//= new byte[entry.Size];
+				
+				BinaryReader reader = new BinaryReader(zipStream);
+				data = reader.ReadBytes((int)entry.Size);
+				
+				//int len = zipStream.Read(data, 0, (int)entry.Size);
+				Console.WriteLine("BodyRead " + data.Length.ToString() + " bytes");
+				//reader.Close();
+				MemoryStream mstream = new MemoryStream(data);
+                _cart = LoadROM(ppu, mstream);
             }
 
             zipStream.CloseEntry();
@@ -60,7 +69,7 @@ namespace NES.CPU.Machine.ROMLoader
             return _cart;
         }
 
-        private static INESCart LoadROM(PixelWhizzler ppu, BinaryReader zipStream)
+        private static INESCart LoadROM(PixelWhizzler ppu, Stream zipStream)
         {
             INESCart _cart = null;
             byte[] iNesHeader = new byte[16];
