@@ -57,7 +57,7 @@ namespace GtkNes {
             this.chkMute = new Gtk.CheckButton();
             this.chkMute.CanFocus = true;
             this.chkMute.Name = "chkMute";
-            this.chkMute.Label = Mono.Unix.Catalog.GetString("Mute");
+            this.chkMute.Label = "Mute";
             this.chkMute.DrawIndicator = true;
             this.chkMute.UseUnderline = true;
             this.vbox1.Add(this.chkMute);
@@ -68,7 +68,7 @@ namespace GtkNes {
             this.expander1.Add(this.vbox1);
             this.GtkLabel1 = new Gtk.Label();
             this.GtkLabel1.Name = "GtkLabel1";
-            this.GtkLabel1.LabelProp = Mono.Unix.Catalog.GetString("Sound");
+            this.GtkLabel1.LabelProp = "Sound";
             this.GtkLabel1.UseUnderline = true;
             this.expander1.LabelWidget = this.GtkLabel1;
             this.Add(this.expander1);

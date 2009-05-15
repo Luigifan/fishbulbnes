@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using Gtk;
 using Fishbulb.Common.UI;
+using UIComposition;
 
 namespace GtkNes
 {
@@ -19,8 +20,9 @@ namespace GtkNes
 
 		void HandleChangeValue(object o, ChangeValueArgs args)
 		{
-			(model as SoundViewModel).Volume = (float)volScale.Value / 100f;
-			// model
+            model.PropertyChanged -= HandlePropertyChanged;
+            this.UpdateSourceBinding(model, (float)volScale.Value, "Volume");
+            model.PropertyChanged += HandlePropertyChanged;
 		}
 		
 		private IProfileViewModel model;
@@ -38,7 +40,9 @@ namespace GtkNes
 			switch (e.PropertyName)
 			{
 			case "Volume":
-				volScale.Value = (model as SoundViewModel).Volume * 100;
+                    double? d = this.GetBindingValue(model, "Volume") as double?;
+                    if (d!= null)
+                        volScale.Value = (double) d;
 				break;
 			}
 		}

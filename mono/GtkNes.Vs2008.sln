@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtkNes.Vs2008", "gnomebulb\GtkNes.Vs2008.csproj", "{412F3870-AF00-4C84-A422-95E1B14F097B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPU6502", "..\common\fishbulbcore\CPU6502.csproj", "{797342A9-BA71-426D-B02C-55608AFACEA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPU6502.DotNet", "..\common\fishbulbcore\CPU6502.DotNet.csproj", "{797342A9-BA71-426D-B02C-55608AFACEA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fishbulbcommonui", "..\common\fishbulbcommonui\fishbulbcommonui.csproj", "{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}"
 EndProject

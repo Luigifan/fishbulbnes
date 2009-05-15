@@ -114,9 +114,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\fishbulbcore\CPU6502.csproj">
+    <ProjectReference Include="..\fishbulbcore\CPU6502.DotNet.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
-      <Name>CPU6502</Name>
+      <Name>CPU6502.DotNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

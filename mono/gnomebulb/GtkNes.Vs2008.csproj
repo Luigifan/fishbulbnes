@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -51,7 +52,7 @@
   <ItemGroup>
     <Reference Include="GLWidget, Version=1.0.3042.25084, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\openglwidget\GLWidget.dll</HintPath>
+      <HintPath>..\..\Lib\GLWidget.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,6 +100,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL" />
     <Reference Include="Tao.OpenAl, Version=1.1.0.1, Culture=neutral, PublicKeyToken=a7579dda88828311, processorArchitecture=MSIL" />
     <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL" />
@@ -122,7 +125,9 @@
     <Compile Include="Planetoid.cs" />
     <Compile Include="OpenALInlineWavStreamer.cs" />
     <Compile Include="MainWindow.cs" />
+    <Compile Include="UIComposition\BindingResolver.cs" />
     <Compile Include="UIComposition\GTKInstigator.cs" />
+    <Compile Include="UIComposition\IBindableElement.cs" />
     <Compile Include="VolumeWidget.cs" />
     <Compile Include="gtk-gui\GtkNes.VolumeWidget.cs" />
   </ItemGroup>
@@ -159,9 +164,9 @@
       <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
       <Name>fishbulbcommonui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.csproj">
+    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.DotNet.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
-      <Name>CPU6502</Name>
+      <Name>CPU6502.DotNet</Name>
     </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>

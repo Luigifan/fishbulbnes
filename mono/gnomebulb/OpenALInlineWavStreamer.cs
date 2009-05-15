@@ -46,13 +46,14 @@ namespace WPFamicom.Sound
 
             Al.alGenSources(1, out sourceId);
             Al.alGenBuffers(BUFFER_COUNT, bufferIds);
-            for (int i = 0; i < bufferIds.Length; ++i)
-            {
-                bufferIDtoArrayIndex.Add(bufferIds[i], i);
-            }
-
             err = Al.alGetError();
             Debug.Assert(err == 0, "Error " + err.ToString());
+            for (int i = 0; i < bufferIds.Length; ++i)
+            {
+                if (bufferIds[i] !=0)
+                    bufferIDtoArrayIndex.Add(bufferIds[i], i);
+            }
+
 
 
             Al.alListenerfv(Al.AL_POSITION, listenerPosition);
