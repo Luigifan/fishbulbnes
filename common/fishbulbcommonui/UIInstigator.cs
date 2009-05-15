@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Practices.Unity;
 
-namespace PatientProfile
+namespace Fishbulb.Common.UI
 {
 
     public class UIInstigator<T>
