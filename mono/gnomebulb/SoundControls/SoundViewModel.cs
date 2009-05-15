@@ -67,5 +67,11 @@ namespace GtkNes
         }
 
         #endregion
+
+        #region INotifyPropertyChanged Members
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
     }
 }
