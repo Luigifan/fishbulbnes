@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtkNes", "gnomebulb\GtkNes.csproj", "{412F3870-AF00-4C84-A422-95E1B14F097B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPU6502", "..\common\fishbulbcore\CPU6502.csproj", "{797342A9-BA71-426D-B02C-55608AFACEA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fishbulbcommonui", "..\common\fishbulbcommonui\fishbulbcommonui.csproj", "{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{412F3870-AF00-4C84-A422-95E1B14F097B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{412F3870-AF00-4C84-A422-95E1B14F097B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{412F3870-AF00-4C84-A422-95E1B14F097B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{412F3870-AF00-4C84-A422-95E1B14F097B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{797342A9-BA71-426D-B02C-55608AFACEA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{797342A9-BA71-426D-B02C-55608AFACEA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{797342A9-BA71-426D-B02C-55608AFACEA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{797342A9-BA71-426D-B02C-55608AFACEA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.1
+		StartupItem = gnomebulb\GtkNes.csproj
+	EndGlobalSection
+EndGlobal
