@@ -170,7 +170,7 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.ToggleButton" id="powerButton">
+                  <widget class="Gtk.ToggleButton" id="ejectButton">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
@@ -185,7 +185,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.ToggleButton" id="togglebutton2">
+                  <widget class="Gtk.ToggleButton" id="powerButton">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
@@ -203,7 +203,7 @@
                   <widget class="Gtk.CheckButton" id="checkPause">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
-                    <property name="Label">checkbutton1</property>
+                    <property name="Label">Paused</property>
                     <property name="DrawIndicator">True</property>
                     <property name="HasLabel">True</property>
                     <property name="UseUnderline">True</property>
@@ -243,7 +243,7 @@
                 <child>
                   <widget class="Gtk.Label" id="GtkLabel4">
                     <property name="MemberName" />
-                    <property name="LabelProp" translatable="yes">expander2</property>
+                    <property name="LabelProp">ROM Information</property>
                     <property name="UseUnderline">True</property>
                   </widget>
                   <packing>
