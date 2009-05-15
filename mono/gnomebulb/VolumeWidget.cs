@@ -21,7 +21,7 @@ namespace GtkNes
 		void HandleChangeValue(object o, ChangeValueArgs args)
 		{
             model.PropertyChanged -= HandlePropertyChanged;
-            this.UpdateSourceBinding(model, (float)volScale.Value, "Volume");
+            this.UpdateSourceBinding(model, (float)volScale.Value / 100f, "Volume");
             model.PropertyChanged += HandlePropertyChanged;
 		}
 		

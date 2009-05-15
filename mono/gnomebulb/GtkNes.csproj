@@ -130,6 +130,11 @@
     <Compile Include="SoundControls\SoundViewModel.cs" />
     <Compile Include="UIComposition\GTKInstigator.cs" />
     <Compile Include="UIComposition\IBindableElement.cs" />
+    <Compile Include="UIComposition\BindingResolver.cs" />
+    <Compile Include="FrontPanel.cs" />
+    <Compile Include="gtk-gui\GtkNes.FrontPanel.cs" />
+    <Compile Include="CheatView.cs" />
+    <Compile Include="gtk-gui\GtkNes.CheatView.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">
