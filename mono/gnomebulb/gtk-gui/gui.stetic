@@ -170,7 +170,7 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.ToggleButton" id="togglebutton1">
+                  <widget class="Gtk.ToggleButton" id="powerButton">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
@@ -200,10 +200,10 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.CheckButton" id="checkbutton1">
+                  <widget class="Gtk.CheckButton" id="checkPause">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
-                    <property name="Label" translatable="yes">checkbutton1</property>
+                    <property name="Label">checkbutton1</property>
                     <property name="DrawIndicator">True</property>
                     <property name="HasLabel">True</property>
                     <property name="UseUnderline">True</property>
@@ -259,7 +259,7 @@
           </widget>
         </child>
         <child>
-          <widget class="Gtk.Label" id="GtkLabel">
+          <widget class="Gtk.Label" id="GtkLabel2">
             <property name="MemberName" />
             <property name="LabelProp" translatable="yes">Control Panel</property>
             <property name="UseUnderline">True</property>
