@@ -72,7 +72,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.VPaned" id="controlPanel1">
+                  <widget class="Gtk.VPaned" id="controlPanel">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Position">23</property>

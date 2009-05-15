@@ -42,7 +42,7 @@ namespace GtkNes
 
         public string CurrentRegion
         {
-            get { return "soundControlRegion"; }
+            get { return "controlPanel.0"; }
         }
 
         public string Header
