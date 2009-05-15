@@ -1,5 +1,6 @@
 using Microsoft.Practices.Unity;
 using Gtk;
+using GtkNes;
 using System;
 using System.Linq;
 using Fishbulb.Common.UI;
@@ -45,7 +46,11 @@ namespace TestGtkInstigation
 		
 		static void BindChild(Widget parent, IProfileViewModel viewModel)
 		{
-			//TODO
+			IBindableElement element = parent as IBindableElement;
+			if (element != null)
+			{
+				element.DataContext = viewModel;
+			}
 		}
 		
 		

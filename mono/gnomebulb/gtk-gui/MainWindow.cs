@@ -18,8 +18,6 @@ public partial class MainWindow {
     
     private Gtk.HBox hbox1;
     
-    private Gtk.Button btnLoadRom;
-    
     private Gtk.Frame frame2;
     
     private Gtk.Alignment GtkAlignment1;
@@ -28,11 +26,13 @@ public partial class MainWindow {
     
     private Gtk.VPaned controlPanel;
     
+    private Gtk.Button btnLoadRom;
+    
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
         // Widget MainWindow
         this.Name = "MainWindow";
-        this.Title = "MainWindow";
+        this.Title = Mono.Unix.Catalog.GetString("MainWindow");
         this.WindowPosition = ((Gtk.WindowPosition)(4));
         // Container child MainWindow.Gtk.Container+ContainerChild
         this.frame1 = new Gtk.Frame();
@@ -46,17 +46,6 @@ public partial class MainWindow {
         this.hbox1 = new Gtk.HBox();
         this.hbox1.Name = "hbox1";
         this.hbox1.Spacing = 6;
-        // Container child hbox1.Gtk.Box+BoxChild
-        this.btnLoadRom = new Gtk.Button();
-        this.btnLoadRom.CanFocus = true;
-        this.btnLoadRom.Name = "btnLoadRom";
-        this.btnLoadRom.UseUnderline = true;
-        this.btnLoadRom.Label = "Load";
-        this.hbox1.Add(this.btnLoadRom);
-        Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.hbox1[this.btnLoadRom]));
-        w1.Position = 0;
-        w1.Expand = false;
-        w1.Fill = false;
         // Container child hbox1.Gtk.Box+BoxChild
         this.frame2 = new Gtk.Frame();
         this.frame2.Name = "frame2";
@@ -76,16 +65,27 @@ public partial class MainWindow {
         this.GtkAlignment1.Add(this.glwidget2);
         this.frame2.Add(this.GtkAlignment1);
         this.hbox1.Add(this.frame2);
-        Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.frame2]));
-        w4.Position = 1;
+        Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.frame2]));
+        w3.Position = 0;
         // Container child hbox1.Gtk.Box+BoxChild
         this.controlPanel = new Gtk.VPaned();
         this.controlPanel.CanFocus = true;
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Position = 23;
+        // Container child controlPanel.Gtk.Paned+PanedChild
+        this.btnLoadRom = new Gtk.Button();
+        this.btnLoadRom.CanFocus = true;
+        this.btnLoadRom.Name = "btnLoadRom";
+        this.btnLoadRom.UseUnderline = true;
+        this.btnLoadRom.Label = Mono.Unix.Catalog.GetString("Load");
+        this.controlPanel.Add(this.btnLoadRom);
+        Gtk.Paned.PanedChild w4 = ((Gtk.Paned.PanedChild)(this.controlPanel[this.btnLoadRom]));
+        w4.Resize = false;
         this.hbox1.Add(this.controlPanel);
         Gtk.Box.BoxChild w5 = ((Gtk.Box.BoxChild)(this.hbox1[this.controlPanel]));
-        w5.Position = 2;
+        w5.Position = 1;
+        w5.Expand = false;
+        w5.Fill = false;
         this.GtkAlignment.Add(this.hbox1);
         this.frame1.Add(this.GtkAlignment);
         this.Add(this.frame1);

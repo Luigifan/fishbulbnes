@@ -17,7 +17,7 @@ namespace GtkNes {
         
         private Gtk.VBox vbox1;
         
-        private Gtk.HScale hscale1;
+        private Gtk.HScale volScale;
         
         private Gtk.CheckButton chkMute;
         
@@ -38,18 +38,18 @@ namespace GtkNes {
             this.vbox1.Name = "vbox1";
             this.vbox1.Spacing = 6;
             // Container child vbox1.Gtk.Box+BoxChild
-            this.hscale1 = new Gtk.HScale(null);
-            this.hscale1.CanFocus = true;
-            this.hscale1.Name = "hscale1";
-            this.hscale1.Adjustment.Upper = 100;
-            this.hscale1.Adjustment.PageIncrement = 10;
-            this.hscale1.Adjustment.StepIncrement = 1;
-            this.hscale1.Adjustment.Value = 75;
-            this.hscale1.DrawValue = true;
-            this.hscale1.Digits = 0;
-            this.hscale1.ValuePos = ((Gtk.PositionType)(2));
-            this.vbox1.Add(this.hscale1);
-            Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.vbox1[this.hscale1]));
+            this.volScale = new Gtk.HScale(null);
+            this.volScale.CanFocus = true;
+            this.volScale.Name = "volScale";
+            this.volScale.Adjustment.Upper = 100;
+            this.volScale.Adjustment.PageIncrement = 10;
+            this.volScale.Adjustment.StepIncrement = 1;
+            this.volScale.Adjustment.Value = 75;
+            this.volScale.DrawValue = true;
+            this.volScale.Digits = 0;
+            this.volScale.ValuePos = ((Gtk.PositionType)(2));
+            this.vbox1.Add(this.volScale);
+            Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.vbox1[this.volScale]));
             w1.Position = 0;
             w1.Expand = false;
             w1.Fill = false;
@@ -57,7 +57,7 @@ namespace GtkNes {
             this.chkMute = new Gtk.CheckButton();
             this.chkMute.CanFocus = true;
             this.chkMute.Name = "chkMute";
-            this.chkMute.Label = "Mute";
+            this.chkMute.Label = Mono.Unix.Catalog.GetString("Mute");
             this.chkMute.DrawIndicator = true;
             this.chkMute.UseUnderline = true;
             this.vbox1.Add(this.chkMute);
@@ -68,7 +68,7 @@ namespace GtkNes {
             this.expander1.Add(this.vbox1);
             this.GtkLabel1 = new Gtk.Label();
             this.GtkLabel1.Name = "GtkLabel1";
-            this.GtkLabel1.LabelProp = "Sound";
+            this.GtkLabel1.LabelProp = Mono.Unix.Catalog.GetString("Sound");
             this.GtkLabel1.UseUnderline = true;
             this.expander1.LabelWidget = this.GtkLabel1;
             this.Add(this.expander1);
