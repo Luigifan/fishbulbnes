@@ -32,7 +32,7 @@ public partial class MainWindow {
         Stetic.Gui.Initialize(this);
         // Widget MainWindow
         this.Name = "MainWindow";
-        this.Title = Mono.Unix.Catalog.GetString("MainWindow");
+        this.Title = "MainWindow";
         this.WindowPosition = ((Gtk.WindowPosition)(4));
         // Container child MainWindow.Gtk.Container+ContainerChild
         this.frame1 = new Gtk.Frame();
@@ -51,7 +51,7 @@ public partial class MainWindow {
         this.btnLoadRom.CanFocus = true;
         this.btnLoadRom.Name = "btnLoadRom";
         this.btnLoadRom.UseUnderline = true;
-        this.btnLoadRom.Label = Mono.Unix.Catalog.GetString("Load");
+        this.btnLoadRom.Label = "Load";
         this.hbox1.Add(this.btnLoadRom);
         Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.hbox1[this.btnLoadRom]));
         w1.Position = 0;

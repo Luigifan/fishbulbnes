@@ -7,19 +7,35 @@ using NES.CPU.Machine.BeepsBoops;
 using WPFamicom;
 using WPFamicom.Sound;
 using testproject;
+using Microsoft.Practices.Unity;
+using TestGtkInstigation;
+using Fishbulb.Common.UI;
+using System.Collections.Generic;
+using GtkNes;
 
 public partial class MainWindow: Gtk.Window
 {	
 	
 	NESMachine machine = new NESMachine();
 	SoundThreader sndThread;
-	
-	public MainWindow (): base (Gtk.WindowType.Toplevel)
+    IUnityContainer container;
+	public MainWindow (IUnityContainer container): base (Gtk.WindowType.Toplevel)
 	{
-		Build ();
+        this.container = container;
+
+        // instigator.Bootstrap(this, 
+        
+        
+        Build ();
 		
 		sndThread = new SoundThreader(machine);
-		
+
+        GTKInstigator instigator = new GTKInstigator(container);
+        List<IProfileViewModel> viewModels = new List<IProfileViewModel>();
+        viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
+
+        instigator.Bootstrap(this, viewModels);
+
 		
 		this.KeyPressEvent += HandleKeyPressEvent;
 		this.KeyReleaseEvent += HandleKeyReleaseEvent;
@@ -164,6 +180,7 @@ public partial class MainWindow: Gtk.Window
 	void RefreshGLWidgets()
 	{
 		glwidget2.QueueDraw();
+        
 	}
 	
 	byte[] pixels = new byte[256 * 256 * 4];
