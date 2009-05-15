@@ -1,0 +1,227 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="WPFamicom.ControlPanel"
+	x:Name="UserControl" BorderThickness="3,3,3,3"
+    xmlns:vm="clr-namespace:WPFamicom.ControlPanelMVVM"
+    xmlns:commanding="clr-namespace:VMCommanding"
+    commanding:CommandSinkBinding.CommandSink="{Binding}"
+    xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna" 
+    VerticalAlignment="Top"
+    xmlns:WPFamicom="clr-namespace:WPFamicom"
+    xmlns:SoundControls="clr-namespace:WPFamicom.ControlPanelMVVM.SoundUI"
+    >
+    
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		<Style x:Key="NESButton" TargetType="{x:Type Button}">
+			<Setter Property="Background" Value="{StaticResource ButtonNormalBackgroundFill}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Microsoft_Windows_Themes:ButtonChrome x:Name="Chrome" SnapsToDevicePixels="true" BorderBrush="{TemplateBinding BorderBrush}" RenderDefaulted="{TemplateBinding IsDefaulted}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" ThemeColor="NormalColor">
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
+						</Microsoft_Windows_Themes:ButtonChrome>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsKeyboardFocused" Value="true">
+								<Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
+							</Trigger>
+							<Trigger Property="ToggleButton.IsChecked" Value="true">
+								<Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Storyboard x:Key="BreakpointPendingStoryboard" AutoReverse="True" RepeatBehavior="Forever"/>
+		<Style x:Key="SaveSoundButton" TargetType="{x:Type Button}">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Microsoft_Windows_Themes:ButtonChrome x:Name="Chrome" SnapsToDevicePixels="true" RenderDefaulted="{TemplateBinding IsDefaulted}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" ThemeColor="NormalColor" Fill="#FFBF2A2A">
+							<ContentPresenter/>
+						</Microsoft_Windows_Themes:ButtonChrome>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsKeyboardFocused" Value="true">
+								<Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
+							</Trigger>
+							<Trigger Property="ToggleButton.IsChecked" Value="true">
+								<Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Storyboard x:Key="SoundRecordingStoryboard" AutoReverse="True" RepeatBehavior="Forever"/>
+		<Style x:Key="WhatsThisButton" TargetType="{x:Type Button}">
+
+			<!--<Setter Property="Background" Value="{StaticResource ButtonNormalBackgroundFill}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}"/>-->
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<ControlTemplate.Resources>
+							<Storyboard x:Key="MouseOverWhatsThis" AutoReverse="True" RepeatBehavior="Forever">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.2"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.2"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="WhatsThisClick">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="-1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="-1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.4000000" Value="1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="-1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.6000000" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</ControlTemplate.Resources>
+						<ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True" x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5">
+							<ContentPresenter.RenderTransform>
+								<TransformGroup>
+									<ScaleTransform ScaleX="1" ScaleY="1"/>
+									<SkewTransform AngleX="0" AngleY="0"/>
+									<RotateTransform Angle="0"/>
+									<TranslateTransform X="0" Y="0"/>
+								</TransformGroup>
+							</ContentPresenter.RenderTransform>
+						</ContentPresenter>
+						<ControlTemplate.Triggers>
+							<EventTrigger RoutedEvent="ButtonBase.Click">
+								<BeginStoryboard Storyboard="{StaticResource WhatsThisClick}" x:Name="WhatsThisClick_BeginStoryboard"/>
+							</EventTrigger>
+							<EventTrigger RoutedEvent="Mouse.MouseEnter">
+								<BeginStoryboard x:Name="MouseOverWhatsThis_BeginStoryboard" Storyboard="{StaticResource MouseOverWhatsThis}"/>
+							</EventTrigger>
+							<EventTrigger RoutedEvent="Mouse.MouseLeave">
+								<RemoveStoryboard BeginStoryboardName="MouseOverWhatsThis_BeginStoryboard"/>
+							</EventTrigger>
+							<Trigger Property="IsKeyboardFocused" Value="true"/>
+							<Trigger Property="ToggleButton.IsChecked" Value="true"/>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+								<Setter Property="Visibility" TargetName="contentPresenter" Value="Hidden"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+    
+    <UserControl.CommandBindings>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.PowerOnCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.PowerOffCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.PowerOnCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.ResetCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.InsertCartCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.RemoveCartCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.GetSnapshotCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.SetSnapshotCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.SaveSnapshotCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.LoadSnapshotCommand"/>
+        <commanding:CommandSinkBinding Command="vm:ControlPanelVM.ShowGameInfoCommand"/>
+    </UserControl.CommandBindings>
+	<Border Background="#FF595250" MouseDown="ShowControlPanel">
+		<StackPanel x:Name="ControlStack">
+			<Border BorderThickness="2,3,2,2" Margin="5,5,5,6" BorderBrush="#FFD7D835">
+				<Canvas VerticalAlignment="Top" Height="47">                            
+					<Canvas Width="79.9166666666667" Height="21.2766666666667" Canvas.Top="24.8">
+						<Button x:Name="powerButton" Content="On" Grid.Column="0" Grid.Row="1" 
+							Grid.RowSpan="1" 
+							Command="vm:ControlPanelVM.PowerOnCommand" Width="21.9166666666667" Height="21.2766666666667" />
+						<CheckBox Width="58" Height="21.2766666666667" Content="PAUSE" FontFamily="Global Monospace" FontSize="12" FontWeight="Bold" Foreground="#FFECF124" Canvas.Left="21.917" IsChecked="{Binding Path=Paused, Mode=Default}"/>
+					</Canvas>                            
+					<Button Content="RESET" x:Name="resetButton"
+						Command="vm:ControlPanelVM.ResetCommand"
+						Width="43.5366666666667" Height="21.2766666666667" Canvas.Left="79.917" Canvas.Top="24.8"
+                        />
+                            
+					<Grid Width="123.453333333333" Height="24.8">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.651*"/>
+							<ColumnDefinition Width="0.349*"/>
+						</Grid.ColumnDefinitions>
+						<Button Grid.Column="0"
+							Command="vm:ControlPanelVM.InsertCartCommand" x:Name="insertCartButton" Grid.ColumnSpan="1"
+							Content="{Binding Path=FrontPanel.CurrentCartName}"
+                    />
+						<Button HorizontalAlignment="Left" VerticalAlignment="Top" Content="Eject" Grid.Column="1"  x:Name="ejectCart" Command="vm:ControlPanelVM.RemoveCartCommand"/>
+					</Grid>
+					<Button Width="23.953" Height="20.8" Canvas.Left="115" x:Name="btnInfo" Command="vm:ControlPanelVM.ShowGameInfoCommand" Style="{DynamicResource WhatsThisButton}">
+						<Image Source="..\whatsThis.JPG" Stretch="Fill"/>
+					</Button>
+				</Canvas>
+			</Border>
+			<Border BorderThickness="2,4,2,3" CornerRadius="2,2,2,2" Margin="5,0,5,6" BorderBrush="#FFD7D835">
+				<StackPanel x:Name="debuggerCanvas" VerticalAlignment="Top">
+					<StackPanel.Background>
+						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+							<GradientStop Color="#FF595959" Offset="0"/>
+							<GradientStop Color="#FF595959" Offset="1"/>
+						</LinearGradientBrush>
+					</StackPanel.Background>
+					<CheckBox Content="Enable Debugger" Foreground="#FFE7DD4B" x:Name="checkBox" IsChecked="{Binding Path=IsDebugging, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+					<CheckBox x:Name="showDebugger" Content="Show Debugger" Foreground="#FFE3D514" IsChecked="{Binding Path=DebuggerIsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+					<CheckBox Content="PPU Viewer" x:Name="showPPUDebugger" Foreground="#FFE3D514" IsChecked="{Binding Path=PPUViewerIsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+				</StackPanel>
+			</Border>
+			<SoundControls:SoundControlView DataContext="{Binding Path=FrontPanel.SoundControls}"/>
+			<WPFamicom:CheatControl x:Name="CheatPanel" DataContext="{Binding Path=CheatController}" />
+			<Border CornerRadius="2,2,2,2" BorderThickness="4,3,4,3" BorderBrush="#FFD7D835">
+				<Grid x:Name="StateGrid" VerticalAlignment="Top">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="0.526*"/>
+						<ColumnDefinition Width="0.474*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="16.35"/>
+						<RowDefinition Height="0.486*"/>
+						<RowDefinition Height="0.514*"/>
+					</Grid.RowDefinitions>
+					<Button x:Name="GrabState" Content="Grab State"  Command="vm:ControlPanelVM.GetSnapshotCommand" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="1" Grid.ColumnSpan="1"/>
+					<Button x:Name="SetState" Content="Set State" Command="vm:ControlPanelVM.SetSnapshotCommand" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="1" Grid.Column="1" />
+					<Button x:Name="LoadState" Content="Load State"  Command="vm:ControlPanelVM.LoadSnapshotCommand" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="1" Grid.Column="0"/>
+					<Button x:Name="SaveState" Content="Save State" Command="vm:ControlPanelVM.SaveSnapshotCommand" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="1" Grid.Column="1" />
+					<TextBlock HorizontalAlignment="Stretch" x:Name="State_Snapshots" VerticalAlignment="Stretch" Text="Snapshots" TextWrapping="Wrap" Background="#FF71B712" Grid.ColumnSpan="2"/>
+					<ComboBox VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Grid.Column="1" ItemsSource="{Binding Path=AvailableStates}" SelectedItem="{Binding Path=CurrentState}" />
+				</Grid>
+			</Border>
+			<Border BorderBrush="#FFE8E019" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1" x:Name="RenderSelection">
+                <StackPanel Background="#FF1D3629">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" MinWidth="75.669"/>
+							<ColumnDefinition Width="Auto" MinWidth="104.925"/>
+						</Grid.ColumnDefinitions>
+                		<TextBlock Background="#FF160C0C" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF1FA505" Text="Renderer:" TextWrapping="Wrap"/>
+                		<ComboBox ItemsSource="{Binding Path=ContextSwitcher.ContextNames}" SelectedValue="{Binding Path=ContextSwitcher.CurrentContextName}" KeyDown="IgnoreKey" KeyUp="IgnoreKey" Grid.Column="1" HorizontalAlignment="Stretch" />
+                	</Grid>
+					<Border Height="100" x:Name="renderPropertiesHolder"  />
+				</StackPanel>
+			</Border>
+			<Button x:Name="HideButton" Content="Hide" Click="HideControlPanel"/>
+		</StackPanel>
+	</Border>
+</UserControl>

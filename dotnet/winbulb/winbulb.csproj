@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F286D38C-EC0C-4968-AC82-E3ED516A1A48}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WPFamicom</RootNamespace>
+    <AssemblyName>WPFamicom</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>http://localhost/WPFamicom/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ApplicationIcon>Mario-Dead.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Luna" />
+    <Reference Include="SlimDX, Version=2.0.6.40, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.OpenAl, Version=1.1.0.1, Culture=neutral, PublicKeyToken=a7579dda88828311, processorArchitecture=MSIL" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="yeti.mmedia, Version=1.0.3370.20846, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\yeti.mmedia.dll</HintPath>
+    </Reference>
+    <Reference Include="yeti.mp3, Version=1.0.3370.20846, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\yeti.mp3.dll</HintPath>
+    </Reference>
+    <BlendEmbeddedFont Include="Fonts\Vera.ttf">
+      <IsSystemFont>True</IsSystemFont>
+    </BlendEmbeddedFont>
+    <BlendEmbeddedFont Include="Fonts\VeraBd.ttf">
+      <IsSystemFont>True</IsSystemFont>
+    </BlendEmbeddedFont>
+    <BlendEmbeddedFont Include="Fonts\VeraBI.ttf">
+      <IsSystemFont>True</IsSystemFont>
+    </BlendEmbeddedFont>
+    <BlendEmbeddedFont Include="Fonts\VeraIt.ttf">
+      <IsSystemFont>True</IsSystemFont>
+    </BlendEmbeddedFont>
+    <Page Include="BreakpointsGridControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanelMVVM\CheatControls\CheatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanelMVVM\ControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanelMVVM\SoundControls\SoundControlView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Debugger.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GameInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NameTableViewerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DebuggerStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InstructionHistoryControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InstructionRolloutControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InstructionUsageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MachineStatus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NESController.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PatternViewerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PPUDebugger.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PPUViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PPUWriteViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="BreakpointsGridControl.xaml.cs">
+      <DependentUpon>BreakpointsGridControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanelMVVM\CheatControls\CheatControl.xaml.cs">
+      <DependentUpon>CheatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanelMVVM\ControlPanel.xaml.cs">
+      <DependentUpon>ControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanelMVVM\SoundControls\SoundControlView.xaml.cs">
+      <DependentUpon>SoundControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Debugger.xaml.cs">
+      <DependentUpon>Debugger.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GameInfo.xaml.cs">
+      <DependentUpon>GameInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NameTableViewerControl.xaml.cs">
+      <DependentUpon>NameTableViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstructionHistoryControl.xaml.cs">
+      <DependentUpon>InstructionHistoryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstructionRolloutControl.xaml.cs">
+      <DependentUpon>InstructionRolloutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstructionUsageControl.xaml.cs">
+      <DependentUpon>InstructionUsageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MachineStatus.xaml.cs">
+      <DependentUpon>MachineStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NESController.xaml.cs">
+      <DependentUpon>NESController.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PatternViewerControl.xaml.cs">
+      <DependentUpon>PatternViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PPUDebugger.xaml.cs">
+      <DependentUpon>PPUDebugger.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PPUViewer.xaml.cs">
+      <DependentUpon>PPUViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PPUWriteViewer.xaml.cs">
+      <DependentUpon>PPUWriteViewer.xaml</DependentUpon>
+    </Compile>
+    <Resource Include="ControlPanelMVVM\SoundControls\TapeRecorder-48x48.png" />
+    <Resource Include="Mario-Dead.ico" />
+    <Resource Include="megacrash.bmp" />
+    <Resource Include="TapeRecorder-48x48.png" />
+    <Resource Include="whatsThis.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="OSDebugger.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Window1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Window1.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\NESConfigManager.cs" />
+    <Compile Include="ControlPanelMVVM\CartInfo.cs" />
+    <Compile Include="ControlPanelMVVM\CheatControls\CheatControlVM.cs" />
+    <Compile Include="ControlPanelMVVM\ControlPanelStub.cs" />
+    <Compile Include="ControlPanelMVVM\ControlPanelVM.cs" />
+    <Compile Include="ControlPanelMVVM\IFrontControlPanel.cs" />
+    <Compile Include="ControlPanelMVVM\Mp3FileSaver.cs" />
+    <Compile Include="ControlPanelMVVM\SoundControls\SoundController.cs" />
+    <Compile Include="ControlPanelMVVM\WaveFileSaver.cs" />
+    <Compile Include="ControlPanelMVVM\WindowManager.cs" />
+    <Compile Include="DebuggerVM.cs" />
+    <Compile Include="FileLoader\FileLoader.cs" />
+    <Compile Include="FileLoader\SRAMHandler.cs" />
+    <Compile Include="GameDisplay\DisplayContextSwitcher.cs" />
+    <Compile Include="GameDisplay\NESDisplay.cs" />
+    <Compile Include="HexViewer\HexValueConverter.cs" />
+    <Compile Include="Input\DXKeyboard.cs" />
+    <Compile Include="InstructionRollout\InstructionRollout.cs" />
+    <Compile Include="InstructionRollout\InstructionRolloutItem.cs" />
+    <Compile Include="opDisassembler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OSDebugger.xaml.cs">
+      <DependentUpon>OSDebugger.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Patterns\CommandSink.cs" />
+    <Compile Include="Patterns\CommandSinkBinding.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Sound\InlineWavStreamer.cs" />
+    <Compile Include="Sound\IWavStreamer.cs" />
+    <Compile Include="Sound\OpenALInlineWavStreamer.cs" />
+    <Compile Include="Sound\OpenALWavStreamer.cs" />
+    <Compile Include="Sound\SoundModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\SoundThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\WavStreamer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="bnes.pal" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="screencap.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="rawvidbufferdump.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="6502OpCodes.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="lame_enc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.csproj">
+      <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
+      <Name>CPU6502</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MachineStatusVM\" />
+    <Folder Include="OpenGLDisplay\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="SubsetFont.targets" />
+</Project>

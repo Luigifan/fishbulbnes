@@ -1,0 +1,35 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="WPFamicom.GameInfo"
+	x:Name="Window"
+	Title="GameInfo"
+	Width="251" Height="278" WindowStyle="None" Background="#FF25152E" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+	<Grid x:Name="LayoutRoot" Height="Auto" Width="Auto">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" MinHeight="24.072"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition MinWidth="27.945" Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+			<TextBlock Text="{Binding Path=CartName}" TextWrapping="Wrap" x:Name="txtCartName" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF5BF509" HorizontalAlignment="Left" VerticalAlignment="Center" />
+			<TextBlock Text="{Binding Path=Mirroring}" TextWrapping="Wrap" x:Name="txtCartMirroring" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF5BF509" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding Path=MapperId}" TextWrapping="Wrap" x:Name="txtMapperID" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF5BF509" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding Path=RomInfoString}" TextWrapping="Wrap" x:Name="txtPrgRomCount" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF5BF509" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        </StackPanel>
+		<TextBlock Text="Game Information" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF5BF509"/>
+		<Button Margin="0,1.229,0,0" VerticalAlignment="Top" Content="X" Grid.Column="1" HorizontalAlignment="Left" Width="27.945" x:Name="closeWindow" Click="HideWindow" Panel.ZIndex="1">
+			<Button.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FFDBB624" Offset="0"/>
+					<GradientStop Color="#FFDF3A1D" Offset="0.9"/>
+				</LinearGradientBrush>
+			</Button.Background>
+		</Button>
+		<Thumb Opacity="0.665" DragDelta="MoveWindow" Background="#FF3D5F68" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+	</Grid>
+</Window>

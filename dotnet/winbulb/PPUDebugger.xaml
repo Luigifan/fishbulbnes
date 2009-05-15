@@ -1,0 +1,22 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="WPFamicom.PPUDebugger"
+	x:Name="UserControl"
+	d:DesignWidth="679.955" d:DesignHeight="943.68" xmlns:WPFamicom="clr-namespace:WPFamicom">
+	<Border>
+		<StackPanel MinHeight="20" MinWidth="20" x:Name="Pane1">
+			<StackPanel.Background>
+				<RadialGradientBrush>
+					<GradientStop Color="#FF000000" Offset="0"/>
+					<GradientStop Color="#FF261E04" Offset="0.585"/>
+				</RadialGradientBrush>
+			</StackPanel.Background>
+			<WPFamicom:PatternViewerControl/>
+			<WPFamicom:NameTableViewerControl HorizontalAlignment="Stretch" />
+		</StackPanel>
+	</Border>
+</UserControl>

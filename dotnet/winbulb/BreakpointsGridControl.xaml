@@ -1,0 +1,138 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="WPFamicom.BreakpointsGridControl"
+	x:Name="UserControl"
+	d:DesignWidth="557.65" d:DesignHeight="178.325" xmlns:WPFamicom="clr-namespace:WPFamicom" xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna">
+
+	<UserControl.Resources>
+		<Style x:Key="NeonListStyle" TargetType="{x:Type ListBox}">
+			<Setter Property="Background" Value="#FF0AB409"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBox}">
+						<Border x:Name="Bd" SnapsToDevicePixels="true" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="1">
+							<ScrollViewer Padding="{TemplateBinding Padding}" Focusable="false">
+								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+							</ScrollViewer>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+							</Trigger>
+							<Trigger Property="IsGrouping" Value="true">
+								<Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="FontFamily" Value="Global Monospace"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+		<DataTemplate x:Key="BreakpointsTemplate">
+			<TextBlock Text="{Binding}"/>
+		</DataTemplate>
+		<Style x:Key="ButtonFocusVisual">
+			<Setter Property="Control.Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Rectangle Stroke="Black" StrokeDashArray="1 2" StrokeThickness="1" Margin="3" SnapsToDevicePixels="true"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<LinearGradientBrush x:Key="ButtonNormalBackgroundFill" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFFFFFFF" Offset="0"/>
+			<GradientStop Color="#FFF0F0EA" Offset="0.9"/>
+		</LinearGradientBrush>
+		<SolidColorBrush x:Key="ButtonBorder" Color="#FF003C74"/>
+		<ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+			<Grid x:Name="Grid" Background="{TemplateBinding Background}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Rectangle Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" x:Name="Corner" Grid.Column="1" Grid.Row="1"/>
+				<ScrollContentPresenter Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Grid.Column="0" Grid.Row="0" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_VerticalScrollBar" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Grid.Column="1" Grid.Row="0" ViewportSize="{TemplateBinding ViewportHeight}" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="VerticalScrollBar" Style="{DynamicResource NeonScrollBarStyle}"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_HorizontalScrollBar" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Value="{Binding Path=HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="HorizontalScrollBar"/>
+			</Grid>
+		</ControlTemplate>
+		<SolidColorBrush x:Key="ListBorder" Color="#FF7F9DB9"/>
+		<Style x:Key="NeonTextBoxStyle" TargetType="{x:Type TextBox}">
+			<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource ListBorder}"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+			<Setter Property="Padding" Value="2"/>
+			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+			<Setter Property="AllowDrop" Value="true"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type TextBox}">
+						<Border x:Name="Bd" SnapsToDevicePixels="true" Background="#FF3D2518" BorderBrush="#FF55C60C" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1">
+							<ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" OpacityMask="#FF2BD519"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid VerticalAlignment="Stretch" x:Name="BreakpointsGrid">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="27"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="42.325"/>
+			</Grid.RowDefinitions>
+			<ScrollViewer Margin="0,-0.901,0,0.496" Grid.Row="1" Template="{DynamicResource ScrollViewerControlTemplate1}">
+				<ListBox IsSynchronizedWithCurrentItem="True" Style="{DynamicResource NeonListStyle}" Foreground="#FF62E61C" FontFamily="Global Monospace" FontSize="16" FontWeight="Bold" x:Name="Breakpoints" ItemTemplate="{DynamicResource BreakpointsTemplate}" ItemsSource="{Binding Path=Breakpoints, Mode=Default}" BorderThickness="0,0,0,0"/>
+			</ScrollViewer>
+			<StackPanel HorizontalAlignment="Stretch" Margin="1,5,0,7" Grid.Row="2" Orientation="Horizontal">
+				<Button Margin="0,0,4,0" x:Name="Add_New" Content="Add New" Padding="2,0,0,0" Click="AddBreakpoint" Style="{DynamicResource NeonButtonStyle}" BorderBrush="#FF2CCC11" BorderThickness="2,2,2,2" FontFamily="Global Monospace" FontWeight="Bold" Foreground="#FF22E12C" FontSize="14"/>
+				<TextBox Text="0000" TextWrapping="Wrap" x:Name="BreakpointAddress" Margin="0,0,9,0" Style="{DynamicResource NeonTextBoxStyle}" Foreground="#FF27E538" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold"/>
+				<Button Content="Delete Checkpoint" Padding="2,0,0,0" Style="{DynamicResource NeonButtonStyle}" BorderBrush="#FF2CCC11" BorderThickness="2,2,2,2" FontFamily="Global Monospace" FontWeight="Bold" Foreground="#FF22E12C" FontSize="14"/>
+			</StackPanel>
+			<Border BorderBrush="#FF526D3B" BorderThickness="2,2,2,0" d:LayoutOverrides="Height">
+				<Border.Background>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FF16EC43" Offset="0"/>
+						<GradientStop Color="#FF3E5C3E" Offset="1"/>
+					</LinearGradientBrush>
+				</Border.Background>
+				<Border.OpacityMask>
+					<LinearGradientBrush MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FF000000" Offset="0.21"/>
+						<GradientStop Color="#00FFFFFF" Offset="0.777"/>
+						<GradientStop Color="#00000000" Offset="0.138"/>
+						<GradientStop Color="#FF5A5A5A" Offset="0.371"/>
+					</LinearGradientBrush>
+				</Border.OpacityMask>
+				<TextBlock Style="{DynamicResource HeaderStyle}" FontFamily="Global Monospace" FontSize="16" FontWeight="Bold" Foreground="#FF1E451D" Text="Break Points" TextWrapping="Wrap"/>
+			</Border>
+		</Grid>
+	</Grid>
+</UserControl>

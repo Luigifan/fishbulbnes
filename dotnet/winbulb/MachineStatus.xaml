@@ -1,0 +1,234 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="WPFamicom.MachineStatus"
+	x:Name="UserControl"
+	d:DesignWidth="573.695" d:DesignHeight="181.8" xmlns:WPFamicom="clr-namespace:WPFamicom" xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna" MinHeight="50" xmlns:WPFamicom_HexViewer="clr-namespace:WPFamicom.HexViewer">
+
+	<UserControl.Resources>
+		<WPFamicom_HexViewer:HexValueConverter x:Key="HexValueConverter1"/>
+		<WPFamicom_HexViewer:HexValueConverter x:Key="HexValueConverter"/>
+		<LinearGradientBrush x:Key="GreenFont" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF59FD02" Offset="0"/>
+			<GradientStop Color="#FF627856" Offset="1"/>
+		</LinearGradientBrush>
+		<Style x:Key="NeonButtonStyle2" TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Microsoft_Windows_Themes:ButtonChrome x:Name="Chrome" SnapsToDevicePixels="true" BorderBrush="{TemplateBinding BorderBrush}" RenderDefaulted="{TemplateBinding IsDefaulted}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" ThemeColor="NormalColor">
+							<Microsoft_Windows_Themes:ButtonChrome.Fill>
+								<RadialGradientBrush>
+									<GradientStop Color="#FF314936" Offset="0"/>
+									<GradientStop Color="#FF3E533D" Offset="1"/>
+								</RadialGradientBrush>
+							</Microsoft_Windows_Themes:ButtonChrome.Fill>
+							<Microsoft_Windows_Themes:ButtonChrome.OpacityMask>
+								<RadialGradientBrush>
+									<GradientStop Color="Transparent" Offset="1"/>
+									<GradientStop Color="#FFFFFFFF" Offset="0"/>
+								</RadialGradientBrush>
+							</Microsoft_Windows_Themes:ButtonChrome.OpacityMask>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
+						</Microsoft_Windows_Themes:ButtonChrome>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsKeyboardFocused" Value="true">
+								<Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
+							</Trigger>
+							<Trigger Property="ToggleButton.IsChecked" Value="true">
+								<Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<SolidColorBrush x:Key="NeonButtonBrushForeColor" Color="#FF2BF316"/>
+		<ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+			<Grid x:Name="Grid" Background="{TemplateBinding Background}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="0*"/>
+				</Grid.RowDefinitions>
+				<Rectangle Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" x:Name="Corner" Grid.Column="1" Grid.Row="1"/>
+				<ScrollContentPresenter Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Grid.Column="0" Grid.Row="0" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_VerticalScrollBar" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Grid.Column="1" Grid.Row="0" ViewportSize="{TemplateBinding ViewportHeight}" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="VerticalScrollBar" Style="{DynamicResource NeonScrollBarStyle}"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_HorizontalScrollBar" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Value="{Binding Path=HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="HorizontalScrollBar"/>
+			</Grid>
+		</ControlTemplate>
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.507*"/>
+			<ColumnDefinition Width="0.493*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="31.088"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="30.745"/>
+		</Grid.RowDefinitions>
+		<ScrollViewer Template="{DynamicResource ScrollViewerControlTemplate1}" Grid.RowSpan="1" Grid.Row="1" Grid.ColumnSpan="2">
+			<StackPanel x:Name="TendoStatuses" ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<StackPanel ScrollViewer.HorizontalScrollBarVisibility="Auto" DataContext="{Binding Path=DebuggerInformation.CPU, Mode=OneWay}" x:Name="CPUStatuses" VerticalAlignment="Top">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Program Counter:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=ProgramCounter, Converter={StaticResource HexValueConverter}, ConverterParameter=4, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtProgramCounter" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Last Opcode:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=LastOpcode, Mode=Default}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtLastOpcode" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Last Instruction: " TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=LastInstruction, Mode=Default}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtLastInstruction" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Accumulator:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=Accumulator, Converter={StaticResource HexValueConverter1}, ConverterParameter=2, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtAccumulator" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Status Register:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=StatusRegister, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtStatusRegister" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Index X:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock Text="{Binding Path=IndexRegisterX, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" x:Name="txtIndexRegisterX" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Index Y:" TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock Text="{Binding Path=IndexRegisterY, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=Default}" TextWrapping="Wrap" x:Name="txtIndexRegisterY" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Stack Pointer: " TextWrapping="Wrap" HorizontalAlignment="Left" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" Foreground="#FF3BDC37" Width="150"/>
+						<TextBlock Text="{Binding Path=StackPointer, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=Default}" TextWrapping="Wrap" x:Name="txtStackPointer" FontFamily="Global Monospace" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel DataContext="{Binding Path=DebuggerInformation.PPU, Mode=Default}" x:Name="PPUStatuses" VerticalAlignment="Top">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock FontFamily="Global Monospace" FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline_Copy" Text="PPU Scanline Number: " Width="200">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=ScanLine, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline" HorizontalAlignment="Left" VerticalAlignment="Top">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock FontFamily="Global Monospace" FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline_Copy1" Text="PPU Scanline Position: " Width="200">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+						<TextBlock FontFamily="Global Monospace" FontSize="14" Text="{Binding Path=ScanlinePos, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanlinePos" HorizontalAlignment="Left">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock FontFamily="Global Monospace" FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUStatuslabel" Text="PPU Status: " Width="200">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+						<TextBlock FontFamily="Global Monospace" FontSize="16" Text="{Binding Path=PPUStatus, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUStatus">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock FontFamily="Global Monospace" FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUControl0" Text="PPU Control: " Width="200">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+						<TextBlock FontFamily="Global Monospace" FontSize="16" Text="{Binding Path=PPUControl, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUControl0V">
+							<TextBlock.Foreground>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FF59FD02" Offset="0"/>
+									<GradientStop Color="#FF627856" Offset="1"/>
+								</LinearGradientBrush>
+							</TextBlock.Foreground>
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
+			</StackPanel>
+		</ScrollViewer>
+		<Border x:Name="StepButtonBorder" BorderBrush="#FF348624" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1" Grid.Row="2" Grid.ColumnSpan="1">
+			<Button Content="Step" x:Name="Step" Foreground="{DynamicResource NeonButtonBrushForeColor}" BorderBrush="#FF12AC1F" BorderThickness="2,2,3,2"  Click="Step_Click" OpacityMask="#FF000000" Style="{DynamicResource NeonButtonStyle2}" FontFamily="Global Monospace" FontSize="16" FontWeight="ExtraBold" >
+				<Button.Background>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFA2CF1F" Offset="0"/>
+						<GradientStop Color="#FF2316CA" Offset="1"/>
+					</RadialGradientBrush>
+				</Button.Background>
+			</Button>
+		</Border>
+		<Border BorderBrush="#FF526D3B" BorderThickness="2,2,2,0" Grid.ColumnSpan="2">
+			<Border.OpacityMask>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" SpreadMethod="Pad" MappingMode="RelativeToBoundingBox">
+					<GradientStop Color="#FF000000" Offset="0.21"/>
+					<GradientStop Color="#00FFFFFF" Offset="0.777"/>
+					<GradientStop Color="#00000000" Offset="0.138"/>
+					<GradientStop Color="#FF5A5A5A" Offset="0.371"/>
+				</LinearGradientBrush>
+			</Border.OpacityMask>
+			<Border.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FF16EC43" Offset="0"/>
+					<GradientStop Color="#FF3E5C3E" Offset="1"/>
+				</LinearGradientBrush>
+			</Border.Background>
+			<TextBlock Text="Machine Status" TextWrapping="Wrap" FontFamily="Global Monospace" FontSize="16" FontWeight="Bold" Foreground="#FF1E451D" Style="{DynamicResource HeaderStyle}"/>
+		</Border>
+		<Border x:Name="StepFrameBorder" BorderBrush="#FF348624" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1" Grid.Row="2" Grid.Column="1">
+			<Button Content="Step Frame" x:Name="StepFront" Foreground="{DynamicResource NeonButtonBrushForeColor}" BorderBrush="#FF12AC1F" BorderThickness="2,2,3,2"  Click="StepFrame_Click" OpacityMask="#FF000000" Style="{DynamicResource NeonButtonStyle2}" FontFamily="Global Monospace" FontSize="16" FontWeight="ExtraBold" >
+				<Button.Background>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFA2CF1F" Offset="0"/>
+						<GradientStop Color="#FF2316CA" Offset="1"/>
+					</RadialGradientBrush>
+				</Button.Background>
+			</Button>
+		</Border>
+	</Grid>
+</UserControl>

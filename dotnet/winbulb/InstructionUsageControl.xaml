@@ -1,0 +1,90 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="WPFamicom.InstructionUsageControl"
+	x:Name="UserControl"
+	d:DesignWidth="558.955" d:DesignHeight="100" xmlns:WPFamicom="clr-namespace:WPFamicom">
+
+	<UserControl.Resources>
+		<Style x:Key="NeonListStyle" TargetType="{x:Type ListBox}">
+			<Setter Property="Background" Value="#FF0AB409"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBox}">
+						<Border x:Name="Bd" SnapsToDevicePixels="true" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="1">
+							<ScrollViewer Padding="{TemplateBinding Padding}" Focusable="false">
+								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+							</ScrollViewer>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+							</Trigger>
+							<Trigger Property="IsGrouping" Value="true">
+								<Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="FontFamily" Value="Global Monospace"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+		<DataTemplate x:Key="InstructionUsageTemplate">
+			<TextBlock Text="{Binding}"/>
+		</DataTemplate>
+		<ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+			<Grid x:Name="Grid" Background="{TemplateBinding Background}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Rectangle Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" x:Name="Corner" Grid.Column="1" Grid.Row="1"/>
+				<ScrollContentPresenter Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Grid.Column="0" Grid.Row="0" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_VerticalScrollBar" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Grid.Column="1" Grid.Row="0" ViewportSize="{TemplateBinding ViewportHeight}" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="VerticalScrollBar" Style="{DynamicResource NeonScrollBarStyle}"/>
+				<ScrollBar Cursor="Arrow" x:Name="PART_HorizontalScrollBar" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Value="{Binding Path=HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="HorizontalScrollBar"/>
+			</Grid>
+		</ControlTemplate>
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="29"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<ScrollViewer Grid.RowSpan="1" Grid.Row="1" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                    
+			<ListBox IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Path=DebuggerInformation.InstructionUsage, Mode=OneWay}" ItemTemplate="{DynamicResource InstructionUsageTemplate}" MinHeight="100" Style="{DynamicResource NeonListStyle}" BorderThickness="0,0,0,0" FontSize="14" FontWeight="Bold" Foreground="#FF22DD0F"/>
+		</ScrollViewer>
+		<Border BorderBrush="#FF526D3B" BorderThickness="2,2,2,0" d:LayoutOverrides="Height">
+			<Border.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FF16EC43" Offset="0"/>
+					<GradientStop Color="#FF3E5C3E" Offset="1"/>
+				</LinearGradientBrush>
+			</Border.Background>
+			<Border.OpacityMask>
+				<LinearGradientBrush MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FF000000" Offset="0.21"/>
+					<GradientStop Color="#00FFFFFF" Offset="0.777"/>
+					<GradientStop Color="#00000000" Offset="0.138"/>
+					<GradientStop Color="#FF5A5A5A" Offset="0.371"/>
+				</LinearGradientBrush>
+			</Border.OpacityMask>
+			<TextBlock Style="{DynamicResource HeaderStyle}" FontFamily="Global Monospace" FontSize="16" FontWeight="Bold" Foreground="#FF1E451D" Text="Instruction Usages" TextWrapping="Wrap"/>
+		</Border>
+	</Grid>
+</UserControl>
