@@ -116,7 +116,6 @@
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="IWavStreamer.cs" />
     <Compile Include="OpenALWavStreamer.cs" />
     <Compile Include="SoundThread.cs" />
     <Compile Include="NesGL.cs" />
@@ -126,7 +125,6 @@
     <Compile Include="UIComposition\GTKInstigator.cs" />
     <Compile Include="VolumeWidget.cs" />
     <Compile Include="gtk-gui\GtkNes.VolumeWidget.cs" />
-    <Compile Include="SoundControls\SoundViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
