@@ -26,15 +26,7 @@ public partial class MainWindow {
     
     private Gtk.GLWidget glwidget2;
     
-    private Gtk.VPaned vpaned1;
-    
-    private Gtk.Frame frame3;
-    
-    private Gtk.Alignment GtkAlignment2;
-    
-    private Gtk.Button button1;
-    
-    private Gtk.Label GtkLabel3;
+    private Gtk.VPaned controlPanel1;
     
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
@@ -52,6 +44,7 @@ public partial class MainWindow {
         this.GtkAlignment.LeftPadding = ((uint)(12));
         // Container child GtkAlignment.Gtk.Container+ContainerChild
         this.hbox1 = new Gtk.HBox();
+        this.hbox1.Name = "hbox1";
         this.hbox1.Spacing = 6;
         // Container child hbox1.Gtk.Box+BoxChild
         this.btnLoadRom = new Gtk.Button();
@@ -86,39 +79,13 @@ public partial class MainWindow {
         Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.frame2]));
         w4.Position = 1;
         // Container child hbox1.Gtk.Box+BoxChild
-        this.vpaned1 = new Gtk.VPaned();
-        this.vpaned1.CanFocus = true;
-        this.vpaned1.Name = "vpaned1";
-        this.vpaned1.Position = 58;
-        // Container child vpaned1.Gtk.Paned+PanedChild
-        this.frame3 = new Gtk.Frame();
-        this.frame3.Name = "frame3";
-        this.frame3.ShadowType = ((Gtk.ShadowType)(0));
-        // Container child frame3.Gtk.Container+ContainerChild
-        this.GtkAlignment2 = new Gtk.Alignment(0F, 0F, 1F, 1F);
-        this.GtkAlignment2.Name = "GtkAlignment2";
-        this.GtkAlignment2.LeftPadding = ((uint)(12));
-        // Container child GtkAlignment2.Gtk.Container+ContainerChild
-        this.button1 = new Gtk.Button();
-        this.button1.CanFocus = true;
-        this.button1.Name = "button1";
-        this.button1.UseUnderline = true;
-        this.button1.Label = Mono.Unix.Catalog.GetString("button1");
-        this.GtkAlignment2.Add(this.button1);
-        this.frame3.Add(this.GtkAlignment2);
-        this.GtkLabel3 = new Gtk.Label();
-        this.GtkLabel3.Name = "GtkLabel3";
-        this.GtkLabel3.LabelProp = Mono.Unix.Catalog.GetString("<b>frame2</b>");
-        this.GtkLabel3.UseMarkup = true;
-        this.frame3.LabelWidget = this.GtkLabel3;
-        this.vpaned1.Add(this.frame3);
-        Gtk.Paned.PanedChild w7 = ((Gtk.Paned.PanedChild)(this.vpaned1[this.frame3]));
-        w7.Resize = false;
-        this.hbox1.Add(this.vpaned1);
-        Gtk.Box.BoxChild w8 = ((Gtk.Box.BoxChild)(this.hbox1[this.vpaned1]));
-        w8.Position = 2;
-        w8.Expand = false;
-        w8.Fill = false;
+        this.controlPanel1 = new Gtk.VPaned();
+        this.controlPanel1.CanFocus = true;
+        this.controlPanel1.Name = "controlPanel1";
+        this.controlPanel1.Position = 23;
+        this.hbox1.Add(this.controlPanel1);
+        Gtk.Box.BoxChild w5 = ((Gtk.Box.BoxChild)(this.hbox1[this.controlPanel1]));
+        w5.Position = 2;
         this.GtkAlignment.Add(this.hbox1);
         this.frame1.Add(this.GtkAlignment);
         this.Add(this.frame1);

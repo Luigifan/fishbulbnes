@@ -79,12 +79,19 @@
     <Compile Include="Planetoid.cs" />
     <Compile Include="OpenALInlineWavStreamer.cs" />
     <Compile Include="MainWindow.cs" />
+    <Compile Include="VolumeWidget.cs" />
+    <Compile Include="gtk-gui\GtkNes.VolumeWidget.cs" />
+    <Compile Include="SoundControls\SoundViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.csproj">
+      <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
+      <Name>fishbulbcommonui</Name>
     </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
@@ -94,5 +101,8 @@
   </ProjectExtensions>
   <ItemGroup>
     <None Include="OpenGLNESViewer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SoundControls\" />
   </ItemGroup>
 </Project>
