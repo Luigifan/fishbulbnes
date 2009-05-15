@@ -19,7 +19,7 @@ namespace GtkNes
         {
             this.nes = nes;
             this.streamer = streamer;
-
+            currentView = "SoundView";
         }
 
         #region IProfileViewModel Members
