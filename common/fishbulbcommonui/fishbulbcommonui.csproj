@@ -82,8 +82,8 @@
     <Compile Include="IProfileView.cs" />
     <Compile Include="IProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoundControls\IWavStreamer.cs" />
-    <Compile Include="SoundControls\SoundViewModel.cs" />
+    <Compile Include="Sound\IWavStreamer.cs" />
+    <Compile Include="Sound\SoundViewModel.cs" />
     <Compile Include="UIInstigator.cs" />
   </ItemGroup>
   <ItemGroup>
