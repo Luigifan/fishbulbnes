@@ -52,7 +52,7 @@
   <ItemGroup>
     <Reference Include="GLWidget, Version=1.0.3042.25084, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\GLWidget.dll</HintPath>
+      <HintPath>..\..\Libs\GLWidget.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -115,11 +115,18 @@
     <EmbeddedResource Include="Shaders\basicVert.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheatView.cs" />
+    <Compile Include="DummyMono.cs" />
+    <Compile Include="FrontPanel.cs" />
     <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="gtk-gui\GtkNes.CheatView.cs" />
+    <Compile Include="gtk-gui\GtkNes.FrontPanel.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="OpenALWavStreamer.cs" />
+    <Compile Include="SoundControls\IWavStreamer.cs" />
+    <Compile Include="SoundControls\SoundViewModel.cs" />
     <Compile Include="SoundThread.cs" />
     <Compile Include="NesGL.cs" />
     <Compile Include="Planetoid.cs" />
@@ -160,13 +167,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.csproj">
+    <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.VStudio.csproj">
       <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
-      <Name>fishbulbcommonui</Name>
+      <Name>fishbulbcommonui.VStudio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.DotNet.csproj">
+    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.VStudio.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
-      <Name>CPU6502.DotNet</Name>
+      <Name>CPU6502.VStudio</Name>
     </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>

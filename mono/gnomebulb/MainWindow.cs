@@ -67,7 +67,6 @@ public partial class MainWindow: Gtk.Window
 		d.Filter.AddPattern("*.zip");
 		if (d.Run() == (int)ResponseType.Accept)
 		{
-			
 			machine.GoTendo(d.Filename);
 			machine.ThreadRuntendo();
 		}
@@ -263,6 +262,7 @@ public partial class MainWindow: Gtk.Window
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
         Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, machine.PPU.VideoBuffer);
 		DrawBillboard();
+        Gl.glFlush();
 	}
 	
 
