@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{797342A9-BA71-426D-B02C-55608AFACEA9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NES.CPU</RootNamespace>
+    <AssemblyName>6502</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Machine\Carts\NesCart.MMC3.cs" />
+    <Compile Include="Machine\Carts\INESCart.cs" />
+    <Compile Include="Machine\Carts\NesCart.MMC1.cs" />
+    <Compile Include="Machine\FastendoDebugging\InstructionRollout\InstructionRollout.cs" />
+    <Compile Include="Machine\FastendoDebugging\InstructionRollout\InstructionRolloutItem.cs" />
+    <Compile Include="Machine\FastendoDebugging\CPUStatus.cs" />
+    <Compile Include="Machine\FastendoDebugging\DebugInformation.cs" />
+    <Compile Include="Machine\FastendoDebugging\opDisassembler.cs" />
+    <Compile Include="Machine\FastendoDebugging\PPUStatus.cs" />
+    <Compile Include="Fastendo\FastendoCPU.Peeper.cs" />
+    <Compile Include="Machine\FastendoDebugging\CPUBreakpoint.cs" />
+    <Compile Include="Fastendo\FastCPU6502.cs" />
+    <Compile Include="Fastendo\Fastendo.CPUAddressing.cs" />
+    <Compile Include="Fastendo\Fastendo.CPUCodeGen.cs" />
+    <Compile Include="Fastendo\Fastendo.CPUOps.cs" />
+    <Compile Include="Fastendo\Fastendo.CPUStructures.cs" />
+    <Compile Include="Fastendo\Fastendo.Enums.cs" />
+    <Compile Include="Fastendo\Fastendo.MemoryMap.cs" />
+    <Compile Include="Fastendo\Interfaces.cs" />
+    <Compile Include="Machine\IControlPad.cs" />
+    <Compile Include="Machine\InputHandler.cs" />
+    <Compile Include="Machine\Carts\NESCart.cs" />
+    <Compile Include="Machine\NESMachine.cs" />
+    <Compile Include="Machine\NESMachine.Threading.cs" />
+    <Compile Include="Machine\NESMachineDebugger.cs" />
+    <Compile Include="Machine\ROMLoader\iNESFileHandler.cs" />
+    <Compile Include="PixelWhizzlerClasses\NESSprite.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Mirroring.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
+    <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="6502OpCodes.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="2A03.txt" />
+    <Content Include="2c02.txt" />
+    <Content Include="iNes Header.txt" />
+    <Content Include="Project Goals.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="bnes.pal" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Machine\ControlPanel\RunningStatuses.cs" />
+    <Compile Include="Machine\NESMachine.Control.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Constants.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.ScanlineEvents.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fastendo\Fastendo.CPUTiming.cs" />
+    <Compile Include="Machine\Carts\BaseCart.cs" />
+    <Compile Include="Machine\NESMachine.Timing.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.RomHandling.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fastendo\Fastendo.Cheating.cs" />
+    <Compile Include="Fastendo\Fastendo.Control.cs" />
+    <Compile Include="Interaction\IDisplayContext.cs" />
+    <Compile Include="Machine\BeepsBoops\Blipper.cs" />
+    <Compile Include="Machine\BeepsBoops\Bopper.cs" />
+    <Compile Include="Machine\BeepsBoops\DMCChannel.cs" />
+    <Compile Include="Machine\BeepsBoops\IWavReader.cs" />
+    <Compile Include="Machine\BeepsBoops\Iwavwriter.cs" />
+    <Compile Include="Machine\BeepsBoops\NoiseChannel.cs" />
+    <Compile Include="Machine\BeepsBoops\SoundStatusChangeEventArgs.cs" />
+    <Compile Include="Machine\BeepsBoops\SquareChannel.cs" />
+    <Compile Include="Machine\BeepsBoops\TriangleChannel.cs" />
+    <Compile Include="Machine\BeepsBoops\WavSharer.cs" />
+    <Compile Include="Machine\Carts\CartInfo.cs" />
+    <Compile Include="Machine\Carts\NSFCart.cs" />
+    <Compile Include="Machine\Carts\VSUnisystem.cs" />
+    <Compile Include="Machine\FastendoDebugging\BreakEvent.cs" />
+    <Compile Include="Machine\NESMachine.SRAM.cs" />
+    <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
+    <Compile Include="Machine\ROMLoader\Hashers.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
