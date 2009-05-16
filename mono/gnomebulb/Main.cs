@@ -12,6 +12,7 @@ namespace testproject
             IUnityContainer container = new UnityContainer();
 
             container.RegisterType<Widget, VolumeWidget>("SoundView");
+			container.RegisterType<Widget, FrontPanel>("FrontPanel");
 
 			Application.Init ();
 			MainWindow win = new MainWindow (container);

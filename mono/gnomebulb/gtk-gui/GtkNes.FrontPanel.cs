@@ -19,11 +19,11 @@ namespace GtkNes {
         
         private Gtk.HBox hbox1;
         
-        private Gtk.ToggleButton togglebutton1;
+        private Gtk.ToggleButton ejectButton;
         
-        private Gtk.ToggleButton togglebutton2;
+        private Gtk.ToggleButton powerButton;
         
-        private Gtk.CheckButton checkbutton1;
+        private Gtk.CheckButton checkPause;
         
         private Gtk.Expander expander2;
         
@@ -33,7 +33,7 @@ namespace GtkNes {
         
         private Gtk.Label GtkLabel4;
         
-        private Gtk.Label GtkLabel;
+        private Gtk.Label GtkLabel3;
         
         protected virtual void Build() {
             Stetic.Gui.Initialize(this);
@@ -54,36 +54,36 @@ namespace GtkNes {
             this.hbox1.Name = "hbox1";
             this.hbox1.Spacing = 6;
             // Container child hbox1.Gtk.Box+BoxChild
-            this.togglebutton1 = new Gtk.ToggleButton();
-            this.togglebutton1.CanFocus = true;
-            this.togglebutton1.Name = "togglebutton1";
-            this.togglebutton1.UseUnderline = true;
-            this.togglebutton1.Label = Mono.Unix.Catalog.GetString("togglebutton1");
-            this.hbox1.Add(this.togglebutton1);
-            Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.hbox1[this.togglebutton1]));
+            this.ejectButton = new Gtk.ToggleButton();
+            this.ejectButton.CanFocus = true;
+            this.ejectButton.Name = "ejectButton";
+            this.ejectButton.UseUnderline = true;
+            this.ejectButton.Label = Mono.Unix.Catalog.GetString("togglebutton1");
+            this.hbox1.Add(this.ejectButton);
+            Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.hbox1[this.ejectButton]));
             w1.Position = 0;
             w1.Expand = false;
             w1.Fill = false;
             // Container child hbox1.Gtk.Box+BoxChild
-            this.togglebutton2 = new Gtk.ToggleButton();
-            this.togglebutton2.CanFocus = true;
-            this.togglebutton2.Name = "togglebutton2";
-            this.togglebutton2.UseUnderline = true;
-            this.togglebutton2.Label = Mono.Unix.Catalog.GetString("togglebutton2");
-            this.hbox1.Add(this.togglebutton2);
-            Gtk.Box.BoxChild w2 = ((Gtk.Box.BoxChild)(this.hbox1[this.togglebutton2]));
+            this.powerButton = new Gtk.ToggleButton();
+            this.powerButton.CanFocus = true;
+            this.powerButton.Name = "powerButton";
+            this.powerButton.UseUnderline = true;
+            this.powerButton.Label = Mono.Unix.Catalog.GetString("togglebutton2");
+            this.hbox1.Add(this.powerButton);
+            Gtk.Box.BoxChild w2 = ((Gtk.Box.BoxChild)(this.hbox1[this.powerButton]));
             w2.Position = 1;
             w2.Expand = false;
             w2.Fill = false;
             // Container child hbox1.Gtk.Box+BoxChild
-            this.checkbutton1 = new Gtk.CheckButton();
-            this.checkbutton1.CanFocus = true;
-            this.checkbutton1.Name = "checkbutton1";
-            this.checkbutton1.Label = Mono.Unix.Catalog.GetString("checkbutton1");
-            this.checkbutton1.DrawIndicator = true;
-            this.checkbutton1.UseUnderline = true;
-            this.hbox1.Add(this.checkbutton1);
-            Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.checkbutton1]));
+            this.checkPause = new Gtk.CheckButton();
+            this.checkPause.CanFocus = true;
+            this.checkPause.Name = "checkPause";
+            this.checkPause.Label = "Paused";
+            this.checkPause.DrawIndicator = true;
+            this.checkPause.UseUnderline = true;
+            this.hbox1.Add(this.checkPause);
+            Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.checkPause]));
             w3.Position = 2;
             this.vbox1.Add(this.hbox1);
             Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.vbox1[this.hbox1]));
@@ -107,18 +107,18 @@ namespace GtkNes {
             this.expander2.Add(this.GtkScrolledWindow);
             this.GtkLabel4 = new Gtk.Label();
             this.GtkLabel4.Name = "GtkLabel4";
-            this.GtkLabel4.LabelProp = Mono.Unix.Catalog.GetString("expander2");
+            this.GtkLabel4.LabelProp = "ROM Information";
             this.GtkLabel4.UseUnderline = true;
             this.expander2.LabelWidget = this.GtkLabel4;
             this.vbox1.Add(this.expander2);
             Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.expander2]));
             w7.Position = 1;
             this.expander1.Add(this.vbox1);
-            this.GtkLabel = new Gtk.Label();
-            this.GtkLabel.Name = "GtkLabel";
-            this.GtkLabel.LabelProp = Mono.Unix.Catalog.GetString("Control Panel");
-            this.GtkLabel.UseUnderline = true;
-            this.expander1.LabelWidget = this.GtkLabel;
+            this.GtkLabel3 = new Gtk.Label();
+            this.GtkLabel3.Name = "GtkLabel3";
+            this.GtkLabel3.LabelProp = Mono.Unix.Catalog.GetString("Control Panel");
+            this.GtkLabel3.UseUnderline = true;
+            this.expander1.LabelWidget = this.GtkLabel3;
             this.Add(this.expander1);
             if ((this.Child != null)) {
                 this.Child.ShowAll();

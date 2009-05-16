@@ -57,10 +57,9 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.VPaned" id="controlPanel">
+                  <widget class="Gtk.VBox" id="controlPanel">
                     <property name="MemberName" />
-                    <property name="CanFocus">True</property>
-                    <property name="Position">23</property>
+                    <property name="Spacing">6</property>
                     <child>
                       <widget class="Gtk.Button" id="btnLoadRom">
                         <property name="MemberName" />
@@ -70,8 +69,14 @@
                         <property name="UseUnderline">True</property>
                       </widget>
                       <packing>
-                        <property name="Resize">False</property>
+                        <property name="Position">0</property>
+                        <property name="AutoSize">True</property>
+                        <property name="Expand">False</property>
+                        <property name="Fill">False</property>
                       </packing>
+                    </child>
+                    <child>
+                      <placeholder />
                     </child>
                     <child>
                       <placeholder />
@@ -259,7 +264,7 @@
           </widget>
         </child>
         <child>
-          <widget class="Gtk.Label" id="GtkLabel2">
+          <widget class="Gtk.Label" id="GtkLabel3">
             <property name="MemberName" />
             <property name="LabelProp" translatable="yes">Control Panel</property>
             <property name="UseUnderline">True</property>
