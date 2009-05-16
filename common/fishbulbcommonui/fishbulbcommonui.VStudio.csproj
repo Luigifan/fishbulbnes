@@ -79,6 +79,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlPanel\CartInfo.cs" />
+    <Compile Include="ControlPanel\ControlPanelVM.cs" />
     <Compile Include="IProfileView.cs" />
     <Compile Include="IProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,6 +114,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\fishbulbcore\CPU6502.VStudio.csproj">
+      <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
+      <Name>CPU6502.VStudio</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
