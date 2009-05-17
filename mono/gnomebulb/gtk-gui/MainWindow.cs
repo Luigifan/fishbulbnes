@@ -26,8 +26,6 @@ public partial class MainWindow {
     
     private Gtk.VBox controlPanel;
     
-    private Gtk.Button btnLoadRom;
-    
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
         // Widget MainWindow
@@ -71,22 +69,9 @@ public partial class MainWindow {
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Spacing = 6;
-        // Container child controlPanel.Gtk.Box+BoxChild
-        this.btnLoadRom = new Gtk.Button();
-        this.btnLoadRom.CanFocus = true;
-        this.btnLoadRom.Name = "btnLoadRom";
-        this.btnLoadRom.UseUnderline = true;
-        this.btnLoadRom.Label = Mono.Unix.Catalog.GetString("Load");
-        this.controlPanel.Add(this.btnLoadRom);
-        Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.controlPanel[this.btnLoadRom]));
-        w4.Position = 0;
-        w4.Expand = false;
-        w4.Fill = false;
         this.hbox1.Add(this.controlPanel);
-        Gtk.Box.BoxChild w5 = ((Gtk.Box.BoxChild)(this.hbox1[this.controlPanel]));
-        w5.Position = 1;
-        w5.Expand = false;
-        w5.Fill = false;
+        Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.controlPanel]));
+        w4.Position = 1;
         this.GtkAlignment.Add(this.hbox1);
         this.frame1.Add(this.GtkAlignment);
         this.Add(this.frame1);

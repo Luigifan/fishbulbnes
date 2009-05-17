@@ -29,7 +29,7 @@ namespace GtkNes {
         
         private Gtk.ScrolledWindow GtkScrolledWindow;
         
-        private Gtk.TextView textview1;
+        private Gtk.TextView txtRomInfo;
         
         private Gtk.Label GtkLabel4;
         
@@ -100,10 +100,10 @@ namespace GtkNes {
             this.GtkScrolledWindow.Name = "GtkScrolledWindow";
             this.GtkScrolledWindow.ShadowType = ((Gtk.ShadowType)(1));
             // Container child GtkScrolledWindow.Gtk.Container+ContainerChild
-            this.textview1 = new Gtk.TextView();
-            this.textview1.CanFocus = true;
-            this.textview1.Name = "textview1";
-            this.GtkScrolledWindow.Add(this.textview1);
+            this.txtRomInfo = new Gtk.TextView();
+            this.txtRomInfo.CanFocus = true;
+            this.txtRomInfo.Name = "txtRomInfo";
+            this.GtkScrolledWindow.Add(this.txtRomInfo);
             this.expander2.Add(this.GtkScrolledWindow);
             this.GtkLabel4 = new Gtk.Label();
             this.GtkLabel4.Name = "GtkLabel4";

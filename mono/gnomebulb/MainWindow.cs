@@ -39,7 +39,6 @@ public partial class MainWindow: Gtk.Window
 		this.KeyPressEvent += HandleKeyPressEvent;
 		this.KeyReleaseEvent += HandleKeyReleaseEvent;
 		
-		this.btnLoadRom.Clicked += LoadRomClickEvent;
 		this.DestroyEvent += HandleDestroyEvent;
 		
 		machine.PPU.PixelWidth=32;
@@ -55,21 +54,6 @@ public partial class MainWindow: Gtk.Window
 	{
 		sndThread.Dispose();
 		machine.Dispose();
-	}
-
-	void LoadRomClickEvent(object o, EventArgs args)
-	{
-		Console.WriteLine("LoadRomCLicked");
-		FileChooserDialog d = new FileChooserDialog("Load ROM", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-		d.Filter = new FileFilter();
-		d.Filter.AddPattern("*.nes");
-		d.Filter.AddPattern("*.zip");
-		if (d.Run() == (int)ResponseType.Accept)
-		{
-			machine.GoTendo(d.Filename);
-			machine.ThreadRuntendo();
-		}
-		d.Destroy();
 	}
 
 	void HandleKeyReleaseEvent(object o, KeyReleaseEventArgs args)
