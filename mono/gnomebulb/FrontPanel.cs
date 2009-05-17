@@ -38,16 +38,25 @@ namespace GtkNes
                 this.ejectButton.Clicked +=LoadRomClickEvent;
 				this.powerButton.CreateBinding("Label", model, "PowerStatusText");
                 this.powerButton.Clicked += new EventHandler(powerButton_Clicked);
+
+                this.checkPause.CreateBinding("Active", model, "Paused");
 				
 				this.checkPause.CreateBinding("Value", model, "Paused");
+                this.CreateBinding("BufferText", model, "CartInfo");
+                
 			}
 		}
+
+        public string BufferText
+        {
+            get { return txtRomInfo.Buffer.Text; }
+            set { txtRomInfo.Buffer.Text = value; }
+        }
 
         void powerButton_Clicked(object sender, EventArgs e)
         {
             powerToggle.Execute(null);
         }
-
 
         void LoadRomClickEvent(object o, EventArgs args)
         {
@@ -66,7 +75,6 @@ namespace GtkNes
                 d.Destroy();
             }
         }
-
 		
 	}
 	

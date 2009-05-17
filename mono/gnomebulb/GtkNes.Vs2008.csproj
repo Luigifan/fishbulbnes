@@ -125,13 +125,12 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="OpenALWavStreamer.cs" />
-    <Compile Include="SoundControls\IWavStreamer.cs" />
-    <Compile Include="SoundControls\SoundViewModel.cs" />
     <Compile Include="SoundThread.cs" />
     <Compile Include="NesGL.cs" />
     <Compile Include="Planetoid.cs" />
     <Compile Include="OpenALInlineWavStreamer.cs" />
     <Compile Include="MainWindow.cs" />
+    <Compile Include="UIComposition\BindingHandlers\BindingHandlerBase.cs" />
     <Compile Include="UIComposition\BindingResolver.cs" />
     <Compile Include="UIComposition\GTKInstigator.cs" />
     <Compile Include="UIComposition\IBindableElement.cs" />
