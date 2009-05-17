@@ -35,7 +35,6 @@ public partial class MainWindow: Gtk.Window
         viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
 		viewModels.Add(new ControlPanelVM(machine));
         instigator.Bootstrap(this.hbox1, viewModels);
-
 		
 		this.KeyPressEvent += HandleKeyPressEvent;
 		this.KeyReleaseEvent += HandleKeyReleaseEvent;

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NES.CPU</RootNamespace>
     <AssemblyName>6502</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,14 +33,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+    <Reference Include="ICSharpCode.SharpZipLib">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.VisualBasic.Compatibility" />
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -59,9 +49,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Machine\Carts\NesCart.MMC3.cs" />
@@ -97,26 +84,10 @@
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
     <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="6502OpCodes.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="2A03.txt" />
-    <Content Include="2c02.txt" />
-    <Content Include="iNes Header.txt" />
-    <Content Include="Project Goals.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="bnes.pal" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Machine\ControlPanel\RunningStatuses.cs" />
     <Compile Include="Machine\NESMachine.Control.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Constants.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.ScanlineEvents.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Fastendo\Fastendo.CPUTiming.cs" />
     <Compile Include="Machine\Carts\BaseCart.cs" />
     <Compile Include="Machine\NESMachine.Timing.cs" />
@@ -125,8 +96,6 @@
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.RomHandling.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Fastendo\Fastendo.Cheating.cs" />
     <Compile Include="Fastendo\Fastendo.Control.cs" />
     <Compile Include="Interaction\IDisplayContext.cs" />
@@ -150,6 +119,16 @@
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="6502OpCodes.xml" />
+    <EmbeddedResource Include="bnes.pal" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="2A03.txt" />
+    <Content Include="2c02.txt" />
+    <Content Include="iNes Header.txt" />
+    <Content Include="Project Goals.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -160,4 +139,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties InternalTargetFrameworkVersion="3.5" />
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

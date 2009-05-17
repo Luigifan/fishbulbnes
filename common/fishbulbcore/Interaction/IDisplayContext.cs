@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
 
 namespace NES.CPU.nitenedo.Interaction
 {
@@ -39,7 +38,7 @@ namespace NES.CPU.nitenedo.Interaction
 
         void SetPausedState(bool state);
 
-        UIElement UIControl { get; }
+        object UIControl { get; }
 
         string PropertiesPanel { get; }
 

@@ -38,6 +38,8 @@ namespace GtkNes
                 this.ejectButton.Clicked +=LoadRomClickEvent;
 				this.powerButton.CreateBinding("Label", model, "PowerStatusText");
                 this.powerButton.Clicked += new EventHandler(powerButton_Clicked);
+				
+				this.checkPause.CreateBinding("Value", model, "Paused");
 			}
 		}
 

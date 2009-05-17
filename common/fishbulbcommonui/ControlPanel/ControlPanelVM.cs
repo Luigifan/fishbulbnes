@@ -193,5 +193,15 @@ namespace Fishbulb.Common.UI
             runstate = RunningStatuses.Running;
             NotifyPropertyChanged("PowerStatusText");
         }
+		
+		public bool Paused
+		{
+			get{ return _target.Paused; }
+			set{
+				_target.Paused = value; 
+				
+			}
+		}
+		
 	}
 }

@@ -6,7 +6,6 @@ using NES.CPU.PPUClasses;
 using System.IO;
 using NES.CPU.Fastendo;
 using System.Threading;
-using System.Windows.Media.Imaging;
 using NES.CPU.Machine.Carts;
 using NES.CPU.Machine.BeepsBoops;
 using NES.CPU.Machine;

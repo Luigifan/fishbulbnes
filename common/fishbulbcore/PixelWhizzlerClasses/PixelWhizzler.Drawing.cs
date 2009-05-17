@@ -82,9 +82,9 @@ namespace NES.CPU.PPUClasses
 
         private void DrawPixel()
         {
-            int tilePixel = _tilesAreVisible ? GetNameTablePixel() : 0;
+            int tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             isForegroundPixel = false;
-            int spritePixel = _spritesAreVisible ? GetSpritePixel() : 0;
+            int spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {
