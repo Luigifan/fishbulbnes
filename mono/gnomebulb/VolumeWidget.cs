@@ -15,8 +15,7 @@ namespace GtkNes
 		public VolumeWidget()
 		{
 			this.Build();
-			// this.volScale.ChangeValue += HandleChangeValue;
-		}
+ 		}
 
 		private IProfileViewModel model;
 		

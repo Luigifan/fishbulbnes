@@ -5,6 +5,7 @@ using System.Text;
 using Gtk;
 using System.ComponentModel;
 using Gnomebulb.UIComposition.BindingHandlers;
+using UIComposition.BindingHandlers;
 
 namespace UIComposition
 {
@@ -12,11 +13,11 @@ namespace UIComposition
 	static class BindingResolver
 	{
 
-        static List<object> currentBindings;
+        static List<IPropertyToPropertyBindingDefinition> currentBindings;
 
         static BindingResolver()
         {
-            currentBindings = new List<object>();
+            currentBindings = new List<IPropertyToPropertyBindingDefinition>();
         }
 
         /// <summary>
@@ -43,38 +44,18 @@ namespace UIComposition
             }
         }
 
-        public static void UpdateBinding(this Widget target, string targetPropertyName)
+        public static IEnumerable<T> QueryBindings<T>()
         {
-
+            return from T binding in currentBindings where binding.GetType() == typeof(T) select binding;
         }
 
-        public static void UpdateSourceBinding(this Widget target, object dataContext, object value, string binding)
+        public static void AllBindingsSourceToTarget()
         {
-            Type type = dataContext.GetType();
-
-            PropertyDescriptor descriptor = TypeDescriptor.GetProperties(dataContext)[binding];
-            try
+            foreach (IPropertyToPropertyBindingDefinition binding in currentBindings)
             {
-                descriptor.SetValue(dataContext, value);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
+                binding.SourceToTarget();
             }
         }
 
-        public static object GetBindingValue(this Widget target, object dataContext, string binding)
-        {
-            PropertyDescriptor descriptor = TypeDescriptor.GetProperties(dataContext)[binding];
-            try
-            {
-                return descriptor.GetValue(dataContext);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            return null;
-        }
 	}
 }

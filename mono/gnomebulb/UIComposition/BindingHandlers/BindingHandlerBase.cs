@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System;
 using Gtk;
+using UIComposition.BindingHandlers;
 
 namespace Gnomebulb.UIComposition.BindingHandlers
 {
-    internal class PropertyToPropertyBindingDefinition<T, S>
+    internal class PropertyToPropertyBindingDefinition<T, S> : IPropertyToPropertyBindingDefinition
     {
         internal PropertyDescriptor targetProperty;
         internal T target;
@@ -109,7 +110,27 @@ namespace Gnomebulb.UIComposition.BindingHandlers
             }
         }
 
+        public object Target
+        {
+            get { return target; }
+        }
 
+        public object Source
+        {
+            get { return source; }
+        }
+
+        public string SourcePropertyName
+        {
+            get { return sourcePropertyName; }
+
+        }
+
+        public string TargetPropertyName
+        {
+            get { return targetPropertyName; }
+
+        }
     }
 
     class CheckButtonToBooleanBindingDefinition : PropertyToPropertyBindingDefinition<Gtk.CheckButton, object>

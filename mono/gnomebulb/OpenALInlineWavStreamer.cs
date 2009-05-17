@@ -140,11 +140,6 @@ namespace WPFamicom.Sound
                 volume = value;
                 Al.alSourcef(sourceId, Al.AL_GAIN, volume);
 
-                //if (volume < 0) volume = 0;
-                //sourceVoice.Volume = volume;
-                //device.CommitChanges();
-                //CreateVoice();
-                //sourceVoice.Volume = volume;
             }
         }
 
@@ -156,15 +151,6 @@ namespace WPFamicom.Sound
 
                 muted = value;
 
-                //if (muted)
-                //{
-                //    volume = sourceVoice.Volume;
-                //    sourceVoice.Volume = 0;
-                //}
-                //else
-                //{
-                //    sourceVoice.Volume = volume;
-                //}
             }
         }
         bool ended = false;

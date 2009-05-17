@@ -4,6 +4,7 @@ using GtkNes;
 using System;
 using System.Linq;
 using Fishbulb.Common.UI;
+using UIComposition;
 
 namespace TestGtkInstigation
 {
@@ -56,7 +57,14 @@ namespace TestGtkInstigation
 		
 		public GTKInstigator(IUnityContainer container) : base(container, AddChildHandler, BindChild, FindChild  )
 		{
-				
+		    		
 		}
+
+        public override void EndBootstrap()
+        {
+            BindingResolver.AllBindingsSourceToTarget();
+        }
+
+        
 	}
 }
