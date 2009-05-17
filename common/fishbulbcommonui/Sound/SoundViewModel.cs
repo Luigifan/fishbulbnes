@@ -15,29 +15,13 @@ namespace GtkNes
     {
         NESMachine nes;
         IWavStreamer streamer;
-        System.Timers.Timer timer = new System.Timers.Timer();
         public SoundViewModel(NESMachine nes, IWavStreamer streamer)
         {
             this.nes = nes;
             this.streamer = streamer;
-            timer.Interval = 100f;
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
-            timer.Start();
+
         }
 
-        int ticks = 0;
-
-        public string Ticks
-        {
-            get { return ticks.ToString(); }
-            set { ticks = int.Parse(value); }
-        }
-
-        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            ticks++;
-            NotifyPropertyChanged("Ticks");
-        }
 
         #region IProfileViewModel Members
 
@@ -73,13 +57,15 @@ namespace GtkNes
         }
 
         private int volume;
-
+        /// <summary>
+        /// Volume is from 0 to 100
+        /// </summary>
         public float Volume
         {
-            get { return streamer.Volume; }
+            get { return streamer.Volume ; }
             set
             {
-                streamer.Volume = value;
+                streamer.Volume = value ;
             }
         }
 

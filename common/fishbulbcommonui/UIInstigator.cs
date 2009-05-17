@@ -68,6 +68,11 @@ namespace Fishbulb.Common.UI
 					Console.WriteLine(pane[0] + " could not be resolved on " + host.ToString());	
 				}
             }
+            EndBootstrap();
+        }
+
+        public virtual void EndBootstrap()
+        {
         }
 
         private T BuildControl(string name)

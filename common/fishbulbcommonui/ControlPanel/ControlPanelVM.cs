@@ -45,74 +45,86 @@ namespace Fishbulb.Common.UI
         #endregion
     }
 
-	public class ControlPanelVM : IProfileViewModel
-	{
+    public class ControlPanelVM : IProfileViewModel
+    {
 
-		#region IProfileViewModel implementation
-		public string CurrentView {
-			get {
-				return "FrontPanel";
-			}
-		}
+        #region IProfileViewModel implementation
+        public string CurrentView
+        {
+            get
+            {
+                return "FrontPanel";
+            }
+        }
 
         Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>();
 
-		public Dictionary<string, ICommandWrapper> Commands {
-			get {
-				return commands;
-			}
-		}
-		
-		public IEnumerable<IProfileViewModel> ChildViewModels {
-			get {
-				return new IProfileViewModel[0];
-			}
-		}
-		
-		public string CurrentRegion {
-			get {
-				return "controlPanel.0";
-			}
-		}
-		
-		public string Header {
-			get {
-				return null;
-			}
-		}
-		
-		public object DataModel {
-			get {
-				throw new System.NotImplementedException();
-			}
-		}
+        public Dictionary<string, ICommandWrapper> Commands
+        {
+            get
+            {
+                return commands;
+            }
+        }
 
-		#endregion
+        public IEnumerable<IProfileViewModel> ChildViewModels
+        {
+            get
+            {
+                return new IProfileViewModel[0];
+            }
+        }
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		private void NotifyPropertyChanged(string propName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propName));
-		}
-		#endregion
+        public string CurrentRegion
+        {
+            get
+            {
+                return "controlPanel.0";
+            }
+        }
+
+        public string Header
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public object DataModel
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+        #endregion
 
         NESMachine _target;
 
-		public ControlPanelVM(NESMachine machine)
-		{
+        public ControlPanelVM(NESMachine machine)
+        {
             _target = machine;
 
-            commands.Add("LoadRom", 
-                new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)), 
+            commands.Add("LoadRom",
+                new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)),
                     new CommandCanExecuteHandler(CanInsertCart)));
             commands.Add("PowerToggle",
                 new InstigatorCommand(new CommandExecuteHandler(o => PowerOn()),
                     new CommandCanExecuteHandler(o => true)));
             runstate = RunningStatuses.Unloaded;
-		}
+        }
 
         bool CanInsertCart(object o)
         {
@@ -193,15 +205,10 @@ namespace Fishbulb.Common.UI
             runstate = RunningStatuses.Running;
             NotifyPropertyChanged("PowerStatusText");
         }
-		
-		public bool Paused
-		{
-			get{ return _target.Paused; }
-			set{
-				_target.Paused = value; 
-				
-			}
-		}
-		
-	}
+        public bool Paused
+        {
+            get { return _target.Paused; }
+            set { _target.Paused = value; }
+        }
+    }
 }

@@ -533,7 +533,6 @@ namespace NES.CPU.Fastendo
                 oldbit = 1;
             }
             SetFlag(CPUStatusMasks.CarryMask, (data & 128) == 128);
-
             
             data = data << 1;
             data = data & 0xFF;
