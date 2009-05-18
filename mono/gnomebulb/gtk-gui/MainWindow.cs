@@ -14,7 +14,7 @@ public partial class MainWindow {
     
     private Gtk.HPaned hpaned2;
     
-    private Gtk.VPaned vpaned1;
+    private Gtk.VPaned debugger;
     
     private Gtk.GLWidget glwidget2;
     
@@ -32,11 +32,11 @@ public partial class MainWindow {
         this.hpaned2.Name = "hpaned2";
         this.hpaned2.Position = 10;
         // Container child hpaned2.Gtk.Paned+PanedChild
-        this.vpaned1 = new Gtk.VPaned();
-        this.vpaned1.CanFocus = true;
-        this.vpaned1.Name = "vpaned1";
-        this.vpaned1.Position = 10;
-        // Container child vpaned1.Gtk.Paned+PanedChild
+        this.debugger = new Gtk.VPaned();
+        this.debugger.CanFocus = true;
+        this.debugger.Name = "debugger";
+        this.debugger.Position = 10;
+        // Container child debugger.Gtk.Paned+PanedChild
         this.glwidget2 = new Gtk.GLWidget();
         this.glwidget2.Name = "glwidget2";
         this.glwidget2.DoubleBuffered = true;
@@ -44,9 +44,9 @@ public partial class MainWindow {
         this.glwidget2.AlphaBits = 8;
         this.glwidget2.DepthBits = 0;
         this.glwidget2.StencilBits = 0;
-        this.vpaned1.Add(this.glwidget2);
-        this.hpaned2.Add(this.vpaned1);
-        Gtk.Paned.PanedChild w2 = ((Gtk.Paned.PanedChild)(this.hpaned2[this.vpaned1]));
+        this.debugger.Add(this.glwidget2);
+        this.hpaned2.Add(this.debugger);
+        Gtk.Paned.PanedChild w2 = ((Gtk.Paned.PanedChild)(this.hpaned2[this.debugger]));
         w2.Resize = false;
         // Container child hpaned2.Gtk.Paned+PanedChild
         this.controlPanel = new Gtk.VBox();
