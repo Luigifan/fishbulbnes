@@ -105,6 +105,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\GLWidget.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -137,6 +138,9 @@
     <Compile Include="gtk-gui\GtkNes.CheatView.cs" />
     <Compile Include="UIComposition\BindingHandlers\BindingHandlerBase.cs" />
     <Compile Include="UIComposition\BindingHandlers\IPropertyToPropertyBindingDefinition.cs" />
+    <Compile Include="UIComposition\BindingHandlers\ListToObservableCollectionBinding.cs" />
+    <Compile Include="AsmViewer.cs" />
+    <Compile Include="gtk-gui\GtkNes.AsmViewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">
@@ -174,5 +178,8 @@
   </ProjectExtensions>
   <ItemGroup>
     <None Include="OpenGLNESViewer.cs" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
