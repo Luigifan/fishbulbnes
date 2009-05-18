@@ -25,7 +25,6 @@ namespace fishbulbcommonui
 			}
 		}
 		
-		
 		Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>();
 		
 		public Dictionary<string, ICommandWrapper> Commands {
