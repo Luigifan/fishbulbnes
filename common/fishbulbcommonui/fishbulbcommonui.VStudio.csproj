@@ -85,6 +85,7 @@
     <Compile Include="ControlPanel\CartInfo.cs" />
     <Compile Include="ControlPanel\CheatPanelVM.cs" />
     <Compile Include="ControlPanel\ControlPanelVM.cs" />
+    <Compile Include="Debugger\DebuggerVM.cs" />
     <Compile Include="Debugger\FutureInstructions.cs" />
     <Compile Include="IProfileView.cs" />
     <Compile Include="IProfileViewModel.cs" />

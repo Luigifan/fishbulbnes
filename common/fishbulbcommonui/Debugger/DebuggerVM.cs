@@ -15,7 +15,7 @@ using NES.CPU.PPUClasses;
 namespace Fishbulb.Common.UI
 {
 
-    public class DebuggerVM : IProfileViewModel 
+    public class DebuggerVM : IProfileViewModel
     {
         private NESMachine _nes = null;
 
@@ -31,7 +31,7 @@ namespace Fishbulb.Common.UI
                 {
                     UpdateDebugInfo();
                     _breakpoints = new List<string>(
-                        from  b in _nes.BreakPoints select b.Address.ToString()
+                        from b in _nes.BreakPoints select b.Address.ToString()
                         );
                     _nes.BreakpointHit += new EventHandler<BreakEventArgs>(_nes_BreakpointHit);
                 }
@@ -56,11 +56,12 @@ namespace Fishbulb.Common.UI
         /// </summary>
         public DebugInformation DebuggerInformation
         {
-            get {
+            get
+            {
                 if (_nes == null || _nes.DebugInfo == null)
                     return null;
-                    //return new DebugInformation { CPU = new DebuggerCPUState(), PPU = new DebuggerPPUState() };
-                return _nes.DebugInfo; 
+                //return new DebugInformation { CPU = new DebuggerCPUState(), PPU = new DebuggerPPUState() };
+                return _nes.DebugInfo;
             }
         }
 
@@ -69,12 +70,12 @@ namespace Fishbulb.Common.UI
             UpdateDebugInfo();
         }
 
-//        public DebuggerVM()
-//        {
-//            _nes = null;
-//            
-//            NotifyPropertyChanged("StepCmd");
-//        }
+        //        public DebuggerVM()
+        //        {
+        //            _nes = null;
+        //            
+        //            NotifyPropertyChanged("StepCmd");
+        //        }
 
         public DebuggerVM(NESMachine nes)
         {
@@ -142,144 +143,157 @@ namespace Fishbulb.Common.UI
                 _breakpoints.Add(string.Format("{0:x4}", newCPUBreakpoint.Address));
                 NotifyPropertyChanged("Breakpoints");
             }
-        }        #region IProfileViewModel implementation
-        
-      public string CurrentView {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-     
-        
-        public Dictionary<string, ICommandWrapper> Commands {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-   
-        
-        public IEnumerable<IProfileViewModel> ChildViewModels {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-   
-        
-        public string CurrentRegion {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-   
-        
-        public string Header {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-   
-        
-        public object DataModel {
-        	get {
-        		throw new System.NotImplementedException();
-        	}
-        }     }     }     }     }   }  
         }
+        #region IProfileViewModel implementation
+
+        public string CurrentView
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public Dictionary<string, ICommandWrapper> Commands
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public IEnumerable<IProfileViewModel> ChildViewModels
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public string CurrentRegion
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public string Header
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public object DataModel
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
         #endregion
 
 
 
 
-//        private WriteableBitmap patternTable0 = null, patternTable1= null;
-//        private WriteableBitmap nameTable0 = null, nameTable1 = null;
-//        private WriteableBitmap nameTable2 = null, nameTable3 = null;
-//
-//        public BitmapSource DrawPatternTableZero()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodlePatternTable(0);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                patternTable0 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (128 * 32 + 7) / 8;
-//
-//                patternTable0.WritePixels(new Int32Rect(0, 0, patternTable0.PixelWidth, patternTable0.PixelHeight), table, stride, 0);
-//            }
-//            return patternTable0;
-//
-//        }
-//
-//        public BitmapSource DrawPatternTableOne()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodlePatternTable(0x1000);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                patternTable1 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (128 * 32 + 7) / 8;
-//
-//                patternTable1.WritePixels(new Int32Rect(0, 0, patternTable1.PixelWidth, patternTable1.PixelHeight), table, stride, 0);
-//            }
-//            return patternTable1;
-//
-//        }
-//
-//        MirrorMasks currentMask = MirrorMasks.FourScreenMask;
-//
-//        public BitmapSource DrawNameTableZero()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodleNameTable(0, currentMask);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                nameTable0 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (256 * 32 + 7) / 8;
-//
-//                nameTable0.WritePixels(new Int32Rect(0, 0, nameTable0.PixelWidth, nameTable0.PixelHeight), table, stride, 0);
-//            }
-//            return nameTable0;
-//
-//        }
-//
-//        public BitmapSource DrawNameTableOne()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodleNameTable(0x400, currentMask);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                nameTable1 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (256 * 32 + 7) / 8;
-//
-//                nameTable1.WritePixels(new Int32Rect(0, 0, nameTable1.PixelWidth, nameTable1.PixelHeight), table, stride, 0);
-//            }
-//            return nameTable1;
-//
-//
-//        }
-//
-//        public BitmapSource DrawNameTableTwo()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodleNameTable(0x800, currentMask);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                nameTable2 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (256 * 32 + 7) / 8;
-//
-//                nameTable2.WritePixels(new Int32Rect(0, 0, nameTable2.PixelWidth, nameTable2.PixelHeight), table, stride, 0);
-//            }
-//            return nameTable2;
-//
-//        }
-//
-//        public BitmapSource DrawNameTableThree()
-//        {
-//            if (!(_nes == null))
-//            {
-//                int[] table = _nes.Tiler.DoodleNameTable(0xC00, currentMask);
-//                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
-//                nameTable3 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
-//                int stride = (256 * 32 + 7) / 8;
-//
-//                nameTable3.WritePixels(new Int32Rect(0, 0, nameTable3.PixelWidth, nameTable3.PixelHeight), table, stride, 0);
-//            }
-//            return nameTable3;
-//        }
+        //        private WriteableBitmap patternTable0 = null, patternTable1= null;
+        //        private WriteableBitmap nameTable0 = null, nameTable1 = null;
+        //        private WriteableBitmap nameTable2 = null, nameTable3 = null;
+        //
+        //        public BitmapSource DrawPatternTableZero()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodlePatternTable(0);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                patternTable0 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (128 * 32 + 7) / 8;
+        //
+        //                patternTable0.WritePixels(new Int32Rect(0, 0, patternTable0.PixelWidth, patternTable0.PixelHeight), table, stride, 0);
+        //            }
+        //            return patternTable0;
+        //
+        //        }
+        //
+        //        public BitmapSource DrawPatternTableOne()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodlePatternTable(0x1000);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                patternTable1 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (128 * 32 + 7) / 8;
+        //
+        //                patternTable1.WritePixels(new Int32Rect(0, 0, patternTable1.PixelWidth, patternTable1.PixelHeight), table, stride, 0);
+        //            }
+        //            return patternTable1;
+        //
+        //        }
+        //
+        //        MirrorMasks currentMask = MirrorMasks.FourScreenMask;
+        //
+        //        public BitmapSource DrawNameTableZero()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodleNameTable(0, currentMask);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                nameTable0 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (256 * 32 + 7) / 8;
+        //
+        //                nameTable0.WritePixels(new Int32Rect(0, 0, nameTable0.PixelWidth, nameTable0.PixelHeight), table, stride, 0);
+        //            }
+        //            return nameTable0;
+        //
+        //        }
+        //
+        //        public BitmapSource DrawNameTableOne()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodleNameTable(0x400, currentMask);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                nameTable1 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (256 * 32 + 7) / 8;
+        //
+        //                nameTable1.WritePixels(new Int32Rect(0, 0, nameTable1.PixelWidth, nameTable1.PixelHeight), table, stride, 0);
+        //            }
+        //            return nameTable1;
+        //
+        //
+        //        }
+        //
+        //        public BitmapSource DrawNameTableTwo()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodleNameTable(0x800, currentMask);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                nameTable2 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (256 * 32 + 7) / 8;
+        //
+        //                nameTable2.WritePixels(new Int32Rect(0, 0, nameTable2.PixelWidth, nameTable2.PixelHeight), table, stride, 0);
+        //            }
+        //            return nameTable2;
+        //
+        //        }
+        //
+        //        public BitmapSource DrawNameTableThree()
+        //        {
+        //            if (!(_nes == null))
+        //            {
+        //                int[] table = _nes.Tiler.DoodleNameTable(0xC00, currentMask);
+        //                (_nes.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+        //                nameTable3 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
+        //                int stride = (256 * 32 + 7) / 8;
+        //
+        //                nameTable3.WritePixels(new Int32Rect(0, 0, nameTable3.PixelWidth, nameTable3.PixelHeight), table, stride, 0);
+        //            }
+        //            return nameTable3;
+        //        }
 
         public List<PPUWriteEvent> FrameWriteEvents
         {

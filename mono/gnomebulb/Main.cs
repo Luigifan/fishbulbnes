@@ -16,9 +16,6 @@ namespace testproject
             UnityConfigurationSection section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
             section.Containers.Default.Configure(container);
 
-            //container.RegisterType<Widget, VolumeWidget>("SoundView");
-            //container.RegisterType<Widget, FrontPanel>("FrontPanel");
-            //container.RegisterType<Widget, CheatView>("CheatPanel");
 			Application.Init ();
 			MainWindow win = new MainWindow (container);
 			win.Show ();
