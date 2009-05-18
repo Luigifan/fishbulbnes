@@ -32,7 +32,6 @@ namespace GtkNes {
             this.expander1 = new Gtk.Expander(null);
             this.expander1.CanFocus = true;
             this.expander1.Name = "expander1";
-            this.expander1.Expanded = true;
             // Container child expander1.Gtk.Container+ContainerChild
             this.vbox1 = new Gtk.VBox();
             this.vbox1.Name = "vbox1";

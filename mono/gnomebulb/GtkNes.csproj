@@ -135,6 +135,8 @@
     <Compile Include="gtk-gui\GtkNes.FrontPanel.cs" />
     <Compile Include="CheatView.cs" />
     <Compile Include="gtk-gui\GtkNes.CheatView.cs" />
+    <Compile Include="UIComposition\BindingHandlers\BindingHandlerBase.cs" />
+    <Compile Include="UIComposition\BindingHandlers\IPropertyToPropertyBindingDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">

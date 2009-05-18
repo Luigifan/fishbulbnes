@@ -17,15 +17,17 @@ namespace GtkNes {
         
         private Gtk.VBox vbox1;
         
-        private Gtk.VBox cheatList;
+        private Gtk.ScrolledWindow GtkScrolledWindow;
+        
+        private Gtk.TreeView cheatList;
         
         private Gtk.HBox hbox1;
         
-        private Gtk.Entry entry1;
+        private Gtk.Entry txtCheatCode;
         
-        private Gtk.Button button1;
+        private Gtk.Button btnAddCheat;
         
-        private Gtk.Button button2;
+        private Gtk.Button btnClearCheats;
         
         private Gtk.Label GtkLabel2;
         
@@ -44,53 +46,57 @@ namespace GtkNes {
             this.vbox1.Name = "vbox1";
             this.vbox1.Spacing = 6;
             // Container child vbox1.Gtk.Box+BoxChild
-            this.cheatList = new Gtk.VBox();
+            this.GtkScrolledWindow = new Gtk.ScrolledWindow();
+            this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+            this.GtkScrolledWindow.ShadowType = ((Gtk.ShadowType)(1));
+            // Container child GtkScrolledWindow.Gtk.Container+ContainerChild
+            this.cheatList = new Gtk.TreeView();
+            this.cheatList.CanFocus = true;
             this.cheatList.Name = "cheatList";
-            this.cheatList.Homogeneous = true;
-            this.cheatList.Spacing = 6;
-            this.vbox1.Add(this.cheatList);
-            Gtk.Box.BoxChild w1 = ((Gtk.Box.BoxChild)(this.vbox1[this.cheatList]));
-            w1.Position = 0;
+            this.GtkScrolledWindow.Add(this.cheatList);
+            this.vbox1.Add(this.GtkScrolledWindow);
+            Gtk.Box.BoxChild w2 = ((Gtk.Box.BoxChild)(this.vbox1[this.GtkScrolledWindow]));
+            w2.Position = 0;
             // Container child vbox1.Gtk.Box+BoxChild
             this.hbox1 = new Gtk.HBox();
             this.hbox1.Name = "hbox1";
             this.hbox1.Spacing = 6;
             // Container child hbox1.Gtk.Box+BoxChild
-            this.entry1 = new Gtk.Entry();
-            this.entry1.CanFocus = true;
-            this.entry1.Name = "entry1";
-            this.entry1.IsEditable = true;
-            this.entry1.InvisibleChar = '●';
-            this.hbox1.Add(this.entry1);
-            Gtk.Box.BoxChild w2 = ((Gtk.Box.BoxChild)(this.hbox1[this.entry1]));
-            w2.Position = 0;
+            this.txtCheatCode = new Gtk.Entry();
+            this.txtCheatCode.CanFocus = true;
+            this.txtCheatCode.Name = "txtCheatCode";
+            this.txtCheatCode.IsEditable = true;
+            this.txtCheatCode.InvisibleChar = '●';
+            this.hbox1.Add(this.txtCheatCode);
+            Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.txtCheatCode]));
+            w3.Position = 0;
             // Container child hbox1.Gtk.Box+BoxChild
-            this.button1 = new Gtk.Button();
-            this.button1.CanFocus = true;
-            this.button1.Name = "button1";
-            this.button1.UseUnderline = true;
-            this.button1.Label = Mono.Unix.Catalog.GetString("button1");
-            this.hbox1.Add(this.button1);
-            Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.button1]));
-            w3.Position = 1;
-            w3.Expand = false;
-            w3.Fill = false;
-            // Container child hbox1.Gtk.Box+BoxChild
-            this.button2 = new Gtk.Button();
-            this.button2.CanFocus = true;
-            this.button2.Name = "button2";
-            this.button2.UseUnderline = true;
-            this.button2.Label = Mono.Unix.Catalog.GetString("button2");
-            this.hbox1.Add(this.button2);
-            Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.button2]));
-            w4.Position = 2;
+            this.btnAddCheat = new Gtk.Button();
+            this.btnAddCheat.CanFocus = true;
+            this.btnAddCheat.Name = "btnAddCheat";
+            this.btnAddCheat.UseUnderline = true;
+            this.btnAddCheat.Label = Mono.Unix.Catalog.GetString("Add");
+            this.hbox1.Add(this.btnAddCheat);
+            Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.btnAddCheat]));
+            w4.Position = 1;
             w4.Expand = false;
             w4.Fill = false;
-            this.vbox1.Add(this.hbox1);
-            Gtk.Box.BoxChild w5 = ((Gtk.Box.BoxChild)(this.vbox1[this.hbox1]));
-            w5.Position = 1;
+            // Container child hbox1.Gtk.Box+BoxChild
+            this.btnClearCheats = new Gtk.Button();
+            this.btnClearCheats.CanFocus = true;
+            this.btnClearCheats.Name = "btnClearCheats";
+            this.btnClearCheats.UseUnderline = true;
+            this.btnClearCheats.Label = Mono.Unix.Catalog.GetString("Clear");
+            this.hbox1.Add(this.btnClearCheats);
+            Gtk.Box.BoxChild w5 = ((Gtk.Box.BoxChild)(this.hbox1[this.btnClearCheats]));
+            w5.Position = 2;
             w5.Expand = false;
             w5.Fill = false;
+            this.vbox1.Add(this.hbox1);
+            Gtk.Box.BoxChild w6 = ((Gtk.Box.BoxChild)(this.vbox1[this.hbox1]));
+            w6.Position = 1;
+            w6.Expand = false;
+            w6.Fill = false;
             this.expander1.Add(this.vbox1);
             this.GtkLabel2 = new Gtk.Label();
             this.GtkLabel2.Name = "GtkLabel2";

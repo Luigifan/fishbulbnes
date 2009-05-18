@@ -12,15 +12,7 @@
 
 public partial class MainWindow {
     
-    private Gtk.Frame frame1;
-    
-    private Gtk.Alignment GtkAlignment;
-    
-    private Gtk.HBox hbox1;
-    
-    private Gtk.Frame frame2;
-    
-    private Gtk.Alignment GtkAlignment1;
+    private Gtk.HPaned hpaned2;
     
     private Gtk.GLWidget glwidget2;
     
@@ -33,26 +25,11 @@ public partial class MainWindow {
         this.Title = Mono.Unix.Catalog.GetString("MainWindow");
         this.WindowPosition = ((Gtk.WindowPosition)(4));
         // Container child MainWindow.Gtk.Container+ContainerChild
-        this.frame1 = new Gtk.Frame();
-        this.frame1.Name = "frame1";
-        this.frame1.ShadowType = ((Gtk.ShadowType)(0));
-        // Container child frame1.Gtk.Container+ContainerChild
-        this.GtkAlignment = new Gtk.Alignment(0F, 0F, 1F, 1F);
-        this.GtkAlignment.Name = "GtkAlignment";
-        this.GtkAlignment.LeftPadding = ((uint)(12));
-        // Container child GtkAlignment.Gtk.Container+ContainerChild
-        this.hbox1 = new Gtk.HBox();
-        this.hbox1.Name = "hbox1";
-        this.hbox1.Spacing = 6;
-        // Container child hbox1.Gtk.Box+BoxChild
-        this.frame2 = new Gtk.Frame();
-        this.frame2.Name = "frame2";
-        this.frame2.ShadowType = ((Gtk.ShadowType)(0));
-        // Container child frame2.Gtk.Container+ContainerChild
-        this.GtkAlignment1 = new Gtk.Alignment(0F, 0F, 1F, 1F);
-        this.GtkAlignment1.Name = "GtkAlignment1";
-        this.GtkAlignment1.LeftPadding = ((uint)(12));
-        // Container child GtkAlignment1.Gtk.Container+ContainerChild
+        this.hpaned2 = new Gtk.HPaned();
+        this.hpaned2.CanFocus = true;
+        this.hpaned2.Name = "hpaned2";
+        this.hpaned2.Position = 10;
+        // Container child hpaned2.Gtk.Paned+PanedChild
         this.glwidget2 = new Gtk.GLWidget();
         this.glwidget2.Name = "glwidget2";
         this.glwidget2.DoubleBuffered = true;
@@ -60,21 +37,15 @@ public partial class MainWindow {
         this.glwidget2.AlphaBits = 8;
         this.glwidget2.DepthBits = 0;
         this.glwidget2.StencilBits = 0;
-        this.GtkAlignment1.Add(this.glwidget2);
-        this.frame2.Add(this.GtkAlignment1);
-        this.hbox1.Add(this.frame2);
-        Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.hbox1[this.frame2]));
-        w3.Position = 0;
-        // Container child hbox1.Gtk.Box+BoxChild
+        this.hpaned2.Add(this.glwidget2);
+        Gtk.Paned.PanedChild w1 = ((Gtk.Paned.PanedChild)(this.hpaned2[this.glwidget2]));
+        w1.Resize = false;
+        // Container child hpaned2.Gtk.Paned+PanedChild
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Spacing = 6;
-        this.hbox1.Add(this.controlPanel);
-        Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.hbox1[this.controlPanel]));
-        w4.Position = 1;
-        this.GtkAlignment.Add(this.hbox1);
-        this.frame1.Add(this.GtkAlignment);
-        this.Add(this.frame1);
+        this.hpaned2.Add(this.controlPanel);
+        this.Add(this.hpaned2);
         if ((this.Child != null)) {
             this.Child.ShowAll();
         }

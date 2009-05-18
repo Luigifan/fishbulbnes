@@ -34,7 +34,7 @@ public partial class MainWindow: Gtk.Window
         List<IProfileViewModel> viewModels = new List<IProfileViewModel>();
         viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
 		viewModels.Add(new ControlPanelVM(machine));
-        instigator.Bootstrap(this.hbox1, viewModels);
+        instigator.Bootstrap(this.hpaned2, viewModels);
 
 
 		this.KeyPressEvent += HandleKeyPressEvent;
