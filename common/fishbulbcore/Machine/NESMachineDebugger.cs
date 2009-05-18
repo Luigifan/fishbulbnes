@@ -13,7 +13,7 @@ namespace NES.CPU.nitenedo
     {
         List<CPUBreakpoint> breakPoints = new List<CPUBreakpoint>();
 
-        DebugInformation _debugInfo;
+        DebugInformation _debugInfo = new DebugInformation();
 
         public event EventHandler<BreakEventArgs> DebugInfoChanged;
         public event EventHandler<BreakEventArgs> BreakpointHit;

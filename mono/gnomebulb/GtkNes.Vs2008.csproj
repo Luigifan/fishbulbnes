@@ -116,10 +116,12 @@
     <EmbeddedResource Include="Shaders\basicVert.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsmViewer.cs" />
     <Compile Include="CheatView.cs" />
     <Compile Include="DummyMono.cs" />
     <Compile Include="FrontPanel.cs" />
     <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="gtk-gui\GtkNes.AsmViewer.cs" />
     <Compile Include="gtk-gui\GtkNes.CheatView.cs" />
     <Compile Include="gtk-gui\GtkNes.FrontPanel.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />

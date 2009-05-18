@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -33,11 +34,20 @@ namespace Gnomebulb.UIComposition.BindingHandlers
         {
             list = new Gtk.ListStore(typeof(string));
             IEnumerable<string> vals = sourceProperty.GetValue(source) as IEnumerable<string>;
-            foreach (string s in vals)
+            if (vals != null)
             {
-                list.AppendValues(s);
+                foreach (string s in vals)
+                {
+                    list.AppendValues(s);
+                }
+                target.Model = list;
             }
-            target.Model = list;
+            else
+            {
+                foreach (object o in sourceProperty.GetValue(source) as IEnumerable)
+                {
+                }
+            }
         }
 
         public override void TargetToSource()

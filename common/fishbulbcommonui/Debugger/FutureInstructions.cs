@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using Fishbulb.Common.UI;
 
-namespace fishbulbcommonui
+namespace GtkNes
 {
 	
 	
@@ -54,7 +54,7 @@ namespace fishbulbcommonui
 		
 		public object DataModel {
 			get {
-				return machine.DebugInfo.FutureOps;
+				return machine.DebugInfo;
 			}
 		}
 
