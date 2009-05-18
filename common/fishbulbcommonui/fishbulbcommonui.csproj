@@ -87,6 +87,8 @@
     <Compile Include="UIInstigator.cs" />
     <Compile Include="ControlPanel\CartInfo.cs" />
     <Compile Include="ControlPanel\ControlPanelVM.cs" />
+    <Compile Include="ControlPanel\CheatPanelVM.cs" />
+    <Compile Include="Debugger\FutureInstructions.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\common\fishbulbcommonui\Microsoft.Net.Client.3.5">
@@ -124,4 +126,7 @@
       <Properties InternalTargetFrameworkVersion="3.5" />
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Debugger\" />
+  </ItemGroup>
 </Project>
