@@ -20,13 +20,23 @@
         <property name="CanFocus">True</property>
         <property name="Position">10</property>
         <child>
-          <widget class="Gtk.GLWidget" id="glwidget2">
+          <widget class="Gtk.VPaned" id="vpaned1">
             <property name="MemberName" />
-            <property name="DoubleBuffered">True</property>
-            <property name="ColorBits">24</property>
-            <property name="AlphaBits">8</property>
-            <property name="DepthBits">0</property>
-            <property name="StencilBits">0</property>
+            <property name="CanFocus">True</property>
+            <property name="Position">10</property>
+            <child>
+              <placeholder />
+            </child>
+            <child>
+              <widget class="Gtk.GLWidget" id="glwidget2">
+                <property name="MemberName" />
+                <property name="DoubleBuffered">True</property>
+                <property name="ColorBits">24</property>
+                <property name="AlphaBits">8</property>
+                <property name="DepthBits">0</property>
+                <property name="StencilBits">0</property>
+              </widget>
+            </child>
           </widget>
           <packing>
             <property name="Resize">False</property>
@@ -344,5 +354,4 @@
       </widget>
     </child>
   </widget>
-  
 </stetic-interface>
