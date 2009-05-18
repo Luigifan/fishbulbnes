@@ -58,16 +58,18 @@ namespace WPFamicom.GameDisplay
 
         public void SetupRenderer(IDisplayContext displayContext)
         {
+            if (displayContext.UIControl as UIElement != null)
+            {
+                this.Child = displayContext.UIControl as UIElement;
 
-            this.Child = displayContext.UIControl;
+                this.Child.SetValue(UIElement.IsEnabledProperty, true);
+                this.Child.SetValue(UIElement.VisibilityProperty, Visibility.Visible);
 
-            displayContext.UIControl.SetValue(UIElement.IsEnabledProperty, true);
-            displayContext.UIControl.SetValue(UIElement.VisibilityProperty, Visibility.Visible);
-
-            this.displayContext = displayContext;
-            this.displayContext.CreateDisplay();
-            this.displayContext.DrawDefaultDisplay();
-            target.Drawscreen += target_Drawscreen;
+                this.displayContext = displayContext;
+                this.displayContext.CreateDisplay();
+                this.displayContext.DrawDefaultDisplay();
+                target.Drawscreen += target_Drawscreen;
+            }
 
         }
 

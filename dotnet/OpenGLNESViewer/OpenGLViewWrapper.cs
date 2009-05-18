@@ -135,7 +135,7 @@ namespace WPFamicom.OpenGLDisplay
             }
         }
 
-        public System.Windows.UIElement UIControl
+        public object UIControl
         {
             get { return this; }
         }

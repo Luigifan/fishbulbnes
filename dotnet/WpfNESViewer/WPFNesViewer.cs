@@ -98,24 +98,16 @@ namespace WpfNESViewer
         {
         }
 
-        public UIElement UIControl
+        public object UIControl
         {
             get { return this; }
         }
-
-        #endregion
-
-        #region IDisplayContext Members
 
 
         public int PixelWidth
         {
             get { return 8; }
         }
-
-        #endregion
-
-        #region IDisplayContext Members
 
 
         string properties;
@@ -132,9 +124,6 @@ namespace WpfNESViewer
                 return properties;
             }
         }
-        #endregion
-
-        #region IDisplayContext Members
 
 
         public void UpdateNESScreen(int[] pixels, int[] palette)
