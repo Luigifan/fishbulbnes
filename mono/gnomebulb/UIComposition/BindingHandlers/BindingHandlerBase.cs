@@ -68,7 +68,7 @@ namespace Gnomebulb.UIComposition.BindingHandlers
             }
         }
 
-        public void SourceToTarget()
+        public virtual void SourceToTarget()
         {
             
             object val = sourceProperty.GetValue(source);

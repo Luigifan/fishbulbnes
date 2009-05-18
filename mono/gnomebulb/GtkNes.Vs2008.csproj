@@ -132,6 +132,7 @@
     <Compile Include="MainWindow.cs" />
     <Compile Include="UIComposition\BindingHandlers\BindingHandlerBase.cs" />
     <Compile Include="UIComposition\BindingHandlers\IPropertyToPropertyBindingDefinition.cs" />
+    <Compile Include="UIComposition\BindingHandlers\ListToObservableCollectionBinding.cs" />
     <Compile Include="UIComposition\BindingResolver.cs" />
     <Compile Include="UIComposition\GTKInstigator.cs" />
     <Compile Include="UIComposition\IBindableElement.cs" />
