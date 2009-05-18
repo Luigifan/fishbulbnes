@@ -7,7 +7,9 @@ using Fishbulb.Common.UI;
 namespace GtkNes
 {
 	
-	
+	/// <summary>
+	/// Encapsulates the future instruction rollout
+	/// </summary>
 	public class FutureInstructions : IProfileViewModel
 	{
 
