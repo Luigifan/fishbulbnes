@@ -7,9 +7,9 @@ using Gtk;
 
 namespace Gnomebulb.UIComposition.BindingHandlers
 {
-	internal class TreeViewToListBindingDefinition : PropertyToPropertyBindingDefinition<Gtk.TreeView, IEnumerable<string>>
+	internal class TreeViewToListBindingDefinition : PropertyToPropertyBindingDefinition<Gtk.TreeView, object>
 	{
-        public TreeViewToListBindingDefinition(IEnumerable<string> source, string sourcePropertyName, Gtk.TreeView target, string targetPropertyName)
+        public TreeViewToListBindingDefinition(object source, string sourcePropertyName, Gtk.TreeView target, string targetPropertyName)
             : base(source, sourcePropertyName, target, targetPropertyName)
         {
 
@@ -32,7 +32,8 @@ namespace Gnomebulb.UIComposition.BindingHandlers
         public override void SourceToTarget()
         {
             list = new Gtk.ListStore(typeof(string));
-            foreach (string s in source)
+            IEnumerable<string> vals = sourceProperty.GetValue(source) as IEnumerable<string>;
+            foreach (string s in vals)
             {
                 list.AppendValues(s);
             }

@@ -6,6 +6,7 @@ using Gtk;
 using System.ComponentModel;
 using Gnomebulb.UIComposition.BindingHandlers;
 using UIComposition.BindingHandlers;
+using Fishbulb.Common.UI;
 
 namespace UIComposition
 {
@@ -38,6 +39,10 @@ namespace UIComposition
             {
                 currentBindings.Add(new ScaleBindingDefinition(source, sourcePropertyName, target as Scale, targetPropertyName));
             }
+            else if (target is Gtk.TreeView)
+            {
+                currentBindings.Add(new TreeViewToListBindingDefinition(source, sourcePropertyName, target as TreeView, targetPropertyName));
+            }
             else
             {
                 currentBindings.Add(new PropertyToPropertyBindingDefinition<Widget, object>(source, sourcePropertyName, target, targetPropertyName));
@@ -57,5 +62,12 @@ namespace UIComposition
             }
         }
 
+        public static void ExecuteCommand(this IProfileViewModel model, string CommandName, object param)
+        {
+            if (model.Commands.ContainsKey(CommandName))
+            {
+                model.Commands[CommandName].Execute(param);
+            }
+        }
 	}
 }
