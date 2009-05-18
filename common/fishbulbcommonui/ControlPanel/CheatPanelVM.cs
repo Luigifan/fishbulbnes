@@ -8,7 +8,7 @@ using Fishbulb.Common.UI;
 using NES.CPU.nitenedo;
 using System.ComponentModel;
 
-namespace fishbulbcommonui.ControlPanel
+namespace Fishbulb.Common.UI
 {
     public class CheatPanelVM : IProfileViewModel
     {
@@ -19,9 +19,14 @@ namespace fishbulbcommonui.ControlPanel
         {
             this.nes = nes;
             commands.Add("AddCheat",new InstigatorCommand(
-                new CommandExecuteHandler(o => AddGenieCode()),
+                new CommandExecuteHandler(o => AddGenieCode(o as string)),
                 new CommandCanExecuteHandler(o => CanAddGenieCode)
                 ));
+            commands.Add("ClearCheats", new InstigatorCommand(
+                new CommandExecuteHandler(o => ClearGenieCodes()),
+                new CommandCanExecuteHandler(o => CanClearGenieCodes)
+                ));
+
         }
 
         private List<string> gameGenieCodes = new List<string>();
@@ -41,6 +46,7 @@ namespace fishbulbcommonui.ControlPanel
         {
             nes.ClearGenieCodes();
             gameGenieCodes = new List<string>();
+            NotifyPropertyChanged("GameGenieCodes");
         }
 
         string _currentCode = string.Empty;
@@ -65,11 +71,12 @@ namespace fishbulbcommonui.ControlPanel
             get { return nes != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
         }
 
-        public void AddGenieCode()
+        public void AddGenieCode(string code)
         {
-            if (nes.AddGameGenieCode(CurrentCode))
+            if (nes.AddGameGenieCode(code))
             {
-                gameGenieCodes.Add(CurrentCode);
+                gameGenieCodes.Add(code);
+                NotifyPropertyChanged("GameGenieCodes");
             }
         }
 
@@ -94,7 +101,7 @@ namespace fishbulbcommonui.ControlPanel
 
         public Dictionary<string, ICommandWrapper> Commands
         {
-            get { return Commands; }
+            get { return commands; }
         }
 
         public IEnumerable<IProfileViewModel> ChildViewModels
