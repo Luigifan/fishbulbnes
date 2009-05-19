@@ -36,6 +36,7 @@ public partial class MainWindow: Gtk.Window
         viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
 		viewModels.Add(new ControlPanelVM(machine));
         viewModels.Add(new CheatPanelVM(machine));
+		viewModels.Add(new CPUStatusVM(machine));
 		viewModels.Add(new DebuggerVM(machine));
         viewModels.Add(new FutureInstructions(machine));
 

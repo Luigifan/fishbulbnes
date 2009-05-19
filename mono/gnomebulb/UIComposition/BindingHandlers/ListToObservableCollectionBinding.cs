@@ -32,28 +32,24 @@ namespace Gnomebulb.UIComposition.BindingHandlers
 
         public override void SourceToTarget()
         {
-            list = new Gtk.ListStore(typeof(string));
-            IEnumerable<string> vals = sourceProperty.GetValue(source) as IEnumerable<string>;
-            if (vals != null)
-            {
-                foreach (string s in vals)
-                {
-                    list.AppendValues(s);
-                }
-                target.Model = list;
-            }
-            else
-            {
-                foreach (object o in sourceProperty.GetValue(source) as IEnumerable)
-                {
-                }
-            }
+			if (sourceProperty == null) return;
+			
+			try{
+	            list = new Gtk.ListStore(typeof(string));
+	            IEnumerable<string> vals = sourceProperty.GetValue(source) as IEnumerable<string>;
+	            if (vals != null)
+	            {
+	                foreach (string s in vals)
+	                {
+	                    list.AppendValues(s);
+	                }
+	                target.Model = list;
+	            }
+			} catch (Exception e)
+			{
+				Console.WriteLine("ListBinding.SourceToTarget " + e.ToString());
+			}
         }
 
-        public override void TargetToSource()
-        {
-            
-            // sourceProperty.SetValue(source, (Single)target.Value);  
-        }
 	}
 }

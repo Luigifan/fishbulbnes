@@ -64,6 +64,11 @@ namespace NES.CPU.nitenedo
             DebugInfo = new DebugInformation() { CPU = _cpuState, PPU = _ppuState };
 
             DebugInfo.UpdateFutureRollout(_cpu);
+			
+			if (DebugInfoChanged != null)
+			{
+				DebugInfoChanged(this, new BreakEventArgs());
+			}
         }
 
         object debugLock = new object();

@@ -102,6 +102,7 @@ namespace Fishbulb.Common.UI
         public void Step()
         {
             if (_nes == null) return;
+			_nes.IsDebugging=true;
             _nes.ThreadStep();
 
             UpdateDebugInfo();
@@ -110,6 +111,7 @@ namespace Fishbulb.Common.UI
         public void StepFrame()
         {
             if (_nes == null) return;
+			_nes.IsDebugging=true;
             _nes.ThreadFrame();
 
             UpdateDebugInfo();
@@ -190,6 +192,7 @@ namespace Fishbulb.Common.UI
             get
             {
                 return "Step";
+				
             }
         }
 

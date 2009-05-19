@@ -71,9 +71,9 @@ namespace Gnomebulb.UIComposition.BindingHandlers
         public virtual void SourceToTarget()
         {
             
-            object val = sourceProperty.GetValue(source);
             try
             {
+	            object val = sourceProperty.GetValue(source);
                 if (targetProperty.PropertyType == typeof(string))
                 {
                     targetProperty.SetValue(target, val.ToString());

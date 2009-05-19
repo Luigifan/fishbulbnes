@@ -142,6 +142,8 @@
     <Compile Include="gtk-gui\GtkNes.AsmViewer.cs" />
     <Compile Include="DebugStepper.cs" />
     <Compile Include="gtk-gui\GtkNes.DebugStepper.cs" />
+    <Compile Include="DebuggerCPUStatusView.cs" />
+    <Compile Include="gtk-gui\GtkNes.DebuggerCPUStatusView.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">
@@ -184,6 +186,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SoundControls\" />
+    <Folder Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\SoundControls\" />
   </ItemGroup>
 </Project>

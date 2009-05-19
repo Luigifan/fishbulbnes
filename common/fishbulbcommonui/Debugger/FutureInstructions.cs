@@ -1,8 +1,10 @@
 using NES.CPU.nitenedo;
 using System;
+using System.Linq;
 using System.Collections.Generic;
-
+using NES.CPU.Machine.FastendoDebugging;
 using Fishbulb.Common.UI;
+using Fishbulb.Common.Disassembly;
 
 namespace GtkNes
 {
@@ -17,7 +19,14 @@ namespace GtkNes
 		public FutureInstructions(NESMachine machine)
 		{
 			this.machine = machine;
-			machine.DebugInfoChanged+= (o,a) => Console.WriteLine(a);
+			this.machine.DebugInfoChanged += HandleDebugInfoChanged;
+			
+		}
+
+		void HandleDebugInfoChanged(object sender, BreakEventArgs e)
+		{
+			Console.WriteLine("FutureInstructions.HandleDebugInfoChanged " );
+			NotifyPropertyChanged("DataModel");	
 		}
 		
 		#region IProfileViewModel implementation
@@ -56,7 +65,10 @@ namespace GtkNes
 		
 		public object DataModel {
 			get {
-				return machine.DebugInfo;
+				if (machine != null && machine.DebugInfo != null)
+					return from op in machine.DebugInfo.FutureOps select op.ToString() + " " + op.Instruction.Disassemble() ;
+				else
+					return new List<string>();
 			}
 		}
 

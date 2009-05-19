@@ -90,6 +90,8 @@
     <Compile Include="ControlPanel\CheatPanelVM.cs" />
     <Compile Include="Debugger\FutureInstructions.cs" />
     <Compile Include="Debugger\DebuggerVM.cs" />
+    <Compile Include="Debugger\opDisassembler.cs" />
+    <Compile Include="Debugger\CPUStatusVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\common\fishbulbcommonui\Microsoft.Net.Client.3.5">
@@ -129,5 +131,8 @@
   </ProjectExtensions>
   <ItemGroup>
     <Folder Include="..\..\..\..\Projects\fishbulblive\common\fishbulbcommonui\Debugger\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Debugger\6502OpCodes.xml" />
   </ItemGroup>
 </Project>
