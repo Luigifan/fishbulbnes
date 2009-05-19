@@ -12,13 +12,15 @@
 
 public partial class MainWindow {
     
-    private Gtk.HPaned hpaned2;
-    
-    private Gtk.VPaned debugger;
+    private Gtk.HPaned hpaned1;
     
     private Gtk.GLWidget glwidget2;
     
+    private Gtk.VPaned vpaned1;
+    
     private Gtk.VBox controlPanel;
+    
+    private Gtk.VBox debugger;
     
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
@@ -27,16 +29,11 @@ public partial class MainWindow {
         this.Title = Mono.Unix.Catalog.GetString("MainWindow");
         this.WindowPosition = ((Gtk.WindowPosition)(4));
         // Container child MainWindow.Gtk.Container+ContainerChild
-        this.hpaned2 = new Gtk.HPaned();
-        this.hpaned2.CanFocus = true;
-        this.hpaned2.Name = "hpaned2";
-        this.hpaned2.Position = 10;
-        // Container child hpaned2.Gtk.Paned+PanedChild
-        this.debugger = new Gtk.VPaned();
-        this.debugger.CanFocus = true;
-        this.debugger.Name = "debugger";
-        this.debugger.Position = 10;
-        // Container child debugger.Gtk.Paned+PanedChild
+        this.hpaned1 = new Gtk.HPaned();
+        this.hpaned1.CanFocus = true;
+        this.hpaned1.Name = "hpaned1";
+        this.hpaned1.Position = 10;
+        // Container child hpaned1.Gtk.Paned+PanedChild
         this.glwidget2 = new Gtk.GLWidget();
         this.glwidget2.Name = "glwidget2";
         this.glwidget2.DoubleBuffered = true;
@@ -44,16 +41,28 @@ public partial class MainWindow {
         this.glwidget2.AlphaBits = 8;
         this.glwidget2.DepthBits = 0;
         this.glwidget2.StencilBits = 0;
-        this.debugger.Add(this.glwidget2);
-        this.hpaned2.Add(this.debugger);
-        Gtk.Paned.PanedChild w2 = ((Gtk.Paned.PanedChild)(this.hpaned2[this.debugger]));
-        w2.Resize = false;
-        // Container child hpaned2.Gtk.Paned+PanedChild
+        this.hpaned1.Add(this.glwidget2);
+        Gtk.Paned.PanedChild w1 = ((Gtk.Paned.PanedChild)(this.hpaned1[this.glwidget2]));
+        w1.Resize = false;
+        // Container child hpaned1.Gtk.Paned+PanedChild
+        this.vpaned1 = new Gtk.VPaned();
+        this.vpaned1.CanFocus = true;
+        this.vpaned1.Name = "vpaned1";
+        this.vpaned1.Position = 84;
+        // Container child vpaned1.Gtk.Paned+PanedChild
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Spacing = 6;
-        this.hpaned2.Add(this.controlPanel);
-        this.Add(this.hpaned2);
+        this.vpaned1.Add(this.controlPanel);
+        Gtk.Paned.PanedChild w2 = ((Gtk.Paned.PanedChild)(this.vpaned1[this.controlPanel]));
+        w2.Resize = false;
+        // Container child vpaned1.Gtk.Paned+PanedChild
+        this.debugger = new Gtk.VBox();
+        this.debugger.Name = "debugger";
+        this.debugger.Spacing = 6;
+        this.vpaned1.Add(this.debugger);
+        this.hpaned1.Add(this.vpaned1);
+        this.Add(this.hpaned1);
         if ((this.Child != null)) {
             this.Child.ShowAll();
         }
