@@ -141,6 +141,8 @@
     <Compile Include="UIComposition\BindingHandlers\ListToObservableCollectionBinding.cs" />
     <Compile Include="AsmViewer.cs" />
     <Compile Include="gtk-gui\GtkNes.AsmViewer.cs" />
+    <Compile Include="DebugStepper.cs" />
+    <Compile Include="gtk-gui\GtkNes.DebugStepper.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">
