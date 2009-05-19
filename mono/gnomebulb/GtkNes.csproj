@@ -128,7 +128,6 @@
     <Compile Include="MainWindow.cs" />
     <Compile Include="VolumeWidget.cs" />
     <Compile Include="gtk-gui\GtkNes.VolumeWidget.cs" />
-    <Compile Include="SoundControls\SoundViewModel.cs" />
     <Compile Include="UIComposition\GTKInstigator.cs" />
     <Compile Include="UIComposition\IBindableElement.cs" />
     <Compile Include="UIComposition\BindingResolver.cs" />
@@ -183,5 +182,8 @@
     <None Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SoundControls\" />
   </ItemGroup>
 </Project>
