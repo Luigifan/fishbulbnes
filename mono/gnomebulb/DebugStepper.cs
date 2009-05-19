@@ -1,4 +1,5 @@
 using Fishbulb.Common.UI;
+using UIComposition;
 using System;
 
 namespace GtkNes
@@ -25,6 +26,12 @@ namespace GtkNes
 		public DebugStepper()
 		{
 			this.Build();
-		}
+            this.btnStep.Pressed += new EventHandler(btnStep_Pressed);
+        }
+
+        void btnStep_Pressed(object sender, EventArgs e)
+        {
+            model.ExecuteCommand("Step", null);
+        }
 	}
 }
