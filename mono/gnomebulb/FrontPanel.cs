@@ -18,9 +18,9 @@ namespace GtkNes
 		{
 			this.Build();
 		}
-		private IProfileViewModel model;
+		private IViewModel model;
 		
-		public IProfileViewModel DataContext 
+		public IViewModel DataContext 
 		{
 			get { return model; }
 			set 

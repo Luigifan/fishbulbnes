@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace Fishbulb.Common.UI
 {
-    public class CheatPanelVM : IProfileViewModel
+    public class CheatPanelVM : IViewModel
     {
         
         private NESMachine nes = null;
@@ -104,9 +104,9 @@ namespace Fishbulb.Common.UI
             get { return commands; }
         }
 
-        public IEnumerable<IProfileViewModel> ChildViewModels
+        public IEnumerable<IViewModel> ChildViewModels
         {
-            get { return new List<IProfileViewModel>(); }
+            get { return new List<IViewModel>(); }
         }
 
         public string CurrentRegion

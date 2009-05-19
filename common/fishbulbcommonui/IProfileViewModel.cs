@@ -13,7 +13,7 @@ namespace Fishbulb.Common.UI
 	}
 	
 	
-    public interface IProfileViewModel: INotifyPropertyChanged
+    public interface IViewModel: INotifyPropertyChanged
     {
         /// <summary>
         /// specifies the view to generate for this viewmodel
@@ -25,7 +25,7 @@ namespace Fishbulb.Common.UI
 
         Dictionary<string, ICommandWrapper> Commands { get; }
 
-        IEnumerable<IProfileViewModel> ChildViewModels
+        IEnumerable<IViewModel> ChildViewModels
         {
             get;
         }

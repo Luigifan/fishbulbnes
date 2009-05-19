@@ -10,7 +10,7 @@ namespace GtkNes
 	/// <summary>
 	/// Encapsulates the future instruction rollout
 	/// </summary>
-	public class FutureInstructions : IProfileViewModel
+	public class FutureInstructions : IViewModel
 	{
 
 		NESMachine machine;
@@ -36,9 +36,9 @@ namespace GtkNes
 		}
 		
 		
-		public System.Collections.Generic.IEnumerable<IProfileViewModel> ChildViewModels {
+		public System.Collections.Generic.IEnumerable<IViewModel> ChildViewModels {
 			get {
-				return new List<IProfileViewModel>();
+				return new List<IViewModel>();
 			}
 		}
 		

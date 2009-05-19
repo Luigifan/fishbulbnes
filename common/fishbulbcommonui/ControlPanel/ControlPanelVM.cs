@@ -45,7 +45,7 @@ namespace Fishbulb.Common.UI
         #endregion
     }
 
-    public class ControlPanelVM : IProfileViewModel
+    public class ControlPanelVM : IViewModel
     {
 
         #region IProfileViewModel implementation
@@ -67,11 +67,11 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        public IEnumerable<IProfileViewModel> ChildViewModels
+        public IEnumerable<IViewModel> ChildViewModels
         {
             get
             {
-                return new IProfileViewModel[0];
+                return new IViewModel[0];
             }
         }
 

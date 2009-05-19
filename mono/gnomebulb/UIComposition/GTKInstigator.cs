@@ -45,7 +45,7 @@ namespace TestGtkInstigation
 			return null;
 		}
 		
-		static void BindChild(Widget parent, IProfileViewModel viewModel)
+		static void BindChild(Widget parent, IViewModel viewModel)
 		{
 			IBindableElement element = parent as IBindableElement;
 			if (element != null)

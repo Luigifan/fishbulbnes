@@ -11,7 +11,7 @@ namespace Fishbulb.Common.UI
     {
 
         public delegate void AddChildElementDelegate(T parent, T child, int row, int col);
-        public delegate void BindViewModelDelegate(T view, IProfileViewModel model);
+        public delegate void BindViewModelDelegate(T view, IViewModel model);
         public delegate T FindChildDelegate(T parent, string name);
 
         IUnityContainer container;
@@ -34,9 +34,9 @@ namespace Fishbulb.Common.UI
         BindViewModelDelegate bindViewModel;
         FindChildDelegate findChild;
 
-        public void Bootstrap(T host, IEnumerable<IProfileViewModel> views)
+        public void Bootstrap(T host, IEnumerable<IViewModel> views)
         {
-            foreach (IProfileViewModel viewModel in views)
+            foreach (IViewModel viewModel in views)
             {
                 T control = BuildControl(viewModel.CurrentView);
 

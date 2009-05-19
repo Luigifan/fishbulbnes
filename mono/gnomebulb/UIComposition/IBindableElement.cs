@@ -8,7 +8,7 @@ namespace GtkNes
 	
 	public interface IBindableElement
 	{
-		IProfileViewModel DataContext { get; set; }
+		IViewModel DataContext { get; set; }
 		
 	}
 }

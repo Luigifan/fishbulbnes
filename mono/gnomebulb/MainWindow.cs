@@ -32,7 +32,7 @@ public partial class MainWindow: Gtk.Window
 
         GTKInstigator instigator = new GTKInstigator(container);
         
-        List<IProfileViewModel> viewModels = new List<IProfileViewModel>();
+        List<IViewModel> viewModels = new List<IViewModel>();
         viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
 		viewModels.Add(new ControlPanelVM(machine));
         viewModels.Add(new CheatPanelVM(machine));

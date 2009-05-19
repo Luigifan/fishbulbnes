@@ -62,7 +62,7 @@ namespace UIComposition
             }
         }
 
-        public static void ExecuteCommand(this IProfileViewModel model, string CommandName, object param)
+        public static void ExecuteCommand(this IViewModel model, string CommandName, object param)
         {
             if (model.Commands.ContainsKey(CommandName))
             {

@@ -11,8 +11,8 @@ namespace GtkNes
 	{
 
 		#region IBindableElement implementation
-		private IProfileViewModel model;
-		public Fishbulb.Common.UI.IProfileViewModel DataContext {
+		private IViewModel model;
+		public Fishbulb.Common.UI.IViewModel DataContext {
 			get {
 				return model;
 			}

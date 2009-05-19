@@ -31,9 +31,9 @@ namespace GtkNes
 
         #region IBindableElement Members
 
-        IProfileViewModel dataContext;
+        IViewModel dataContext;
 
-        public Fishbulb.Common.UI.IProfileViewModel DataContext
+        public Fishbulb.Common.UI.IViewModel DataContext
         {
             get
             {

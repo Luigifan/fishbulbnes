@@ -15,7 +15,7 @@ using NES.CPU.PPUClasses;
 namespace Fishbulb.Common.UI
 {
 
-    public class DebuggerVM : IProfileViewModel
+    public class DebuggerVM : IViewModel
     {
         private NESMachine _nes = null;
 
@@ -80,6 +80,12 @@ namespace Fishbulb.Common.UI
         public DebuggerVM(NESMachine nes)
         {
             _nes = nes;
+            commands.Add ("Step", new InstigatorCommand( 
+                (o) => Step(), 
+                (o) => true ));
+            commands.Add("StepFrame", new InstigatorCommand(
+                (o) => StepFrame(),
+                (o) => true));
         }
 
 
@@ -93,7 +99,6 @@ namespace Fishbulb.Common.UI
             NotifyPropertyChanged("FrameWriteEvents");
         }
 
-
         public void Step()
         {
             if (_nes == null) return;
@@ -101,7 +106,6 @@ namespace Fishbulb.Common.UI
 
             UpdateDebugInfo();
         }
-
 
         public void StepFrame()
         {
@@ -144,29 +148,32 @@ namespace Fishbulb.Common.UI
                 NotifyPropertyChanged("Breakpoints");
             }
         }
+
         #region IProfileViewModel implementation
 
         public string CurrentView
         {
             get
             {
-                throw new System.NotImplementedException();
+                return "DebugStepper";
             }
         }
+
+        Dictionary<string, ICommandWrapper> commands = new Dictionary<string,ICommandWrapper>();
 
         public Dictionary<string, ICommandWrapper> Commands
         {
             get
             {
-                throw new System.NotImplementedException();
+                return commands;
             }
         }
 
-        public IEnumerable<IProfileViewModel> ChildViewModels
+        public IEnumerable<IViewModel> ChildViewModels
         {
             get
             {
-                throw new System.NotImplementedException();
+                return new List<IViewModel>();
             }
         }
 
@@ -174,7 +181,7 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                throw new System.NotImplementedException();
+                return "debugger.1";
             }
         }
 
@@ -182,7 +189,7 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                throw new System.NotImplementedException();
+                return "Step";
             }
         }
 
@@ -190,13 +197,11 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                throw new System.NotImplementedException();
+                return null;
             }
         }
 
         #endregion
-
-
 
 
         //        private WriteableBitmap patternTable0 = null, patternTable1= null;

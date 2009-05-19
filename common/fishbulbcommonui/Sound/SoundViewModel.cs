@@ -11,7 +11,7 @@ namespace GtkNes
 {
 
 
-    public class SoundViewModel : IProfileViewModel
+    public class SoundViewModel : IViewModel
     {
         NESMachine nes;
         IWavStreamer streamer;
@@ -36,9 +36,9 @@ namespace GtkNes
             get { return new System.Collections.Generic.Dictionary<string, ICommandWrapper>(); }
         }
 
-        public IEnumerable<IProfileViewModel> ChildViewModels
+        public IEnumerable<IViewModel> ChildViewModels
         {
-            get { return new List<IProfileViewModel>(); }
+            get { return new List<IViewModel>(); }
         }
 
         public string CurrentRegion
