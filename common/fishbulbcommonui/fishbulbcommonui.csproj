@@ -89,6 +89,7 @@
     <Compile Include="ControlPanel\ControlPanelVM.cs" />
     <Compile Include="ControlPanel\CheatPanelVM.cs" />
     <Compile Include="Debugger\FutureInstructions.cs" />
+    <Compile Include="Debugger\DebuggerVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\common\fishbulbcommonui\Microsoft.Net.Client.3.5">
@@ -127,6 +128,6 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
-    <Folder Include="Debugger\" />
+    <Folder Include="..\..\..\..\Projects\fishbulblive\common\fishbulbcommonui\Debugger\" />
   </ItemGroup>
 </Project>
