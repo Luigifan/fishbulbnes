@@ -34,8 +34,6 @@ namespace Gnomebulb.UIComposition.BindingHandlers
                 (source as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(SourcePropertyChanged);
             }
 
-            Console.WriteLine("sourceProperty: " + sourceProperty);
-
             this.target = target;
             if (target is INotifyPropertyChanged)
             {
@@ -43,8 +41,17 @@ namespace Gnomebulb.UIComposition.BindingHandlers
             }
             targetProperty = TypeDescriptor.GetProperties(target)[targetPropertyName];
 
-            Console.WriteLine("targetProperty: " + sourceProperty);
+            Console.WriteLine(
+                sourceProperty == null ? "  sourceProperty failed" :
+                string.Format(" sourceProperty: {0},{1}", sourceProperty.Name, sourceProperty.PropertyType)
+                );
+
+            Console.WriteLine(
+                targetProperty == null ? "  targetProperty failed" :
+                string.Format(" targetProperty: {0},{1}", targetProperty.Name, targetProperty.PropertyType)
+                );
             Initialize();
+            Console.WriteLine();
         }
 
         protected virtual void Initialize()

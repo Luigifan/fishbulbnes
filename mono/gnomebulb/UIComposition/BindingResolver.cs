@@ -39,13 +39,17 @@ namespace UIComposition
             {
                 currentBindings.Add(new ScaleBindingDefinition(source, sourcePropertyName, target as Scale, targetPropertyName));
             }
-            else if (target is Gtk.TreeView)
-            {
-                currentBindings.Add(new TreeViewToListBindingDefinition(source, sourcePropertyName, target as TreeView, targetPropertyName));
-            }
-            else
+            else 
             {
                 currentBindings.Add(new PropertyToPropertyBindingDefinition<Widget, object>(source, sourcePropertyName, target, targetPropertyName));
+            }
+        }
+
+        public static void CreateTreeViewBinding<T>(this TreeView target, string targetPropertyName, object source, string sourcePropertyName)
+        {
+            if (target is Gtk.TreeView)
+            {
+                currentBindings.Add(new TreeViewToListBindingDefinition<T>(source, sourcePropertyName, target as TreeView, targetPropertyName));
             }
         }
 

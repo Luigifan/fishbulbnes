@@ -59,10 +59,10 @@ namespace Fishbulb.Common.UI
 		
 		public object DataModel {
 			get {
-				if (machine.DebugInfo != null)
+                if (machine.DebugInfo != null && machine.DebugInfo.CPU != null)
 					return machine.DebugInfo.CPU;
 				else
-					return null;
+					return new NES.CPU.FastendoDebugging.DebuggerCPUState();
 			}
 		}
 

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using NES.CPU.Machine.FastendoDebugging;
 using Fishbulb.Common.UI;
-using Fishbulb.Common.Disassembly;
-
+using NES.CPU.FastendoDebugging;
 namespace GtkNes
 {
 	
@@ -66,7 +65,7 @@ namespace GtkNes
 		public object DataModel {
 			get {
 				if (machine != null && machine.DebugInfo != null)
-					return from op in machine.DebugInfo.FutureOps select op.ToString() + " " + op.Instruction.Disassemble() ;
+					return (from op in machine.DebugInfo.FutureOps select op.ToString()).ToList<string>();
 				else
 					return new List<string>();
 			}

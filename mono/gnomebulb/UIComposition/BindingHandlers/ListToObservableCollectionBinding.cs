@@ -8,7 +8,7 @@ using Gtk;
 
 namespace Gnomebulb.UIComposition.BindingHandlers
 {
-	internal class TreeViewToListBindingDefinition : PropertyToPropertyBindingDefinition<Gtk.TreeView, object>
+	internal class TreeViewToListBindingDefinition<BINDTYPE> : PropertyToPropertyBindingDefinition<Gtk.TreeView, object>
 	{
         public TreeViewToListBindingDefinition(object source, string sourcePropertyName, Gtk.TreeView target, string targetPropertyName)
             : base(source, sourcePropertyName, target, targetPropertyName)
@@ -24,31 +24,51 @@ namespace Gnomebulb.UIComposition.BindingHandlers
             Gtk.CellRendererText valueCell = new Gtk.CellRendererText();
 
             tree.PackStart(valueCell, true);
-
             tree.AddAttribute(valueCell, "text", 0);
-
             //+= new EventHandler(TargetPressEvent);	
         }
 
         public override void SourceToTarget()
         {
 			if (sourceProperty == null) return;
-			
-			try{
-	            list = new Gtk.ListStore(typeof(string));
-	            IEnumerable<string> vals = sourceProperty.GetValue(source) as IEnumerable<string>;
-	            if (vals != null)
-	            {
-	                foreach (string s in vals)
-	                {
-	                    list.AppendValues(s);
-	                }
-	                target.Model = list;
-	            }
-			} catch (Exception e)
-			{
-				Console.WriteLine("ListBinding.SourceToTarget " + e.ToString());
-			}
+
+            Application.Invoke((o,e)=>RebuildSourceList());
+            
+        }
+
+        private void RebuildSourceList()
+        {
+            try
+            {
+
+                list.Clear();
+                var val = sourceProperty.GetValue(source);
+                if (val != null)
+                {
+                    if (val is IEnumerable<BINDTYPE>)
+                    {
+                        if (typeof(BINDTYPE) == typeof(string))
+                        {
+                            foreach (var o in val as IEnumerable<BINDTYPE>)
+                            {
+                                list.AppendValues(o);
+                            }
+                        }
+                        else
+                        {
+                            foreach (object o in val as IEnumerable<BINDTYPE>)
+                            {
+                                list.AppendValues(o.ToString());
+                            }
+                        }
+                        target.Model = list;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ListBinding.SourceToTarget " + e.ToString());
+            }
         }
 
 	}

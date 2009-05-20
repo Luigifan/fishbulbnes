@@ -345,11 +345,11 @@ namespace NES.CPU.Machine.BeepsBoops
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
             set
             {
-                throw new NotImplementedException();
+                // throw new NotImplementedException();
             }
         }
 

@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace NES.CPU.FastendoDebugging
 {
-    static class DisassemblyExtensions
+    public static class DisassemblyExtensions
     {
         private static XmlDocument doc;
         private static string[] mnemnonics = new string[0x100];
@@ -131,7 +131,7 @@ namespace NES.CPU.FastendoDebugging
                     break;
 
             }
-            return string.Format ("{0:x4}: ", inst.Address) +   result;
+            return  result;
         }
     }
 }

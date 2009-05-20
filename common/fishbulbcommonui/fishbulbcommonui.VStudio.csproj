@@ -86,6 +86,7 @@
     <Compile Include="ControlPanel\CartInfo.cs" />
     <Compile Include="ControlPanel\CheatPanelVM.cs" />
     <Compile Include="ControlPanel\ControlPanelVM.cs" />
+    <Compile Include="Debugger\CPUStatusVM.cs" />
     <Compile Include="Debugger\DebuggerVM.cs" />
     <Compile Include="Debugger\FutureInstructions.cs" />
     <Compile Include="IProfileView.cs" />
@@ -127,6 +128,9 @@
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502.VStudio</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Debugger\6502OpCodes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

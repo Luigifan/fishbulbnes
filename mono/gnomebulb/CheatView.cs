@@ -42,7 +42,7 @@ namespace GtkNes
             set
             {
                 this.dataContext = value;
-                this.cheatList.CreateBinding("List", dataContext, "GameGenieCodes");
+                this.cheatList.CreateTreeViewBinding<string>("List", dataContext, "GameGenieCodes");
             }
         }
 
