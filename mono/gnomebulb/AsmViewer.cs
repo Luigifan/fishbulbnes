@@ -18,7 +18,7 @@ namespace GtkNes
 			}
 			set {
 				model=value;
-				this.treeview1.CreateBinding("List", model, "DataModel");
+				this.treeview1.CreateTreeViewBinding<string>("List", model, "DataModel");
 			}
 		}
 		#endregion

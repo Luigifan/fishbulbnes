@@ -49,6 +49,7 @@ namespace Gnomebulb.UIComposition.BindingHandlers
                     {
                         if (typeof(BINDTYPE) == typeof(string))
                         {
+							Console.WriteLine("Bindtype: " + typeof(BINDTYPE).ToString());
                             foreach (var o in val as IEnumerable<BINDTYPE>)
                             {
                                 list.AppendValues(o);
@@ -56,9 +57,11 @@ namespace Gnomebulb.UIComposition.BindingHandlers
                         }
                         else
                         {
+							Console.WriteLine("Bindtype: " + typeof(BINDTYPE).ToString());
                             foreach (object o in val as IEnumerable<BINDTYPE>)
                             {
                                 list.AppendValues(o.ToString());
+								Console.WriteLine("Adding value: " + o.ToString());
                             }
                         }
                         target.Model = list;

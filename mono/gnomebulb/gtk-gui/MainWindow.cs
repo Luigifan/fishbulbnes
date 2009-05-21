@@ -16,11 +16,15 @@ public partial class MainWindow {
     
     private Gtk.GLWidget glwidget2;
     
-    private Gtk.VPaned vpaned1;
+    private Gtk.Notebook notebook1;
     
     private Gtk.VBox controlPanel;
     
+    private Gtk.Label label1;
+    
     private Gtk.VBox debugger;
+    
+    private Gtk.Label label2;
     
     protected virtual void Build() {
         Stetic.Gui.Initialize(this);
@@ -32,7 +36,7 @@ public partial class MainWindow {
         this.hpaned1 = new Gtk.HPaned();
         this.hpaned1.CanFocus = true;
         this.hpaned1.Name = "hpaned1";
-        this.hpaned1.Position = 10;
+        this.hpaned1.Position = 98;
         // Container child hpaned1.Gtk.Paned+PanedChild
         this.glwidget2 = new Gtk.GLWidget();
         this.glwidget2.Name = "glwidget2";
@@ -45,23 +49,35 @@ public partial class MainWindow {
         Gtk.Paned.PanedChild w1 = ((Gtk.Paned.PanedChild)(this.hpaned1[this.glwidget2]));
         w1.Resize = false;
         // Container child hpaned1.Gtk.Paned+PanedChild
-        this.vpaned1 = new Gtk.VPaned();
-        this.vpaned1.CanFocus = true;
-        this.vpaned1.Name = "vpaned1";
-        this.vpaned1.Position = 84;
-        // Container child vpaned1.Gtk.Paned+PanedChild
+        this.notebook1 = new Gtk.Notebook();
+        this.notebook1.CanFocus = true;
+        this.notebook1.Name = "notebook1";
+        this.notebook1.CurrentPage = 0;
+        // Container child notebook1.Gtk.Notebook+NotebookChild
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Spacing = 6;
-        this.vpaned1.Add(this.controlPanel);
-        Gtk.Paned.PanedChild w2 = ((Gtk.Paned.PanedChild)(this.vpaned1[this.controlPanel]));
-        w2.Resize = false;
-        // Container child vpaned1.Gtk.Paned+PanedChild
+        this.notebook1.Add(this.controlPanel);
+        // Notebook tab
+        this.label1 = new Gtk.Label();
+        this.label1.Name = "label1";
+        this.label1.LabelProp = Mono.Unix.Catalog.GetString("page1");
+        this.notebook1.SetTabLabel(this.controlPanel, this.label1);
+        this.label1.ShowAll();
+        // Container child notebook1.Gtk.Notebook+NotebookChild
         this.debugger = new Gtk.VBox();
         this.debugger.Name = "debugger";
         this.debugger.Spacing = 6;
-        this.vpaned1.Add(this.debugger);
-        this.hpaned1.Add(this.vpaned1);
+        this.notebook1.Add(this.debugger);
+        Gtk.Notebook.NotebookChild w3 = ((Gtk.Notebook.NotebookChild)(this.notebook1[this.debugger]));
+        w3.Position = 1;
+        // Notebook tab
+        this.label2 = new Gtk.Label();
+        this.label2.Name = "label2";
+        this.label2.LabelProp = Mono.Unix.Catalog.GetString("page2");
+        this.notebook1.SetTabLabel(this.debugger, this.label2);
+        this.label2.ShowAll();
+        this.hpaned1.Add(this.notebook1);
         this.Add(this.hpaned1);
         if ((this.Child != null)) {
             this.Child.ShowAll();

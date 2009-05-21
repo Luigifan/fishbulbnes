@@ -19,12 +19,11 @@ public partial class MainWindow: Gtk.Window
 	NESMachine machine = new NESMachine();
 	SoundThreader sndThread;
     IUnityContainer container;
+
 	public MainWindow (IUnityContainer container): base (Gtk.WindowType.Toplevel)
 	{
         this.container = container;
 
-        // instigator.Bootstrap(this, 
-        
         
         Build ();
 		
@@ -33,14 +32,14 @@ public partial class MainWindow: Gtk.Window
         GTKInstigator instigator = new GTKInstigator(container);
         
         List<IViewModel> viewModels = new List<IViewModel>();
-        viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
 		viewModels.Add(new ControlPanelVM(machine));
+        viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
         viewModels.Add(new CheatPanelVM(machine));
 		viewModels.Add(new CPUStatusVM(machine));
 		viewModels.Add(new DebuggerVM(machine));
         viewModels.Add(new FutureInstructions(machine));
 
-        instigator.Bootstrap(this.vpaned1, viewModels);
+        instigator.Bootstrap(this.notebook1, viewModels);
 
 
 		this.KeyPressEvent += HandleKeyPressEvent;

@@ -46,7 +46,11 @@ namespace NES.CPU.FastendoDebugging
 
         public override string ToString()
         {
-            return string.Format("{0:x4) ", this.Address) + this.Instruction.Disassemble();
+			Console.WriteLine("InstructionRolloutItem.ToString()");
+			Console.WriteLine(this.Instruction.Disassemble());
+			
+				
+            return this.Address + this.Instruction.Disassemble();
         }
 
         #region INotifyPropertyChanged Members

@@ -18,7 +18,7 @@
       <widget class="Gtk.HPaned" id="hpaned1">
         <property name="MemberName" />
         <property name="CanFocus">True</property>
-        <property name="Position">10</property>
+        <property name="Position">98</property>
         <child>
           <widget class="Gtk.GLWidget" id="glwidget2">
             <property name="MemberName" />
@@ -33,10 +33,10 @@
           </packing>
         </child>
         <child>
-          <widget class="Gtk.VPaned" id="vpaned1">
+          <widget class="Gtk.Notebook" id="notebook1">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="Position">84</property>
+            <property name="CurrentPage">0</property>
             <child>
               <widget class="Gtk.VBox" id="controlPanel">
                 <property name="MemberName" />
@@ -51,8 +51,14 @@
                   <placeholder />
                 </child>
               </widget>
+            </child>
+            <child>
+              <widget class="Gtk.Label" id="label1">
+                <property name="MemberName" />
+                <property name="LabelProp" translatable="yes">page1</property>
+              </widget>
               <packing>
-                <property name="Resize">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -69,6 +75,18 @@
                   <placeholder />
                 </child>
               </widget>
+              <packing>
+                <property name="Position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Label" id="label2">
+                <property name="MemberName" />
+                <property name="LabelProp" translatable="yes">page2</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+              </packing>
             </child>
           </widget>
         </child>
