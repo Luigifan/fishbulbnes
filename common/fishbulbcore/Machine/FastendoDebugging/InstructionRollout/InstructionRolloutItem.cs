@@ -46,11 +46,8 @@ namespace NES.CPU.FastendoDebugging
 
         public override string ToString()
         {
-			Console.WriteLine("InstructionRolloutItem.ToString()");
-			Console.WriteLine(this.Instruction.Disassemble());
 			
-				
-            return this.Address + this.Instruction.Disassemble();
+            return this.Address + " " + this.Instruction.Disassemble();
         }
 
         #region INotifyPropertyChanged Members

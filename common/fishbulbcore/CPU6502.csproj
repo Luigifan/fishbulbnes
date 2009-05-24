@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,7 +29,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -92,7 +93,6 @@
     <Compile Include="Machine\Carts\BaseCart.cs" />
     <Compile Include="Machine\NESMachine.Timing.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.RomHandling.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.Unsafe.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="6502OpCodes.xml" />
