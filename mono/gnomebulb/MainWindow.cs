@@ -12,6 +12,7 @@ using TestGtkInstigation;
 using Fishbulb.Common.UI;
 using System.Collections.Generic;
 using GtkNes;
+using GtkNes.SDL;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -20,6 +21,7 @@ public partial class MainWindow: Gtk.Window
 	SoundThreader sndThread;
     IUnityContainer container;
 
+	Video sdlVideo;
 	public MainWindow (IUnityContainer container): base (Gtk.WindowType.Toplevel)
 	{
         this.container = container;
@@ -52,8 +54,15 @@ public partial class MainWindow: Gtk.Window
 		machine.PPU.LoadPalRGBA();
 		machine.PPU.ShouldRender = true;
 		glwidget2.ExposeEvent += Render;
+		glwidget2.SizeAllocated += HandleSizeAllocated;
+		// sdlVideo = new Video(machine);
 		
 		machine.Drawscreen += HandleDrawscreen;	
+	}
+
+	void HandleSizeAllocated(object o, SizeAllocatedArgs args)
+	{
+		if (inititalized) GLResize();	
 	}
 
 	void HandleDestroyEvent(object o, DestroyEventArgs args)
@@ -168,6 +177,7 @@ public partial class MainWindow: Gtk.Window
 	void RefreshGLWidgets()
 	{
 		glwidget2.QueueDraw();
+		//sdlVideo.BlitScreen();
         
 	}
 	
@@ -183,7 +193,6 @@ public partial class MainWindow: Gtk.Window
 		}
 		
         Gl.ReloadFunctions();
-        //base.AutoSwapBuffers = false;
         Gl.glClearColor(0, 0, 0, 0.5f);
         Gl.glClearDepth(1.0f);
         //Gl.glShadeModel(Gl.GL_SMOOTH);
@@ -205,12 +214,13 @@ public partial class MainWindow: Gtk.Window
 		Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE);
         Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP);
         Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP);
-        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
         Gl.glPixelStorei(Gl.GL_UNPACK_ALIGNMENT, 1);
 
         Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, 256, 256, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixels);
 
+		
 		
 		// setup window
 		
@@ -219,39 +229,51 @@ public partial class MainWindow: Gtk.Window
 
     }
 
+	void GLResize()
+	{
+		    int width;
+		    int height;
+			glwidget2.GdkWindow.GetSize(out width, out height);
+			// glHandler.ResizeGLWindow(height,width);
+			
+	//		if (machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Paused || machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Running)
+	//			glHandler.UpdateNESScreen(machine.PPU.VideoBuffer);		
+	
+			Gl.glViewport(0, 0, width, height);
+			Gl.glClearColor(0.0f,0.0f,0.0f,0);
+			Gl.glMatrixMode(Gl.GL_PROJECTION);
+			Gl.glLoadIdentity();
+			Gl.glOrtho(-1, 1, -1, 1, -1, 1);
+			
+			Gl.glMatrixMode(Gl.GL_MODELVIEW);
+
+	}
+	
 	bool inititalized =false;
-	void Render(object sender, EventArgs e)
+	unsafe void  Render(object sender, EventArgs e)
 	{
 		if  (!inititalized)
 		{
 			inititalized= true;
 			SetupDisplay();
+			GLResize();
 		}
-		int width;
-	    int height;
-		glwidget2.GdkWindow.GetSize(out width, out height);
-		// glHandler.ResizeGLWindow(height,width);
 		
-//		if (machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Paused || machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Running)
-//			glHandler.UpdateNESScreen(machine.PPU.VideoBuffer);		
-
-		Gl.glViewport(0, 0, width, height);
-		
-		Gl.glClearColor(0.0f,0.0f,0.0f,0);
         
 		Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-		Gl.glMatrixMode(Gl.GL_PROJECTION);
-		Gl.glLoadIdentity();
-		Gl.glOrtho(-1, 1, -1, 1, -1, 1);
-		
-		Gl.glMatrixMode(Gl.GL_MODELVIEW);
 		Gl.glLoadIdentity();
 		
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
-        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, machine.PPU.VideoBuffer);
-		DrawBillboard();
-        Gl.glFlush();
+//		fixed (int* p = machine.PPU.VideoBuffer)
+//		{
+	        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE,machine.PPU.VideoBuffer);
+			DrawBillboard();
+	        Gl.glFinish();
+//		}
+        //glwidget2.SwapBuffers();
+		
+
 	}
 	
 

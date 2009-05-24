@@ -20,7 +20,7 @@ public partial class MainWindow {
     
     private Gtk.VBox controlPanel;
     
-    private Gtk.Label label1;
+    private Gtk.Label lblControls;
     
     private Gtk.VBox debugger;
     
@@ -52,18 +52,18 @@ public partial class MainWindow {
         this.notebook1 = new Gtk.Notebook();
         this.notebook1.CanFocus = true;
         this.notebook1.Name = "notebook1";
-        this.notebook1.CurrentPage = 0;
+        this.notebook1.CurrentPage = 1;
         // Container child notebook1.Gtk.Notebook+NotebookChild
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";
         this.controlPanel.Spacing = 6;
         this.notebook1.Add(this.controlPanel);
         // Notebook tab
-        this.label1 = new Gtk.Label();
-        this.label1.Name = "label1";
-        this.label1.LabelProp = Mono.Unix.Catalog.GetString("page1");
-        this.notebook1.SetTabLabel(this.controlPanel, this.label1);
-        this.label1.ShowAll();
+        this.lblControls = new Gtk.Label();
+        this.lblControls.Name = "lblControls";
+        this.lblControls.LabelProp = Mono.Unix.Catalog.GetString("Controls");
+        this.notebook1.SetTabLabel(this.controlPanel, this.lblControls);
+        this.lblControls.ShowAll();
         // Container child notebook1.Gtk.Notebook+NotebookChild
         this.debugger = new Gtk.VBox();
         this.debugger.Name = "debugger";
@@ -74,7 +74,7 @@ public partial class MainWindow {
         // Notebook tab
         this.label2 = new Gtk.Label();
         this.label2.Name = "label2";
-        this.label2.LabelProp = Mono.Unix.Catalog.GetString("page2");
+        this.label2.LabelProp = Mono.Unix.Catalog.GetString("Debugging");
         this.notebook1.SetTabLabel(this.debugger, this.label2);
         this.label2.ShowAll();
         this.hpaned1.Add(this.notebook1);

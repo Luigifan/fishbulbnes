@@ -18,7 +18,7 @@ namespace GtkNes
 			}
 			set {
 				model = value;
-				this.lblAccumulator.CreateBinding("Text", model.DataModel, "Accumulator");
+				this.treeview1.CreateTreeViewBinding<string>("Text", model, "DataModel");
 			}
 		}
 		#endregion

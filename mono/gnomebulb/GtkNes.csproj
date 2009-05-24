@@ -106,6 +106,9 @@
       <HintPath>..\..\Libs\GLWidget.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
+    <Reference Include="Tao.Sdl, Version=1.2.12.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
+      <Package>tao-sdl-1.2</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -144,6 +147,8 @@
     <Compile Include="gtk-gui\GtkNes.DebugStepper.cs" />
     <Compile Include="DebuggerCPUStatusView.cs" />
     <Compile Include="gtk-gui\GtkNes.DebuggerCPUStatusView.cs" />
+    <Compile Include="SDLVidWindow.cs" />
+    <Compile Include="SDLInlineWavStreamer.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">

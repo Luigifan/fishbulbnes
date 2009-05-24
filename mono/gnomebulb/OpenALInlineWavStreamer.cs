@@ -33,14 +33,12 @@ namespace WPFamicom.Sound
             _wavSource = wavSource;
             _wavSource.BytesWritten += new EventHandler(_wavSource_BytesWritten);
 
-
             int err = 0;
 
             Alut.alutInit();
 
             err = Al.alGetError();
             Debug.Assert(err == 0, "Error " + err.ToString());
-
 
             // device = new XAudio2();
 
@@ -98,6 +96,8 @@ namespace WPFamicom.Sound
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
+			return;
+			
             if (freeBuffers.Count > 0)
             {
                 SendBuffer();
@@ -119,8 +119,6 @@ namespace WPFamicom.Sound
 
         int currentBuffer = 0;
 
-        private AutoResetEvent BufferEmptyResetEvent = new AutoResetEvent(false);
-        private AutoResetEvent SamplesAvailableResetEvent = new AutoResetEvent(false);
 
         private bool _isRunning = true;
 
@@ -198,10 +196,11 @@ namespace WPFamicom.Sound
             }
         }
 
-        private void SendBuffer()
+        private unsafe void SendBuffer()
         {
             int buffer = freeBuffers.Dequeue();
-            Al.alBufferData(buffer, Al.AL_FORMAT_MONO16, _wavSource.SharedBuffer, _wavSource.SharedBufferLength, frequency);
+			fixed (byte* p = _wavSource.SharedBuffer)
+	            Al.alBufferData(buffer, Al.AL_FORMAT_MONO16, p, _wavSource.SharedBufferLength, frequency);
             Al.alSourceQueueBuffers(sourceId, 1, ref buffer);
             currentBuffer++;
             currentBuffer %= BUFFER_COUNT;
@@ -209,19 +208,15 @@ namespace WPFamicom.Sound
             _wavSource.SharedBuffer = buffers[currentBuffer];
             _wavSource.ReadWaves();
         }
-
-        public void CheckSamples()
-        {
-            BufferEmptyResetEvent.Set();
-        }
+		
+		public void CheckSamples()
+		{}
 
         #region IDisposable Members
 
         public void Dispose()
         {
 
-            BufferEmptyResetEvent.Close();
-            SamplesAvailableResetEvent.Close();
 
         }
 

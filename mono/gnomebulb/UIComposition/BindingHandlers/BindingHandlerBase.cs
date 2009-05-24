@@ -81,7 +81,8 @@ namespace Gnomebulb.UIComposition.BindingHandlers
             try
             {
 	            object val = sourceProperty.GetValue(source);
-                if (targetProperty.PropertyType == typeof(string))
+                Console.WriteLine("SourceToTarget sourceval: " + val.ToString());
+				if (targetProperty.PropertyType == typeof(string))
                 {
                     targetProperty.SetValue(target, val.ToString());
                 }
@@ -90,13 +91,13 @@ namespace Gnomebulb.UIComposition.BindingHandlers
                     targetProperty.SetValue(target, val);
                 }
 
-                if (target is Widget)
-                {
-                    Gtk.Application.Invoke(
-                        (o, e) =>
-                    (target as Widget).QueueDraw()
-                    );
-                }
+//                if (target is Widget)
+//                {
+//                    Gtk.Application.Invoke(
+//                        (o, e) =>
+//                    (target as Widget).QueueDraw()
+//                    );
+//                }
             }
             catch (Exception e)
             {

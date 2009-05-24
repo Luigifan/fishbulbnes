@@ -13,15 +13,9 @@ namespace GtkNes {
     
     public partial class DebuggerCPUStatusView {
         
-        private Gtk.Table table1;
+        private Gtk.ScrolledWindow GtkScrolledWindow;
         
-        private Gtk.Label label1;
-        
-        private Gtk.Label label2;
-        
-        private Gtk.Label label3;
-        
-        private Gtk.Label lblAccumulator;
+        private Gtk.TreeView treeview1;
         
         protected virtual void Build() {
             Stetic.Gui.Initialize(this);
@@ -29,48 +23,15 @@ namespace GtkNes {
             Stetic.BinContainer.Attach(this);
             this.Name = "GtkNes.DebuggerCPUStatusView";
             // Container child GtkNes.DebuggerCPUStatusView.Gtk.Container+ContainerChild
-            this.table1 = new Gtk.Table(((uint)(3)), ((uint)(2)), false);
-            this.table1.Name = "table1";
-            this.table1.RowSpacing = ((uint)(6));
-            this.table1.ColumnSpacing = ((uint)(6));
-            // Container child table1.Gtk.Table+TableChild
-            this.label1 = new Gtk.Label();
-            this.label1.Name = "label1";
-            this.label1.LabelProp = Mono.Unix.Catalog.GetString("Accumulator");
-            this.table1.Add(this.label1);
-            Gtk.Table.TableChild w1 = ((Gtk.Table.TableChild)(this.table1[this.label1]));
-            w1.XOptions = ((Gtk.AttachOptions)(4));
-            w1.YOptions = ((Gtk.AttachOptions)(4));
-            // Container child table1.Gtk.Table+TableChild
-            this.label2 = new Gtk.Label();
-            this.label2.Name = "label2";
-            this.label2.LabelProp = Mono.Unix.Catalog.GetString("Ind X");
-            this.table1.Add(this.label2);
-            Gtk.Table.TableChild w2 = ((Gtk.Table.TableChild)(this.table1[this.label2]));
-            w2.TopAttach = ((uint)(1));
-            w2.BottomAttach = ((uint)(2));
-            w2.XOptions = ((Gtk.AttachOptions)(4));
-            w2.YOptions = ((Gtk.AttachOptions)(4));
-            // Container child table1.Gtk.Table+TableChild
-            this.label3 = new Gtk.Label();
-            this.label3.Name = "label3";
-            this.label3.LabelProp = Mono.Unix.Catalog.GetString("Ind Y");
-            this.table1.Add(this.label3);
-            Gtk.Table.TableChild w3 = ((Gtk.Table.TableChild)(this.table1[this.label3]));
-            w3.TopAttach = ((uint)(2));
-            w3.BottomAttach = ((uint)(3));
-            w3.XOptions = ((Gtk.AttachOptions)(4));
-            w3.YOptions = ((Gtk.AttachOptions)(4));
-            // Container child table1.Gtk.Table+TableChild
-            this.lblAccumulator = new Gtk.Label();
-            this.lblAccumulator.Name = "lblAccumulator";
-            this.table1.Add(this.lblAccumulator);
-            Gtk.Table.TableChild w4 = ((Gtk.Table.TableChild)(this.table1[this.lblAccumulator]));
-            w4.LeftAttach = ((uint)(1));
-            w4.RightAttach = ((uint)(2));
-            w4.XOptions = ((Gtk.AttachOptions)(4));
-            w4.YOptions = ((Gtk.AttachOptions)(4));
-            this.Add(this.table1);
+            this.GtkScrolledWindow = new Gtk.ScrolledWindow();
+            this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+            this.GtkScrolledWindow.ShadowType = ((Gtk.ShadowType)(1));
+            // Container child GtkScrolledWindow.Gtk.Container+ContainerChild
+            this.treeview1 = new Gtk.TreeView();
+            this.treeview1.CanFocus = true;
+            this.treeview1.Name = "treeview1";
+            this.GtkScrolledWindow.Add(this.treeview1);
+            this.Add(this.GtkScrolledWindow);
             if ((this.Child != null)) {
                 this.Child.ShowAll();
             }
