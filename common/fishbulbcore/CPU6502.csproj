@@ -117,7 +117,7 @@
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.Unsafe.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="6502OpCodes.xml" />

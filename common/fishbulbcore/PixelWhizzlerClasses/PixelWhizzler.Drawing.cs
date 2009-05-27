@@ -6,9 +6,27 @@ using NES.CPU.nitenedo.Interaction;
 
 namespace NES.CPU.PPUClasses
 {
-    public partial class PixelWhizzler
+    public unsafe partial class PixelWhizzler
     {
+		
+        private int[] rgb32OutBuffer = new int[256 * 256];
 
+        public int[] VideoBuffer
+        {
+            get 
+			{ 
+				
+				return rgb32OutBuffer; 
+			}
+        }
+
+		int* bufStart;
+		int* curBufPos;
+		public unsafe void SetVideoBuffer(IntPtr Buffer)
+		{
+			bufStart = (int*) Buffer;
+		}
+		
         private int lastcpuClock;
 
         public int LastcpuClock
@@ -45,6 +63,112 @@ namespace NES.CPU.PPUClasses
             }
             lastcpuClock = cpuClockNum;
         }
+		
+		        private unsafe void BumpScanline()
+        {
+            switch (frameClock++)
+            {
+                case 0:
+                    frameFinished();
+                    break;
+                case 6820:
+                    frameOn = true;
+                    // setFrameOn();
+                    if (spriteChanges)
+                    {
+                        UnpackSprites();
+                        spriteChanges = false;
+                    }
+
+                    ClearVINT();
+                    break;
+        //304 pixels into pre-render scanline
+                case 7125:
+                    break;
+
+                case 7161:
+                    //lockedVScroll = _vScroll;
+                    vbufLocation = 0;
+                    xNTXor = 0x0;
+                    yNTXor = 0;
+                    currentXPosition = 0;
+                    currentYPosition = 0;
+
+                    break;
+
+                case frameClockEnd:
+                    SetupVINT();
+                    frameFinished();
+                    frameOn = false;
+                    //Array.Copy(_palette, 0, rgb32OutBuffer, 255 * 256, 32);
+                    //setFrameOff();
+                    frameClock = 0;
+                    break;
+            }
+
+            if (frameClock >= 7161 && frameClock <= 89342)
+            {
+
+
+                if (currentXPosition < 256 && vbufLocation < 256 * 240)
+                {
+
+                    xPosition = currentXPosition + lockedHScroll;
+                    if ((xPosition & 7) == 0)
+                    {
+                        xNTXor = ((xPosition & 0x100) == 0x100) ? 0x400 : 0x00;
+                        xPosition &= 0xFF;
+                        
+                        FetchNextTile();
+                    }
+
+                    if (currentXPosition < 8)
+                        DrawClipPixel();
+                    else
+                        DrawPixel();
+
+                    vbufLocation++;
+//					nextPixel++;
+                }
+
+                currentXPosition++;
+                
+                if (currentXPosition > 340)
+                {
+                    currentXPosition = 0;
+                    currentYPosition++;
+
+                    PreloadSprites(currentYPosition );
+                    if (spritesOnThisScanline >= 7)
+                    {
+                        _PPUStatus = _PPUStatus | 0x20;
+                    }
+                    
+                    lockedHScroll = _hScroll;
+
+                    yPosition = currentYPosition + lockedVScroll;
+
+                    if (yPosition < 0)
+                    {
+                        yPosition += 240;
+                    }
+                    if (yPosition >= 240)
+                    {
+                        yPosition -= 240;
+                        yNTXor = 0x800;
+                    }
+                    else
+                    {
+                        yNTXor = 0x00;
+                    }
+
+                }
+                
+            }
+
+
+        }
+
 
         bool frameEnded = false;
 
@@ -94,12 +218,12 @@ namespace NES.CPU.PPUClasses
 
             if (fillRGB)
             {
-                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                bufStart[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? pal[rgb32OutBuffer[255 * 256 + spritePixel]] : pal[rgb32OutBuffer[255 * 256 + tilePixel]];
             }
             else
             {
-                rgb32OutBuffer[vbufLocation] =
+                bufStart[vbufLocation] =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
             }
@@ -129,12 +253,12 @@ namespace NES.CPU.PPUClasses
 
             if (fillRGB)
             {
-                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                bufStart[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? pal[rgb32OutBuffer[255*256 + spritePixel]] : pal[rgb32OutBuffer[255*256+tilePixel]];
             }
             else
             {
-                rgb32OutBuffer[vbufLocation] =
+                bufStart[vbufLocation] =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
             }
