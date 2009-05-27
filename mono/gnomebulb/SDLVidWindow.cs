@@ -36,18 +36,20 @@ namespace GtkNes.SDL
 		public void BlitScreen()
 		{
 		
-			fixed (int* pbufStart = machine.PPU.VideoBuffer)
-			{
-			int *p = (int * ) sdlBuffer;
-				int *pbuf = pbufStart;
-				int *pbufEnd = pbuf + (256 * 240);
-				
-				while (pbuf < pbufEnd)
-				{
-					*(p++) = *(pbuf++);
-				}
-			}
+//			fixed (int* pbufStart = machine.PPU.VideoBuffer)
+//			{
+//			int *p = (int * ) sdlBuffer;
+//				int *pbuf = pbufStart;
+//				int *pbufEnd = pbuf + (256 * 240);
+//				
+//				while (pbuf < pbufEnd)
+//				{
+//					*(p++) = *(pbuf++);
+//				}
+//			}
 			resultFlip = Sdl.SDL_Flip(surfacePtr);
+			
+			// Marshal.AllocHGlobal
 			//FillBuffer(j % 255);
 		
 		}
@@ -75,6 +77,7 @@ namespace GtkNes.SDL
 	
 			sdlBuffer = surface.pixels;
 			
+			machine.PPU.SetVideoBuffer(sdlBuffer);
 			//END Initialize the SDL frontend
 			
 			//Initialize the offscreen buffer

@@ -96,7 +96,7 @@ namespace WPFamicom.Sound
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
-			return;
+			//return;
 			
             if (freeBuffers.Count > 0)
             {
@@ -178,15 +178,15 @@ namespace WPFamicom.Sound
         {
             int processed = 0;
             Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
-//
-//            while (processed <= 0)
-//            {
-//                processed = 0;
-//
-//                int err = Al.alGetError();
-//                Thread.Sleep(timeSpanFromMilliseconds);
-//                Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
-//            }
+
+            while (processed <= 0)
+            {
+                processed = 0;
+
+                int err = Al.alGetError();
+                Thread.Sleep(timeSpanFromMilliseconds);
+                Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
+            }
 
             while (processed-- > 0)
             {

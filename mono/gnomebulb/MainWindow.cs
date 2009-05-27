@@ -13,6 +13,7 @@ using Fishbulb.Common.UI;
 using System.Collections.Generic;
 using GtkNes;
 using GtkNes.SDL;
+using System.Runtime.InteropServices;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -51,14 +52,21 @@ public partial class MainWindow: Gtk.Window
 		
 		machine.PPU.PixelWidth=32;
 		machine.PPU.FillRGB = true;
-		machine.PPU.LoadPalRGBA();
-		machine.PPU.ShouldRender = true;
-		glwidget2.ExposeEvent += Render;
-		glwidget2.SizeAllocated += HandleSizeAllocated;
-		// sdlVideo = new Video(machine);
+		// machine.PPU.LoadPalRGBA();
+		machine.PPU.ShouldRender = false;
+		
+		vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256*256);
+		machine.PPU.SetVideoBuffer(vidBuffer);
+		
+//		glwidget2.ExposeEvent += Render;
+//		
+//		glwidget2.SizeAllocated += HandleSizeAllocated;
+		sdlVideo = new Video(machine);
 		
 		machine.Drawscreen += HandleDrawscreen;	
 	}
+	IntPtr vidBuffer;
+	//  int[] vidBuffer = new int[256*256];
 
 	void HandleSizeAllocated(object o, SizeAllocatedArgs args)
 	{
@@ -69,6 +77,7 @@ public partial class MainWindow: Gtk.Window
 	{
 		sndThread.Dispose();
 		machine.Dispose();
+		Marshal.FreeHGlobal(vidBuffer);
 	}
 
 	void HandleKeyReleaseEvent(object o, KeyReleaseEventArgs args)
@@ -176,7 +185,7 @@ public partial class MainWindow: Gtk.Window
 
 	void RefreshGLWidgets()
 	{
-		glwidget2.QueueDraw();
+		//glwidget2.QueueDraw();
 		//sdlVideo.BlitScreen();
         
 	}
@@ -267,9 +276,9 @@ public partial class MainWindow: Gtk.Window
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
 //		fixed (int* p = machine.PPU.VideoBuffer)
 //		{
-	        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE,machine.PPU.VideoBuffer);
+	        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
 			DrawBillboard();
-	        Gl.glFinish();
+	        Gl.glFlush();
 //		}
         //glwidget2.SwapBuffers();
 		

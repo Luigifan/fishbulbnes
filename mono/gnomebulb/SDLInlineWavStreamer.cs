@@ -1,228 +1,221 @@
-//﻿using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Threading;
-//using NES.CPU.Machine.BeepsBoops;
-//using Tao.Sdl;
-//using System.Diagnostics;
-//
-//namespace WPFamicom.Sound
-//{
-//    public class SDLInlineWavStreamer : IDisposable, IWavStreamer
-//    {
-//        // each buffer should contain 1/60th of a second of audio
-//        //  lag sound behind up to _count frames
-//        const int BUFFER_STREAM_SIZE = 2048;
-//        const int BUFFER_COUNT = 2;
-//
-//        int[] bufferIds = new int[BUFFER_COUNT];
-//        byte[][] buffers = new byte[BUFFER_COUNT][];
-//        Queue<int> freeBuffers = new Queue<int>(BUFFER_COUNT);
-//        Dictionary<int, int> bufferIDtoArrayIndex = new Dictionary<int, int>(BUFFER_COUNT);
-//        int frequency;
-//
-//        int sourceId = 0, bufferId = 0;
-//        private float[] listenerOrientation = { 0, 0, -1, 0, 1, 0 };
-//        private float[] listenerPosition = { 0, 0, 0 };                // Position of the Listener.
-//        private float[] listenerVelocity = { 0, 0, 0 };
-//
-//        public SDLInlineWavStreamer(IWavReader wavSource)
-//        {
-//            frequency = (int)wavSource.Frequency;
-//            _wavSource = wavSource;
-//            _wavSource.BytesWritten += new EventHandler(_wavSource_BytesWritten);
-//
-//
-//            int err = 0;
-//			
-//			Sdl.SDL_Init(Sdl.SDL_INIT_AUDIO);
-//			
-//
-//
-//            // device = new XAudio2();
-//
-//            Al.alGenSources(1, out sourceId);
-//            Al.alGenBuffers(BUFFER_COUNT, bufferIds);
-//            err = Al.alGetError();
-//            Debug.Assert(err == 0, "Error " + err.ToString());
-//            for (int i = 0; i < bufferIds.Length; ++i)
-//            {
-//                if (bufferIds[i] !=0)
-//                    bufferIDtoArrayIndex.Add(bufferIds[i], i);
-//            }
-//
-//
-//
-//            Al.alListenerfv(Al.AL_POSITION, listenerPosition);
-//            Al.alListenerfv(Al.AL_VELOCITY, listenerVelocity);
-//            Al.alListenerfv(Al.AL_ORIENTATION, listenerOrientation);
-//
-//            err = Al.alGetError();
-//            Debug.Assert(err == 0, "Error " + err.ToString());
-//            
-//
-//
-//            // Set the pitch
-//            Al.alSourcef(sourceId, Al.AL_PITCH, 1.0f);
-//            // Set the gain
-//            Al.alSourcef(sourceId, Al.AL_GAIN, 1.0f);
-//            // Set looping to loop
-//            Al.alSourcei(sourceId, Al.AL_LOOPING, 0);
-//            err = Al.alGetError();
-//            if (err != 0)
-//            {
-//                Debug.Assert(false, "Error " + err.ToString());
-//            }
-//
-//
-//            for (int i = 0; i < BUFFER_COUNT; ++i)
-//            {
-//                buffers[i] = new byte[BUFFER_STREAM_SIZE];
-//                Al.alBufferData(bufferIds[i], Al.AL_FORMAT_MONO16, buffers[i], buffers[i].Length, frequency);
-//                //                Al.alBufferData(bufferIds[1], Al.AL_FORMAT_MONO16, buffers[0], buffers[0].Length, (int)44100);
-//            }
-//
-//
-//            Al.alSourceQueueBuffers(sourceId, BUFFER_COUNT, bufferIds);
-//            Al.alSourcePlay(sourceId);
-//            err = Al.alGetError();
-//            if (err != 0)
-//            {
-//                Debug.Assert(false, "Error " + err.ToString());
-//            }
-//
-//        }
-//
-//        void _wavSource_BytesWritten(object sender, EventArgs e)
-//        {
-//            if (freeBuffers.Count > 0)
-//            {
-//                SendBuffer();
-//            }
-//
-//            while (freeBuffers.Count < BUFFER_LAG)
-//            {
-//                DequeueBuffers();
-//            }
-//
-//            if (!IsPlaying)
-//            {
-//                Al.alSourcePlay(sourceId);
-//            }
-//
-//        }
-//
-//        IWavReader _wavSource;
-//
-//        int currentBuffer = 0;
-//
-//        private AutoResetEvent BufferEmptyResetEvent = new AutoResetEvent(false);
-//        private AutoResetEvent SamplesAvailableResetEvent = new AutoResetEvent(false);
-//
-//        private bool _isRunning = true;
-//
-//        public bool IsRunning
-//        {
-//            set { _isRunning = value; }
-//        }
-//
-//        private bool muted;
-//        private float volume;
-//
-//        public float Volume
-//        {
-//            get { return volume; }
-//            set
-//            {
-//                volume = value;
-//                Al.alSourcef(sourceId, Al.AL_GAIN, volume);
-//
-//            }
-//        }
-//
-//        public bool Muted
-//        {
-//            get { return muted; }
-//            set
-//            {
-//
-//                muted = value;
-//
-//            }
-//        }
-//        bool ended = false;
-//
-//
-//        bool IsPlaying
-//        {
-//            get
-//            {
-//                int state;
-//
-//                Al.alGetSourcei(sourceId, Al.AL_SOURCE_STATE, out state);
-//
-//                return (state == Al.AL_PLAYING);
-//            }
-//        }
-//
-//        public void PlayPCM()
-//        {
-//            // nothing to do here!
-//        }
-//
-//        TimeSpan timeSpanFromMilliseconds = TimeSpan.FromMilliseconds(1000f / 70f);
-//
-//
-//        private void DequeueBuffers()
-//        {
-//            int processed = 0;
-//            Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
-////
-////            while (processed <= 0)
-////            {
-////                processed = 0;
-////
-////                int err = Al.alGetError();
-////                Thread.Sleep(timeSpanFromMilliseconds);
-////                Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
-////            }
-//
-//            while (processed-- > 0)
-//            {
-//                int buffer = 0;
-//                Al.alSourceUnqueueBuffers(sourceId, 1, ref buffer);
-//                freeBuffers.Enqueue(buffer);
-//            }
-//        }
-//
-//        private void SendBuffer()
-//        {
-//            int buffer = freeBuffers.Dequeue();
-//            Al.alBufferData(buffer, Al.AL_FORMAT_MONO16, _wavSource.SharedBuffer, _wavSource.SharedBufferLength, frequency);
-//            Al.alSourceQueueBuffers(sourceId, 1, ref buffer);
-//            currentBuffer++;
-//            currentBuffer %= BUFFER_COUNT;
-//
-//            _wavSource.SharedBuffer = buffers[currentBuffer];
-//            _wavSource.ReadWaves();
-//        }
-//
-//        public void CheckSamples()
-//        {
-//            BufferEmptyResetEvent.Set();
-//        }
-//
-//        #region IDisposable Members
-//
-//        public void Dispose()
-//        {
-//
-//            BufferEmptyResetEvent.Close();
-//            SamplesAvailableResetEvent.Close();
-//
-//        }
-//
-//        #endregion
-//    }
-//
-//}
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using NES.CPU.Machine.BeepsBoops;
+using Tao.Sdl;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+namespace WPFamicom.Sound
+{
+    public unsafe class SDLInlineWavStreamer : IDisposable, IWavStreamer
+    {
+        // each buffer should contain 1/60th of a second of audio
+        //  lag sound behind up to _count frames
+        const int BUFFER_STREAM_SIZE = 4096;
+        const int BUFFER_COUNT = 8;
+		class bufDef
+		{
+			public byte[] buffer;
+			public int length;
+		}
+
+		Queue<bufDef> buffersToPlay = new Queue<bufDef>(BUFFER_COUNT);
+
+		byte[][] buffers = new byte[BUFFER_COUNT][];
+        int frequency;
+		int currentBuffer=0;
+
+        Sdl.AudioSpecCallbackDelegate audioCallback;
+
+		bufDef playingBuf = null;
+		int lastPlayPos = 0;
+		
+        void DoCallback(IntPtr userData, IntPtr stream, int length)
+        {
+			//Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
+
+            try
+            {
+                byte* ptr = (byte*)stream;
+
+				while (length > 0)
+                {
+					length = PlayoutCurrentBuffer(ref ptr, length);
+
+					if (length > 0)
+					{
+						if (buffersToPlay.Count > 0)
+						{
+							playingBuf = buffersToPlay.Dequeue();
+							lastPlayPos = 0;
+							BufferEmptyResetEvent.Set();
+						} else 
+						{
+							// playingBuf = null;
+							Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
+							SamplesAvailableResetEvent.WaitOne();
+						}
+					}
+					
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error with SDL audio callback " + Sdl.SDL_GetError());
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+		int PlayoutCurrentBuffer(ref byte* ptr, int length)
+		{
+			if (playingBuf != null)
+			{
+				for (; lastPlayPos < playingBuf.length ; ++lastPlayPos)
+				{
+					length--;
+					if (length <=0)
+					{
+						return 0;
+					}
+                    *(ptr++) = playingBuf.buffer[lastPlayPos];
+				}
+				playingBuf = null;
+				lastPlayPos=0;
+				
+			}
+			return length;
+
+		}
+		
+        public SDLInlineWavStreamer(IWavReader wavSource)
+        {
+			//frequency = (int)_wavSource.Frequency;
+            _wavSource = wavSource;
+			_wavSource.BytesWritten += _wavSource_BytesWritten;
+			Console.WriteLine(String.Format("SDLInlineWavStreamer() {0}", wavSource.Frequency));
+			
+            for (int i = 0; i < BUFFER_COUNT; ++i)
+            {
+                buffers[i] = new byte[BUFFER_STREAM_SIZE];
+            }
+
+            Sdl.SDL_Init(Sdl.SDL_INIT_AUDIO);
+            audioCallback = DoCallback;
+			
+            Sdl.SDL_AudioSpec spec = new Sdl.SDL_AudioSpec()
+            {
+                freq = (int)_wavSource.Frequency,
+                format = (short)Sdl.AUDIO_S16SYS,
+                silence = 0,
+                channels = 1,
+                samples = 4096,
+                callback = Marshal.GetFunctionPointerForDelegate(audioCallback),
+            };
+
+            IntPtr specPtr= Marshal.AllocHGlobal(Marshal.SizeOf(spec));
+            try
+            {
+                Marshal.StructureToPtr(spec, specPtr, false);
+
+                IntPtr obtained = IntPtr.Zero;
+                if (Sdl.SDL_OpenAudio((IntPtr)specPtr, obtained) < 0)
+                {
+                    Console.WriteLine("Error opening sdl_audio");
+                    Console.WriteLine(Sdl.SDL_GetError());
+                }
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(specPtr);
+            }
+
+        }
+
+        void _wavSource_BytesWritten(object sender, EventArgs e)
+        {
+			while(buffersToPlay.Count > 1)
+			{
+				BufferEmptyResetEvent.WaitOne();
+			}
+			
+			buffersToPlay.Enqueue(
+			   new bufDef() 
+			    { 
+					buffer = buffers[currentBuffer], length = _wavSource.SharedBufferLength 
+				}
+			);
+			
+			SamplesAvailableResetEvent.Set();
+			currentBuffer++;
+			currentBuffer %= BUFFER_COUNT;
+			_wavSource.SharedBuffer = buffers[currentBuffer];
+			_wavSource.ReadWaves();
+        }
+
+        IWavReader _wavSource;
+
+        private AutoResetEvent BufferEmptyResetEvent = new AutoResetEvent(false);
+        private AutoResetEvent SamplesAvailableResetEvent = new AutoResetEvent(false);
+
+        private bool _isRunning = true;
+
+        public bool IsRunning
+        {
+            set { _isRunning = value; }
+        }
+
+        private bool muted;
+        private float volume;
+
+        public float Volume
+        {
+            get { return volume; }
+            set
+            {
+                volume = value;
+            }
+        }
+
+        public bool Muted
+        {
+            get { return muted; }
+            set
+            {
+
+                muted = value;
+
+            }
+        }
+        bool ended = false;
+
+		public void CheckSamples()
+        {
+            BufferEmptyResetEvent.Set();
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+
+            BufferEmptyResetEvent.Close();
+			SamplesAvailableResetEvent.Set();
+            SamplesAvailableResetEvent.Close();
+
+        }
+
+
+        #endregion
+
+        #region IWavStreamer implementation
+        public void PlayPCM ()
+        {
+            Sdl.SDL_PauseAudio(0);
+			SamplesAvailableResetEvent.WaitOne();
+        }
+        #endregion
+    }
+
+}

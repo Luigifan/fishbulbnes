@@ -32,7 +32,6 @@ namespace WPFamicom.Sound
             _wavSource = wavSource;
             _wavSource.BytesWritten += new EventHandler(_wavSource_BytesWritten);
 
-
             int err = 0;
 
             Alut.alutInit();
