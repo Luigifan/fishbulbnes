@@ -53,7 +53,7 @@
   <ItemGroup>
     <Reference Include="GLWidget, Version=1.0.3042.25084, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\GLWidget.dll</HintPath>
+      <HintPath>..\..\Lib\GLWidget.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +107,7 @@
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -133,6 +134,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="OpenALWavStreamer.cs" />
+    <Compile Include="SDLInlineWavStreamer.cs" />
+    <Compile Include="SDLVidWindow.cs" />
     <Compile Include="SoundThread.cs" />
     <Compile Include="NesGL.cs" />
     <Compile Include="Planetoid.cs" />

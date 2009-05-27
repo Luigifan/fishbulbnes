@@ -34,7 +34,7 @@ namespace WPFamicom.Sound
 		
         void DoCallback(IntPtr userData, IntPtr stream, int length)
         {
-			//Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
+			Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
 
             try
             {
@@ -43,20 +43,10 @@ namespace WPFamicom.Sound
 				while (length > 0)
                 {
 					length = PlayoutCurrentBuffer(ref ptr, length);
-
 					if (length > 0)
 					{
-						if (buffersToPlay.Count > 0)
-						{
-							playingBuf = buffersToPlay.Dequeue();
-							lastPlayPos = 0;
-							BufferEmptyResetEvent.Set();
-						} else 
-						{
-							// playingBuf = null;
-							Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
-							SamplesAvailableResetEvent.WaitOne();
-						}
+                        Console.WriteLine("  " + length.ToString() + " bytes remaining");
+                        GetNextBuffer();
 					}
 					
                 }
@@ -68,22 +58,37 @@ namespace WPFamicom.Sound
             }
         }
 
+        private void GetNextBuffer()
+        {
+            if (buffersToPlay.Count > 0)
+            {
+                playingBuf = buffersToPlay.Dequeue();
+                lastPlayPos = 0;
+                BufferEmptyResetEvent.Set();
+            }
+            else
+            {
+                playingBuf = null;
+                Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
+                SamplesAvailableResetEvent.WaitOne();
+            }
+        }
+
 		int PlayoutCurrentBuffer(ref byte* ptr, int length)
 		{
 			if (playingBuf != null)
 			{
-				for (; lastPlayPos < playingBuf.length ; ++lastPlayPos)
+				while  (lastPlayPos < playingBuf.length)
 				{
 					length--;
-					if (length <=0)
+                    *(ptr++) = playingBuf.buffer[lastPlayPos++];
+                    if (length <= 0)
 					{
 						return 0;
 					}
-                    *(ptr++) = playingBuf.buffer[lastPlayPos];
 				}
 				playingBuf = null;
 				lastPlayPos=0;
-				
 			}
 			return length;
 
@@ -108,9 +113,8 @@ namespace WPFamicom.Sound
             {
                 freq = (int)_wavSource.Frequency,
                 format = (short)Sdl.AUDIO_S16SYS,
-                silence = 0,
                 channels = 1,
-                samples = 4096,
+                samples = 2048,
                 callback = Marshal.GetFunctionPointerForDelegate(audioCallback),
             };
 
@@ -135,7 +139,7 @@ namespace WPFamicom.Sound
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
-			while(buffersToPlay.Count > 1)
+			while(buffersToPlay.Count > 5)
 			{
 				BufferEmptyResetEvent.WaitOne();
 			}
@@ -143,11 +147,13 @@ namespace WPFamicom.Sound
 			buffersToPlay.Enqueue(
 			   new bufDef() 
 			    { 
-					buffer = buffers[currentBuffer], length = _wavSource.SharedBufferLength 
+					buffer = _wavSource.SharedBuffer, 
+                    length = _wavSource.SharedBufferLength 
 				}
 			);
-			
+
 			SamplesAvailableResetEvent.Set();
+
 			currentBuffer++;
 			currentBuffer %= BUFFER_COUNT;
 			_wavSource.SharedBuffer = buffers[currentBuffer];
