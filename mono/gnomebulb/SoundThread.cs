@@ -45,7 +45,7 @@ namespace WPFamicom.Sound
 
             public void Dispose()
             {
-                //_wavePlayer.Dispose();
+               _wavePlayer.Dispose();
             }
 
             #endregion

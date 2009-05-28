@@ -32,7 +32,7 @@ namespace NES.CPU.PPUClasses
             {
                 while (outBufPtr < endBufPtr)
                 {
-                    *(outBufPtr) = pal[_palette[*outBufPtr & 0xFF]];
+                    *outBufPtr = pal[_palette[*outBufPtr & 0xFF]];
                     outBufPtr++;
                 }
             }
@@ -62,11 +62,14 @@ namespace NES.CPU.PPUClasses
         }
 
         int* bufStart;
+		int* bufEnd;
         int* curBufPos;
         public unsafe void SetVideoBuffer(IntPtr Buffer)
         {
             bufStart = (int*)Buffer;
+			bufEnd = bufStart + (256 * 240);
             rgb32OutBuffer = bufStart;
+			curBufPos = bufStart;
         }
 		
 		private int* nextPixel;
@@ -154,7 +157,7 @@ namespace NES.CPU.PPUClasses
             {
 
 
-                if (currentXPosition < 256 && vbufLocation < 256 * 240)
+                if (currentXPosition < 256 && curBufPos < bufEnd)
                 {
 
                     xPosition = currentXPosition + lockedHScroll;
@@ -170,8 +173,9 @@ namespace NES.CPU.PPUClasses
                         DrawClipPixel();
                     else
                         DrawPixel();
-
-                    vbufLocation++;
+					
+					curBufPos++;
+//                    vbufLocation++;
 //					nextPixel++;
                 }
 
@@ -252,7 +256,7 @@ namespace NES.CPU.PPUClasses
         {
             int tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             isForegroundPixel = false;
-            int spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
+            int spritePixel = _spritesAreVisible ? FastGetSpritePixel() : (byte)0;
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {
@@ -268,7 +272,7 @@ namespace NES.CPU.PPUClasses
             //}
             //else
             //{
-                rgb32OutBuffer[vbufLocation] =
+                *curBufPos =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
             //}
@@ -287,7 +291,7 @@ namespace NES.CPU.PPUClasses
             isForegroundPixel = false;
             if (_spritesAreVisible && !ClippingSpritePixels())
             {
-                spritePixel = GetSpritePixel();
+                spritePixel = FastGetSpritePixel();
             }
             //&& (newbyte & 3) != 0
             if (!hitSprite && spriteZeroHit)
@@ -296,18 +300,9 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            if (fillRGB)
-            {
-                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? pal[_palette[spritePixel]]
-                    : pal[_palette[tilePixel]];
-            }
-            else
-            {
-                rgb32OutBuffer[vbufLocation] =
-                    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? spritePixel : tilePixel;
-            }
+            *curBufPos =
+                (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                ? spritePixel : tilePixel;
         }
 
 

@@ -55,8 +55,12 @@ public partial class MainWindow: Gtk.Window
 		machine.PPU.LoadPalRGBA();
 		machine.PPU.ShouldRender = true;
 		
-		vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256*256);
-		machine.PPU.SetVideoBuffer(vidBuffer);
+		for(int i = 0; i < 2; ++i)
+		{
+			vidBuffers[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256*256);
+		}
+		SwapNesBuffer();
+		vidBuffer = vidBuffers[curBuffer];
 		
 		glwidget2.ExposeEvent += Render;
 		
@@ -64,10 +68,36 @@ public partial class MainWindow: Gtk.Window
 		// sdlVideo = new Video(machine);
 		
 		machine.Drawscreen += HandleDrawscreen;	
+
+		
+		this.Destroyed += HandleDestroyed;
+
+
 	}
+
+	void HandleDestroyed(object sender, EventArgs e)
+	{
+		sndThread.Dispose();
+		machine.Dispose();
+		for(int i = 0; i < 2; ++i)
+		{
+			Marshal.FreeHGlobal(vidBuffers[i]);
+		}
+	
+	}
+
 	IntPtr vidBuffer;
+	IntPtr[] vidBuffers = new IntPtr[2];
+	int curBuffer=0;
 	//  int[] vidBuffer = new int[256*256];
 
+	void SwapNesBuffer()
+	{
+		curBuffer++;
+		curBuffer %=2;
+		machine.PPU.SetVideoBuffer(vidBuffers[curBuffer]);
+
+	}
 	void HandleSizeAllocated(object o, SizeAllocatedArgs args)
 	{
 		if (inititalized) GLResize();	
@@ -75,9 +105,7 @@ public partial class MainWindow: Gtk.Window
 
 	void HandleDestroyEvent(object o, DestroyEventArgs args)
 	{
-		sndThread.Dispose();
-		machine.Dispose();
-		Marshal.FreeHGlobal(vidBuffer);
+
 	}
 
 	void HandleKeyReleaseEvent(object o, KeyReleaseEventArgs args)
@@ -177,7 +205,11 @@ public partial class MainWindow: Gtk.Window
 
 	void HandleDrawscreen(object sender, EventArgs e)
 	{
+
+		
 		machine.PadOne.SetNextControlByte(padOneState);
+		vidBuffer = vidBuffers[curBuffer];
+		SwapNesBuffer();
  		
 		Gtk.Application.Invoke(delegate {RefreshGLWidgets(); });
 	}
@@ -185,6 +217,9 @@ public partial class MainWindow: Gtk.Window
 
 	void RefreshGLWidgets()
 	{
+        Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
+        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
+
 		glwidget2.QueueDraw();
 		//sdlVideo.BlitScreen();
         
@@ -250,21 +285,22 @@ public partial class MainWindow: Gtk.Window
 	bool inititalized =false;
 	unsafe void  Render(object sender, EventArgs e)
 	{
-		if  (!inititalized)
+		if (!inititalized)
 		{
-			inititalized= true;
-			SetupDisplay();
-			GLResize();
+				inititalized= true;
+		SetupDisplay();
+		GLResize();
 		}
-		
+
         
 		Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
 		Gl.glLoadIdentity();
 		
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
-        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
+        //Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
 		DrawBillboard();
+		Gl.glFlush();
 	}
 	
 
@@ -310,7 +346,9 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
+		
 		Application.Quit ();
+		
 		a.RetVal = true;
 	}
 	

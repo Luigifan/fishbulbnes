@@ -200,8 +200,9 @@ namespace NES.CPU.PPUClasses
                 if (scanline >= y && scanline < y + spriteSize)
                 {
 
-                    currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
-                    currentSprites[spritesOnThisScanline].IsVisible = true;
+                    //currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
+                    //currentSprites[spritesOnThisScanline].IsVisible = true;
+					DrawSpriteLine(unpackedSprites[spriteID], scanline);
 
                     spritesOnThisScanline++;
                     if (spritesOnThisScanline == _maxSpritesPerScanline)
@@ -217,17 +218,16 @@ namespace NES.CPU.PPUClasses
 //            spritesOnThisScanline = currSprite;
         }
 
-        private void DrawSpriteLine(NESSprite currSprite)
+        private void DrawSpriteLine(NESSprite currSprite, int scanline)
         {
             int spritePatternTable = 0;
             if ((_PPUControlByte0 & 0x08) == 0x08)
             {
                 spritePatternTable = 0x1000;
             }
-            for (
-            int xPos = currSprite.XPosition; xPos < currSprite.XPosition + 8; ++xPos)
+            for (int xPos = currSprite.XPosition; xPos < currSprite.XPosition + 8; ++xPos)
             {
-                int yLine = currentYPosition - currSprite.YPosition - 1;
+                int yLine = scanline - currSprite.YPosition - 1;
 
                 yLine = yLine & (spriteSize - 1);
 
