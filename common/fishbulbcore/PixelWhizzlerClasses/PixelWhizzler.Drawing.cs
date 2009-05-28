@@ -64,13 +64,13 @@ namespace NES.CPU.PPUClasses
             lastcpuClock = cpuClockNum;
         }
 		
-		        private unsafe void BumpScanline()
+        private unsafe void BumpScanline()
         {
             switch (frameClock++)
             {
-                case 0:
-                    frameFinished();
-                    break;
+//                case 0:
+//                    frameFinished();
+//                    break;
                 case 6820:
                     frameOn = true;
                     // setFrameOn();
@@ -126,7 +126,7 @@ namespace NES.CPU.PPUClasses
                         DrawClipPixel();
                     else
                         DrawPixel();
-
+					
                     vbufLocation++;
 //					nextPixel++;
                 }

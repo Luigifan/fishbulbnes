@@ -33,7 +33,7 @@ namespace NES.CPU.Machine.BeepsBoops
             _sharedBuffer = new byte[8192];
         }
 		
-		private float frequency = 44100;
+		private float frequency = 22050;
 		public float Frequency
 		{	
 			get { return frequency;}

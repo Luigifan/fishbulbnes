@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.FastendoDebugging;
+using NES.CPU.FastendoDebugging;
 
 namespace Fishbulb.Common.UI
 {
@@ -21,9 +22,30 @@ namespace Fishbulb.Common.UI
 
 		void HandleDebugInfoChanged(object sender, BreakEventArgs e)
 		{
+			UpdateDebugInfo();
 			NotifyPropertyChanged("DataModel");
 		}
 
+		private string[] debugInfo = new string[9];
+		
+		private void UpdateDebugInfo()
+		{
+			if (machine.DebugInfo != null && machine.DebugInfo.CPU != null)
+			{
+				debugInfo[0]=  string.Format( "Accumulator: {0}" , machine.DebugInfo.CPU.Accumulator);
+				debugInfo[1]=  string.Format( "IndX: {0}" , machine.DebugInfo.CPU.IndexRegisterX);
+				debugInfo[2]=  string.Format( "IndY: {0}" , machine.DebugInfo.CPU.IndexRegisterY);
+				debugInfo[3]=  string.Format( "PC: {0}" , machine.DebugInfo.CPU.ProgramCounter);
+				debugInfo[4]=  string.Format( "SR: {0}" , machine.DebugInfo.CPU.StatusRegister);
+				debugInfo[5]=  string.Format( "SP: {0}" , machine.DebugInfo.CPU.StackPointer);
+				debugInfo[6]=  string.Format( "Current Op: {0}" , machine.DebugInfo.CPU.CurrentInstruction.Disassemble());
+				debugInfo[7]=  string.Format( "Last Address: {0}" , machine.DebugInfo.CPU.CurrentInstruction.Address);
+				debugInfo[8]=  string.Format( "Last Op: {0}" , machine.DebugInfo.CPU.LastInstruction);
+				
+				
+			}
+		}
+		
 		#region IViewModel implementation
 		public string CurrentView {
 			get {
@@ -59,10 +81,7 @@ namespace Fishbulb.Common.UI
 		
 		public object DataModel {
 			get {
-                if (machine.DebugInfo != null && machine.DebugInfo.CPU != null)
-					return machine.DebugInfo.CPU;
-				else
-					return new NES.CPU.FastendoDebugging.DebuggerCPUState();
+				return debugInfo;
 			}
 		}
 

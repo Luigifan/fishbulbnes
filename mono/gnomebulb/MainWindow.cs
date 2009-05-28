@@ -52,16 +52,16 @@ public partial class MainWindow: Gtk.Window
 		
 		machine.PPU.PixelWidth=32;
 		machine.PPU.FillRGB = true;
-		// machine.PPU.LoadPalRGBA();
-		machine.PPU.ShouldRender = false;
+		machine.PPU.LoadPalRGBA();
+		machine.PPU.ShouldRender = true;
 		
 		vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256*256);
 		machine.PPU.SetVideoBuffer(vidBuffer);
 		
-//		glwidget2.ExposeEvent += Render;
-//		
-//		glwidget2.SizeAllocated += HandleSizeAllocated;
-		sdlVideo = new Video(machine);
+		glwidget2.ExposeEvent += Render;
+		
+		glwidget2.SizeAllocated += HandleSizeAllocated;
+		// sdlVideo = new Video(machine);
 		
 		machine.Drawscreen += HandleDrawscreen;	
 	}
@@ -185,7 +185,7 @@ public partial class MainWindow: Gtk.Window
 
 	void RefreshGLWidgets()
 	{
-		//glwidget2.QueueDraw();
+		glwidget2.QueueDraw();
 		//sdlVideo.BlitScreen();
         
 	}
@@ -229,13 +229,6 @@ public partial class MainWindow: Gtk.Window
 
         Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, 256, 256, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixels);
 
-		
-		
-		// setup window
-		
-		//GLWidget glWidget = glwidget2 as GLWidget;
-
-
     }
 
 	void GLResize()
@@ -243,10 +236,6 @@ public partial class MainWindow: Gtk.Window
 		    int width;
 		    int height;
 			glwidget2.GdkWindow.GetSize(out width, out height);
-			// glHandler.ResizeGLWindow(height,width);
-			
-	//		if (machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Paused || machine.RunState == NES.Machine.ControlPanel.RunningStatuses.Running)
-	//			glHandler.UpdateNESScreen(machine.PPU.VideoBuffer);		
 	
 			Gl.glViewport(0, 0, width, height);
 			Gl.glClearColor(0.0f,0.0f,0.0f,0);
@@ -274,15 +263,8 @@ public partial class MainWindow: Gtk.Window
 		Gl.glLoadIdentity();
 		
         Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
-//		fixed (int* p = machine.PPU.VideoBuffer)
-//		{
-	        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
-			DrawBillboard();
-	        Gl.glFlush();
-//		}
-        //glwidget2.SwapBuffers();
-		
-
+        Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, vidBuffer);
+		DrawBillboard();
 	}
 	
 

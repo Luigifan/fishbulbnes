@@ -34,7 +34,7 @@ namespace WPFamicom.Sound
 		
         void DoCallback(IntPtr userData, IntPtr stream, int length)
         {
-			Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
+			// Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
 
             try
             {
@@ -45,7 +45,7 @@ namespace WPFamicom.Sound
 					length = PlayoutCurrentBuffer(ref ptr, length);
 					if (length > 0)
 					{
-                        Console.WriteLine("  " + length.ToString() + " bytes remaining");
+                        // Console.WriteLine("  " + length.ToString() + " bytes remaining");
                         GetNextBuffer();
 					}
 					
@@ -69,7 +69,7 @@ namespace WPFamicom.Sound
             else
             {
                 playingBuf = null;
-                Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
+                // Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
                 SamplesAvailableResetEvent.WaitOne();
             }
         }
