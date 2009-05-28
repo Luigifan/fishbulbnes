@@ -142,12 +142,13 @@ namespace NES.CPU.PPUClasses
 
         public byte FastGetSpritePixel()
         {
-            if ((spriteLine[currentXPosition] & 256) == 256)
+			int i = spriteLine[currentXPosition];
+            if ((i & 256) == 256)
             {
                 spriteZeroHit = true;
             }
-            isForegroundPixel = (spriteLine[currentXPosition] & 512) == 512;
-            return (byte)spriteLine[currentXPosition];
+            isForegroundPixel = (i & 512) == 512;
+            return (byte)(i | (i >> 16));
         }
 
 
@@ -202,7 +203,8 @@ namespace NES.CPU.PPUClasses
 
                     //currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
                     //currentSprites[spritesOnThisScanline].IsVisible = true;
-					DrawSpriteLine(unpackedSprites[spriteID], scanline);
+					if (SpritesAreVisible)
+						DrawSpriteLine(unpackedSprites[spriteID], scanline);
 
                     spritesOnThisScanline++;
                     if (spritesOnThisScanline == _maxSpritesPerScanline)
@@ -225,28 +227,29 @@ namespace NES.CPU.PPUClasses
             {
                 spritePatternTable = 0x1000;
             }
-            for (int xPos = currSprite.XPosition; xPos < currSprite.XPosition + 8; ++xPos)
+			int yLine = scanline - currSprite.YPosition - 1;
+			
+			yLine = yLine & (spriteSize - 1);
+			
+            int tileIndex = currSprite.TileIndex;
+
+            if ((_PPUControlByte0 & 0x20) == 0x20)
             {
-                int yLine = scanline - currSprite.YPosition - 1;
-
-                yLine = yLine & (spriteSize - 1);
-
-                int tileIndex = currSprite.TileIndex;
-
-                if ((_PPUControlByte0 & 0x20) == 0x20)
+                if ((tileIndex & 1) == 1)
                 {
-                    if ((tileIndex & 1) == 1)
-                    {
-                        spritePatternTable = 0x1000;
-                        tileIndex = tileIndex ^ 1;
-                    }
-                    else
-                    {
-                        spritePatternTable = 0;
-                    }
+                    spritePatternTable = 0x1000;
+                    tileIndex = tileIndex ^ 1;
                 }
+                else
+                {
+                    spritePatternTable = 0;
+                }
+            }
 
-                if (spriteLine[xPos] == 0)
+            for (int xPos = 0; xPos < 8; ++xPos)
+            {
+
+                if (spriteLine[currSprite.XPosition + xPos] == 0)
                 {
                     int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
                     if (result != 0)
@@ -259,7 +262,8 @@ namespace NES.CPU.PPUClasses
                         {
                             result |= 512;
                         }
-                        spriteLine[xPos] = result;
+						result |= currSprite.AttributeByte << 16;
+                        spriteLine[currSprite.XPosition + xPos] = result;
                     }
                 }
             }

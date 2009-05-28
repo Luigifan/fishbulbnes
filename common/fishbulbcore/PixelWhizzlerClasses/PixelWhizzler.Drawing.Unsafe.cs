@@ -116,7 +116,7 @@ namespace NES.CPU.PPUClasses
             switch (frameClock++)
             {
                 case 0:
-                    frameFinished();
+//                    frameFinished();
                     break;
                 case 6820:
                     frameOn = true;
@@ -136,6 +136,8 @@ namespace NES.CPU.PPUClasses
                 case 7161:
                     //lockedVScroll = _vScroll;
                     vbufLocation = 0;
+					//curBufPos = bufStart;
+				
                     xNTXor = 0x0;
                     yNTXor = 0;
                     currentXPosition = 0;
@@ -157,7 +159,7 @@ namespace NES.CPU.PPUClasses
             {
 
 
-                if (currentXPosition < 256 && curBufPos < bufEnd)
+                if (currentXPosition < 256 && vbufLocation < 256 * 240)
                 {
 
                     xPosition = currentXPosition + lockedHScroll;
@@ -174,8 +176,8 @@ namespace NES.CPU.PPUClasses
                     else
                         DrawPixel();
 					
-					curBufPos++;
-//                    vbufLocation++;
+					//curBufPos++;
+                    vbufLocation++;
 //					nextPixel++;
                 }
 
@@ -256,7 +258,7 @@ namespace NES.CPU.PPUClasses
         {
             int tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             isForegroundPixel = false;
-            int spritePixel = _spritesAreVisible ? FastGetSpritePixel() : (byte)0;
+            int spritePixel = FastGetSpritePixel() ;
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {
@@ -272,7 +274,7 @@ namespace NES.CPU.PPUClasses
             //}
             //else
             //{
-                *curBufPos =
+                rgb32OutBuffer[vbufLocation] =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
             //}
@@ -289,7 +291,7 @@ namespace NES.CPU.PPUClasses
                 tilePixel = GetNameTablePixel();
             }
             isForegroundPixel = false;
-            if (_spritesAreVisible && !ClippingSpritePixels())
+            if (!ClippingSpritePixels())
             {
                 spritePixel = FastGetSpritePixel();
             }
@@ -300,7 +302,7 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            *curBufPos =
+            rgb32OutBuffer[vbufLocation] =
                 (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 ? spritePixel : tilePixel;
         }
