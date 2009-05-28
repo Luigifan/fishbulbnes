@@ -6,7 +6,7 @@ using NES.CPU.Fastendo;
 
 namespace NES.CPU.PPUClasses
 {
-    public partial class PixelWhizzler : IClockedMemoryMappedIOElement
+    public unsafe partial  class PixelWhizzler : IClockedMemoryMappedIOElement
     {
 
         private bool vidRamIsRam = true;
@@ -185,13 +185,13 @@ namespace NES.CPU.PPUClasses
                     {
                         // these palettes are all mirrored every 0x10 bytes
                         int palAddress = (_PPUAddress) & 0x1F;
-                        _palette[palAddress] = (byte)data;
-                        // rgb32OutBuffer[255 * 256 + palAddress] = data;
-                        if ((_PPUAddress & 0xFFEF) == 0x3F00)
-                        {
-                           _palette[(palAddress ^ 0x10) & 0x1F] = (byte)data;
-                          // rgb32OutBuffer[255 * 256 + palAddress ^ 0x10] = data;
-                        }
+                        // _palette[palAddress] = (byte)data;
+                        //*(rgb32OutBufferStart + (255 * 256 + palAddress)) = data;
+                        //if ((_PPUAddress & 0xFFEF) == 0x3F00)
+                        //{
+                        //   // _palette[(palAddress ^ 0x10) & 0x1F] = (byte)data;
+                        //    *(rgb32OutBufferStart + (255 * 256 + palAddress ^ 0x10)) = data;
+                        //}
 
                         // _vidRAM[_PPUAddress ^ 0x1000] = (byte)data;
                     }
@@ -275,7 +275,7 @@ namespace NES.CPU.PPUClasses
                     if ((PPUAddress & 0xFF00) == 0x3F00)
                     {
                         // these palettes are all mirrored every 0x10 bytes
-                        tmp = _palette[PPUAddress & 0x1F];
+                        tmp = rgb32OutBuffer[255*256 + PPUAddress & 0x1F];
                         // palette read should also read vram into read buffer
 
                         // info i found on the nesdev forums
@@ -316,6 +316,9 @@ namespace NES.CPU.PPUClasses
             return 0;
         }
 
+        #region IClockedMemoryMappedIOElement Members
+
+        #endregion
 
         #region IClockedMemoryMappedIOElement Members
 

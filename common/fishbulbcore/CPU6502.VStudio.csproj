@@ -18,12 +18,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -90,10 +90,8 @@
     <Compile Include="Machine\NESMachine.Threading.cs" />
     <Compile Include="Machine\NESMachineDebugger.cs" />
     <Compile Include="Machine\ROMLoader\iNESFileHandler.cs" />
-    <Compile Include="PixelWhizzlerClasses\NESSprite.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Mirroring.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
     <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,8 +119,6 @@
     <Compile Include="Machine\Carts\BaseCart.cs" />
     <Compile Include="Machine\NESMachine.Timing.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.RomHandling.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
   </ItemGroup>
@@ -147,6 +143,16 @@
     <Compile Include="Machine\NESMachine.SRAM.cs" />
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
+    <Compile Include="PixelWhizzlerClasses\NESSprite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.Unsafe.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,8 @@ namespace NES.CPU.nitenedo.Interaction
 
         void UpdateNESScreen(int[] pixels, int[] palette);
 
+        void UpdateNESScreen(IntPtr pixelData);
+
         void DrawDefaultDisplay();
 
         void SetPausedState(bool state);

@@ -17,26 +17,57 @@ namespace NES.CPU.PPUClasses
             set { lastcpuClock = value; }
         }
 		
-        private int[] rgb32OutBuffer = new int[256 * 256];
-		
+        private int* rgb32OutBuffer;
+
+        public IntPtr VideoDataPtr
+        {
+            get { return (IntPtr)rgb32OutBuffer; }
+        }
+
 		public void FillBuffer()
 		{
-			for(int i = 0; i < 256*240;++i)
-			{
-                rgb32OutBuffer[i] =  pal[rgb32OutBuffer[255 * 256 + (byte)rgb32OutBuffer[i]]];
-			}
+            int* outBufPtr = rgb32OutBuffer;
+            int* endBufPtr = rgb32OutBuffer + 256 * 240;
+            if (fillRGB)
+            {
+                while (outBufPtr < endBufPtr)
+                {
+                    *(outBufPtr) = pal[_palette[*outBufPtr & 0xFF]];
+                    outBufPtr++;
+                }
+            }
+            else
+            {
+                fixed (byte* pal = _palette)
+                {
+                    byte* palPtr = pal;
+                    outBufPtr += 255 * 256;
+                    for (int i = 0; i < 32; ++i)
+                    {
+                        *outBufPtr++ = *palPtr++;
+                    }
+                }
+
+            }
 			
 		}
 	
         public int[] VideoBuffer
         {
             get 
-			{ 
-				
-				return rgb32OutBuffer; 
+			{
+                return null;
+				// return rgb32OutBuffer; 
 			}
         }
 
+        int* bufStart;
+        int* curBufPos;
+        public unsafe void SetVideoBuffer(IntPtr Buffer)
+        {
+            bufStart = (int*)Buffer;
+            rgb32OutBuffer = bufStart;
+        }
 		
 		private int* nextPixel;
         /// <summary>
@@ -110,12 +141,11 @@ namespace NES.CPU.PPUClasses
                     break;
 
                 case frameClockEnd:
-					if (fillRGB) FillBuffer();
+                    FillBuffer();
                     SetupVINT();
                     frameFinished();
                     frameOn = false;
-                    //Array.Copy(_palette, 0, rgb32OutBuffer, 255 * 256, 32);
-                    //setFrameOff();
+
                     frameClock = 0;
                     break;
             }
@@ -230,18 +260,18 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-//            if (fillRGB)
-//            {
-//                *(nextPixel) = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-//                    ? pal[rgb32OutBuffer[255 * 256 + spritePixel]] 
-//					: pal[rgb32OutBuffer[255 * 256 + tilePixel]];
-//            }
-//            else
-//            {
+            //if (fillRGB)
+            //{
+            //    rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+            //        ? pal[_palette[spritePixel]]
+            //        : pal[_palette[tilePixel]];
+            //}
+            //else
+            //{
                 rgb32OutBuffer[vbufLocation] =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
-//            }
+            //}
         }
 
         private void DrawClipPixel()
@@ -266,17 +296,18 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-//            if (fillRGB)
-//            {
-//                *(nextPixel) = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-//                    ? pal[rgb32OutBuffer[255*256 + spritePixel]] : pal[rgb32OutBuffer[255*256+tilePixel]];
-//            }
-//            else
-//            {
+            if (fillRGB)
+            {
+                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                    ? pal[_palette[spritePixel]]
+                    : pal[_palette[tilePixel]];
+            }
+            else
+            {
                 rgb32OutBuffer[vbufLocation] =
                     (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                     ? spritePixel : tilePixel;
-//            }
+            }
         }
 
 
