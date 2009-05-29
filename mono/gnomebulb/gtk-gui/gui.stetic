@@ -24,8 +24,8 @@
             <property name="MemberName" />
             <property name="DoubleBuffered">True</property>
             <property name="ColorBits">24</property>
-            <property name="AlphaBits">8</property>
-            <property name="DepthBits">0</property>
+            <property name="AlphaBits">0</property>
+            <property name="DepthBits">8</property>
             <property name="StencilBits">0</property>
           </widget>
           <packing>

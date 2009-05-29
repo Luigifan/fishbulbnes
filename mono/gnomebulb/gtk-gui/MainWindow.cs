@@ -42,8 +42,8 @@ public partial class MainWindow {
         this.glwidget2.Name = "glwidget2";
         this.glwidget2.DoubleBuffered = true;
         this.glwidget2.ColorBits = 24;
-        this.glwidget2.AlphaBits = 8;
-        this.glwidget2.DepthBits = 0;
+        this.glwidget2.AlphaBits = 0;
+        this.glwidget2.DepthBits = 8;
         this.glwidget2.StencilBits = 0;
         this.hpaned1.Add(this.glwidget2);
         Gtk.Paned.PanedChild w1 = ((Gtk.Paned.PanedChild)(this.hpaned1[this.glwidget2]));

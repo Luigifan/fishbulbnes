@@ -114,7 +114,7 @@ namespace WPFamicom.Sound
                 freq = (int)_wavSource.Frequency,
                 format = (short)Sdl.AUDIO_S16SYS,
                 channels = 1,
-                samples = 2048,
+                samples = (short)(_wavSource.Frequency/60),
                 callback = Marshal.GetFunctionPointerForDelegate(audioCallback),
             };
 
@@ -139,7 +139,7 @@ namespace WPFamicom.Sound
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
-			while(buffersToPlay.Count > 5)
+			while(buffersToPlay.Count > 2)
 			{
 				BufferEmptyResetEvent.WaitOne();
 			}

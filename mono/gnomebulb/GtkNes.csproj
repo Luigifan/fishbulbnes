@@ -36,7 +36,7 @@
     <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -49,21 +49,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -109,6 +94,11 @@
     <Reference Include="Tao.Sdl, Version=1.2.12.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
       <Package>tao-sdl-1.2</Package>
     </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -151,19 +141,19 @@
     <Compile Include="SDLInlineWavStreamer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Client.3.5">
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Framework.2.0">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Framework.3.0">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
       <Visible>False</Visible>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Framework.3.5">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
       <Visible>False</Visible>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\Microsoft.Net.Framework.3.5.SP1">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
     </BootstrapperPackage>
   </ItemGroup>
@@ -191,6 +181,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="..\..\..\..\Projects\fishbulblive\mono\gnomebulb\SoundControls\" />
+    <Folder Include="SoundControls\" />
   </ItemGroup>
 </Project>
