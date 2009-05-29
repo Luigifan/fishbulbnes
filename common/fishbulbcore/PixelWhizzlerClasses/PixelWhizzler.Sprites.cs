@@ -174,6 +174,83 @@ namespace NES.CPU.PPUClasses
                 : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2));
         }
 
+        private void WhissaSprite(int patternTableIndex, int y, NESSprite sprite, int tileIndex)
+        {
+            // 8x8 tile
+            int patternEntry;
+            int patternEntryBit2;
+
+            if (sprite.FlipY)
+            {
+                y = spriteSize - y - 1;
+            }
+
+            if (y >= 8)
+            {
+                y += 8;
+            }
+
+            patternEntry = _vidRAM[patternTableIndex + tileIndex * 16 + y];
+            patternEntryBit2 = _vidRAM[patternTableIndex + tileIndex * 16 + y + 8];
+
+            if (sprite.FlipX)
+            {
+                for (int x = 0; x < 8; ++x)
+                {
+                    if (sprite.XPosition + x < 256 && spriteLine[sprite.XPosition + x] == 0)
+                    {
+                        int b =
+                            ((patternEntry ) & 0x1) | (((patternEntryBit2) << 1) & 0x2);
+
+                        if (b != 0)
+                        {
+                            if (sprite.SpriteNumber == 0)
+                            {
+                                b |= 256;
+                            }
+                            if (sprite.Foreground)
+                            {
+                                b |= 512;
+                            }
+                            b |= sprite.AttributeByte << 16;
+                            spriteLine[sprite.XPosition + x] = b;
+                        }
+                        patternEntry >>=1;
+                        patternEntryBit2 >>=1;
+                    }
+                }
+            }
+            else 
+            {
+                for (int x = 7; x >= 0; --x)
+                {
+                    if (sprite.XPosition + x < 256 && spriteLine[sprite.XPosition + x] == 0)
+                    {
+                        int b =
+                            ((patternEntry ) & 0x1) | (((patternEntryBit2) << 1) & 0x2);
+
+                        if (b != 0)
+                        {
+                            if (sprite.SpriteNumber == 0)
+                            {
+                                b |= 256;
+                            }
+                            if (sprite.Foreground)
+                            {
+                                b |= 512;
+                            }
+                            b |= sprite.AttributeByte << 16;
+                            spriteLine[sprite.XPosition + x] = b;
+                        }
+                        patternEntry >>=1;
+                        patternEntryBit2 >>=1;
+                    }
+                }
+            }
+
+
+        }
+
         int spritesOnThisScanline;
 
         int spriteSize;
@@ -242,27 +319,28 @@ namespace NES.CPU.PPUClasses
                 }
             }
 
-            for (int xPos = 0; xPos < 8; ++xPos)
-            {
-                int pixelNum = currSprite.XPosition + xPos;
-                if (pixelNum < 256 && spriteLine[pixelNum] == 0)
-                {
-                    int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
-                    if (result != 0)
-                    {
-                        if (currSprite.SpriteNumber == 0)
-                        {
-                            result |= 256;
-                        }
-                        if (currSprite.Foreground)
-                        {
-                            result |= 512;
-                        }
-                        result |= currSprite.AttributeByte << 16;
-                        spriteLine[pixelNum] = result;
-                    }
-                }
-            }
+            WhissaSprite(spritePatternTable, yLine, currSprite, tileIndex);
+            //for (int xPos = 0; xPos < 8; ++xPos)
+            //{
+            //    int pixelNum = currSprite.XPosition + xPos;
+            //    if (pixelNum < 256 && spriteLine[pixelNum] == 0)
+            //    {
+            //        int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
+            //        if (result != 0)
+            //        {
+            //            if (currSprite.SpriteNumber == 0)
+            //            {
+            //                result |= 256;
+            //            }
+            //            if (currSprite.Foreground)
+            //            {
+            //                result |= 512;
+            //            }
+            //            result |= currSprite.AttributeByte << 16;
+            //            spriteLine[pixelNum] = result;
+            //        }
+            //    }
+            //}
         }
 
         public void UnpackSprites()
