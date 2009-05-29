@@ -34,7 +34,7 @@ namespace WPFamicom.Sound
 		
         void DoCallback(IntPtr userData, IntPtr stream, int length)
         {
-			// Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
+			//Console.WriteLine("SDLInlineWavStreamer wants bytes: " + length.ToString());
 
             try
             {
@@ -47,6 +47,15 @@ namespace WPFamicom.Sound
 					{
                         // Console.WriteLine("  " + length.ToString() + " bytes remaining");
                         GetNextBuffer();
+						if (playingBuf == null)
+						{
+							while (length > 0)
+							{
+								*ptr++=0;
+								length--;
+							}
+						}
+						
 					}
 					
                 }
@@ -69,8 +78,6 @@ namespace WPFamicom.Sound
             else
             {
                 playingBuf = null;
-                // Console.WriteLine("SDLInlineWavStreamer ran out of data (NES too slow)");
-                SamplesAvailableResetEvent.WaitOne();
             }
         }
 
@@ -114,7 +121,7 @@ namespace WPFamicom.Sound
                 freq = (int)_wavSource.Frequency,
                 format = (short)Sdl.AUDIO_S16SYS,
                 channels = 1,
-                samples = (short)(_wavSource.Frequency/60),
+                samples = 512, //(short)(_wavSource.Frequency/50),
                 callback = Marshal.GetFunctionPointerForDelegate(audioCallback),
             };
 
@@ -205,8 +212,11 @@ namespace WPFamicom.Sound
 
         public void Dispose()
         {
-
-            BufferEmptyResetEvent.Close();
+			Sdl.SDL_AudioQuit();
+			while(buffersToPlay.Count > 0)
+				BufferEmptyResetEvent.Set();
+				
+	        BufferEmptyResetEvent.Close();
 			SamplesAvailableResetEvent.Set();
             SamplesAvailableResetEvent.Close();
 

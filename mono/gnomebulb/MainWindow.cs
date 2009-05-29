@@ -48,7 +48,6 @@ public partial class MainWindow: Gtk.Window
 		this.KeyPressEvent += HandleKeyPressEvent;
 		this.KeyReleaseEvent += HandleKeyReleaseEvent;
 		
-		this.DestroyEvent += HandleDestroyEvent;
 		
 		machine.PPU.PixelWidth=32;
 		machine.PPU.FillRGB = true;
@@ -70,21 +69,11 @@ public partial class MainWindow: Gtk.Window
 		machine.Drawscreen += HandleDrawscreen;	
 
 		
-		this.Destroyed += HandleDestroyed;
-
+		
 
 	}
 
-	void HandleDestroyed(object sender, EventArgs e)
-	{
-		sndThread.Dispose();
-		machine.Dispose();
-		for(int i = 0; i < 2; ++i)
-		{
-			Marshal.FreeHGlobal(vidBuffers[i]);
-		}
-	
-	}
+
 
 	IntPtr vidBuffer;
 	IntPtr[] vidBuffers = new IntPtr[2];
@@ -103,10 +92,6 @@ public partial class MainWindow: Gtk.Window
 		if (inititalized) GLResize();	
 	}
 
-	void HandleDestroyEvent(object o, DestroyEventArgs args)
-	{
-
-	}
 
 	void HandleKeyReleaseEvent(object o, KeyReleaseEventArgs args)
 	{
@@ -346,10 +331,26 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
+		Console.WriteLine("StartDestroy");
+		machine.ThreadStoptendo();
+		machine.Dispose();
+		Console.WriteLine("\tmachine disposed");
+		sndThread.Dispose();
+		Console.WriteLine("\tsound disposed");
+		Tao.Sdl.Sdl.SDL_Quit();
+		Console.WriteLine("\tSDL closed");
+		for(int i = 0; i < 2; ++i)
+		{
+			Marshal.FreeHGlobal(vidBuffers[i]);
+		}
+		Console.WriteLine("\t buffers destroyed");
 		
+		Console.WriteLine("Destroyed");
 		Application.Quit ();
 		
 		a.RetVal = true;
-	}
+	}	
+
+
 	
 }
