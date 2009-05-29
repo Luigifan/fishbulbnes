@@ -39,6 +39,7 @@ namespace WPFamicom.Sound
 
             masteringVoice = new MasteringVoice(device);
 
+            
             CreateVoice();
 
         }
@@ -72,8 +73,9 @@ namespace WPFamicom.Sound
             if (buffersInPlay < BUFFER_COUNT)
             {
                 SendBuffer();
+                
                 buffersInPlay++;
-                while (sourceVoice.State.BuffersQueued > 3)
+                if (buffersInPlay > 3)
                 {
                     BufferEmptyResetEvent.WaitOne();
                 }

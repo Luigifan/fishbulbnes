@@ -116,7 +116,7 @@ namespace NES.CPU.PPUClasses
             switch (frameClock++)
             {
                 case 0:
-//                    frameFinished();
+                   frameFinished();
                     break;
                 case 6820:
                     frameOn = true;
@@ -258,7 +258,8 @@ namespace NES.CPU.PPUClasses
         {
             int tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             isForegroundPixel = false;
-            int spritePixel = FastGetSpritePixel() ;
+            // int spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
+            int spritePixel = FastGetSpritePixel();
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {

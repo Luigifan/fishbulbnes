@@ -69,7 +69,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OpenGLViewWritableBitmap.cs" />
     <Compile Include="OpenGLNESViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

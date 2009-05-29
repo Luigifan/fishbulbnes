@@ -29,7 +29,7 @@ namespace WPFamicom
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public unsafe partial class Window1 : Window
     {
         private double top = 0, left = 0;
         
@@ -38,6 +38,7 @@ namespace WPFamicom
         DebuggerVM dvm;
         SoundThreader sndThread;
         DXKeyboard keyboard;
+        IntPtr vidBuffer;
 
         public Window1()
         {
@@ -57,7 +58,9 @@ namespace WPFamicom
             whizzlerDebugger.DataContext = dvm;
             this.Closed += Window1_Closed;
             keyboard = new DXKeyboard();
-            
+
+            vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256 * 256);
+            nes.PPU.SetVideoBuffer(vidBuffer);
             nes.Drawscreen += nes_Drawscreen;
 
 
@@ -139,6 +142,7 @@ namespace WPFamicom
         {
             try
             {
+                Marshal.FreeHGlobal(vidBuffer);
                 Dispatcher.ExitAllFrames();
                 controlPanel.Dispose();
                 nes.Dispose();

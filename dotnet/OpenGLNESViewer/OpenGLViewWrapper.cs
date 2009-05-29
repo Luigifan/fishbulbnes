@@ -181,5 +181,16 @@ namespace WPFamicom.OpenGLDisplay
         }
 
         #endregion
+
+        #region IDisplayContext Members
+
+
+        public void UpdateNESScreen(IntPtr data)
+        {
+            viewer.UpdateNESScreen(data);
+            viewer.Draw();
+        }
+
+        #endregion
     }
 }

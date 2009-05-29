@@ -143,10 +143,7 @@ namespace NES.CPU.PPUClasses
         public byte FastGetSpritePixel()
         {
 			int i = spriteLine[currentXPosition];
-            if ((i & 256) == 256)
-            {
-                spriteZeroHit = true;
-            }
+            spriteZeroHit = (i & 256) == 256;
             isForegroundPixel = (i & 512) == 512;
             return (byte)(i | (i >> 16));
         }
@@ -203,8 +200,7 @@ namespace NES.CPU.PPUClasses
 
                     //currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
                     //currentSprites[spritesOnThisScanline].IsVisible = true;
-					if (SpritesAreVisible)
-						DrawSpriteLine(unpackedSprites[spriteID], scanline);
+					DrawSpriteLine(unpackedSprites[spriteID], scanline);
 
                     spritesOnThisScanline++;
                     if (spritesOnThisScanline == _maxSpritesPerScanline)
@@ -227,10 +223,10 @@ namespace NES.CPU.PPUClasses
             {
                 spritePatternTable = 0x1000;
             }
-			int yLine = scanline - currSprite.YPosition - 1;
-			
-			yLine = yLine & (spriteSize - 1);
-			
+            int yLine = scanline - currSprite.YPosition - 1;
+
+            yLine = yLine & (spriteSize - 1);
+
             int tileIndex = currSprite.TileIndex;
 
             if ((_PPUControlByte0 & 0x20) == 0x20)
@@ -248,8 +244,8 @@ namespace NES.CPU.PPUClasses
 
             for (int xPos = 0; xPos < 8; ++xPos)
             {
-
-                if (spriteLine[currSprite.XPosition + xPos] == 0)
+                int pixelNum = currSprite.XPosition + xPos;
+                if (pixelNum < 256 && spriteLine[pixelNum] == 0)
                 {
                     int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
                     if (result != 0)
@@ -262,8 +258,8 @@ namespace NES.CPU.PPUClasses
                         {
                             result |= 512;
                         }
-						result |= currSprite.AttributeByte << 16;
-                        spriteLine[currSprite.XPosition + xPos] = result;
+                        result |= currSprite.AttributeByte << 16;
+                        spriteLine[pixelNum] = result;
                     }
                 }
             }

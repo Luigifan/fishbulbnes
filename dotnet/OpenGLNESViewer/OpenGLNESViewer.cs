@@ -298,6 +298,40 @@ namespace WPFamicom.OpenGLDisplay
 
         }
         int[] nesPalette = new int[256];
+        public void UpdateNESScreen(IntPtr pixelData)
+        {
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+            Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
+            Gl.glTexSubImage2D(Gl.GL_TEXTURE_2D, 0, 0, 0, 256, 256, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, pixelData);
+            Gl.glLoadIdentity();
+            Gl.glTranslatef(0f, 0, -3.5f);
+            Gl.glUniform1i(fragShaderPassNumber, (int)engine);
+            if (isRotating)
+            {
+                rotation = isRotating ? rotation - 0.25f : 0;
+
+                Gl.glRotatef(rotation, 1.0f, 1.0f, 1.0f);
+            }
+            switch (renderOnto)
+            {
+                case Shapes.Billboard:
+                    DrawNesScreen();
+                    break;
+                case Shapes.Cube:
+                    Gl.glCallList(nesCubeDisplayList);
+                    break;
+                case Shapes.Sphere:
+                    DrawNesSphere();
+                    break;
+                case Shapes.SphereInCube:
+                    DrawNesSphereInNesCube();
+                    break;
+            }
+            Gl.glFlush();
+
+        }
+
         public void UpdateNESScreen(int[] pixels) 
         {
             //Array.Copy(pixels, 255 * 256, nesPalette, 0, 32);
@@ -331,6 +365,7 @@ namespace WPFamicom.OpenGLDisplay
                     DrawNesSphereInNesCube();
                     break;
             }
+            Gl.glFlush();
         }
 
         private void UpdateNESTexture(int[] pixels)

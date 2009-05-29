@@ -17,9 +17,12 @@ namespace testproject
             section.Containers.Default.Configure(container);
 
 			Application.Init ();
-			MainWindow win = new MainWindow (container);
+
+            MainWindow win = new MainWindow (container);
 			win.Show ();
-			Application.Run ();
+			
+            Application.Run ();
+            
 		}
 	}
 }
