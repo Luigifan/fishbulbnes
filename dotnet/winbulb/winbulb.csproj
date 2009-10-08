@@ -410,10 +410,6 @@
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502.VStudio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenGLNESViewer\OpenGLNESViewer.csproj">
-      <Project>{E6E59ECA-0D68-4D80-AB73-9E751C95B5D4}</Project>
-      <Name>OpenGLNESViewer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WpfNESViewer\WpfNESViewer.csproj">
       <Project>{1A666FE9-318A-4DA9-810B-4D16D449765E}</Project>
       <Name>WpfNESViewer</Name>

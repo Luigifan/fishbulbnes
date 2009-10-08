@@ -60,7 +60,7 @@ namespace WPFamicom
             keyboard = new DXKeyboard();
 
             vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256 * 256);
-            nes.PPU.SetVideoBuffer(vidBuffer);
+            //nes.PPU.SetVideoBuffer(vidBuffer);
             nes.Drawscreen += nes_Drawscreen;
 
 

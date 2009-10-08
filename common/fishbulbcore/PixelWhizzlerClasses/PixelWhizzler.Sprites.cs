@@ -259,7 +259,7 @@ namespace NES.CPU.PPUClasses
         /// denoted scanline. 
         /// </summary>
         /// <param name="scanline">the scanline to preload sprites for</param>
-        public unsafe void PreloadSprites(int scanline)
+        public void PreloadSprites(int scanline)
         {
             spritesOnThisScanline = 0;
 			Array.Clear(spriteLine,0,256);

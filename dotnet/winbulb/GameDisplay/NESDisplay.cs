@@ -53,7 +53,7 @@ namespace WPFamicom.GameDisplay
         void DrawScreen()
         {
             //if (displayContext.PixelWidth ==32)
-                displayContext.UpdateNESScreen(target.PPU.VideoDataPtr);
+                displayContext.UpdateNESScreen(target.PPU.VideoBuffer);
         }
 
         public void SetupRenderer(IDisplayContext displayContext)
