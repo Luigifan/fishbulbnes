@@ -6,6 +6,7 @@ using SlimDX.XAudio2;
 using SlimDX.Multimedia;
 using System.Threading;
 using NES.CPU.Machine.BeepsBoops;
+using System.IO;
 
 namespace WPFamicom.Sound
 {
@@ -22,7 +23,7 @@ namespace WPFamicom.Sound
         MasteringVoice masteringVoice;
         SourceVoice sourceVoice = null;
         AudioBuffer buffer;
-
+        MemoryStream bufferStream = new MemoryStream();
         public InlineWavStreamer(IWavReader wavSource)
         {
             _wavSource = wavSource;
@@ -35,6 +36,7 @@ namespace WPFamicom.Sound
             device = new XAudio2();
 
             buffer = new AudioBuffer();
+            buffer.AudioData = bufferStream;
             buffer.Flags = BufferFlags.EndOfStream;
 
             masteringVoice = new MasteringVoice(device);
@@ -141,7 +143,7 @@ namespace WPFamicom.Sound
             sourceVoice.SubmitSourceBuffer(buffer);
             sourceVoice.Start(PlayFlags.None);
             sourceVoice.BufferEnd += new EventHandler<ContextEventArgs>(sourceVoice_BufferEnd);
-            sourceVoice.VoiceError += new EventHandler<ErrorEventArgs>(sourceVoice_VoiceError);
+            sourceVoice.VoiceError += new EventHandler<SlimDX.XAudio2.ErrorEventArgs>(sourceVoice_VoiceError);
             //while (_isRunning)
             //{
 
@@ -171,7 +173,9 @@ namespace WPFamicom.Sound
         {
             buffer.AudioBytes = _wavSource.SharedBufferLength;
             buffer.PlayLength = _wavSource.SharedBufferLength / 2;
-            buffer.AudioData = _wavSource.SharedBuffer;
+            //bufferStream.Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            buffer.AudioData = new MemoryStream(_wavSource.SharedBuffer);
+            //bufferStream.Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
             sourceVoice.SubmitSourceBuffer(buffer);
             currentBuffer++;
             currentBuffer %= BUFFER_COUNT;
@@ -181,7 +185,7 @@ namespace WPFamicom.Sound
             _wavSource.ReadWaves();
         }
 
-        void sourceVoice_VoiceError(object sender, ErrorEventArgs e)
+        void sourceVoice_VoiceError(object sender, SlimDX.XAudio2.ErrorEventArgs e)
         {
             throw new NotImplementedException();
         }

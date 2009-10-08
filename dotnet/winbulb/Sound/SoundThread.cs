@@ -25,7 +25,7 @@ namespace WPFamicom.Sound
 
                 _nes = nes;
                 _nes.SoundStatusChanged += new EventHandler<NES.CPU.Machine.BeepsBoops.SoundStatusChangeEventArgs>(_nes_SoundStatusChanged);
-                _wavePlayer = new SDLInlineWavStreamer(_nes.WaveForms);
+                _wavePlayer = new InlineWavStreamer(_nes.WaveForms);
 
                 ThreadPool.QueueUserWorkItem(PlaySound, null);
 

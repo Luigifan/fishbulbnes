@@ -138,5 +138,18 @@ namespace WpfNESViewer
         }
 
         #endregion
+
+        #region IDisplayContext Members
+
+
+        public void UpdateNESScreen(IntPtr pixelData)
+        {
+           
+            bitmap.WritePixels(new Int32Rect(0, 8, 256, 240), pixelData, 256*240*8 , stride, 0, 0);
+            
+            //throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

@@ -18,8 +18,9 @@ namespace WPFamicom.Input
         public DXKeyboard()
         {
             // make sure that DirectInput has been initialized
-            DirectInput.Initialize();
-            keyboard = new Device<KeyboardState>(SystemGuid.Keyboard);
+            //DirectInput.Initialize();
+            
+            keyboard = new Device<KeyboardState>(new DirectInput(), SystemGuid.Keyboard);
         }
 
         public void CreateDevice(Window host)

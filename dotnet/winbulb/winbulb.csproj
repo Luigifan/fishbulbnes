@@ -51,6 +51,27 @@
     <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -77,7 +98,14 @@
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.StaticFactory.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Luna" />
-    <Reference Include="SlimDX, Version=2.0.6.40, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86" />
+    <Reference Include="SlimDX, Version=2.0.7.41, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\SlimDX SDK (March 2009)\Bin\x64\SlimDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SlimDX.Windows7, Version=2.0.7.41, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\SlimDX SDK (March 2009)\Bin\x64\SlimDX.Windows7.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -308,7 +336,6 @@
     <Compile Include="Sound\InlineWavStreamer.cs" />
     <Compile Include="Sound\OpenALInlineWavStreamer.cs" />
     <Compile Include="Sound\OpenALWavStreamer.cs" />
-    <Compile Include="Sound\SDLInlineWavStreamer.cs" />
     <Compile Include="Sound\SoundModel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -382,6 +409,14 @@
     <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.VStudio.csproj">
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502.VStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenGLNESViewer\OpenGLNESViewer.csproj">
+      <Project>{E6E59ECA-0D68-4D80-AB73-9E751C95B5D4}</Project>
+      <Name>OpenGLNESViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfNESViewer\WpfNESViewer.csproj">
+      <Project>{1A666FE9-318A-4DA9-810B-4D16D449765E}</Project>
+      <Name>WpfNESViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

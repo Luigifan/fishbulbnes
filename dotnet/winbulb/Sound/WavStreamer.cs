@@ -149,7 +149,7 @@ namespace WPFamicom.Sound
 
                     buffer.AudioBytes = _wavSource.SharedBufferLength;
                     buffer.PlayLength = _wavSource.SharedBufferLength / 2;
-                    buffer.AudioData = _wavSource.SharedBuffer;
+                    buffer.AudioData = new System.IO.MemoryStream(_wavSource.SharedBuffer);
                     sourceVoice.SubmitSourceBuffer(buffer);
                     currentBuffer++;
                     currentBuffer %= BUFFER_COUNT;
