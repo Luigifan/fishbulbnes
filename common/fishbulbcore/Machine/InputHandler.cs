@@ -3,14 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NES.CPU.Fastendo;
+using NES.CPU.Machine;
 
 namespace NES.CPU.nitenedo
 {
-    public class InputHandler : IMemoryMappedIOElement, NES.CPU.Machine.IControlPad
+    public class InputHandler : IMemoryMappedIOElement
     {
         private int currentByte;
         private int nextByte;
         private int readNumber=0;
+
+        private IControlPad controlPad;
+
+        public IControlPad ControlPad
+        {
+            get { return controlPad; }
+            set { controlPad = value;
+            controlPad.NextControlByteSet += new EventHandler<ControlByteEventArgs>(controlPad_NextControlByteSet);
+            }
+        }
+
+        void controlPad_NextControlByteSet(object sender, ControlByteEventArgs e)
+        {
+            SetNextControlByte(e.NextValue);
+        }
+
         private object inputLock = new object();
 
         public int GetByte(int address)
@@ -38,7 +55,7 @@ namespace NES.CPU.nitenedo
             }
         }
 
-        public void SetNextControlByte(int data)
+        private void SetNextControlByte(int data)
         {
 
             nextByte = data;

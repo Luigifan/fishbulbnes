@@ -16,7 +16,7 @@ namespace NES.CPU.Fastendo
         // custom ram handlers
         private IPPU _pixelWhizzler;
         private IClockedMemoryMappedIOElement _cart;
-        private IMemoryMappedIOElement _padOne = new InputHandler();
+        private InputHandler _padOne = new InputHandler();
 
         IClockedMemoryMappedIOElement soundBopper;
 
@@ -43,7 +43,7 @@ namespace NES.CPU.Fastendo
             _handleIRQ = soundBopper.IRQAsserted | _cart.IRQAsserted;
         }
 
-        public IMemoryMappedIOElement PadOne
+        public InputHandler PadOne
         {
             get { return _padOne; }
         }

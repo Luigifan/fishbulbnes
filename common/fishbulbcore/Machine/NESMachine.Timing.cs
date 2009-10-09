@@ -50,14 +50,18 @@ namespace NES.CPU.nitenedo
             {
                 soundBopper.FlushFrame(_totalCPUClocks);
                 soundBopper.EndFrame(_totalCPUClocks);
-                //_sharedWave.SyncUp();
+
             }
+
             if (Drawscreen != null)
                 Drawscreen(this, new EventArgs());
+
+            PadOne.Refresh();
 
             _totalCPUClocks = 0;
             _cpu.Clock = 0;
             _ppu.LastcpuClock = 0;
+            
 
         }
 
