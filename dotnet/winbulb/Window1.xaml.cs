@@ -37,7 +37,7 @@ namespace WPFamicom
         ControlPanelVM controlPanel;
         DebuggerVM dvm;
         SoundThreader sndThread;
-        DXKeyboard keyboard;
+        SlimDXKeyboardControlPad keyboard;
         IntPtr vidBuffer;
 
         public Window1()
@@ -57,7 +57,8 @@ namespace WPFamicom
 
             whizzlerDebugger.DataContext = dvm;
             this.Closed += Window1_Closed;
-            keyboard = new DXKeyboard();
+            keyboard = new SlimDXKeyboardControlPad();
+            nes.PadOne = keyboard;
 
             vidBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256 * 256);
             //nes.PPU.SetVideoBuffer(vidBuffer);
@@ -71,8 +72,6 @@ namespace WPFamicom
 
         void nes_Drawscreen(object sender, EventArgs e)
         {
-            nes.PadOne.SetNextControlByte(keyboard.ReadImmediateData());
-            //sndThread.WavePlayer.CheckSamples();
         }
 
 

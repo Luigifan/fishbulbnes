@@ -310,6 +310,7 @@
     <Compile Include="GameDisplay\NESDisplay.cs" />
     <Compile Include="HexViewer\HexValueConverter.cs" />
     <Compile Include="Input\DXKeyboard.cs" />
+    <Compile Include="Input\SlimDXKeyboardControlPad.cs" />
     <Compile Include="InstructionRollout\InstructionRollout.cs" />
     <Compile Include="InstructionRollout\InstructionRolloutItem.cs" />
     <Compile Include="opDisassembler.cs">

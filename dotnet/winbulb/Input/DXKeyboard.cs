@@ -114,8 +114,6 @@ namespace WPFamicom.Input
             return PadOneState;
         }
 
-
-
         void ReleaseDevice()
         {
             if (keyboard != null)
