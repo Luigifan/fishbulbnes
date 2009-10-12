@@ -93,10 +93,8 @@ namespace Fishbulb.Common.UI
 
         public object DataModel
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
+            get;
+            set;
         }
 
         #endregion

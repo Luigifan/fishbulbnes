@@ -16,7 +16,7 @@ namespace NES.CPU.Fastendo
         // custom ram handlers
         private IPPU _pixelWhizzler;
         private IClockedMemoryMappedIOElement _cart;
-        private InputHandler _padOne = new InputHandler();
+        private InputHandler _padOne ;
 
         IClockedMemoryMappedIOElement soundBopper;
 

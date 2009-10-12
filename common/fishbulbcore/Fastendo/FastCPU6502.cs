@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using NES.CPU.nitenedo;
 
 namespace NES.CPU.Fastendo
 {
@@ -14,10 +15,17 @@ namespace NES.CPU.Fastendo
         private int _accumulator = 0, _indexRegisterX = 0, _indexRegisterY = 0;
 
 
-        public CPU2A03()
+        public CPU2A03(IPPU whizzler, NES.CPU.Machine.BeepsBoops.Bopper bopper, InputHandler padOne)
         {
+            _padOne = padOne;
+            
+            _pixelWhizzler = whizzler;
+
+            SoundBopper = bopper;
             nmiHandler = NMIHandler;
             irqUpdater = IRQUpdater;
+
+            _pixelWhizzler.NMIHandler = nmiHandler;
         }
 
  
@@ -41,6 +49,7 @@ namespace NES.CPU.Fastendo
 
         private int _programCounter;
 
+       
         public int ProgramCounter
         {
             get { return _programCounter; }

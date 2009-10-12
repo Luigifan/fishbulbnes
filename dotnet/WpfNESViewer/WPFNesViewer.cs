@@ -35,11 +35,22 @@ namespace WpfNESViewer
                 throw new NotImplementedException();
             }
         }
-
+        ImageBrush marioBrush;
+        ImageBrush nesBrush;
         public void CreateDisplay()
         {
             bitmap = new WriteableBitmap(256, 256, 96, 96, PixelFormats.Pbgra32,null);
-            this.Background = new ImageBrush(bitmap);
+            nesBrush = new ImageBrush(bitmap);
+            marioBrush = new ImageBrush( );
+
+            
+
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.StreamSource = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.default.jpg");
+            img.EndInit();
+            marioBrush.ImageSource = img;
+
         }
 
         private BitmapPalette SetupNESPalette()
@@ -87,11 +98,13 @@ namespace WpfNESViewer
         byte[] pixArray = new byte[256 * 256];
         public void UpdateNESScreen(int[] pixels)
         {
+            if (this.Background != nesBrush) this.Background = nesBrush;
             bitmap.WritePixels(new Int32Rect(0, 8, 256, 240), pixels, stride, 0, 0);
         }
 
         public void DrawDefaultDisplay()
         {
+            this.Background = marioBrush;
         }
 
         public void SetPausedState(bool state)

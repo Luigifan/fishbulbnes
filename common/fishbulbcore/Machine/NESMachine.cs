@@ -87,32 +87,48 @@ namespace NES.CPU.nitenedo
         
         TextWriter debug;
         //zzzz bloop;
-        public NESMachine()
+        public NESMachine(CPU2A03 cpu, PixelWhizzler ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper)
         {
-            // create new memory map
-            // add cpu, ppu, input etc to it
+            _cpu = cpu;
+            _ppu = ppu;
+            _ppu.FrameFinishHandler = StartDraw;
+            this.tiler = tiler;
+
             DebugStream = null;
 
-            _cpu = new CPU2A03();
-            _ppu = new PixelWhizzler();
-            _ppu.FrameFinishHandler = StartDraw;
-
-            //TODO: only hook this up when debugging, it doesnt need to live in ram
-            tiler = new TileDoodler(_ppu);
-
-            _cpu.PixelWhizzler = _ppu;
-            
-            SetupSound();
-
+            _sharedWave = wavSharer;
+            this.soundBopper = soundBopper;
             _cpu.SoundBopper = soundBopper;
-            //Blip blipper = new Blip();
-            //debug = new StreamWriter(new FileStream("d:\\soundout.txt", FileMode.Create, FileAccess.Write));
-            //bloop = new Blooper(blipper, debug);
 
-            //_cpu.Blooper = bloop;
-            
             Initialize();
         }
+
+        //public NESMachine()
+        //{
+        //    // create new memory map
+        //    // add cpu, ppu, input etc to it
+        //    DebugStream = null;
+
+        //    _cpu = new CPU2A03();
+        //    _ppu = new PixelWhizzler();
+        //    _ppu.FrameFinishHandler = StartDraw;
+
+        //    //TODO: only hook this up when debugging, it doesnt need to live in ram
+        //    tiler = new TileDoodler(_ppu);
+
+        //    _cpu.PixelWhizzler = _ppu;
+            
+        //    SetupSound();
+
+        //    _cpu.SoundBopper = soundBopper;
+        //    //Blip blipper = new Blip();
+        //    //debug = new StreamWriter(new FileStream("d:\\soundout.txt", FileMode.Create, FileAccess.Write));
+        //    //bloop = new Blooper(blipper, debug);
+
+        //    //_cpu.Blooper = bloop;
+            
+        //    Initialize();
+        //}
 
         public int FrameCount
         {

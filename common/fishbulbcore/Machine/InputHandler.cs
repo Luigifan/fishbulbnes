@@ -15,11 +15,16 @@ namespace NES.CPU.nitenedo
 
         private IControlPad controlPad;
 
+        public InputHandler(IControlPad padOne)
+        {
+            ControlPad = padOne;
+        }
+
         public IControlPad ControlPad
         {
             get { return controlPad; }
             set { controlPad = value;
-            controlPad.NextControlByteSet += new EventHandler<ControlByteEventArgs>(controlPad_NextControlByteSet);
+                    controlPad.NextControlByteSet += new EventHandler<ControlByteEventArgs>(controlPad_NextControlByteSet);
             }
         }
 

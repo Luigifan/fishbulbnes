@@ -1,0 +1,12 @@
+﻿<Application x:Class="InstiBulb.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:InstiBulb.Converters"
+             Startup="Application_Startup"
+             StartupUri="MainWindow.xaml"
+    >
+    <Application.Resources>
+        <converters:CommandDictionaryConverter x:Key="CommandDictionaryConverter" />
+        <converters:ContainerResolverConverter x:Key="ContainerResolver"/>
+    </Application.Resources>
+</Application>
