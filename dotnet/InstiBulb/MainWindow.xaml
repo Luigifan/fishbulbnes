@@ -6,7 +6,6 @@
         xmlns:wpfView ="clr-namespace:WpfNESViewer"
         DataContext="{DynamicResource Container}"
     Title="Window1" Height="480" Width="720"
-        KeyDown="Window_KeyDown"
         >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -33,8 +32,12 @@
             DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                             ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
                               />
-            </StackPanel>
-        
-        
+            <views:CheatControl x:Name="CheatControl"
+            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
+                              />
+        </StackPanel>
+
+
     </Grid>
 </Window>

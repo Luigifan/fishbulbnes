@@ -31,18 +31,13 @@ namespace InstiBulb
 
         void Window1_KeyUp(object sender, KeyEventArgs e)
         {
-            e.Handled = true;
-
+            e.Handled = !NesDisplay.Target.IsRunning;
         }
 
         void Window1_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = true;
+            e.Handled = !NesDisplay.Target.IsRunning;
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-        }
     }
 }

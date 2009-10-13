@@ -51,13 +51,16 @@ namespace InstiBulb.Integration
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
+            
             container.RegisterType<NESMachine>( new ContainerControlledLifetimeManager());
 
             // register views
             container.RegisterType<ControlPanelVM>();
             container.RegisterType<SoundViewModel>();
+            container.RegisterType<CheatPanelVM>();
             container.RegisterType<IViewModel, SoundViewModel>("SoundVM", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, CheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
 
             return container;
         }

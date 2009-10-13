@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="InstiBulb.SoundPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Background="DarkBlue" Foreground="Yellow">Sound Controls</Label>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <Slider Minimum="0" Maximum="1" Value="{Binding Volume, Mode=TwoWay}"/>
+            <CheckBox IsChecked="{Binding Muted}" Content="Muted" />
+        </StackPanel>
+    </Grid>
+</UserControl>

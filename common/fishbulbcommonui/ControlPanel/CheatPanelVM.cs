@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using System.Collections.Specialized;
 using System.Text;
 using Fishbulb.Common.UI;
 using NES.CPU.nitenedo;
@@ -10,6 +10,7 @@ using System.ComponentModel;
 
 namespace Fishbulb.Common.UI
 {
+
     public class CheatPanelVM : IViewModel
     {
         
@@ -19,7 +20,7 @@ namespace Fishbulb.Common.UI
         {
             this.nes = nes;
             commands.Add("AddCheat",new InstigatorCommand(
-                new CommandExecuteHandler(o => AddGenieCode(o as string)),
+                new CommandExecuteHandler(o => AddGenieCode() ),
                 new CommandCanExecuteHandler(o => CanAddGenieCode)
                 ));
             commands.Add("ClearCheats", new InstigatorCommand(
@@ -27,14 +28,17 @@ namespace Fishbulb.Common.UI
                 new CommandCanExecuteHandler(o => CanClearGenieCodes)
                 ));
 
+            gameGenieCodes = new List<string>();
+            gameGenieCodes.Add("Test");
+
         }
 
         private List<string> gameGenieCodes = new List<string>();
 
-        public IEnumerable<string> GameGenieCodes
+        public List<string> GameGenieCodes
         {
             get { return gameGenieCodes; }
-            // set { gameGenieCodes = value; }
+            set { gameGenieCodes = value; }
         }
 
         public bool CanClearGenieCodes
@@ -45,8 +49,9 @@ namespace Fishbulb.Common.UI
         public void ClearGenieCodes()
         {
             nes.ClearGenieCodes();
-            gameGenieCodes = new List<string>();
+            gameGenieCodes.Clear();
             NotifyPropertyChanged("GameGenieCodes");
+
         }
 
         string _currentCode = string.Empty;
@@ -62,6 +67,7 @@ namespace Fishbulb.Common.UI
                 {
                     _currentCode = value;
                     NotifyPropertyChanged("CanAddGenieCode");
+                    NotifyPropertyChanged("Commands");
                 }
             }
         }
@@ -71,11 +77,12 @@ namespace Fishbulb.Common.UI
             get { return nes != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
         }
 
-        public void AddGenieCode(string code)
+        public void AddGenieCode()
         {
-            if (nes.AddGameGenieCode(code))
+
+            if (nes.AddGameGenieCode(_currentCode))
             {
-                gameGenieCodes.Add(code);
+                gameGenieCodes.Add(_currentCode);
                 NotifyPropertyChanged("GameGenieCodes");
             }
         }
