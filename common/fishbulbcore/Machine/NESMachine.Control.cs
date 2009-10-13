@@ -96,7 +96,8 @@ namespace NES.CPU.nitenedo
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
             }
             else
-            { 
+            {
+                throw new CartLoadException("Couldn't load file");
                 
             }
 

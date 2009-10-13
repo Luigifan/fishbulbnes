@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using Fishbulb.Common.UI;
 using NES.Machine;
 using NES.CPU.nitenedo;
+using NES.CPU.Machine.ROMLoader;
 
 namespace Fishbulb.Common.UI
 {
 
     public delegate void CommandExecuteHandler(object parm);
     public delegate bool CommandCanExecuteHandler(object parm);
+    public delegate string GetFileDelegate(string defaultExt, string Filter);
 
     public enum RunningStatuses
     {
@@ -111,17 +113,30 @@ namespace Fishbulb.Common.UI
 
         NESMachine _target;
 
-        public ControlPanelVM(NESMachine machine)
+        public ControlPanelVM(NESMachine machine, GetFileDelegate fileGetter)
         {
             _target = machine;
-
+            this.fileGetter = fileGetter;
             commands.Add("LoadRom",
                 new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)),
                     new CommandCanExecuteHandler(CanInsertCart)));
             commands.Add("PowerToggle",
-                new InstigatorCommand(new CommandExecuteHandler(o => PowerOn()),
+                new InstigatorCommand(new CommandExecuteHandler(o => 
+                    PowerToggle()
+                    ),
                     new CommandCanExecuteHandler(o => true)));
+            commands.Add("BrowseRom",
+                new InstigatorCommand(new CommandExecuteHandler(BrowseFile), new CommandCanExecuteHandler(CanInsertCart)));
             runstate = RunningStatuses.Unloaded;
+        }
+
+        GetFileDelegate fileGetter;
+
+        void BrowseFile(object o)
+        {
+            string filename = fileGetter("*.nes", "NES Games (*.nes, *.nsf, *.zip)|*.nes;*.nsf;*.zip");
+            if (filename != null)
+                InsertCart(filename);
         }
 
         bool CanInsertCart(object o)
@@ -153,10 +168,15 @@ namespace Fishbulb.Common.UI
                 switch (runstate)
                 {
                     case RunningStatuses.Unloaded:
+                        return "";
                     case RunningStatuses.Off:
                         return "off";
-                    default:
+                    case RunningStatuses.Paused:
+                        return "paused";
+                    case RunningStatuses.Running:
                         return "on";
+                    default:
+                        return "";
                 }
             }
         }
@@ -181,7 +201,16 @@ namespace Fishbulb.Common.UI
 
         void InsertCart(string fileName)
         {
-            _target.GoTendo(fileName);
+            if (_target.IsRunning) PowerOff();
+
+            try
+            {
+                _target.GoTendo(fileName);
+            }
+            catch (CartLoadException )
+            {
+                return;
+            }
 
             this.CartInfo = new CartInfo()
             {
@@ -199,10 +228,45 @@ namespace Fishbulb.Common.UI
 
         void PowerOn()
         {
-            _target.ThreadRuntendo();
+            switch (runstate)
+            {
+                case RunningStatuses.Off:
+                    _target.Reset();
+                    _target.ThreadRuntendo();
+                    break;
+                case RunningStatuses.Paused:
+                    _target.ThreadRuntendo();
+                    break;
+                case RunningStatuses.Unloaded:
+                    return;
+            }
+
             runstate = RunningStatuses.Running;
             NotifyPropertyChanged("PowerStatusText");
         }
+
+        void PowerToggle()
+        {
+            if (runstate == RunningStatuses.Running)
+            {
+                PowerOff();
+            }
+            else
+            {
+                PowerOn();
+            }
+        }
+
+        void PowerOff()
+        {
+            if (_target.IsRunning)
+                _target.KeepRunning = false;
+
+            runstate = RunningStatuses.Off;
+            NotifyPropertyChanged("PowerStatusText");
+
+        }
+
         public bool Paused
         {
             get { return _target.Paused; }

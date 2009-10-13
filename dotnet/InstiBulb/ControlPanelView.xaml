@@ -2,11 +2,35 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     >
-    
+    <UserControl.Resources>
+            <SolidColorBrush x:Key="OnBrush" Color="LimeGreen"/>
+            <SolidColorBrush x:Key="OffBrush" Color="Red"/>
+        <Style x:Key="PowerButtonStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding PowerStatusText}" Value="off">
+                    <Setter Property="Button.Background" Value="{StaticResource OnBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding PowerStatusText}" Value="on">
+                    <Setter Property="Button.Background" Value="{StaticResource OffBrush}"/>
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
     <Grid>
-        <StackPanel Orientation="Horizontal"  >
-            <Button Content="{Binding CurrentCartName}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=LoadRom}" CommandParameter="c:\\1943.zip" />
-            <Button Content="{Binding PowerStatusText}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=PowerToggle}" />
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Background="DarkBlue" Foreground="Yellow">Console Controls</Label>
+
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <StackPanel Orientation="Horizontal"  >
+                <Button Height="20" Width="75" Content="{Binding CurrentCartName, Converter={StaticResource ShortFileNameConverter}}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" ToolTip="{Binding CartInfo}" />
+                <Button Width="25" Content="{Binding PowerStatusText}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=PowerToggle}" Style="{StaticResource PowerButtonStyle}" />
+            </StackPanel>
+            <CheckBox IsChecked="{Binding Paused}">Paused</CheckBox>
         </StackPanel>
     </Grid>
 </UserControl>

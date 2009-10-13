@@ -34,6 +34,7 @@ namespace WPFamicom.GameDisplay
         {
             contextNames = new List<string>();
             loadedDisplayContexts = new Dictionary<string, Type>();
+            SetupPlugin(Assembly.GetExecutingAssembly());
             foreach (string fileName in Directory.GetFiles(folderName, "*.dll"))
             {
                 SetupPlugin(fileName);
@@ -45,34 +46,39 @@ namespace WPFamicom.GameDisplay
         {
             try
             {
-                Assembly assembly = Assembly.LoadFrom(fileName);
 
-                foreach (Type t in assembly.GetTypes())
-                {
-                    if (t.IsPublic && t.IsDefined(typeof(NES.CPU.nitenedo.Interaction.NESDisplayPluginAttribute), true))
-                    {
-                        try
-                        {
-
-                            IDisplayContext renderer = (IDisplayContext)Activator.CreateInstance(t);
-                            if (renderer != null)
-                            {
-
-                                contextNames.Add(renderer.DisplayName);
-                                loadedDisplayContexts.Add(renderer.DisplayName, t);
-                                
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-
-                }
+                SetupPlugin(Assembly.LoadFrom(fileName));
             }
             catch (BadImageFormatException)
             {
             }
+        }
+
+        private void SetupPlugin(Assembly assembly)
+        {
+            foreach (Type t in assembly.GetTypes())
+            {
+                if (t.IsPublic && t.IsDefined(typeof(NES.CPU.nitenedo.Interaction.NESDisplayPluginAttribute), true))
+                {
+                    try
+                    {
+
+                        IDisplayContext renderer = (IDisplayContext)Activator.CreateInstance(t);
+                        if (renderer != null)
+                        {
+
+                            contextNames.Add(renderer.DisplayName);
+                            loadedDisplayContexts.Add(renderer.DisplayName, t);
+
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+            }
+
         }
 
         public NESDisplay Display
@@ -91,7 +97,7 @@ namespace WPFamicom.GameDisplay
             set { contextNames = value.ToList<string>(); }
         }
 
-        private string currentContext = "OpenGL";
+        private string currentContext = "";
 
         public string CurrentContextName
         {

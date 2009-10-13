@@ -4,7 +4,7 @@ using NES.Machine;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.BeepsBoops;
 using GtkNes;
-using WPFamicom.Sound;
+using NES.Sound;
 using System.Collections.Generic;
 
 namespace GtkNes
@@ -23,7 +23,6 @@ namespace GtkNes
         }
 
 
-        #region IProfileViewModel Members
 
         string currentView = "SoundView";
         public string CurrentView
@@ -69,7 +68,21 @@ namespace GtkNes
             }
         }
 
-        #endregion
+        public bool Muted
+        {
+            get
+            {
+                return streamer.Muted;
+            }
+            set
+            {
+                if (streamer.Muted != value)
+                {
+                    streamer.Muted = value;
+                    NotifyPropertyChanged("Muted");
+                }
+            }
+        }
 
         #region INotifyPropertyChanged Members
 

@@ -213,7 +213,7 @@ namespace NES.CPU.PPUClasses
                                 b |= 512;
                             }
                             b |= sprite.AttributeByte << 16;
-                            spriteLine[sprite.XPosition + x] = b;
+                            spriteLine[sprite.XPosition + x] = b | spriteLine[sprite.XPosition + x] & 0xFF00;
                         }
                         patternEntry >>=1;
                         patternEntryBit2 >>=1;
@@ -240,7 +240,8 @@ namespace NES.CPU.PPUClasses
                                 b |= 512;
                             }
                             b |= sprite.AttributeByte << 16;
-                            spriteLine[sprite.XPosition + x] = b;
+                            spriteLine[sprite.XPosition + x] = b | spriteLine[sprite.XPosition + x] & 0xFF00;
+
                         }
                         patternEntry >>=1;
                         patternEntryBit2 >>=1;
@@ -263,19 +264,7 @@ namespace NES.CPU.PPUClasses
         {
             spritesOnThisScanline = 0;
 			Array.Clear(spriteLine,0,256);
-//            fixed (int* p = spriteLine)
-//			{
-//				int* pt = p, pe = p+ 256;
-//				while (pt < pe)
-//				{
-//					*pt++ = 0;
-//				}
-//				
-//			}
-//			for (int i = 0; i < 256; ++i)
-//            {
-//                spriteLine[i] = 0;
-//            }
+
             for (int spriteNum = 0; spriteNum < 0x100; spriteNum += 4)
             {
                 int spriteID = ((spriteNum + _spriteAddress) & 0xFF) >> 2;
@@ -285,8 +274,6 @@ namespace NES.CPU.PPUClasses
                 if (scanline >= y && scanline < y + spriteSize)
                 {
 
-                    //currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
-                    //currentSprites[spritesOnThisScanline].IsVisible = true;
 					DrawSpriteLine(unpackedSprites[spriteID], scanline);
 
                     spritesOnThisScanline++;
@@ -300,7 +287,6 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x20;
 
 
-//            spritesOnThisScanline = currSprite;
         }
 
         private void DrawSpriteLine(NESSprite currSprite, int scanline)
@@ -330,27 +316,7 @@ namespace NES.CPU.PPUClasses
             }
 
             WhissaSprite(spritePatternTable, yLine, currSprite, tileIndex);
-            //for (int xPos = 0; xPos < 8; ++xPos)
-            //{
-            //    int pixelNum = currSprite.XPosition + xPos;
-            //    if (pixelNum < 256 && spriteLine[pixelNum] == 0)
-            //    {
-            //        int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
-            //        if (result != 0)
-            //        {
-            //            if (currSprite.SpriteNumber == 0)
-            //            {
-            //                result |= 256;
-            //            }
-            //            if (currSprite.Foreground)
-            //            {
-            //                result |= 512;
-            //            }
-            //            result |= currSprite.AttributeByte << 16;
-            //            spriteLine[pixelNum] = result;
-            //        }
-            //    }
-            //}
+
         }
 
         public void UnpackSprites()

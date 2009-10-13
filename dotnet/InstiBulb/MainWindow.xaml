@@ -3,28 +3,37 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:InstiBulb"
         xmlns:integration="clr-namespace:InstiBulb.Integration"
-        xmlns:wpfView ="clr-namespace:WpfNESViewer;assembly=WpfNESViewer"
-        DataContext="{StaticResource Container}"
-    Title="Window1" Height="300" Width="300">
+        xmlns:wpfView ="clr-namespace:WpfNESViewer"
+        DataContext="{DynamicResource Container}"
+    Title="Window1" Height="480" Width="720"
+        KeyDown="Window_KeyDown"
+        >
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <integration:NESDisplay x:Name="NesDisplay" Width="256" Height="256"
-            Target="{Binding Path=., Converter={StaticResource ContainerResolver}, 
-                ConverterParameter=NES.CPU.nitenedo.NESMachine\,6502;NESMachine, Mode=OneTime}"  
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" BorderThickness="3"> 
+        <integration:NESDisplay x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
                                 >
             <integration:NESDisplay.Context>
                 <wpfView:WPFNesViewer x:Name="Wpf" />
             </integration:NESDisplay.Context>
         </integration:NESDisplay>
+            </Border>
 
-        <views:ControlPanelView x:Name="ControlPanel"  Grid.Row="1"
+        <StackPanel Orientation="Vertical" Grid.Column="1">
+        <views:ControlPanelView x:Name="ControlPanel"  
             DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                            ConverterParameter=Fishbulb.Common.UI.ControlPanelVM\,fishbulbcommonui;ControlPanel}" 
+                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
                 />
+        <views:SoundPanelView x:Name="SoundPanel"
+            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
+                              />
+            </StackPanel>
         
         
     </Grid>

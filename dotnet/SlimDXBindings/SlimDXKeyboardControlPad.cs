@@ -8,7 +8,7 @@ using System.Windows.Interop;
 using SlimDX;
 using System.Windows;
 
-namespace WPFamicom.Input
+namespace SlimDXBindings
 {
     public class SlimDXKeyboardControlPad: IControlPad, IDisposable
     {

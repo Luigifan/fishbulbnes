@@ -15,9 +15,31 @@ namespace InstiBulb.Converters
         {
             IUnityContainer container = value as IUnityContainer;
             string name = parameter as string;
-            if (container == null || name == null) return null;
+            if (container == null ) return null;
 
-            string[] parms =  name.Split(new char[] { ';' });
+
+            if (targetType == typeof(object))
+            {
+                return ResolveWithTypeString(container, name);
+            }
+            else
+            {
+                if (name == null)
+                    return container.Resolve(targetType);
+                else
+                {
+                    if (name.Contains(';'))
+                        return ResolveWithTypeString(container, name);
+                    return container.Resolve(targetType, name);
+                }
+            }
+        }
+
+        private static object ResolveWithTypeString(IUnityContainer container, string name)
+        {
+            if (name == null) return null;
+
+            string[] parms = name.Split(new char[] { ';' });
 
             if (parms.Count() == 2)
                 return container.Resolve(Type.GetType(parms[0]), parms[1]);

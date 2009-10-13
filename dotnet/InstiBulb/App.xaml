@@ -8,5 +8,6 @@
     <Application.Resources>
         <converters:CommandDictionaryConverter x:Key="CommandDictionaryConverter" />
         <converters:ContainerResolverConverter x:Key="ContainerResolver"/>
+        <converters:ShortFileNameConverter x:Key="ShortFileNameConverter"/>
     </Application.Resources>
 </Application>

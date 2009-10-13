@@ -73,6 +73,23 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -139,15 +156,23 @@
     </Reference>
     <BlendEmbeddedFont Include="Fonts\Vera.ttf">
       <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
     <BlendEmbeddedFont Include="Fonts\VeraBd.ttf">
       <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
     <BlendEmbeddedFont Include="Fonts\VeraBI.ttf">
       <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
     <BlendEmbeddedFont Include="Fonts\VeraIt.ttf">
       <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
     <Page Include="BreakpointsGridControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -284,6 +309,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="WpfNesViewer\WpfControls.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WpfNesViewer\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="App.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
@@ -348,6 +380,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UIComposition\WpfInstigator.cs" />
+    <Compile Include="WpfNesViewer\WPFNesViewer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -370,6 +403,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="WpfNesViewer\bnes.pal" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -412,9 +446,9 @@
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502.VStudio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WpfNESViewer\WpfNESViewer.csproj">
-      <Project>{1A666FE9-318A-4DA9-810B-4D16D449765E}</Project>
-      <Name>WpfNESViewer</Name>
+    <ProjectReference Include="..\SlimDXNESViewer\SlimDXNESViewer.csproj">
+      <Project>{B6986AA5-8100-41A0-9E09-D6C44815D414}</Project>
+      <Name>SlimDXNESViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -429,5 +463,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="SubsetFont.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\3.0\WPF\Microsoft.Expression.Blend.WPF.targets" />
 </Project>

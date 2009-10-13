@@ -23,7 +23,6 @@ namespace WPFamicom.Sound
         MasteringVoice masteringVoice;
         SourceVoice sourceVoice = null;
         AudioBuffer buffer;
-        MemoryStream bufferStream = new MemoryStream();
         public InlineWavStreamer(IWavReader wavSource)
         {
             _wavSource = wavSource;
@@ -34,9 +33,8 @@ namespace WPFamicom.Sound
                 buffers[i] = new byte[BUFFER_STREAM_SIZE];
             }
             device = new XAudio2();
-
             buffer = new AudioBuffer();
-            buffer.AudioData = bufferStream;
+            buffer.AudioData = new MemoryStream();
             buffer.Flags = BufferFlags.EndOfStream;
 
             masteringVoice = new MasteringVoice(device);
@@ -144,38 +142,16 @@ namespace WPFamicom.Sound
             sourceVoice.Start(PlayFlags.None);
             sourceVoice.BufferEnd += new EventHandler<ContextEventArgs>(sourceVoice_BufferEnd);
             sourceVoice.VoiceError += new EventHandler<SlimDX.XAudio2.ErrorEventArgs>(sourceVoice_VoiceError);
-            //while (_isRunning)
-            //{
 
-            //    while (_wavSource.SharedBufferLength < 256)
-            //    {
-            //        SamplesAvailableResetEvent.WaitOne();
-            //    }
-
-            //    // locks the wav sharer so nes cant write it
-
-            //    lock (_wavSource)
-            //    {
-            //        // wait for xaudio to read until its 1 frame behind
-
-
-            //        SendBuffer();
-            //    }
-            //}
-
-            //// sit and spin baby
-            //BufferEmptyResetEvent.WaitOne();
-            //BufferEmptyResetEvent.Reset();
-            //ended = true;
         }
 
         private void SendBuffer()
         {
             buffer.AudioBytes = _wavSource.SharedBufferLength;
             buffer.PlayLength = _wavSource.SharedBufferLength / 2;
-            //bufferStream.Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
-            buffer.AudioData = new MemoryStream(_wavSource.SharedBuffer);
-            //bufferStream.Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            buffer.AudioData
+                    = new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+
             sourceVoice.SubmitSourceBuffer(buffer);
             currentBuffer++;
             currentBuffer %= BUFFER_COUNT;
@@ -217,14 +193,10 @@ namespace WPFamicom.Sound
 
         #endregion
 
-        #region IWavStreamer Members
-
 
         public void CheckSamples()
         {
         }
-
-        #endregion
     }
 
 }

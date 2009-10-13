@@ -97,8 +97,28 @@ namespace InstiBulb.Integration
                 this.displayContext = displayContext;
                 this.displayContext.CreateDisplay();
                 this.displayContext.DrawDefaultDisplay();
-            }
+                if (Target != null)
+                {
+                    Target.PPU.PixelWidth = displayContext.PixelWidth;
+                    Target.PPU.PixelWidth = displayContext.PixelWidth;
 
+                    Target.PPU.LoadPalABGR();
+                    if (displayContext.PixelFormat == NES.CPU.nitenedo.Interaction.NESPixelFormats.RGB)
+                    {
+                        Target.PPU.LoadPalRGBA();
+
+                    }
+
+                    if (displayContext.PixelFormat == NESPixelFormats.Indexed)
+                    {
+                        Target.PPU.FillRGB = false;
+                    }
+                    else
+                    {
+                        Target.PPU.FillRGB = true;
+                    }
+                }
+            }
         }
 
         public IDisplayContext Context

@@ -24,8 +24,25 @@ namespace InstiBulb
         {
             InitializeComponent();
 
-            NesDisplay.SetupRenderer(new WpfNESViewer.WPFNesViewer());
+            Keyboard.AddPreviewKeyDownHandler(this, new KeyEventHandler(Window1_KeyDown));
+            Keyboard.AddPreviewKeyUpHandler(this, new KeyEventHandler(Window1_KeyUp));
             
+        }
+
+        void Window1_KeyUp(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+
+        }
+
+        void Window1_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

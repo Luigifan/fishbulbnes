@@ -10,6 +10,7 @@ using NES.CPU.Machine.Carts;
 using NES.CPU.Machine.BeepsBoops;
 using NES.CPU.Machine;
 using NES.CPU.Machine.ROMLoader;
+using NES.Sound;
 
 namespace NES.CPU.nitenedo
 {
@@ -86,9 +87,12 @@ namespace NES.CPU.nitenedo
         }
         
         TextWriter debug;
+
+        SoundThreader soundThreader;
         //zzzz bloop;
-        public NESMachine(CPU2A03 cpu, PixelWhizzler ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper)
+        public NESMachine(CPU2A03 cpu, PixelWhizzler ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper, SoundThreader soundThread)
         {
+            
             _cpu = cpu;
             _ppu = ppu;
             _ppu.FrameFinishHandler = StartDraw;
@@ -99,6 +103,9 @@ namespace NES.CPU.nitenedo
             _sharedWave = wavSharer;
             this.soundBopper = soundBopper;
             _cpu.SoundBopper = soundBopper;
+
+            soundThreader = soundThread;
+            this.SoundStatusChanged += soundThreader.OnSoundStatusChanged;
 
             Initialize();
         }

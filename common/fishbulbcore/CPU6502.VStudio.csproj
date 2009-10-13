@@ -59,6 +59,25 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -165,6 +184,7 @@
     <Compile Include="Machine\FastendoDebugging\BreakEvent.cs" />
     <Compile Include="Machine\NESMachine.SRAM.cs" />
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
+    <Compile Include="Machine\ROMLoader\CartLoadException.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
     <Compile Include="PixelWhizzlerClasses\NESSprite.cs">
       <SubType>Code</SubType>
@@ -177,6 +197,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
+    <Compile Include="Sound\IWavStreamer.cs" />
+    <Compile Include="Sound\SoundThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
