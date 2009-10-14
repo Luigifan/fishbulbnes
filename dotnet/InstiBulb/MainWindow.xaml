@@ -24,6 +24,7 @@
             </integration:NESDisplay>
         </Border>
         <threeD:ThreeDeeControls x:Name="ControlBoxer" Grid.Column="1" />
+        
     </Grid>
     
 </Window>

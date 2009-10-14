@@ -26,11 +26,15 @@ namespace InstiBulb.ThreeDee
         public ThreeDeeControls()
         {
             InitializeComponent();
-            stepping = 360 / WheelGrid.Children.Count;
-            WheelGrid.Width = WheelGrid.Children.Count * 2048;
-            WheelGrid.Height = 2048;
-            WheelGrid.UpdateLayout();
+            WheelGrid.Rows = 1;
+            WheelGrid.Columns = WheelGrid.Children.Count;
+            if (WheelGrid.Columns > 0)
+                stepping = 360 / WheelGrid.Columns;
+            else
+                stepping = 15;
+            //WheelGrid.UpdateLayout();
             myAngleRotation.SetValue(AxisAngleRotation3D.AngleProperty, stepping);
+            WheelGrid.UpdateLayout();
         }
 
         double currentAngle = 0;

@@ -62,50 +62,42 @@
                             </Transform3DGroup>
                         </threeDeeHelpers:InteractiveCylinder.Transform>
                             <threeDeeHelpers:InteractiveCylinder.Visual>
-                            <Grid x:Name="WheelGrid" HorizontalAlignment="Stretch" Width="4096" Height="1024">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                 </Grid.ColumnDefinitions>
+                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch"  >
                                 <Viewbox>
                                 <views:ControlPanelView 
-                                x:Name="ControlPanel"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
-                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                    x:Name="ControlPanel"  
+                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                     ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                        />
-                                </Viewbox>
-                                <Viewbox Grid.Column="1">
-                                    <views:SoundPanelView  Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                    x:Name="SoundPanel"
-                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
-                                          />
-                                </Viewbox>
-                                <Viewbox Grid.Column="2">
-                                    <views:CheatControl Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                    x:Name="CheatControl"
-                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
-                                      />
-                                </Viewbox>
-                                <Viewbox Grid.Column="3">
-                                    <views:MachineStatus  Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                                      x:Name="MachineStatus"
-                                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
-                                         />
+                                />
                                     </Viewbox>
-                                <Viewbox Grid.Column="4">
-                                    <TextBlock Text="Test Test Test" />
-                                </Viewbox>
-                                <Viewbox Grid.Column="5">
-                                    <TextBlock Text="Test Test Test !!!" />
-                                </Viewbox>
-                            </Grid>
+                                <Viewbox>
+                                <views:SoundPanelView   
+                                    x:Name="SoundPanel"
+                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
+                                      />
+                                    </Viewbox>
+                                <Viewbox>
+                                <views:CheatControl 
+                                    x:Name="CheatControl"
+                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
+                                  />
+                                    </Viewbox>
+                                <Viewbox>
+                                <views:MachineStatus  
+                                                  x:Name="MachineStatus"
+                                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
+                                     />
+                                    </Viewbox>
+                                <Viewbox>
+                                <TextBlock Text="Test Test Test" />
+                                    </Viewbox>
+                                <Viewbox>
+                                <TextBlock Text="Test Test Test !!!" />
+                                    </Viewbox>
+                            </UniformGrid>
                     </threeDeeHelpers:InteractiveCylinder.Visual>
                 </threeDeeHelpers:InteractiveCylinder>
 
