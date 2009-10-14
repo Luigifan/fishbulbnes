@@ -111,7 +111,8 @@ namespace NES.CPU.Fastendo
         public int GetByte(int address)
         {
             int result=0;
-            
+
+
             // check high byte, find appropriate handler
             switch (address & 0xF000)
             {
@@ -161,8 +162,6 @@ namespace NES.CPU.Fastendo
                 case 0xE000:
                 case 0xF000:
                     result = _cart.GetByte(clock, address);
-                    if (_cheating)
-                        result = Cheat(address, result);
                     break;
                 //ppu owns this part of the map
                 default:
@@ -170,6 +169,12 @@ namespace NES.CPU.Fastendo
                 // cart sram, lives here
 
             }
+            if (_cheating && memoryPatches.ContainsKey(address))
+            {
+                
+                return memoryPatches[address].Activated ? memoryPatches[address].GetData(result) & 0xFF : result & 0xFF;
+            }
+
             return result & 0xFF;
         }
 

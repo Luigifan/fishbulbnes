@@ -167,6 +167,7 @@
   <ItemGroup>
     <Compile Include="Fastendo\Fastendo.Cheating.cs" />
     <Compile Include="Fastendo\Fastendo.Control.cs" />
+    <Compile Include="Fastendo\Hacking\MemoryPatch.cs" />
     <Compile Include="Interaction\IDisplayContext.cs" />
     <Compile Include="Machine\BeepsBoops\Blipper.cs" />
     <Compile Include="Machine\BeepsBoops\Bopper.cs" />

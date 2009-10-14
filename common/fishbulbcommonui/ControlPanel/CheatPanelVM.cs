@@ -7,12 +7,31 @@ using System.Text;
 using Fishbulb.Common.UI;
 using NES.CPU.nitenedo;
 using System.ComponentModel;
+using NES.CPU.Fastendo.Hacking;
 
 namespace Fishbulb.Common.UI
 {
 
+
     public class CheatPanelVM : IViewModel
     {
+        public class CheatVM : INotifyPropertyChanged
+        {
+            public string Name { get; set; }
+            public IMemoryPatch Patch { get; set; }
+
+            #region INotifyPropertyChanged Members
+
+            public event PropertyChangedEventHandler PropertyChanged;
+            #endregion
+
+            public override string ToString()
+            {
+                return string.Format("{0} - {1}", Name, Patch.ToString());
+            }
+
+        }
+
         
         private NESMachine nes = null;
 
@@ -29,8 +48,14 @@ namespace Fishbulb.Common.UI
                 ));
 
             gameGenieCodes = new List<string>();
-            gameGenieCodes.Add("Test");
+        }
 
+        private List<CheatVM> cheats = new List<CheatVM>();
+
+        public List<CheatVM> Cheats
+        {
+            get { return cheats; }
+            set { cheats = value; }
         }
 
         private List<string> gameGenieCodes = new List<string>();
@@ -48,10 +73,10 @@ namespace Fishbulb.Common.UI
 
         public void ClearGenieCodes()
         {
+            cheats.RemoveAll(p => gameGenieCodes.Contains(p.Name));
             nes.ClearGenieCodes();
-            gameGenieCodes.Clear();
             NotifyPropertyChanged("GameGenieCodes");
-
+            NotifyPropertyChanged("Cheats");
         }
 
         string _currentCode = string.Empty;
@@ -77,13 +102,29 @@ namespace Fishbulb.Common.UI
             get { return nes != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
         }
 
+        public bool Cheating
+        {
+            get
+            {
+                return (nes == null) ? false : nes.Cpu.Cheating;
+            }
+            set
+            {
+                if (nes == null) return;
+                nes.Cpu.Cheating = value;
+            }
+        }
+
+
         public void AddGenieCode()
         {
-
-            if (nes.AddGameGenieCode(_currentCode))
+            IMemoryPatch patch = null;
+            if (nes.AddGameGenieCode(_currentCode, out patch))
             {
                 gameGenieCodes.Add(_currentCode);
+                cheats.Add(new CheatVM() { Name = _currentCode, Patch = patch });
                 NotifyPropertyChanged("GameGenieCodes");
+                NotifyPropertyChanged("Cheats");
             }
         }
 
@@ -92,8 +133,11 @@ namespace Fishbulb.Common.UI
         void NotifyPropertyChanged(string parameter)
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(parameter));
+            OnPropertyChanged(parameter);
         }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public virtual void OnPropertyChanged(string PropName) { }
 
         #endregion
 

@@ -23,19 +23,19 @@ namespace Fishbulb.Common.UI
         public NESMachine DebugTarget
         {
             get { return _nes; }
-            set
-            {
-                _nes = value;
-                _nes.DebugInfoChanged += new EventHandler<BreakEventArgs>(_nes_DebugInfoChanged);
-                if (_nes != null)
-                {
-                    UpdateDebugInfo();
-                    _breakpoints = new List<string>(
-                        from b in _nes.BreakPoints select b.Address.ToString()
-                        );
-                    _nes.BreakpointHit += new EventHandler<BreakEventArgs>(_nes_BreakpointHit);
-                }
-            }
+            //set
+            //{
+            //    _nes = value;
+            //    _nes.DebugInfoChanged += new EventHandler<BreakEventArgs>(_nes_DebugInfoChanged);
+            //    if (_nes != null)
+            //    {
+            //        UpdateDebugInfo();
+            //        _breakpoints = new List<string>(
+            //            from b in _nes.BreakPoints select b.Address.ToString()
+            //            );
+            //        _nes.BreakpointHit += new EventHandler<BreakEventArgs>(_nes_BreakpointHit);
+            //    }
+            //}
         }
 
         void _nes_BreakpointHit(object sender, BreakEventArgs e)
@@ -151,7 +151,6 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        #region IProfileViewModel implementation
 
         public string CurrentView
         {
@@ -203,9 +202,6 @@ namespace Fishbulb.Common.UI
                 return null;
             }
         }
-
-        #endregion
-
 
         //        private WriteableBitmap patternTable0 = null, patternTable1= null;
         //        private WriteableBitmap nameTable0 = null, nameTable1 = null;

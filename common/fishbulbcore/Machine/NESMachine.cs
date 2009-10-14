@@ -17,6 +17,12 @@ namespace NES.CPU.nitenedo
     public partial class NESMachine
     {
         private CPU2A03 _cpu;
+
+        public CPU2A03 Cpu
+        {
+            get { return _cpu; }
+            set { _cpu = value; }
+        }
         private PixelWhizzler _ppu;
         private INESCart _cart;
 

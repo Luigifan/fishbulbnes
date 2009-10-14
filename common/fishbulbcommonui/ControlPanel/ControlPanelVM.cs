@@ -22,10 +22,33 @@ namespace Fishbulb.Common.UI
         Paused
     }
 
+    public class RunStatusChangedEventArgs : EventArgs
+    {
+        public RunStatusChangedEventArgs(RunningStatuses oldState, RunningStatuses newState)
+        {
+            NewState = newState;
+            OldState = oldState;
+        }
+
+        public RunningStatuses NewState
+        {
+            get;
+            private set;
+        }
+
+        public RunningStatuses OldState
+        {
+            get;
+            private set;
+        }
+    }
+
     public class InstigatorCommand : ICommandWrapper
     {
         CommandExecuteHandler exectutor;
         CommandCanExecuteHandler canExecutor;
+
+
         public InstigatorCommand(CommandExecuteHandler exectutor, CommandCanExecuteHandler canExecutor)
         {
             this.exectutor = exectutor;
@@ -49,6 +72,8 @@ namespace Fishbulb.Common.UI
 
     public class ControlPanelVM : IViewModel
     {
+
+        public event EventHandler<RunStatusChangedEventArgs> RunStatusChangedEvent;
 
         #region IProfileViewModel implementation
         public string CurrentView
@@ -226,8 +251,16 @@ namespace Fishbulb.Common.UI
             NotifyPropertyChanged("CartInfo");
         }
 
+        void OnRunStatusChanged(RunningStatuses oldState, RunningStatuses newState)
+        {
+            if (RunStatusChangedEvent != null)
+                RunStatusChangedEvent(this, new RunStatusChangedEventArgs(oldState, newState));
+        }
+
+
         void PowerOn()
         {
+            RunningStatuses oldState = runstate;
             switch (runstate)
             {
                 case RunningStatuses.Off:
@@ -235,14 +268,17 @@ namespace Fishbulb.Common.UI
                     _target.ThreadRuntendo();
                     break;
                 case RunningStatuses.Paused:
-                    _target.ThreadRuntendo();
+                    Paused=false;
                     break;
                 case RunningStatuses.Unloaded:
                     return;
             }
 
             runstate = RunningStatuses.Running;
+
+            OnRunStatusChanged(oldState, runstate);
             NotifyPropertyChanged("PowerStatusText");
+            
         }
 
         void PowerToggle()
@@ -259,18 +295,36 @@ namespace Fishbulb.Common.UI
 
         void PowerOff()
         {
+            RunningStatuses oldState = runstate;
+
             if (_target.IsRunning)
                 _target.KeepRunning = false;
 
             runstate = RunningStatuses.Off;
             NotifyPropertyChanged("PowerStatusText");
+            OnRunStatusChanged(oldState, runstate);
 
         }
+
+        RunningStatuses prePauseState;
 
         public bool Paused
         {
             get { return _target.Paused; }
-            set { _target.Paused = value; }
+            set {
+                RunningStatuses oldState = runstate;
+                _target.Paused = value;
+                if (runstate == RunningStatuses.Paused)
+                    runstate = prePauseState;
+                else
+                {
+                    prePauseState = runstate;
+                    runstate = RunningStatuses.Paused;
+                }
+
+                OnRunStatusChanged(oldState, runstate);
+                
+            }
         }
     }
 }

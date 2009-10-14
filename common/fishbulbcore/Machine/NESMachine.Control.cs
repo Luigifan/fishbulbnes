@@ -7,6 +7,7 @@ using NES.CPU.Machine.ROMLoader;
 using System.IO;
 using NES.CPU.Fastendo;
 using NES.CPU.Machine.Carts;
+using NES.CPU.Fastendo.Hacking;
 
 namespace NES.CPU.nitenedo
 {
@@ -179,10 +180,12 @@ namespace NES.CPU.nitenedo
             _cpu.Cheating = false;
         }
 
-        public bool AddGameGenieCode(string code)
+        public bool AddGameGenieCode(string code, out IMemoryPatch patch)
         {
             byte[] hexCode = new byte[code.Length];
             int i = 0;
+
+
             foreach (char c in code.ToUpper())
             {
                 byte digit = 0;
@@ -256,6 +259,8 @@ namespace NES.CPU.nitenedo
                 data =
                      ((hexCode[1] & 7) << 4) | ((hexCode[0] & 8) << 4)
                     | (hexCode[0] & 7) | (hexCode[5] & 8);
+
+                patch = new MemoryPatch(address, data);
             }
             else if (hexCode.Length == 8)
             {
@@ -265,16 +270,19 @@ namespace NES.CPU.nitenedo
                 compare =
                      ((hexCode[7] & 7) << 4) | ((hexCode[6] & 8) << 4)
                     | (hexCode[6] & 7) | (hexCode[5] & 8);
-                data |= compare << 8;
+
+                patch = new ComparedMemoryPatch(address, (byte)compare, (byte)data);
             }
             else
             {
                 // not a genie code!  
+                patch = null;
                 return false;
             }
             try
             {
-                _cpu.GenieCodes.Add(address, data);
+                patch.Activated = true;
+                _cpu.MemoryPatches.Add(address, patch);
                 _cpu.Cheating = true;
             }
             catch {
