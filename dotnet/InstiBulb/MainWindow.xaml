@@ -22,21 +22,26 @@
             </integration:NESDisplay.Context>
         </integration:NESDisplay>
             </Border>
-
-        <StackPanel Orientation="Vertical" Grid.Column="1">
-        <views:ControlPanelView x:Name="ControlPanel"  
-            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                />
-        <views:SoundPanelView x:Name="SoundPanel"
-            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
-                              />
-            <views:CheatControl x:Name="CheatControl"
-            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
-                              />
-        </StackPanel>
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"> 
+            <StackPanel Orientation="Vertical" >
+                <views:ControlPanelView x:Name="ControlPanel"  
+                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
+                        />
+                <views:SoundPanelView x:Name="SoundPanel"
+                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
+                                      />
+                <views:CheatControl x:Name="CheatControl"
+                DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
+                                  />
+                <views:MachineStatus x:Name="MachineStatus"
+                DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
+                                     />
+            </StackPanel>
+        </ScrollViewer>
 
 
     </Grid>

@@ -12,6 +12,7 @@ using NES.CPU.Machine;
 using NES.CPU.nitenedo;
 using Fishbulb.Common.UI;
 using GtkNes;
+using InstiBulb.WinViewModels;
 
 namespace InstiBulb.Integration
 {
@@ -57,10 +58,12 @@ namespace InstiBulb.Integration
             // register views
             container.RegisterType<ControlPanelVM>();
             container.RegisterType<SoundViewModel>();
-            container.RegisterType<CheatPanelVM>();
+            container.RegisterType<WinCheatPanelVM>();
+            container.RegisterType<WinDebuggerVM>();
             container.RegisterType<IViewModel, SoundViewModel>("SoundVM", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager());
-            container.RegisterType<IViewModel, CheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager());
 
             return container;
         }

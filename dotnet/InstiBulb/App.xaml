@@ -9,5 +9,23 @@
         <converters:CommandDictionaryConverter x:Key="CommandDictionaryConverter" />
         <converters:ContainerResolverConverter x:Key="ContainerResolver"/>
         <converters:ShortFileNameConverter x:Key="ShortFileNameConverter"/>
+        <converters:HexValueConverter x:Key="HexValueConverter"/>
+        <Style x:Key="HeaderStyle" TargetType="{x:Type Label}">
+            <Setter Property="Background" >
+                <Setter.Value>
+                    <SolidColorBrush Color="DarkBlue"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" >
+                <Setter.Value>
+                    <SolidColorBrush Color="Yellow"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
     </Application.Resources>
 </Application>

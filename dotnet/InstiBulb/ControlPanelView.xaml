@@ -23,7 +23,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Label Background="DarkBlue" Foreground="Yellow">Console Controls</Label>
+        <Label Style="{StaticResource HeaderStyle}" >Console Controls</Label>
 
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <StackPanel Orientation="Horizontal"  >

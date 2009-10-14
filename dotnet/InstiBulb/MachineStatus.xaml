@@ -1,0 +1,135 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="InstiBulb.MachineStatus"
+	x:Name="UserControl"
+	d:DesignWidth="573.695" d:DesignHeight="181.8" 
+    MinHeight="50" 
+    >
+
+	<UserControl.Resources>
+		
+		<LinearGradientBrush x:Key="GreenFont" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF59FD02" Offset="0"/>
+			<GradientStop Color="#FF627856" Offset="1"/>
+		</LinearGradientBrush>
+        <LinearGradientBrush x:Key="SubHeaderBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF59FD02" Offset="0"/>
+            <GradientStop Color="#FF627856" Offset="1"/>
+        </LinearGradientBrush>
+		<Style x:Key="NeonButtonStyle2" TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<SolidColorBrush x:Key="NeonButtonBrushForeColor" Color="#FF2BF316"/>
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.507*"/>
+			<ColumnDefinition Width="0.493*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="31.088"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="30.745"/>
+		</Grid.RowDefinitions>
+        <Label Style="{StaticResource HeaderStyle}" Content="Machine Status" Grid.ColumnSpan="2"/>
+
+        <ScrollViewer Grid.RowSpan="1" Grid.Row="1" Grid.ColumnSpan="2">
+			<StackPanel x:Name="TendoStatuses" ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<StackPanel ScrollViewer.HorizontalScrollBarVisibility="Auto" DataContext="{Binding Path=DebuggerInformation.CPU, Mode=OneWay}" x:Name="CPUStatuses" VerticalAlignment="Top">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Program Counter:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock  FontSize="14" Text="{Binding Path=ProgramCounter, Converter={StaticResource HexValueConverter}, ConverterParameter=4, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtProgramCounter" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Last Opcode:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock  FontSize="14" Text="{Binding Path=LastOpcode, Mode=Default}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtLastOpcode" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Last Instruction: " TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock  FontSize="14" Text="{Binding Path=LastInstruction, Mode=Default}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtLastInstruction" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Accumulator:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock  FontSize="14" Text="{Binding Path=Accumulator, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtAccumulator" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Status Register:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock  FontSize="14" Text="{Binding Path=StatusRegister, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtStatusRegister" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Index X:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock Text="{Binding Path=IndexRegisterX, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" x:Name="txtIndexRegisterX"  FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Index Y:" TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock Text="{Binding Path=IndexRegisterY, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=Default}" TextWrapping="Wrap" x:Name="txtIndexRegisterY"  FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Stack Pointer: " TextWrapping="Wrap" HorizontalAlignment="Left"  FontSize="14" FontWeight="Bold" Width="150"/>
+						<TextBlock Text="{Binding Path=StackPointer, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=Default}" TextWrapping="Wrap" x:Name="txtStackPointer"  FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="#FF3BDC37"/>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel DataContext="{Binding Path=DebuggerInformation.PPU, Mode=Default}" x:Name="PPUStatuses" VerticalAlignment="Top">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock  FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline_Copy" Text="PPU Scanline Number: " Width="200">
+						</TextBlock>
+						<TextBlock  FontSize="14" Text="{Binding Path=ScanLine, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline" HorizontalAlignment="Left" VerticalAlignment="Top">
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock  FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanline_Copy1" Text="PPU Scanline Position: " Width="200">
+						</TextBlock>
+						<TextBlock  FontSize="14" Text="{Binding Path=ScanlinePos, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUScanlinePos" HorizontalAlignment="Left">
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock  FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUStatuslabel" Text="PPU Status: " Width="200">
+						</TextBlock>
+						<TextBlock  FontSize="16" Text="{Binding Path=PPUStatus, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUStatus">
+						</TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock  FontSize="14" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUControl0" Text="PPU Control: " Width="200">
+
+						</TextBlock>
+						<TextBlock  FontSize="16" Text="{Binding Path=PPUControl, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True" FontWeight="Bold" x:Name="txtPPUControl0V">
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
+			</StackPanel>
+		</ScrollViewer>
+		<Border x:Name="StepButtonBorder" BorderBrush="#FF348624" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1" Grid.Row="2" Grid.ColumnSpan="1">
+			<Button Content="Step" x:Name="Step" 
+                    Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=Step}" 
+
+                    Foreground="{DynamicResource NeonButtonBrushForeColor}" BorderBrush="#FF12AC1F" BorderThickness="2,2,3,2"  OpacityMask="#FF000000" Style="{DynamicResource NeonButtonStyle2}"  FontSize="16" FontWeight="ExtraBold" >
+				<Button.Background>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFA2CF1F" Offset="0"/>
+						<GradientStop Color="#FF2316CA" Offset="1"/>
+					</RadialGradientBrush>
+				</Button.Background>
+			</Button>
+		</Border>
+		<Border x:Name="StepFrameBorder" BorderBrush="#FF348624" BorderThickness="2,2,2,2" CornerRadius="1,1,1,1" Grid.Row="2" Grid.Column="1">
+			<Button Content="Step Frame" x:Name="StepFront" Foreground="{DynamicResource NeonButtonBrushForeColor}" BorderBrush="#FF12AC1F" BorderThickness="2,2,3,2"  OpacityMask="#FF000000" Style="{DynamicResource NeonButtonStyle2}"  FontSize="16" FontWeight="ExtraBold" 
+                    Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=StepFrame}" 
+                    
+                    >
+				<Button.Background>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFA2CF1F" Offset="0"/>
+						<GradientStop Color="#FF2316CA" Offset="1"/>
+					</RadialGradientBrush>
+				</Button.Background>
+			</Button>
+		</Border>
+	</Grid>
+</UserControl>

@@ -24,19 +24,35 @@ namespace InstiBulb
         {
             InitializeComponent();
 
-            Keyboard.AddPreviewKeyDownHandler(this, new KeyEventHandler(Window1_KeyDown));
-            Keyboard.AddPreviewKeyUpHandler(this, new KeyEventHandler(Window1_KeyUp));
+            ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
+
             
+        }
+
+        void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
+        {
+            if (ControlPanel.SuppressKeystrokes)
+            {
+                Keyboard.AddPreviewKeyDownHandler(this, Window1_KeyDown);
+                Keyboard.AddPreviewKeyUpHandler(this, Window1_KeyUp);
+            }
+            else
+            {
+                
+                Keyboard.RemovePreviewKeyDownHandler(this, Window1_KeyDown);
+                Keyboard.RemovePreviewKeyUpHandler(this, Window1_KeyUp);
+            }
+
         }
 
         void Window1_KeyUp(object sender, KeyEventArgs e)
         {
-            e.Handled = !NesDisplay.Target.IsRunning;
+            e.Handled = true;
         }
 
         void Window1_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = !NesDisplay.Target.IsRunning;
+            e.Handled = true;
         }
 
     }

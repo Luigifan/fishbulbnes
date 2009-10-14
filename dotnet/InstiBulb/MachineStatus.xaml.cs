@@ -15,15 +15,14 @@ using Fishbulb.Common.UI;
 namespace InstiBulb
 {
 	/// <summary>
-	/// Interaction logic for CheatControl.xaml
+	/// Interaction logic for MachineStatus.xaml
 	/// </summary>
-	public partial class CheatControl
+	public partial class MachineStatus
 	{
-		public CheatControl()
+		public MachineStatus()
 		{
 			this.InitializeComponent();
 		}
-
 
 	}
 }
