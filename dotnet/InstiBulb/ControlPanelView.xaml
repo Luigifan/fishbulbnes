@@ -25,10 +25,10 @@
         </Grid.RowDefinitions>
         <Label Style="{StaticResource HeaderStyle}" >Console Controls</Label>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <StackPanel Orientation="Horizontal"  >
-                <Button Height="20" Width="75" Content="{Binding CurrentCartName, Converter={StaticResource ShortFileNameConverter}}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" ToolTip="{Binding CartInfo}" />
-                <Button Width="25" Content="{Binding PowerStatusText}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=PowerToggle}" Style="{StaticResource PowerButtonStyle}" />
+        <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                <Button MinHeight="20" MinWidth="75" Content="{Binding CurrentCartName, Converter={StaticResource ShortFileNameConverter}}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" ToolTip="{Binding CartInfo}" />
+                <Button MinWidth="25" Content="{Binding PowerStatusText}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=PowerToggle}" Style="{StaticResource PowerButtonStyle}" />
             </StackPanel>
             <CheckBox IsChecked="{Binding Paused}">Paused</CheckBox>
         </StackPanel>

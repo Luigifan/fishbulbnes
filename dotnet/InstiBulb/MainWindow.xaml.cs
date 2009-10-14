@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Practices.Unity;
+using _3DTools;
 
 namespace InstiBulb
 {
@@ -20,30 +21,35 @@ namespace InstiBulb
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+
         public MainWindow()
         {
+            
             InitializeComponent();
 
-            ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
+            //ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
 
+
+            
             
         }
 
-        void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
-        {
-            if (ControlPanel.SuppressKeystrokes)
-            {
-                Keyboard.AddPreviewKeyDownHandler(this, Window1_KeyDown);
-                Keyboard.AddPreviewKeyUpHandler(this, Window1_KeyUp);
-            }
-            else
-            {
-                
-                Keyboard.RemovePreviewKeyDownHandler(this, Window1_KeyDown);
-                Keyboard.RemovePreviewKeyUpHandler(this, Window1_KeyUp);
-            }
+        //void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
+        //{
+        //    if (ControlPanel.SuppressKeystrokes)
+        //    {
+        //        Keyboard.AddPreviewKeyDownHandler(this, Window1_KeyDown);
+        //        Keyboard.AddPreviewKeyUpHandler(this, Window1_KeyUp);
+        //    }
+        //    else
+        //    {
 
-        }
+        //        Keyboard.RemovePreviewKeyDownHandler(this, Window1_KeyDown);
+        //        Keyboard.RemovePreviewKeyUpHandler(this, Window1_KeyUp);
+        //    }
+
+        //}
 
         void Window1_KeyUp(object sender, KeyEventArgs e)
         {

@@ -18,7 +18,7 @@ namespace SlimDXBindings
         const int BUFFER_COUNT = 8;
         int buffersInPlay = 0;
         byte[][] buffers = new byte[BUFFER_COUNT][];
-
+        MemoryStream[] memStream = new MemoryStream[BUFFER_COUNT];
         XAudio2 device;
         MasteringVoice masteringVoice;
         SourceVoice sourceVoice = null;
@@ -31,10 +31,11 @@ namespace SlimDXBindings
             for (int i = 0; i < BUFFER_COUNT; ++i)
             {
                 buffers[i] = new byte[BUFFER_STREAM_SIZE];
+                memStream[i] = new MemoryStream();
             }
             device = new XAudio2();
             buffer = new AudioBuffer();
-            buffer.AudioData = new MemoryStream();
+            buffer.AudioData = memStream[0];
             buffer.Flags = BufferFlags.EndOfStream;
 
             masteringVoice = new MasteringVoice(device);
@@ -142,8 +143,8 @@ namespace SlimDXBindings
         {
             buffer.AudioBytes = _wavSource.SharedBufferLength;
             buffer.PlayLength = _wavSource.SharedBufferLength / 2;
-            buffer.AudioData
-                    = new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            //memStream[currentBuffer].Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            buffer.AudioData = new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
 
             sourceVoice.SubmitSourceBuffer(buffer);
             currentBuffer++;

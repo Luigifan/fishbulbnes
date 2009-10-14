@@ -34,9 +34,9 @@
 			<ColumnDefinition Width="0.493*"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="31.088"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="30.745"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
         <Label Style="{StaticResource HeaderStyle}" Content="Machine Status" Grid.ColumnSpan="2"/>
 

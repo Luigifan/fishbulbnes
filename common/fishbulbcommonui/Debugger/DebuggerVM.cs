@@ -303,7 +303,8 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                if (_nes == null) return new List<PPUWriteEvent>();
+                if (_nes == null || _nes.DebugInfo == null || _nes.DebugInfo.PPU == null) return new List<PPUWriteEvent>();
+
                 return _nes.DebugInfo.PPU.FrameWriteEvents;
             }
         }

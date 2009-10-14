@@ -4,45 +4,26 @@
         xmlns:views="clr-namespace:InstiBulb"
         xmlns:integration="clr-namespace:InstiBulb.Integration"
         xmlns:wpfView ="clr-namespace:WpfNESViewer"
+        xmlns:threeD="clr-namespace:InstiBulb.ThreeDee"
         DataContext="{DynamicResource Container}"
     Title="Window1" Height="480" Width="720"
         >
-    <Grid>
+    <Grid x:Name="OuterGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
         <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" BorderThickness="3"> 
         <integration:NESDisplay x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
             Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
                                 >
-            <integration:NESDisplay.Context>
-                <wpfView:WPFNesViewer x:Name="Wpf" />
-            </integration:NESDisplay.Context>
-        </integration:NESDisplay>
-            </Border>
-        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"> 
-            <StackPanel Orientation="Vertical" >
-                <views:ControlPanelView x:Name="ControlPanel"  
-                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                        />
-                <views:SoundPanelView x:Name="SoundPanel"
-                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
-                                      />
-                <views:CheatControl x:Name="CheatControl"
-                DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
-                                  />
-                <views:MachineStatus x:Name="MachineStatus"
-                DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
-                                     />
-            </StackPanel>
-        </ScrollViewer>
-
-
+                <integration:NESDisplay.Context>
+                    <wpfView:WPFNesViewer x:Name="Wpf" />
+                </integration:NESDisplay.Context>
+            </integration:NESDisplay>
+        </Border>
+        <threeD:ThreeDeeControls x:Name="ControlBoxer" Grid.Column="1" />
     </Grid>
+    
 </Window>
