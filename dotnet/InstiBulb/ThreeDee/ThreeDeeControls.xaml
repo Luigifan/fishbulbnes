@@ -58,7 +58,7 @@
                         </threeDeeHelpers:InteractiveCylinder.Transform>
                         <threeDeeHelpers:InteractiveCylinder.Visual>
                             <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch" Background="Transparent"  >
-                                <Viewbox >
+                                <Viewbox Margin="5">
                                     <views:ControlPanelView Background="LightSalmon"
                                             x:Name="ControlPanel"  
                                             DataContext="{Binding Converter={StaticResource ContainerResolver}, 
@@ -66,34 +66,34 @@
                                             UpdateKeyhandlingEvent="ControlPanel_UpdateKeyhandlingEvent"
                                         />
                                 </Viewbox>
-                                <Viewbox >
+                                <Viewbox Margin="5" >
                                     <views:SoundPanelView   Background="LightSalmon"
                                         x:Name="SoundPanel"
                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                         ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
                                           />
                                 </Viewbox>
-                                <Viewbox >
+                                <Viewbox Margin="5">
                                     <views:CheatControl Background="LightSalmon"
                                         x:Name="CheatControl"
                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                         ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
                                       />
                                 </Viewbox>
-                                <Viewbox >
+                                <Viewbox Margin="5">
                                     <views:MachineStatus  Background="LightSalmon"
                                                       x:Name="MachineStatus"
                                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                                         ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
                                          />
                                 </Viewbox>
-                                <Viewbox>
+                                <Viewbox Margin="5">
                                     <views:CartInfoPanel x:Name="CartInfo"
                                          DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                             ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
                                         />
                                 </Viewbox>
-                                <Viewbox>
+                                <Viewbox Margin="5">
                                     <views:ControllerConfig x:Name="KeyConfig" 
                                          DataContext="{Binding Converter={StaticResource ContainerResolver}, 
                                             ConverterParameter=InstiBulb.WinViewModels.WpfKeyConfigVM\,InstiBulb;KeyConfigVM}" 

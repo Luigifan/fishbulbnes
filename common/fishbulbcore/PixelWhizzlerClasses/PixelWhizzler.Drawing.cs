@@ -236,10 +236,9 @@ namespace NES.CPU.PPUClasses
 
         private void DrawPixel()
         {
-            int tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
+            int tilePixel = _tilesAreVisible ? GetNameTablePixel() : 0;
             isForegroundPixel = false;
-            //int spritePixel =  GetSpritePixel() ;
-            int spritePixel = FastGetSpritePixel();
+            int spritePixel =  _spritesAreVisible ? GetSpritePixel() : 0;
 
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
@@ -273,7 +272,8 @@ namespace NES.CPU.PPUClasses
                 tilePixel = GetNameTablePixel();
             }
             isForegroundPixel = false;
-            int spritePixel = FastGetSpritePixel();
+            int spritePixel = _spritesAreVisible && !ClippingSpritePixels() ? GetSpritePixel() : 0;
+
 
             //&& (newbyte & 3) != 0
             if (!hitSprite && spriteZeroHit)
