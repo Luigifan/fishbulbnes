@@ -42,7 +42,7 @@ namespace InstiBulb
             {
                 if (ControlBoxer.Visibility != Visibility.Visible)
                 {
-                    ControlBoxer.WhizOn();
+                    Dispatcher.BeginInvoke(ControlBoxer.WhizOnHandler, System.Windows.Threading.DispatcherPriority.Render, null);
                 }
             }
         }

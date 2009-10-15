@@ -22,10 +22,17 @@ namespace InstiBulb.ThreeDee
     /// </summary>
     public partial class ThreeDeeControls : UserControl
     {
+        public delegate void IntArgDelegate(int i);
+        public delegate void NoArgDelegate();
+
+        public NoArgDelegate WhizOnHandler;
+        public NoArgDelegate WhizOffHandler;
 
         public ThreeDeeControls()
         {
             rotater = new IntArgDelegate(Rotater);
+            WhizOnHandler = new NoArgDelegate(WhizOn);
+            WhizOffHandler = new NoArgDelegate(WhizOff);
 
             InitializeComponent();
             ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
@@ -96,7 +103,7 @@ namespace InstiBulb.ThreeDee
             {
                 Keyboard.AddPreviewKeyDownHandler(parent, KeySuppressor);
                 Keyboard.AddPreviewKeyDownHandler(parent, KeySuppressor);
-                WhizOff();
+                Dispatcher.BeginInvoke(WhizOffHandler, System.Windows.Threading.DispatcherPriority.Render, null);
             }
             else {
                 Keyboard.RemovePreviewKeyDownHandler(parent, KeySuppressor);
@@ -199,7 +206,6 @@ namespace InstiBulb.ThreeDee
        }
         bool wheeling;
 
-        delegate void IntArgDelegate(int i);
         IntArgDelegate rotater;
 
         void Rotater(int i)
