@@ -27,11 +27,19 @@ namespace InstiBulb
     public partial class App : Application
     {
 
+        IUnityContainer container = new UnityContainer();
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            IUnityContainer container = new UnityContainer();
+
+
             
             this.Resources.Add("Container", new NesContainerFactory().RegisterNesTypes(container));
+            
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            container.Resolve<NESMachine>().Dispose();
             
         }
     }

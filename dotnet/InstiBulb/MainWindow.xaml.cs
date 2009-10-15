@@ -35,6 +35,18 @@ namespace InstiBulb
             
         }
 
+
+        private void OuterGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                if (ControlBoxer.Visibility != Visibility.Visible)
+                {
+                    ControlBoxer.WhizOn();
+                }
+            }
+        }
+
         //void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
         //{
         //    if (ControlPanel.SuppressKeystrokes)
@@ -51,15 +63,7 @@ namespace InstiBulb
 
         //}
 
-        void Window1_KeyUp(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-        }
 
-        void Window1_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-        }
 
     }
 }

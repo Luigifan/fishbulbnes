@@ -270,12 +270,13 @@ namespace NES.CPU.nitenedo
                 SRAMWriter(_cart.CheckSum, _cart.SRAM);
             }
 
-            //note, give it half a chance to cleanup gracefully
             keepRunning = false;
 
-            // _sharedWave.ReadWaves();
+
             Thread.Sleep(100);
-            // kill it
+            _sharedWave.Dispose();
+            soundThreader.Dispose();
+            
         }
 
         #endregion

@@ -18,91 +18,91 @@
 
 
     </UserControl.Resources>
-    <Grid x:Name="OuterGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button x:Name="Left" Content="left" Click="Left_Click" />
-            <Button x:Name="Right" Content="Right" Click="Right_Click" Grid.Column="1"/>
-        </Grid>
-        <threeDee:Interactive3DDecorator Grid.Row="1">
-        <Viewport3D x:Name="viewer3d" >
-            <Viewport3D.Camera >
+    <Grid x:Name="OuterGrid" MouseWheel="OuterGrid_MouseWheel" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <threeDee:Interactive3DDecorator Grid.Column="0" Grid.ColumnSpan="3">
+            <Viewport3D x:Name="viewer3d"  >
+                <Viewport3D.Camera >
 
-                    <PerspectiveCamera x:Name="camera" Position="0,0,5"  >
+                    <PerspectiveCamera x:Name="camera" Position="0,1.5,6" LookDirection="0,-0.3,-1" FarPlaneDistance="12"  >
                     </PerspectiveCamera>
 
                 </Viewport3D.Camera>
-            
-            <Viewport3D.Children>
-                <ModelVisual3D>
 
-                    <ModelVisual3D.Content>
+                <Viewport3D.Children>
+                    <ModelVisual3D>
 
-                        <DirectionalLight x:Name="HeadLight" Color="White" />
+                        <ModelVisual3D.Content>
 
-                    </ModelVisual3D.Content>
+                            <DirectionalLight x:Name="HeadLight" Color="White" />
 
-                </ModelVisual3D>
-                  <threeDeeHelpers:InteractiveCylinder x:Name="Wheel">
+                        </ModelVisual3D.Content>
+
+                    </ModelVisual3D>
+                    <threeDeeHelpers:InteractiveCylinder x:Name="Wheel" IsBackVisible="True">
                         <threeDeeHelpers:InteractiveCylinder.Transform>
                             <Transform3DGroup>
                                 <RotateTransform3D>
                                     <RotateTransform3D.Rotation>
                                         <AxisAngleRotation3D x:Name="myAngleRotation" Axis="0,1,0" Angle="45" />
                                     </RotateTransform3D.Rotation>
-                                </RotateTransform3D> 
-                                <ScaleTransform3D ScaleX="2" ScaleZ="2" />
+                                </RotateTransform3D>
+                                <ScaleTransform3D ScaleX="2" ScaleZ="2" ScaleY="0.75">
+
+                                </ScaleTransform3D>
                             </Transform3DGroup>
                         </threeDeeHelpers:InteractiveCylinder.Transform>
-                            <threeDeeHelpers:InteractiveCylinder.Visual>
-                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch"  >
-                                <Viewbox>
-                                <views:ControlPanelView 
-                                    x:Name="ControlPanel"  
-                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                                />
-                                    </Viewbox>
-                                <Viewbox>
-                                <views:SoundPanelView   
-                                    x:Name="SoundPanel"
-                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
+                        <threeDeeHelpers:InteractiveCylinder.Visual>
+                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch" Background="Transparent"  >
+                                <Viewbox >
+                                    <views:ControlPanelView Background="LightSalmon"
+                                            x:Name="ControlPanel"  
+                                            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
+                                            UpdateKeyhandlingEvent="ControlPanel_UpdateKeyhandlingEvent"
+                                        />
+                                </Viewbox>
+                                <Viewbox >
+                                    <views:SoundPanelView   Background="LightSalmon"
+                                        x:Name="SoundPanel"
+                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
+                                          />
+                                </Viewbox>
+                                <Viewbox >
+                                    <views:CheatControl Background="LightSalmon"
+                                        x:Name="CheatControl"
+                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
                                       />
-                                    </Viewbox>
+                                </Viewbox>
+                                <Viewbox >
+                                    <views:MachineStatus  Background="LightSalmon"
+                                                      x:Name="MachineStatus"
+                                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
+                                         />
+                                </Viewbox>
                                 <Viewbox>
-                                <views:CheatControl 
-                                    x:Name="CheatControl"
-                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
-                                  />
-                                    </Viewbox>
-                                <Viewbox>
-                                <views:MachineStatus  
-                                                  x:Name="MachineStatus"
-                                                    DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                                    ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
-                                     />
-                                    </Viewbox>
-                                <Viewbox>
-                                <TextBlock Text="Test Test Test" />
-                                    </Viewbox>
-                                <Viewbox>
-                                <TextBlock Text="Test Test Test !!!" />
-                                    </Viewbox>
-                            </UniformGrid>
-                    </threeDeeHelpers:InteractiveCylinder.Visual>
-                </threeDeeHelpers:InteractiveCylinder>
+                                    <views:CartInfoPanel x:Name="CartInfo"
+                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
+                                        />
+                                </Viewbox>
 
-            </Viewport3D.Children>
-        </Viewport3D>
+                            </UniformGrid>
+                        </threeDeeHelpers:InteractiveCylinder.Visual>
+                    </threeDeeHelpers:InteractiveCylinder>
+
+                </Viewport3D.Children>
+            </Viewport3D>
         </threeDee:Interactive3DDecorator>
+        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Left" Content="((" MouseDown="Left_Click"  />
+        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Right" Content="))" MouseDown="Right_Click" Grid.Column="2"/>
+
     </Grid>
 </UserControl>

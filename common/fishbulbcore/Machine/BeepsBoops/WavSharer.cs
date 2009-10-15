@@ -115,7 +115,8 @@ namespace NES.CPU.Machine.BeepsBoops
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (null != appendToFile)
+                appendToFile.Dispose();
         }
 
         #endregion

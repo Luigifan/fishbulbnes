@@ -38,7 +38,7 @@ namespace WpfNESViewer
 
         public void CreateDisplay()
         {
-            bitmap = new WriteableBitmap(256, 256, 96, 96, PixelFormats.Pbgra32,null);
+            bitmap = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32,null);
             this.Background = new ImageBrush(bitmap);
             this.SnapsToDevicePixels = true;
         }
@@ -49,7 +49,7 @@ namespace WpfNESViewer
 
         int stride = (256 * 32 + 7) / 8;
 
-        byte[] pixArray = new byte[256 * 256];
+        byte[] pixArray = new byte[256 * 240];
         public void UpdateNESScreen(int[] pixels)
         {
             

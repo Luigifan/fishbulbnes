@@ -13,7 +13,12 @@ namespace InstiBulb.ThreeDee
     {
         public InteractiveCylinder()
         {
-            Geometry = Tessellate(6, 64);
+            Geometry = Tessellate(4, 64);
+        }
+
+        public void RebuildGeometry(int angleDivs, int ySlices)
+        {
+            Geometry = Tessellate(angleDivs, ySlices);
         }
 
         internal static Point3D GetPosition(double t, double y)
