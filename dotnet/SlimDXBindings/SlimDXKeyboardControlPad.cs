@@ -148,11 +148,6 @@ namespace SlimDXBindings
 
         public event EventHandler<ControlByteEventArgs> NextControlByteSet;
 
-        #endregion
-
-
-        #region IDisposable Members
-
         public void Dispose()
         {
             ReleaseDevice();

@@ -28,18 +28,29 @@ namespace InstiBulb
     {
 
         IUnityContainer container = new UnityContainer();
-        private void Application_Startup(object sender, StartupEventArgs e)
+
+
+        protected override void OnStartup(StartupEventArgs e)
         {
+            container.RegisterType<MainWindow>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<DependencyObject, MainWindow>("MainWindow", new ContainerControlledLifetimeManager());
 
-
-            
             this.Resources.Add("Container", new NesContainerFactory().RegisterNesTypes(container));
+            base.OnStartup(e);
+
+            container.Resolve<MainWindow>().Initialize().Show();
+        }
+
+
+        void App_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
             
         }
 
+
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            container.Resolve<NESMachine>().Dispose();
+            container.Dispose();
             
         }
     }

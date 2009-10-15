@@ -11,14 +11,26 @@ namespace InstiBulb.ThreeDee
 {
     public class InteractiveCylinder : InteractiveVisual3D
     {
+
+        List<double> angleLocks;
+
         public InteractiveCylinder()
         {
-            Geometry = Tessellate(4, 64);
+            angleLocks = new List<double>();
+            Geometry = Tessellate(2, 4, 64, angleLocks);
         }
 
-        public void RebuildGeometry(int angleDivs, int ySlices)
+        public void RebuildGeometry(int segments, int slicesPerSegment, int ySlices)
         {
-            Geometry = Tessellate(angleDivs, ySlices);
+            List<double> angles = new List<double>();
+            Geometry = Tessellate(slicesPerSegment, segments * slicesPerSegment, ySlices, angles);
+            angles.Remove(360);
+            double angle = 180 / segments;
+            angleLocks = new List<double>();
+            foreach (double d in angles)
+            {
+                angleLocks.Add(d + angle);
+            }
         }
 
         internal static Point3D GetPosition(double t, double y)
@@ -47,7 +59,7 @@ namespace InstiBulb.ThreeDee
             return new Point(1.0 - t * 1 / (2 * Math.PI), y * -0.5 + 0.5);
         }
 
-        internal static MeshGeometry3D Tessellate(int tDiv, int yDiv)
+        internal static MeshGeometry3D Tessellate(int divider, int tDiv, int yDiv, List<double> angleLocks)
         {
             double maxTheta = DegToRad(360.0);
             double minY = -1.0;
@@ -55,6 +67,15 @@ namespace InstiBulb.ThreeDee
 
             double dt = maxTheta / tDiv;
             double dy = (maxY - minY) / yDiv;
+
+
+            for (int ti = 0; ti <= tDiv; ti++)
+            {
+                double t = ti * dt;
+
+                if (ti % divider == 0)
+                    angleLocks.Add(t / Math.PI * 180);
+            }
 
             MeshGeometry3D mesh = new MeshGeometry3D();
 

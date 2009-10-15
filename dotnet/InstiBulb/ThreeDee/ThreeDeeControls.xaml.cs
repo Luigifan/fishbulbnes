@@ -39,7 +39,7 @@ namespace InstiBulb.ThreeDee
 
             WheelGrid.Rows = 1;
             WheelGrid.Columns = WheelGrid.Children.Count;
-            Wheel.RebuildGeometry(WheelGrid.Children.Count * 8, 2);
+            Wheel.RebuildGeometry(WheelGrid.Children.Count, 8, 2);
             
             if (WheelGrid.Columns > 0)
                 stepping = 360 / WheelGrid.Columns;

@@ -13,6 +13,7 @@ using NES.CPU.nitenedo;
 using Fishbulb.Common.UI;
 using GtkNes;
 using InstiBulb.WinViewModels;
+using InstiBulb.WpfKeyboardInput;
 
 namespace InstiBulb.Integration
 {
@@ -22,8 +23,10 @@ namespace InstiBulb.Integration
 
         public IUnityContainer RegisterNesTypes(IUnityContainer container)
         {
+
             
             // register types needed to build a NES
+
 
             // platform specific wavestreamer
             container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
@@ -47,8 +50,15 @@ namespace InstiBulb.Integration
             
             container.RegisterType<Bopper>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
+                , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
+
+            container.RegisterType<IControlPad, WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
+
+            //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
+
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
+            
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());

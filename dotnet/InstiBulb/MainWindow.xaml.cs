@@ -26,15 +26,16 @@ namespace InstiBulb
         public MainWindow()
         {
             
-            InitializeComponent();
+            
 
             //ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
 
-
-            
-            
         }
-
+        public MainWindow Initialize()
+        {
+            InitializeComponent();
+            return this;
+        }
 
         private void OuterGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {

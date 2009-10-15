@@ -17,7 +17,7 @@ namespace NES.CPU.Machine
         }
     }
 
-    public interface IControlPad
+    public interface IControlPad : IDisposable
     {
         int CurrentByte { get; set; }
         void Refresh();
