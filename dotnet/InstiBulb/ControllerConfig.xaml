@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="InstiBulb.ControllerConfig"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:key="clr-namespace:InstiBulb.WpfKeyboardInput"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    >
+    <UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="odp">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="key:PadValues"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Style="{StaticResource HeaderStyle}" Content="Controller Configuration" />
+        <ScrollViewer Height="NaN" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" Grid.Row="1"> 
+            <ListView ItemsSource="{Binding KeyBindings}" Grid.Row="1" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox ItemsSource="{Binding Source={StaticResource odp}}" SelectedValue="{Binding BoundValue, Mode=TwoWay}" />
+                            <TextBox x:Name="KeyTB" PreviewKeyDown="KeyGrab_KeyDown"  Text="{Binding Key, Mode=TwoWay, Converter={StaticResource InputKeyToStringConverter}}" />
+                            <Button x:Name="Update" 
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.KeyCommand}" CommandParameter="{Binding .}" Content="!!!" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

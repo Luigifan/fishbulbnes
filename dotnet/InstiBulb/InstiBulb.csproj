@@ -137,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControllerConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -180,12 +184,16 @@
     <Compile Include="CheatControl.xaml.cs">
       <DependentUpon>CheatControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ControllerConfig.xaml.cs">
+      <DependentUpon>ControllerConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ControlPanelView.xaml.cs">
       <DependentUpon>ControlPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\CommandDictionaryConverter.cs" />
     <Compile Include="Converters\ContainerResolverConverter.cs" />
     <Compile Include="Converters\HexValueConverter.cs" />
+    <Compile Include="Converters\InputKeyToStringConverter.cs" />
     <Compile Include="Converters\ShortFileNameConverter.cs" />
     <Compile Include="Integration\NesContainer.cs" />
     <Compile Include="Integration\NESDisplay.cs" />
@@ -216,6 +224,7 @@
     </Compile>
     <Compile Include="WinViewModels\WinCheatPanelVM.cs" />
     <Compile Include="WinViewModels\WinDebuggerVM.cs" />
+    <Compile Include="WinViewModels\WpfKeyConfigVM.cs" />
     <Compile Include="WpfKeyboardInput\WpfKeyboardControlPad.cs" />
     <Compile Include="WpfNesViewer\WPFNesViewer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -249,6 +258,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Mario-Dead.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

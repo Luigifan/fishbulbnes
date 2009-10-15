@@ -93,6 +93,13 @@
                                             ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
                                         />
                                 </Viewbox>
+                                <Viewbox>
+                                    <views:ControllerConfig x:Name="KeyConfig" 
+                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
+                                            ConverterParameter=InstiBulb.WinViewModels.WpfKeyConfigVM\,InstiBulb;KeyConfigVM}" 
+                                                            
+                                                            />
+                                </Viewbox>
 
                             </UniformGrid>
                         </threeDeeHelpers:InteractiveCylinder.Visual>

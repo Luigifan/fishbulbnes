@@ -53,6 +53,8 @@ namespace InstiBulb.Integration
             container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
                 , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
 
+            container.RegisterType<WpfKeyConfigVM>(new ContainerControlledLifetimeManager());
+
             container.RegisterType<IControlPad, WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
             //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());

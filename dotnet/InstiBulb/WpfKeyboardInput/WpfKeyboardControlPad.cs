@@ -5,10 +5,43 @@ using System.Text;
 using NES.CPU.Machine;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace InstiBulb.WpfKeyboardInput
 {
-    public class WpfKeyboardControlPad : IControlPad
+
+
+    public enum PadValues : int
+    {
+        A = 1,
+        B = 2,
+        Select = 4,
+        Start = 8,
+        Up = 16,
+        Down = 32,
+        Left = 64,
+        Right = 128
+    }
+
+    public class NesKeyBinding
+    {
+        public System.Windows.Input.Key Key
+        {
+            get;
+            set;
+        }
+
+        public PadValues BoundValue
+        {
+            get;
+            set;
+        }
+
+    }
+
+
+    public class WpfKeyboardControlPad : IControlPad,INotifyPropertyChanged
     {
         int PadOneState = 0;
 
@@ -16,6 +49,32 @@ namespace InstiBulb.WpfKeyboardInput
         public WpfKeyboardControlPad()
         {
 
+            NesKeyBindings = new Dictionary<Key, PadValues>();
+            NesKeyBindings.Add(Key.X, PadValues.A);
+            NesKeyBindings.Add(Key.Z, PadValues.B);
+            NesKeyBindings.Add(Key.Space, PadValues.Select);
+            NesKeyBindings.Add(Key.Enter, PadValues.Start);
+            NesKeyBindings.Add(Key.Up, PadValues.Up);
+            NesKeyBindings.Add(Key.Down, PadValues.Down);
+            NesKeyBindings.Add(Key.Left, PadValues.Left);
+            NesKeyBindings.Add(Key.Right, PadValues.Right);
+
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.B, Key = Key.LeftCtrl });
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Select, Key = Key.Space });
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Start, Key = Key.Enter });
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Up, Key = Key.Up });
+
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Down, Key = Key.Down });
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Left, Key = Key.Left });
+            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Right, Key = Key.Right });
+        }
+
+
+
+        public Dictionary<Key, PadValues> NesKeyBindings
+        {
+            get;
+            set;
         }
 
         public DependencyObject Handler
@@ -31,67 +90,19 @@ namespace InstiBulb.WpfKeyboardInput
 
         void KeyDownHandler(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+
+            if (NesKeyBindings.ContainsKey(e.Key))
             {
-                case Key.X:
-                    PadOneState = PadOneState | 1;
-                    break;
-                case Key.Z:
-                    PadOneState = PadOneState | 2;
-                    break;
-                case Key.W:
-                    PadOneState = PadOneState | 4;
-                    break;
-                case Key.Q:
-                    PadOneState = PadOneState | 8;
-                    break;
-                case Key.Up:
-                    PadOneState = PadOneState | 16;
-                    PadOneState = PadOneState & ~32;
-                    break;
-                case Key.Down:
-                    PadOneState = PadOneState | 32;
-                    PadOneState = PadOneState & ~16;
-                    break;
-                case Key.Left:
-                    PadOneState = PadOneState | 64;
-                    PadOneState = PadOneState & ~128;
-                    break;
-                case Key.Right:
-                    PadOneState = PadOneState | 128;
-                    PadOneState = PadOneState & ~64;
-                    break;
+                PadOneState |= (int)NesKeyBindings[e.Key];
             }
+
         }
 
         void KeyUpHandler(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if (NesKeyBindings.ContainsKey(e.Key))
             {
-                case Key.X:
-                    PadOneState = PadOneState & ~1;
-                    break;
-                case Key.Z:
-                    PadOneState = PadOneState & ~2;
-                    break;
-                case Key.W:
-                    PadOneState = PadOneState & ~4;
-                    break;
-                case Key.Q:
-                    PadOneState = PadOneState & ~8;
-                    break;
-                case Key.Up:
-                    PadOneState = PadOneState & ~16;
-                    break;
-                case Key.Down:
-                    PadOneState = PadOneState & ~32;
-                    break;
-                case Key.Left:
-                    PadOneState = PadOneState & ~64;
-                    break;
-                case Key.Right:
-                    PadOneState = PadOneState & ~128;
-                    break;
+                PadOneState &= ~(int)NesKeyBindings[e.Key];
             }
         }
 
@@ -124,6 +135,18 @@ namespace InstiBulb.WpfKeyboardInput
         {
             Keyboard.RemovePreviewKeyDownHandler(handler, KeyDownHandler);
             Keyboard.RemovePreviewKeyUpHandler(handler, KeyUpHandler);
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(string propName)
+
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
 
         #endregion

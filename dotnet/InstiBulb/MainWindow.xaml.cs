@@ -25,12 +25,9 @@ namespace InstiBulb
 
         public MainWindow()
         {
-            
-            
-
-            //ControlPanel.UpdateKeyhandlingEvent += new EventHandler<EventArgs>(ControlPanel_UpdateKeyhandlingEvent);
 
         }
+
         public MainWindow Initialize()
         {
             InitializeComponent();
@@ -47,24 +44,6 @@ namespace InstiBulb
                 }
             }
         }
-
-        //void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
-        //{
-        //    if (ControlPanel.SuppressKeystrokes)
-        //    {
-        //        Keyboard.AddPreviewKeyDownHandler(this, Window1_KeyDown);
-        //        Keyboard.AddPreviewKeyUpHandler(this, Window1_KeyUp);
-        //    }
-        //    else
-        //    {
-
-        //        Keyboard.RemovePreviewKeyDownHandler(this, Window1_KeyDown);
-        //        Keyboard.RemovePreviewKeyUpHandler(this, Window1_KeyUp);
-        //    }
-
-        //}
-
-
 
     }
 }
