@@ -14,6 +14,9 @@ using Fishbulb.Common.UI;
 using GtkNes;
 using InstiBulb.WinViewModels;
 using InstiBulb.WpfKeyboardInput;
+using SlimDXNESViewer;
+using NES.CPU.nitenedo.Interaction;
+using WpfNESViewer;
 
 namespace InstiBulb.Integration
 {
@@ -52,15 +55,19 @@ namespace InstiBulb.Integration
 
             container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
                 , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
+            container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<WpfKeyConfigVM>(new ContainerControlledLifetimeManager());
-
+            
             container.RegisterType<IControlPad, WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
-
             //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
-            
+
+            container.RegisterType<WPFNesViewer>(new ContainerControlledLifetimeManager());
+            container.RegisterType<SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());

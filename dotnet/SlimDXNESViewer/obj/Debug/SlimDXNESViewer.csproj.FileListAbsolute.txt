@@ -10,3 +10,16 @@ D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.Properties.Resour
 D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.csproj.GenerateResource.Cache
 D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.dll
 D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.pdb
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\SlimDXNESViewer.dll
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\SlimDXNESViewer.pdb
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\6502.dll
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\SlimDX.Windows7.dll
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\SampleFramework.pdb
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\SlimDX.Windows7.pdb
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\bin\Debug\6502.pdb
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.Properties.Resources.resources
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.csproj.GenerateResource.Cache
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.dll
+C:\Projects\FishbulbLive\dotnet\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.pdb

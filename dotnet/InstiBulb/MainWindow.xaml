@@ -22,11 +22,8 @@
         </Grid.RowDefinitions>
         <integration:NESDisplay Grid.RowSpan="2" x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                         Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
-                        SuspendNESDisplay="{Binding ElementName=ControlBoxer, Path=IsAnimating, Mode=OneWay}"
+                        Context="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"
                                     >
-                    <integration:NESDisplay.Context>
-                        <wpfView:WPFNesViewer x:Name="Wpf" />
-                    </integration:NESDisplay.Context>
                 </integration:NESDisplay>
         <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

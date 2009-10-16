@@ -7,6 +7,8 @@ using _3DTools;
 using System.Windows.Media.Media3D;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 
 namespace InstiBulb.ThreeDee
 {
@@ -49,6 +51,14 @@ namespace InstiBulb.ThreeDee
 
         void RotateTo(double angle, bool clockWise)
         {
+            //var p = new ImageBrush();
+            //p.ImageSource = new BitmapImage(new Uri("pack://application:,,/nes_controller_wallpaper.jpg"));
+            //p.ViewportUnits = BrushMappingMode.Absolute;
+            //p.TileMode = TileMode.Tile;
+            //p.Viewbox = new Rect(0, 0, 1, 1);
+            //base.Material = new DiffuseMaterial(p);
+
+   
             DoubleAnimation angleAnimation = new DoubleAnimation();
 
             if (clockWise)
@@ -78,11 +88,19 @@ namespace InstiBulb.ThreeDee
 
             this.Transform = new RotateTransform3D(rotation);
 
+            angleAnimation.Completed += new EventHandler(angleAnimation_Completed);
             rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, angleAnimation);
 
             currentAngle = angle;
             while (currentAngle > 360) currentAngle -= 360;
             while (currentAngle < 0) currentAngle += 360;
+        }
+
+        void angleAnimation_Completed(object sender, EventArgs e)
+        {
+            //ResetVisualBrush();
+            //Material.SetValue(InteractiveVisual3D.IsInteractiveMaterialProperty, true);
+
         }
 
         public InteractiveCylinder()

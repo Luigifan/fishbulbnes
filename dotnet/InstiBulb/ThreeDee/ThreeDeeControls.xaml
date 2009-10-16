@@ -30,19 +30,14 @@
         <threeDee:Interactive3DDecorator Grid.Column="0" Grid.ColumnSpan="3">
             <Viewport3D x:Name="viewer3d"  >
                 <Viewport3D.Camera >
-
-                    <PerspectiveCamera x:Name="camera" Position="8,0,0" LookDirection="-1,0,0" FarPlaneDistance="12"  >
-                    </PerspectiveCamera>
-
+                    <PerspectiveCamera x:Name="camera"  Position="8,1.5,0" LookDirection="-1,-0.2,0" FarPlaneDistance="12" />
                 </Viewport3D.Camera>
 
                 <Viewport3D.Children>
                     <ModelVisual3D>
 
                         <ModelVisual3D.Content>
-
-                            <DirectionalLight x:Name="HeadLight" Direction="-1,0,0" Color="AntiqueWhite" />
-
+                            <DirectionalLight x:Name="HeadLight" Direction="-1,0,0" Color="LightBlue" />
                         </ModelVisual3D.Content>
 
                     </ModelVisual3D>
