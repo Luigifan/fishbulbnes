@@ -28,6 +28,15 @@ namespace InstiBulb.ThreeDee
         public NoArgDelegate WhizOnHandler;
         public NoArgDelegate WhizOffHandler;
 
+        public static DependencyProperty IsAnimatingProperty = DependencyProperty.Register("IsAnimating", typeof(bool), typeof(ThreeDeeControls), new PropertyMetadata(false));
+
+
+        public bool IsAnimating
+        {
+            get { return (bool)GetValue(ThreeDeeControls.IsAnimatingProperty); }
+            set { SetValue(ThreeDeeControls.IsAnimatingProperty, value); }
+        }
+
         public ThreeDeeControls()
         {
             WhizOnHandler = new NoArgDelegate(WhizOn);
@@ -92,6 +101,7 @@ namespace InstiBulb.ThreeDee
 
         private void WhizOff()
         {
+            this.IsAnimating = true;
             DoubleAnimation transFormanimation = new DoubleAnimation();
             transFormanimation.From = 0;
             transFormanimation.To = 20;
@@ -104,12 +114,9 @@ namespace InstiBulb.ThreeDee
             rotateAnimation.Duration = TimeSpan.FromSeconds(1.5);
             rotateAnimation.FillBehavior = FillBehavior.Stop;
 
-            
-
             TranslateTransform3D translate = new TranslateTransform3D();
             AxisAngleRotation3D rotation = new AxisAngleRotation3D();
             rotation.Axis = new Vector3D(0, 1, 0);
-
 
             Transform3DGroup group = new Transform3DGroup();
             group.Children.Add(translate);
@@ -118,7 +125,7 @@ namespace InstiBulb.ThreeDee
             camera.Transform = group;
             HeadLight.Transform = group;
 
-            transFormanimation.Completed += new EventHandler(Whizoff_Completed);
+            transFormanimation.Completed += Whizoff_Completed;
             translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
             rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, rotateAnimation);
 
@@ -127,6 +134,7 @@ namespace InstiBulb.ThreeDee
 
         public void WhizOn()
         {
+            this.IsAnimating = true;
             this.Visibility = Visibility.Visible;
             //this.UpdateLayout();
 
@@ -154,6 +162,7 @@ namespace InstiBulb.ThreeDee
             camera.Transform = group;
             HeadLight.Transform = group;
 
+            transFormanimation.Completed += new EventHandler(EndAnimation);
             translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
             rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, rotateAnimation);
 
@@ -163,7 +172,14 @@ namespace InstiBulb.ThreeDee
         void Whizoff_Completed(object sender, EventArgs e)
         {
             this.Visibility = Visibility.Hidden;
+            this.IsAnimating = false;
             
+        }
+
+        void EndAnimation(object sender, EventArgs e)
+        {
+
+            this.IsAnimating = false;
         }
 
         void KeySuppressor(object sender, KeyEventArgs e)

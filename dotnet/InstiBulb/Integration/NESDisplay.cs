@@ -17,6 +17,9 @@ namespace InstiBulb.Integration
 
         public static DependencyProperty DisplayContextProperty = DependencyProperty.Register("Context", typeof(IDisplayContext), typeof(NESDisplay), new PropertyMetadata(null, new PropertyChangedCallback(DisplayContextChanged)));
         public static DependencyProperty TargetProperty = DependencyProperty.Register("Target", typeof(NESMachine), typeof(NESDisplay), new PropertyMetadata(null, new PropertyChangedCallback(TargetChanged)));
+
+        public static DependencyProperty SuspendNESDisplayProperty = DependencyProperty.Register("SuspendNESDisplay", typeof(bool), typeof(NESDisplay), new PropertyMetadata(false, new PropertyChangedCallback(SuspendNESDisplayChanged)));
+
         private delegate void NoArgDelegate();
 
         private IDisplayContext displayContext;
@@ -25,6 +28,35 @@ namespace InstiBulb.Integration
             : base()
         {
             doTheDraw = new NoArgDelegate(DrawScreen);
+        }
+
+        bool _suspendNESDisplay = false;
+
+        internal void StopDisplaying()
+        {
+            if (Target != null)
+                Target.Drawscreen -= target_Drawscreen;
+        }
+
+        internal void StartDisplaying()
+        {
+            if (Target != null)
+                Target.Drawscreen += target_Drawscreen;
+        }
+
+        public bool SuspendNESDisplay
+        {
+            get { return (bool)GetValue( NESDisplay.SuspendNESDisplayProperty); }
+            set { SetValue(NESDisplay.SuspendNESDisplayProperty, value); }
+        }
+
+        static void SuspendNESDisplayChanged(DependencyObject o, DependencyPropertyChangedEventArgs arg)
+        {
+            if ((bool)arg.NewValue)
+                ((NESDisplay)o).StopDisplaying();
+            else
+                ((NESDisplay)o).StartDisplaying();
+
         }
 
         static void DisplayContextChanged(DependencyObject o, DependencyPropertyChangedEventArgs arg)
@@ -55,11 +87,11 @@ namespace InstiBulb.Integration
             }
         }
 
+
+
         void target_Drawscreen(object sender, EventArgs e)
         {
-
             Dispatcher.BeginInvoke(doTheDraw, DispatcherPriority.Normal, null);
-
         }
 
         public NESMachine Target
