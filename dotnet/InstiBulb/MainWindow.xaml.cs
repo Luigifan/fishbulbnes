@@ -27,7 +27,11 @@ namespace InstiBulb
         {
 
         }
-
+        /// <summary>
+        /// This is so that DI Container can Resolve the MainWindow, but can defer resolution of the components
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public MainWindow Initialize()
         {
             InitializeComponent();
@@ -43,6 +47,19 @@ namespace InstiBulb
                     Dispatcher.BeginInvoke(ControlBoxer.WhizOnHandler, System.Windows.Threading.DispatcherPriority.Render, null);
                 }
             }
+        }
+
+        private void Windows_Close(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Maximize(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else
+                this.WindowState = WindowState.Maximized;
         }
 
     }

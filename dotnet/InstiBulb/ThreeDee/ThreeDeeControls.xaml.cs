@@ -30,7 +30,6 @@ namespace InstiBulb.ThreeDee
 
         public ThreeDeeControls()
         {
-            rotater = new IntArgDelegate(Rotater);
             WhizOnHandler = new NoArgDelegate(WhizOn);
             WhizOffHandler = new NoArgDelegate(WhizOff);
 
@@ -48,7 +47,8 @@ namespace InstiBulb.ThreeDee
             //WheelGrid.UpdateLayout();
             myAngleRotation.SetValue(AxisAngleRotation3D.AngleProperty, stepping);
             WheelGrid.UpdateLayout();
-            RotateCamera(stepping / (WheelGrid.Children.Count/ 2));
+            //RotateCamera(stepping / (WheelGrid.Children.Count/ 2));
+            Wheel.JumpTo(0);
         }
 
         double currentAngle = 0;
@@ -56,39 +56,16 @@ namespace InstiBulb.ThreeDee
 
         private void Left_Click(object sender, RoutedEventArgs e)
         {
-            RotateCamera(currentAngle + stepping);
+         //   RotateCamera(currentAngle + stepping);
+            Wheel.Previous();
         }
 
         private void Right_Click(object sender, RoutedEventArgs e)
         {
-            RotateCamera(currentAngle - stepping);
-
+            //RotateCamera(currentAngle - stepping);
+            Wheel.Next();
         }
 
-
-        void RotateCamera(double angle)
-        {
-            DoubleAnimation angleAnimation = new DoubleAnimation();
-
-            angleAnimation.From = currentAngle;
-
-            angleAnimation.To = angle;
-
-            angleAnimation.Duration = TimeSpan.FromSeconds(0.5);
-            angleAnimation.FillBehavior = FillBehavior.HoldEnd;
-            AxisAngleRotation3D rotation = new AxisAngleRotation3D();
-
-            rotation.Axis = new Vector3D(0, 1, 0);
-
-            camera.Transform = new RotateTransform3D(rotation);
-            HeadLight.Transform = new RotateTransform3D(rotation);
-
-            rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, angleAnimation);
-
-            currentAngle = angle;
-            while (currentAngle > 360) currentAngle -= 360;
-            while (currentAngle < 0) currentAngle += 360;
-        }
 
         private void ControlPanel_UpdateKeyhandlingEvent(object sender, EventArgs e)
         {
@@ -142,7 +119,7 @@ namespace InstiBulb.ThreeDee
             HeadLight.Transform = group;
 
             transFormanimation.Completed += new EventHandler(Whizoff_Completed);
-            translate.BeginAnimation(TranslateTransform3D.OffsetZProperty, transFormanimation);
+            translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
             rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, rotateAnimation);
 
 
@@ -151,7 +128,7 @@ namespace InstiBulb.ThreeDee
         public void WhizOn()
         {
             this.Visibility = Visibility.Visible;
-            this.UpdateLayout();
+            //this.UpdateLayout();
 
             DoubleAnimation transFormanimation = new DoubleAnimation();
             transFormanimation.From = 20;
@@ -177,7 +154,7 @@ namespace InstiBulb.ThreeDee
             camera.Transform = group;
             HeadLight.Transform = group;
 
-            translate.BeginAnimation(TranslateTransform3D.OffsetZProperty, transFormanimation);
+            translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
             rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, rotateAnimation);
 
 
@@ -204,21 +181,29 @@ namespace InstiBulb.ThreeDee
            } while (dpParent.GetType().BaseType != typeof(Window) && dpParent.GetType().BaseType != typeof(UserControl));   
            return dpParent;   
        }
-        bool wheeling;
 
-        IntArgDelegate rotater;
-
-        void Rotater(int i)
+        private void Label_MouseEnter(object sender, MouseEventArgs e)
         {
-            RotateCamera(stepping * i);
+            ColorAnimation animation = new ColorAnimation(Color.FromArgb(75, 128, 201, 128), new Duration(new TimeSpan(0, 0, 0, 0, 250)));
+            animation.FillBehavior = FillBehavior.HoldEnd;
+            var p = sender as Label;
+            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(0, 128, 128, 128));
+            p.SetValue(Label.BackgroundProperty, brush);
+
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
         }
 
-        private void OuterGrid_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            
-            //Dispatcher.BeginInvoke(rotater, e.Delta/120);
-        }
 
+        private void Label_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ColorAnimation animation = new ColorAnimation(Color.FromArgb(0, 128, 201, 128), new Duration(new TimeSpan(0, 0, 0, 0, 250)));
+            animation.FillBehavior = FillBehavior.HoldEnd;
+            var p = sender as Label;
+            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(75, 128, 201, 128));
+            p.SetValue(Label.BackgroundProperty, brush);
+
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+        }
 
     }
 }

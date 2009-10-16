@@ -65,7 +65,7 @@ namespace WpfNESViewer
         public void DrawDefaultDisplay()
         {
             isDefault = true;
-            this.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+            this.Background = new SolidColorBrush(Color.FromArgb(0,0, 0, 0));
         }
 
         public void SetPausedState(bool state)

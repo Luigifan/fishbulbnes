@@ -7,21 +7,32 @@
         xmlns:threeD="clr-namespace:InstiBulb.ThreeDee"
         DataContext="{DynamicResource Container}"
     Title="InstiBulb" Height="480" Width="720"
-        Icon="Mario-Dead.ico"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="False"
         
         >
-    <Grid x:Name="OuterGrid"  MouseDown="OuterGrid_MouseDown" >
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" BorderThickness="3" Grid.RowSpan="3"> 
-        <integration:NESDisplay x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-            Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
-                                >
-                <integration:NESDisplay.Context>
-                    <wpfView:WPFNesViewer x:Name="Wpf" />
-                </integration:NESDisplay.Context>
-            </integration:NESDisplay>
-        </Border>
-        <threeD:ThreeDeeControls x:Name="ControlBoxer" Visibility="Visible" Grid.Row="1" Background="Transparent"/>
-        
+    <Window.Resources>
+        <ImageBrush x:Key="Wallpaper" ImageSource="nes_controller_wallpaper.jpg" />
+    </Window.Resources>
+    <Grid x:Name="OuterGrid"  MouseDown="OuterGrid_MouseDown" Background="{StaticResource Wallpaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+        <integration:NESDisplay Grid.RowSpan="2" x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                        Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
+                                    >
+                    <integration:NESDisplay.Context>
+                        <wpfView:WPFNesViewer x:Name="Wpf" />
+                    </integration:NESDisplay.Context>
+                </integration:NESDisplay>
+        <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="25" Height="25" Content="^" Click="Maximize" />
+            <Button Width="25" Height="25" Content="X" Click="Windows_Close" />
+        </StackPanel>
+
     </Grid>
     
 </Window>

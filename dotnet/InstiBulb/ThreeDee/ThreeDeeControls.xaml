@@ -10,25 +10,28 @@
 
     >
     <UserControl.Resources>
-        <threeDeeHelpers:SphereMeshGenerator x:Key="sphereMeshGenerator"
-
-        Center="0 0 0"
-
-        Radius="2" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Tiles.xaml" />
+                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
 
     </UserControl.Resources>
-    <Grid x:Name="OuterGrid" MouseWheel="OuterGrid_MouseWheel" >
+    <Grid x:Name="OuterGrid"   >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
+        
         </Grid.ColumnDefinitions>
+        
         <threeDee:Interactive3DDecorator Grid.Column="0" Grid.ColumnSpan="3">
             <Viewport3D x:Name="viewer3d"  >
                 <Viewport3D.Camera >
 
-                    <PerspectiveCamera x:Name="camera" Position="0,1.5,6" LookDirection="0,-0.3,-1" FarPlaneDistance="12"  >
+                    <PerspectiveCamera x:Name="camera" Position="8,0,0" LookDirection="-1,0,0" FarPlaneDistance="12"  >
                     </PerspectiveCamera>
 
                 </Viewport3D.Camera>
@@ -38,11 +41,12 @@
 
                         <ModelVisual3D.Content>
 
-                            <DirectionalLight x:Name="HeadLight" Color="White" />
+                            <DirectionalLight x:Name="HeadLight" Direction="-1,0,0" Color="AntiqueWhite" />
 
                         </ModelVisual3D.Content>
 
                     </ModelVisual3D>
+                    <ContainerUIElement3D>
                     <threeDeeHelpers:InteractiveCylinder x:Name="Wheel" IsBackVisible="True">
                         <threeDeeHelpers:InteractiveCylinder.Transform>
                             <Transform3DGroup>
@@ -51,13 +55,10 @@
                                         <AxisAngleRotation3D x:Name="myAngleRotation" Axis="0,1,0" Angle="45" />
                                     </RotateTransform3D.Rotation>
                                 </RotateTransform3D>
-                                <ScaleTransform3D ScaleX="2" ScaleZ="2" ScaleY="0.75">
-
-                                </ScaleTransform3D>
                             </Transform3DGroup>
                         </threeDeeHelpers:InteractiveCylinder.Transform>
                         <threeDeeHelpers:InteractiveCylinder.Visual>
-                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch" Background="Transparent"  >
+                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch" Background="{StaticResource Bricks}"  >
                                 <Viewbox Margin="5">
                                     <views:ControlPanelView Background="LightSalmon"
                                             x:Name="ControlPanel"  
@@ -100,16 +101,18 @@
                                                             
                                                             />
                                 </Viewbox>
-
                             </UniformGrid>
                         </threeDeeHelpers:InteractiveCylinder.Visual>
                     </threeDeeHelpers:InteractiveCylinder>
+                        <ModelUIElement3D>
 
+                            </ModelUIElement3D>
+                    </ContainerUIElement3D>
                 </Viewport3D.Children>
             </Viewport3D>
         </threeDee:Interactive3DDecorator>
-        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Left" Content="((" MouseDown="Left_Click"  />
-        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Right" Content="))" MouseDown="Right_Click" Grid.Column="2"/>
+        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Left" Content="((" MouseDown="Left_Click" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
+        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Right" Content="))" MouseDown="Right_Click" Grid.Column="2" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
 
     </Grid>
 </UserControl>

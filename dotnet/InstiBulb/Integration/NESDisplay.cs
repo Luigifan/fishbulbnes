@@ -34,8 +34,14 @@ namespace InstiBulb.Integration
 
         static void TargetChanged(DependencyObject o, DependencyPropertyChangedEventArgs arg)
         {
-            (o as NESDisplay).UnhookTarget(arg.OldValue as NESMachine);
-            (o as NESDisplay).UpdateTarget(arg.NewValue as NESMachine);
+            var p = o as NESDisplay;
+            if (p == null) return;
+            p.UnhookTarget(arg.OldValue as NESMachine);
+            p.UpdateTarget(arg.NewValue as NESMachine);
+            if (p.Context != null)
+            {
+                p.SetupRenderer(p.Context);
+            }
             
         }
 
