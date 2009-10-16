@@ -1,0 +1,12 @@
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\SlimDXNESViewer.dll
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\SlimDXNESViewer.pdb
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\6502.dll
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\SampleFramework.dll
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\SampleFramework.pdb
+D:\Projects\Fastendu\SlimDXNESViewer\bin\Debug\6502.pdb
+D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\ResolveAssemblyReference.cache
+D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.Properties.Resources.resources
+D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.csproj.GenerateResource.Cache
+D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.dll
+D:\Projects\Fastendu\SlimDXNESViewer\obj\Debug\SlimDXNESViewer.pdb
