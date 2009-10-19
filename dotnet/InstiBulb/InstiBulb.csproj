@@ -17,13 +17,13 @@
     <ApplicationIcon>Mario-Dead.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>64C336E898181F834AC6701281541A8472D93F7D</ManifestCertificateThumbprint>
     <ManifestKeyFile>InstiKey.pfx</ManifestKeyFile>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>InstiKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <PublishUrl>\\fatbones\fishbulblive\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -40,6 +40,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -290,7 +291,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="InstiBulb_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -300,7 +300,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
+    <ProjectReference Include="..\..\..\..\Users\jhartrick.TIGERDEV1\Downloads\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
       <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
       <Name>3DTools</Name>
     </ProjectReference>
@@ -363,12 +363,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="alut.dll" />
-    <None Include="InstiBulb_1_TemporaryKey.pfx" />
-    <None Include="InstiKey.pfx" />
-    <Content Include="OpenAL32.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

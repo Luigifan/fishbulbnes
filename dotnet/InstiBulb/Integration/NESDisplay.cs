@@ -122,11 +122,24 @@ namespace InstiBulb.Integration
 
         Delegate doTheDraw;
 
-        void DrawScreen()
+        void DrawScreenArray()
         {
             //if (displayContext.PixelWidth ==32)
                 displayContext.UpdateNESScreen(Target.PPU.VideoBuffer);
         }
+
+        void DrawScreen()
+        {
+            //if (displayContext.PixelWidth ==32)
+            displayContext.UpdateNESScreen();
+        }
+
+        void DrawScreenPtr()
+        {
+            //if (displayContext.PixelWidth ==32)
+            displayContext.UpdateNESScreen(new IntPtr(Target.PPU.VideoBuffer[0]) );
+        }
+
 
         public void SetupRenderer(IDisplayContext displayContext)
         {
@@ -161,6 +174,21 @@ namespace InstiBulb.Integration
                     {
                         Target.PPU.FillRGB = true;
                     }
+                }
+
+                switch (displayContext.DesiredCallback)
+                {
+                    case CallbackType.None:
+                        break;
+                    case CallbackType.NoArgs:
+                        doTheDraw = new NoArgDelegate(DrawScreen);
+                        break;
+                    case CallbackType.Array:
+                        doTheDraw = new NoArgDelegate( DrawScreenArray);
+                        break;
+                    case CallbackType.IntPtr:
+                        doTheDraw = new NoArgDelegate(DrawScreenPtr);
+                        break;
                 }
             }
         }

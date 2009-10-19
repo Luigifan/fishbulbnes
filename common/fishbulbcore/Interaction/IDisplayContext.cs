@@ -23,11 +23,23 @@ namespace NES.CPU.nitenedo.Interaction
         Indexed
     }
 
+
+    public enum CallbackType
+    {
+        None,
+        NoArgs,
+        Array,
+        IntPtr
+    }
+
     /// <summary>
     /// Defines what the main windows interaction with the current renderer
     /// </summary>
     public interface IDisplayContext
     {
+
+        CallbackType DesiredCallback { get;  }
+
         int PixelWidth { get; }
 
         NESPixelFormats PixelFormat { get; set; }
@@ -36,9 +48,9 @@ namespace NES.CPU.nitenedo.Interaction
 
         void TearDownDisplay();
 
-        void UpdateNESScreen(int[] pixels);
+        void UpdateNESScreen();
 
-        void UpdateNESScreen(int[] pixels, int[] palette);
+        void UpdateNESScreen(int[] pixels);
 
         void UpdateNESScreen(IntPtr pixelData);
 

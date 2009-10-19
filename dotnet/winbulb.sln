@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimDXBindings", "SlimDXBin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaoBindings", "OpenALWavStreamer\TaoBindings.csproj", "{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DTools", "..\..\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj", "{5F603892-DE40-4246-A969-1C6717AFE35D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DTools", "..\..\..\Users\jhartrick.TIGERDEV1\Downloads\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj", "{5F603892-DE40-4246-A969-1C6717AFE35D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,13 +92,12 @@ Global
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|x86.ActiveCfg = Debug|x86
-		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|x86.Build.0 = Debug|x86
+		{5F603892-DE40-4246-A969-1C6717AFE35D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|x64.ActiveCfg = Release|Any CPU
-		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|x86.ActiveCfg = Release|x86
-		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|x86.Build.0 = Release|x86
+		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|x64.Build.0 = Release|Any CPU
+		{5F603892-DE40-4246-A969-1C6717AFE35D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

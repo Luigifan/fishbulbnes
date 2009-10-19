@@ -22,7 +22,6 @@ namespace WpfNESViewer
     {
 
         WriteableBitmap bitmap;
-        #region IDisplayContext Members
 
         public NESPixelFormats PixelFormat
         {
@@ -100,26 +99,28 @@ namespace WpfNESViewer
         }
 
 
-        public void UpdateNESScreen(int[] pixels, int[] palette)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public string DisplayName
         {
             get { return "WPF WriteableBitmap"; }
         }
 
-        #endregion
-
-        #region IDisplayContext Members
-
-
         public void UpdateNESScreen(IntPtr pixelData)
         {
            
             bitmap.WritePixels(new Int32Rect(0, 8, 256, 240), pixelData, 256*240*8 , stride, 0, 0);
+            
+        }
+
+
+        #region IDisplayContext Members
+
+        public CallbackType DesiredCallback
+        {
+            get { return CallbackType.Array; }
+        }
+
+        public void UpdateNESScreen()
+        {
             
         }
 
