@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WPFamicom.Configuration
+namespace InstiBulb.Configuration
 {
     public static class NESConfigManager
     {

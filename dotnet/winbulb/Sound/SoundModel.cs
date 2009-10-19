@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WPFamicom.Sound
+namespace InstiBulb.Sound
 {
     // contains the interaction between the nes object, the sound streamer, and the UI
 

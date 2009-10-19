@@ -15,6 +15,31 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>Mario-Dead.ico</ApplicationIcon>
+    <ManifestCertificateThumbprint>64C336E898181F834AC6701281541A8472D93F7D</ManifestCertificateThumbprint>
+    <ManifestKeyFile>InstiKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <TargetZone>LocalIntranet</TargetZone>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <SignManifests>true</SignManifests>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>InstiKey.pfx</AssemblyOriginatorKeyFile>
+    <PublishUrl>\\fatbones\fishbulblive\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Background</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -153,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Models\ThreeDIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SoundPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,6 +193,18 @@
     <Page Include="ThreeDee\Tiles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstructionRolloutControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NameTableViewerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PatternViewerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WpfNesViewer\Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -221,11 +262,25 @@
     <Compile Include="SoundPanelView.xaml.cs">
       <DependentUpon>SoundPanelView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThreeDee\Icon3D.cs" />
+    <Compile Include="ThreeDee\InteractiveCanvas.cs" />
+    <Compile Include="ThreeDee\InteractiveCanvasSpinner.cs" />
     <Compile Include="ThreeDee\InteractiveCylinder.cs" />
     <Compile Include="ThreeDee\SphereMeshGenerator.cs" />
     <Compile Include="ThreeDee\ThreeDeeControls.xaml.cs">
       <DependentUpon>ThreeDeeControls.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\InstructionRolloutControl.xaml.cs">
+      <DependentUpon>InstructionRolloutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NameTableViewerControl.xaml.cs">
+      <DependentUpon>NameTableViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PatternViewerControl.xaml.cs">
+      <DependentUpon>PatternViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinViewModels\DisplayNameTablesCommand.cs" />
+    <Compile Include="WinViewModels\DisplayTilesCommand.cs" />
     <Compile Include="WinViewModels\WinCheatPanelVM.cs" />
     <Compile Include="WinViewModels\WinDebuggerVM.cs" />
     <Compile Include="WinViewModels\WpfKeyConfigVM.cs" />
@@ -235,6 +290,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="InstiBulb_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -243,6 +300,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
+      <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
+      <Name>3DTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.VStudio.csproj">
       <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
       <Name>fishbulbcommonui.VStudio</Name>
@@ -251,9 +312,9 @@
       <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
       <Name>CPU6502.VStudio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libs\3DTools\3DTools.csproj">
-      <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
-      <Name>3DTools</Name>
+    <ProjectReference Include="..\OpenALWavStreamer\TaoBindings.csproj">
+      <Project>{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}</Project>
+      <Name>TaoBindings</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlimDXBindings\SlimDXBindings.csproj">
       <Project>{8ACDBECE-4418-4454-A0FB-273064F465A1}</Project>
@@ -270,6 +331,44 @@
     <Resource Include="nes_controller_wallpaper.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="alut.dll" />
+    <None Include="InstiBulb_1_TemporaryKey.pfx" />
+    <None Include="InstiKey.pfx" />
+    <Content Include="OpenAL32.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,6 +5,12 @@ using System.Text;
 
 namespace NES.CPU.nitenedo.Interaction
 {
+    public class InvalidDisplayContextException : Exception
+    {
+        public InvalidDisplayContextException(string s) : base(s) { }
+        public InvalidDisplayContextException(string s, Exception innerException) : base(s, innerException) { }
+    }
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public sealed class NESDisplayPluginAttribute : Attribute
     {
@@ -42,7 +48,7 @@ namespace NES.CPU.nitenedo.Interaction
 
         object UIControl { get; }
 
-        string PropertiesPanel { get; }
+        object PropertiesPanel { get; }
 
         string DisplayName { get; }
 

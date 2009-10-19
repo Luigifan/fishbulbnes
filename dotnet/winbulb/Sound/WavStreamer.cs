@@ -7,9 +7,9 @@ using SlimDX.Multimedia;
 using System.Threading;
 using NES.CPU.Machine.BeepsBoops;
 
-namespace WPFamicom.Sound
+namespace InstiBulb.Sound
 {
-    public class WavStreamer : IDisposable, WPFamicom.Sound.IWavStreamer
+    public class WavStreamer : IDisposable, InstiBulb.Sound.IWavStreamer
     {
         // each buffer should contain 1/60th of a second of audio
         //  lag sound behind up to _count frames

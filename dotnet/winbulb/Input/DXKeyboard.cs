@@ -7,7 +7,7 @@ using SlimDX.DirectInput;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace WPFamicom.Input
+namespace InstiBulb.Input
 {
     public class DXKeyboard : IDisposable
     {

@@ -13,101 +13,63 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Tiles.xaml" />
-                
+                <ResourceDictionary Source="..\Models\ThreeDIcons.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
 
     </UserControl.Resources>
-    <Grid x:Name="OuterGrid"   >
+    <Grid x:Name="OuterGrid" MouseDown="viewer3d_MouseDown"  MouseWheel="viewer3d_MouseWheel"  >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
-        
         </Grid.ColumnDefinitions>
-        
-        <threeDee:Interactive3DDecorator Grid.Column="0" Grid.ColumnSpan="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <threeDee:Interactive3DDecorator Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3">
             <Viewport3D x:Name="viewer3d"  >
                 <Viewport3D.Camera >
-                    <PerspectiveCamera x:Name="camera"  Position="8,1.5,0" LookDirection="-1,-0.2,0" FarPlaneDistance="12" />
+                    <PerspectiveCamera x:Name="camera"  Position="10,1.6,0" LookDirection="-1,-0.2,0"  />
                 </Viewport3D.Camera>
 
-                <Viewport3D.Children>
+                <Viewport3D.Children >
                     <ModelVisual3D>
-
                         <ModelVisual3D.Content>
-                            <DirectionalLight x:Name="HeadLight" Direction="-1,0,0" Color="LightBlue" />
+                            <DirectionalLight x:Name="HeadLight" Direction="-1,0.2,0" Color="AntiqueWhite"  />
                         </ModelVisual3D.Content>
 
                     </ModelVisual3D>
-                    <ContainerUIElement3D>
-                    <threeDeeHelpers:InteractiveCylinder x:Name="Wheel" IsBackVisible="True">
-                        <threeDeeHelpers:InteractiveCylinder.Transform>
-                            <Transform3DGroup>
-                                <RotateTransform3D>
-                                    <RotateTransform3D.Rotation>
-                                        <AxisAngleRotation3D x:Name="myAngleRotation" Axis="0,1,0" Angle="45" />
-                                    </RotateTransform3D.Rotation>
-                                </RotateTransform3D>
-                            </Transform3DGroup>
-                        </threeDeeHelpers:InteractiveCylinder.Transform>
-                        <threeDeeHelpers:InteractiveCylinder.Visual>
-                            <UniformGrid x:Name="WheelGrid" HorizontalAlignment="Stretch" Background="{StaticResource Bricks}"  >
-                                <Viewbox Margin="5">
-                                    <views:ControlPanelView Background="LightSalmon"
-                                            x:Name="ControlPanel"  
-                                            DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                                            UpdateKeyhandlingEvent="ControlPanel_UpdateKeyhandlingEvent"
-                                        />
-                                </Viewbox>
-                                <Viewbox Margin="5" >
-                                    <views:SoundPanelView   Background="LightSalmon"
-                                        x:Name="SoundPanel"
-                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;SoundVM}" 
-                                          />
-                                </Viewbox>
-                                <Viewbox Margin="5">
-                                    <views:CheatControl Background="LightSalmon"
-                                        x:Name="CheatControl"
-                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;CheatVM}" 
-                                      />
-                                </Viewbox>
-                                <Viewbox Margin="5">
-                                    <views:MachineStatus  Background="LightSalmon"
-                                                      x:Name="MachineStatus"
-                                                        DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                                        ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;DebuggerVM}" 
-                                         />
-                                </Viewbox>
-                                <Viewbox Margin="5">
-                                    <views:CartInfoPanel x:Name="CartInfo"
-                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                            ConverterParameter=Fishbulb.Common.UI.IViewModel\,fishbulbcommonui;ControlPanel}" 
-                                        />
-                                </Viewbox>
-                                <Viewbox Margin="5">
-                                    <views:ControllerConfig x:Name="KeyConfig" 
-                                         DataContext="{Binding Converter={StaticResource ContainerResolver}, 
-                                            ConverterParameter=InstiBulb.WinViewModels.WpfKeyConfigVM\,InstiBulb;KeyConfigVM}" 
-                                                            
-                                                            />
-                                </Viewbox>
-                            </UniformGrid>
-                        </threeDeeHelpers:InteractiveCylinder.Visual>
-                    </threeDeeHelpers:InteractiveCylinder>
-                        <ModelUIElement3D>
+                    <ModelVisual3D>
+                        <ModelVisual3D.Content>
+                            <DirectionalLight Direction="-1,-0.2,0" Color="Red"  />
+                        </ModelVisual3D.Content>
 
-                            </ModelUIElement3D>
-                    </ContainerUIElement3D>
+                    </ModelVisual3D>
+
+                    <ContainerUIElement3D x:Name="debugContainer"/>
+                    <ContainerUIElement3D x:Name="spinnerContainer"/>
                 </Viewport3D.Children>
             </Viewport3D>
         </threeDee:Interactive3DDecorator>
-        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Left" Content="((" MouseDown="Left_Click" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
-        <Label Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Right" Content="))" MouseDown="Right_Click" Grid.Column="2" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
+        <Label  Grid.Row="1"  Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Left" Content="((" MouseDown="Left_Click" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
+        <Label Grid.Row="1" Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Right" Content="))" MouseDown="Right_Click" Grid.Column="2" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
+        <Label  Grid.Row="0" Grid.Column="1"  Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Up" Content="^^" MouseDown="Up_Click" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
+        <Label Grid.Row="2" Grid.Column="1" Background="Transparent" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="Yellow" x:Name="Down" Content=".." MouseDown="Down_Click" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" />
 
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5*" />
+            </Grid.RowDefinitions>
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Right" ZIndex="1" Visibility="{Binding ElementName=PopupPropertiesGrid, Path=Visibility}">
+                <Button Height="25" Width="25"  Background="Red" Foreground="White" Content="X" x:Name="ClosePopupPropertiesButton" Click="ClosePopupPropertiesButton_Click" />
+            </StackPanel>
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" x:Name="PopupPropertiesGrid" Background="LightSalmon" BorderBrush="Transparent" BorderThickness="3" CornerRadius="2" Visibility="Hidden" />
+        </Grid>
     </Grid>
 </UserControl>

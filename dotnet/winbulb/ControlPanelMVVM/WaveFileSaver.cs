@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
     public class WaveFileSaver: IDisposable, NES.CPU.Machine.BeepsBoops.IWavWriter
     {

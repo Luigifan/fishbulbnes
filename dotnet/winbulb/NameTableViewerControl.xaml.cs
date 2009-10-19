@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPFamicom
+namespace InstiBulb
 {
 	/// <summary>
     /// Interaction logic for NameTableViewerControl.xaml

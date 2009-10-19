@@ -9,7 +9,7 @@ using NES.CPU.nitenedo;
 using NES.CPU.nitenedo.Interaction;
 using System.Windows.Threading;
 
-namespace WPFamicom.GameDisplay
+namespace InstiBulb.GameDisplay
 {
     public class NESDisplay : Border, IDisposable
     {

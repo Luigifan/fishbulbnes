@@ -8,9 +8,9 @@ using System.Threading;
 using NES.CPU.Machine.BeepsBoops;
 using System.IO;
 
-namespace WPFamicom.Sound
+namespace InstiBulb.Sound
 {
-    public class InlineWavStreamer : IDisposable, WPFamicom.Sound.IWavStreamer
+    public class InlineWavStreamer : IDisposable, InstiBulb.Sound.IWavStreamer
     {
         // each buffer should contain 1/60th of a second of audio
         //  lag sound behind up to _count frames

@@ -5,14 +5,14 @@ using System.Text;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.BeepsBoops;
 using Microsoft.Win32;
-using WPFamicom.Configuration;
+using InstiBulb.Configuration;
 using System.IO;
 using System.ComponentModel;
 using VMCommanding;
 using System.Windows.Input;
-using WPFamicom.Sound;
+using InstiBulb.Sound;
 
-namespace WPFamicom.ControlPanelMVVM.SoundUI
+namespace InstiBulb.ControlPanelMVVM.SoundUI
 {
     /// <summary>
     /// something for wpf to bind to

@@ -6,7 +6,7 @@ using NES.CPU.nitenedo;
 using System.Threading;
 using System.ComponentModel;
 
-namespace WPFamicom.Sound
+namespace InstiBulb.Sound
 {
     public class SoundThreader : IDisposable
     {

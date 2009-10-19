@@ -1,9 +1,9 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	x:Class="WPFamicom.Debugger"
+	x:Class="InstiBulb.Debugger"
 	x:Name="Window"
-	Width="640" Height="480" xmlns:WPFamicom="clr-namespace:WPFamicom" WindowStyle="ToolWindow">
+	Width="640" Height="480" xmlns:WPFamicom="clr-namespace:InstiBulb" WindowStyle="ToolWindow">
 
 	<Grid>
 

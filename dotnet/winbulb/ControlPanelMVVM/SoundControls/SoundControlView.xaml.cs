@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPFamicom.ControlPanelMVVM.SoundUI
+namespace InstiBulb.ControlPanelMVVM.SoundUI
 {
 	/// <summary>
 	/// Interaction logic for SoundControlView.xaml

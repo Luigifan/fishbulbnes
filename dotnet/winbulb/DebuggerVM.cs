@@ -17,7 +17,7 @@ using NES.CPU.FastendoDebugging;
 using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.PPUClasses;
 
-namespace WPFamicom
+namespace InstiBulb
 {
 
     public class DebuggerVM : INotifyPropertyChanged 

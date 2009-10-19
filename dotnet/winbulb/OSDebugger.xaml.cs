@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NES.CPU.CPUDebugging;
 
-namespace WPFamicom
+namespace InstiBulb
 {
 
 

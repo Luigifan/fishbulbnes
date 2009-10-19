@@ -87,7 +87,12 @@ namespace InstiBulb.Integration
             }
         }
 
+        public event EventHandler ContextChanged;
 
+        internal void UpdateContext()
+        {
+            if (ContextChanged != null) ContextChanged(this, EventArgs.Empty);
+        }
 
         void target_Drawscreen(object sender, EventArgs e)
         {
@@ -135,6 +140,7 @@ namespace InstiBulb.Integration
                 this.displayContext = displayContext;
                 this.displayContext.CreateDisplay();
                 this.displayContext.DrawDefaultDisplay();
+                UpdateContext();
                 if (Target != null)
                 {
                     Target.PPU.PixelWidth = displayContext.PixelWidth;
@@ -167,6 +173,8 @@ namespace InstiBulb.Integration
                 SetValue(NESDisplay.DisplayContextProperty, value);
             }
         }
+
+
 
         public void Dispose()
         {

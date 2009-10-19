@@ -5,7 +5,7 @@ using System.Text;
 using NES.CPU.Fastendo;
 using System.ComponentModel;
 
-namespace WPFamicom.InstructionRollout
+namespace InstiBulb.InstructionRollout
 {
     public class InstructionRolloutItem : INotifyPropertyChanged
     {

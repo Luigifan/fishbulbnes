@@ -6,7 +6,7 @@ using NES.CPU.Machine.BeepsBoops;
 using Yeti.MMedia.Mp3;
 using System.IO;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
     public class Mp3FileSaver : IWavWriter
     {

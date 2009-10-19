@@ -7,7 +7,7 @@ using NES.CPU.Machine.BeepsBoops;
 using Tao.OpenAl;
 using System.Diagnostics;
 
-namespace WPFamicom.Sound
+namespace InstiBulb.Sound
 {
     public class OpenALInlineWavStreamer : IDisposable, IWavStreamer
     {

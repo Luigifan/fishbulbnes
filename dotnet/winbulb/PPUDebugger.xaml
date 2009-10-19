@@ -4,9 +4,9 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	x:Class="WPFamicom.PPUDebugger"
+	x:Class="InstiBulb.PPUDebugger"
 	x:Name="UserControl"
-	d:DesignWidth="679.955" d:DesignHeight="943.68" xmlns:WPFamicom="clr-namespace:WPFamicom">
+	d:DesignWidth="679.955" d:DesignHeight="943.68" xmlns:WPFamicom="clr-namespace:InstiBulb">
 	<Border>
 		<StackPanel MinHeight="20" MinWidth="20" x:Name="Pane1">
 			<StackPanel.Background>

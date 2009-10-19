@@ -4,15 +4,15 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	x:Class="WPFamicom.ControlPanel"
+	x:Class="InstiBulb.ControlPanel"
 	x:Name="UserControl" BorderThickness="3,3,3,3"
-    xmlns:vm="clr-namespace:WPFamicom.ControlPanelMVVM"
+    xmlns:vm="clr-namespace:InstiBulb.ControlPanelMVVM"
     xmlns:commanding="clr-namespace:VMCommanding"
     commanding:CommandSinkBinding.CommandSink="{Binding}"
     xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna" 
     VerticalAlignment="Top"
-    xmlns:WPFamicom="clr-namespace:WPFamicom"
-    xmlns:SoundControls="clr-namespace:WPFamicom.ControlPanelMVVM.SoundUI"
+    xmlns:WPFamicom="clr-namespace:InstiBulb"
+    xmlns:SoundControls="clr-namespace:InstiBulb.ControlPanelMVVM.SoundUI"
     >
     
 	<UserControl.Resources>

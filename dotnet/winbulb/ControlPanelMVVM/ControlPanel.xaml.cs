@@ -10,10 +10,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WPFamicom.ControlPanelMVVM;
+using InstiBulb.ControlPanelMVVM;
 using System.Windows.Media.Animation;
 
-namespace WPFamicom
+namespace InstiBulb
 {
 	/// <summary>
 	/// Interaction logic for ControlPanel.xaml

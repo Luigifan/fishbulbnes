@@ -8,15 +8,15 @@ using System.Windows.Input;
 using System.ComponentModel;
 using Microsoft.Win32;
 using System.IO;
-using WPFamicom.FileLoader;
-using WPFamicom.Configuration;
-using WPFamicom.ControlPanelMVVM.CheatControls;
+using InstiBulb.FileLoader;
+using InstiBulb.Configuration;
+using InstiBulb.ControlPanelMVVM.CheatControls;
 using NES.CPU.nitenedo.Interaction;
-using WPFamicom.GameDisplay;
+using InstiBulb.GameDisplay;
 using System.Windows.Markup;
 using System.Windows.Controls;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
 
     public class ControlPanelVM : INotifyPropertyChanged, ICommandSink, IDisposable

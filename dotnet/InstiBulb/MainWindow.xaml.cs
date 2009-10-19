@@ -34,7 +34,14 @@ namespace InstiBulb
         /// <returns></returns>
         public MainWindow Initialize()
         {
+            IUnityContainer container = (IUnityContainer)FindResource("Container");
+
             InitializeComponent();
+            UIElement element = container.Resolve<InstiBulb.Integration.NESDisplay>();
+            element.SetValue(Grid.RowSpanProperty, OuterGrid.RowDefinitions.Count);
+            element.SetValue(Grid.RowProperty, 0);
+            OuterGrid.Children.Insert(0,element);
+            this.InvalidateArrange();
             return this;
         }
 

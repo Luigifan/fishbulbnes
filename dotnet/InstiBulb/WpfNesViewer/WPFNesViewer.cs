@@ -40,7 +40,7 @@ namespace WpfNESViewer
         {
             bitmap = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32,null);
             this.Background = new ImageBrush(bitmap);
-            this.SnapsToDevicePixels = true;
+            //this.SnapsToDevicePixels = true;
         }
 
         public void TearDownDisplay()
@@ -85,7 +85,7 @@ namespace WpfNESViewer
 
 
         string properties;
-        public string PropertiesPanel
+        public object PropertiesPanel
         {
             get
             {
@@ -95,7 +95,7 @@ namespace WpfNESViewer
                     TextReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.WpfControls.xaml"));
                     properties = reader.ReadToEnd();
                 }
-                return properties;
+                return XamlReader.Parse( properties);
             }
         }
 

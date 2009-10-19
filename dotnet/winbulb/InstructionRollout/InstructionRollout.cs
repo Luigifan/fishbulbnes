@@ -6,7 +6,7 @@ using NES.CPU.Fastendo;
 using NES.CPU.CPUDebugging;
 using NES.CPU.FastendoDebugging;
 
-namespace WPFamicom.InstructionRollout
+namespace InstiBulb.InstructionRollout
 {
     public class InstructionRollout : List<InstructionRolloutItem>
     {

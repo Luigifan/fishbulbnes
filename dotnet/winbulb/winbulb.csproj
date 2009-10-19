@@ -8,7 +8,7 @@
     <ProjectGuid>{F286D38C-EC0C-4968-AC82-E3ED516A1A48}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WPFamicom</RootNamespace>
+    <RootNamespace>InstiBulb</RootNamespace>
     <AssemblyName>WPFamicom</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

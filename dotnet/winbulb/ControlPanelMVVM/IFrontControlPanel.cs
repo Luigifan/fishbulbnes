@@ -7,7 +7,7 @@ using NES.Machine.ControlPanel;
 using System.Collections.ObjectModel;
 using NES.CPU.nitenedo;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
     public interface IFrontControlPanel : INotifyPropertyChanged, IDisposable
     {

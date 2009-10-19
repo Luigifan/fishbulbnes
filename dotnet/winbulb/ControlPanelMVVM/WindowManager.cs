@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Data;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
     public class ShmindowManager
     {

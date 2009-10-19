@@ -10,10 +10,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Security;
 using NES.CPU.Machine.BeepsBoops;
-using WPFamicom.ControlPanelMVVM.SoundUI;
-using WPFamicom.Sound;
+using InstiBulb.ControlPanelMVVM.SoundUI;
+using InstiBulb.Sound;
 
-namespace WPFamicom.ControlPanelMVVM
+namespace InstiBulb.ControlPanelMVVM
 {
     public class ControlPanelModel : IFrontControlPanel
     {

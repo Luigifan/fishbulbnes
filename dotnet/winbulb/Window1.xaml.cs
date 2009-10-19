@@ -17,14 +17,14 @@ using System.Windows.Interop;
 using NES.CPU;
 using NES.CPU.nitenedo;
 using System.Runtime.InteropServices;
-using WPFamicom.ControlPanelMVVM;
-using WPFamicom.FileLoader;
-using WPFamicom.Sound;
-using WPFamicom.Input;
-using WPFamicom.ControlPanelMVVM.CheatControls;
+using InstiBulb.ControlPanelMVVM;
+using InstiBulb.FileLoader;
+using InstiBulb.Sound;
+using InstiBulb.Input;
+using InstiBulb.ControlPanelMVVM.CheatControls;
 
 
-namespace WPFamicom
+namespace InstiBulb
 {
     /// <summary>
     /// Interaction logic for Window1.xaml

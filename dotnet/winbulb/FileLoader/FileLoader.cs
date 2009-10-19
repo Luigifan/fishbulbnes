@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Win32;
 
-namespace WPFamicom.FileLoader
+namespace InstiBulb.FileLoader
 {
     public interface IFileLoader
     {

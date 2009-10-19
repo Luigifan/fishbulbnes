@@ -17,6 +17,8 @@ using InstiBulb.WpfKeyboardInput;
 using SlimDXNESViewer;
 using NES.CPU.nitenedo.Interaction;
 using WpfNESViewer;
+using InstiBulb.Sound;
+using InstiBulb.Views;
 
 namespace InstiBulb.Integration
 {
@@ -34,7 +36,8 @@ namespace InstiBulb.Integration
             // platform specific wavestreamer
             container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
             // make it default
-            container.RegisterType<IWavStreamer, InlineWavStreamer>();
+            //container.RegisterType<IWavStreamer, InlineWavStreamer>();
+            container.RegisterType<IWavStreamer, OpenALInlineWavStreamer>();
             // the shared buffer between the IWavStreamer and the NES
             container.RegisterType<WavSharer>(new ContainerControlledLifetimeManager());
             container.Configure<InjectedMembers>().ConfigureInjectionFor<WavSharer>(new InjectionConstructor((float)44100.0));
@@ -57,15 +60,13 @@ namespace InstiBulb.Integration
                 , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
             container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<WpfKeyConfigVM>(new ContainerControlledLifetimeManager());
-            
             container.RegisterType<IControlPad, WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
             //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<WPFNesViewer>(new ContainerControlledLifetimeManager());
-            container.RegisterType<SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<WPFNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<SlimDXNesViewer>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
@@ -74,7 +75,7 @@ namespace InstiBulb.Integration
             
             container.RegisterType<NESMachine>( new ContainerControlledLifetimeManager());
 
-            // register views
+            // register view models
             container.RegisterType<ControlPanelVM>();
             container.RegisterType<SoundViewModel>();
             container.RegisterType<WinCheatPanelVM>();
@@ -83,6 +84,26 @@ namespace InstiBulb.Integration
             container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager());
+            
+            container.RegisterType<WpfKeyConfigVM>("KeyConfigVM", new ContainerControlledLifetimeManager());
+
+            // register views
+            container.RegisterType<NESDisplay>(new ContainerControlledLifetimeManager(),
+                new InjectionProperty("Target", new ResolvedParameter<NESMachine>()),
+                new InjectionProperty("Context", new ResolvedParameter<IDisplayContext>())
+
+                );
+
+
+            container.RegisterType<ControlPanelView>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
+            container.RegisterType<SoundPanelView>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "SoundVM")));
+            container.RegisterType<CheatControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "CheatVM")));
+            container.RegisterType<CartInfoPanel>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
+            container.RegisterType<MachineStatus>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));    
+            container.RegisterType<ControllerConfig>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(WpfKeyConfigVM), "KeyConfigVM")));
+            container.RegisterType<InstructionRolloutControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
+            container.RegisterType<NameTableViewerControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
+            container.RegisterType<PatternViewerControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
 
             return container;
         }

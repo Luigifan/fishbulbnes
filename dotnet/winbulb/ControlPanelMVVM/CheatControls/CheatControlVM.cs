@@ -8,7 +8,7 @@ using NES.CPU.nitenedo;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace WPFamicom.ControlPanelMVVM.CheatControls
+namespace InstiBulb.ControlPanelMVVM.CheatControls
 {
     public class CheatControlVM :INotifyPropertyChanged, ICommandSink
     {

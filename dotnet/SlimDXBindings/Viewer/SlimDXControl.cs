@@ -27,6 +27,7 @@ namespace SlimDXBindings.Viewer
 
         // this one is our only child
         private D3DImage _d3dimage;
+        private Image image;
         private bool _startThread = false;
         private bool _sizeChanged = false;
 
@@ -85,6 +86,11 @@ namespace SlimDXBindings.Viewer
         /// Occurs when the device is reset.
         /// </summary>
         public event EventHandler DeviceReset;
+        
+        /// <summary>
+        /// Occurs when the PresentationParameters backbuffer size is reset
+        /// </summary>
+        public event EventHandler BackBufferSizeChanged;
 
         /// <summary>
         /// Raises the OnInitialize event.
@@ -146,12 +152,18 @@ namespace SlimDXBindings.Viewer
 
         public SlimDXControl()
         {
-            _d3dimage = new D3DImage();
+
+            //Background = new ImageBrush(_d3dimage);
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+            _d3dimage = new D3DImage();
+            image = new Image();
+            image.Source = _d3dimage;
+            image.Stretch = Stretch.Uniform;
+            this.Children.Add(image);
             InitializeDirect3D();
         }
 
@@ -191,10 +203,10 @@ namespace SlimDXBindings.Viewer
                 _pp.SwapEffect = SwapEffect.Discard;
                 _pp.DeviceWindowHandle = hwnd.Handle;
                 _pp.Windowed = true;
-                _pp.BackBufferWidth = (int)256;
-                _pp.BackBufferHeight = (int)256;
+                _pp.BackBufferWidth = (int)BackBufferWidth;
+                _pp.BackBufferHeight = (int)BackBufferHeight;
                 _pp.BackBufferFormat = Format.X8R8G8B8;
-
+                BackBufferSizeChanged(this, EventArgs.Empty);
                 if (UseDeviceEx)
                 {
                     _deviceEx = new DeviceEx((Direct3DEx)Direct3D, 0,
@@ -226,7 +238,7 @@ namespace SlimDXBindings.Viewer
                 _backBufferSurface = Device.GetBackBuffer(0, 0);
                 _d3dimage.SetBackBuffer(D3DResourceType.IDirect3DSurface9, _backBufferSurface.ComPointer);
                 _d3dimage.Unlock();
-                this.Background = new ImageBrush(_d3dimage);
+                //this.Background = new ImageBrush(_d3dimage);
                 return true;
             }
             catch
@@ -279,9 +291,23 @@ namespace SlimDXBindings.Viewer
             }
         }
 
+        public bool AllowRendering
+        {
+            get;
+            set;
+        }
+
+        public int BackBufferWidth
+        {
+            get { return (int)ActualWidth; }
+        }
+
+        public int BackBufferHeight { get { return (int)ActualHeight; } }
         private void OnRendering(object sender, EventArgs e)
         {
             Result result;
+
+            if (!AllowRendering) return;
 
             try
             {
@@ -290,11 +316,12 @@ namespace SlimDXBindings.Viewer
 
                 if (_sizeChanged)
                 {
-                    _pp.BackBufferWidth = (int)256;
-                    _pp.BackBufferHeight = (int)256;
+                    _pp.BackBufferWidth = (int)BackBufferWidth;
+                    _pp.BackBufferHeight = (int)BackBufferHeight;
                     ReleaseBackBuffer();
                     Device.Reset(_pp);
                     OnDeviceReset(EventArgs.Empty);
+                    BackBufferSizeChanged(this, EventArgs.Empty);
                 }
 
                 if (_d3dimage.IsFrontBufferAvailable)
@@ -305,13 +332,7 @@ namespace SlimDXBindings.Viewer
                         throw new Direct3D9Exception();
                     }
                     _d3dimage.Lock();
-
-                    Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Yellow), 0, 0);
-                    Device.BeginScene();
-                    // call the users method
                     OnMainLoop(EventArgs.Empty);
-
-                    Device.EndScene();
                     Device.Present();
 
                     _backBufferSurface = Device.GetBackBuffer(0, 0);

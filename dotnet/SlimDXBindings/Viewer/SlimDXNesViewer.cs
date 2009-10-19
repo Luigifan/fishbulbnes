@@ -24,15 +24,27 @@ using System.Runtime.InteropServices;
 namespace SlimDXNESViewer
 {
     [NESDisplayPluginAttribute]
-    public class SlimDXNesViewer : Grid, IDisplayContext, IDisposable
+    public class SlimDXNesViewer : Border, IDisplayContext, IDisposable
     {
         private SlimDXControl panel;
 
         #region IDisplayContext Members
 
 
+        PropertyPanel propertiesPanel = new PropertyPanel();
+
         public SlimDXNesViewer()
         {
+            panel = new SlimDXControl();
+            panel.DeviceCreated += new EventHandler(panel_DeviceCreated);
+            panel.DeviceDestroyed += new EventHandler(panel_DeviceDestroyed);
+            panel.DeviceLost += new EventHandler(panel_DeviceLost);
+            panel.DeviceReset += new EventHandler(panel_DeviceReset);
+            panel.MainLoop += new EventHandler(panel_MainLoop);
+            panel.BackBufferSizeChanged += new EventHandler(panel_BackBufferSizeChanged);
+            this.Child = panel;
+            //CreateDisplay();
+            propertiesPanel.DataContext = this;
         }
 
         void SlimDXNesViewer_Loaded(object sender, RoutedEventArgs e)
@@ -54,21 +66,34 @@ namespace SlimDXNESViewer
 
         public void CreateDisplay()
         {
-            panel = new SlimDXControl();
-            panel.DeviceCreated += new EventHandler(panel_DeviceCreated);
-            panel.DeviceDestroyed += new EventHandler(panel_DeviceDestroyed);
-            panel.DeviceLost += new EventHandler(panel_DeviceLost);
-            panel.DeviceReset += new EventHandler(panel_DeviceReset);
-            panel.MainLoop += new EventHandler(panel_MainLoop);
-            this.Children.Clear();
-            this.Children.Add( panel);
-            panel.Initialize(true);
 
+            //panel.InvalidateMeasure();
+            panel.Initialize(true);
             if (panel.UseDeviceEx == false)
             {
                 throw new InvalidDisplayContextException("You cannot create a Direct3D9Ex device.  You die and you go to hell.");
             }
+            InitializeScene();
 
+
+        }
+        Vector2 scaleVector = new Vector2(1, 1);
+
+        void panel_BackBufferSizeChanged(object sender, EventArgs e)
+        {
+            scaleVector = new Vector2(panel.BackBufferWidth / 256, panel.BackBufferHeight / 240);
+            if (_sprite != null)
+                _sprite.Transform = SlimDX.Matrix.Transformation2D(new Vector2(0, 0), 0, scaleVector, new Vector2(0, 0), 0, new Vector2(0, 0));
+        }
+
+        void panel_Loaded(object sender, RoutedEventArgs e)
+        {
+            panel.Initialize(true);
+            if (panel.UseDeviceEx == false)
+            {
+                throw new InvalidDisplayContextException("You cannot create a Direct3D9Ex device.  You die and you go to hell.");
+            }
+            InitializeScene();
         }
 
         private Sprite _sprite;
@@ -110,6 +135,7 @@ namespace SlimDXNESViewer
                     _sprite.Dispose();
                 }
                 _sprite = new Sprite(control.Device);
+                _sprite.Transform = SlimDX.Matrix.Transformation2D(new Vector2(0, 0), 0, scaleVector, new Vector2(0, 0), 0, new Vector2(0, 0));
 
                 if (_texture != null)
                 {
@@ -122,7 +148,7 @@ namespace SlimDXNESViewer
             }
         }
 
-        //VertexBuffer vertices;
+        VertexBuffer vertices;
         protected  void LoadContent()
         {
             //vertices = new VertexBuffer(panel.Device, 4 * TransformedColoredVertex.SizeInBytes, Usage.Dynamic, VertexFormat.None, Pool.Default);
@@ -147,14 +173,55 @@ namespace SlimDXNESViewer
                 new TransformedColoredVertex(new Vector4(150.0f, 100.0f, 0.5f, 1.0f), System.Drawing.Color.Purple.ToArgb()), 
             };
         }
-        bool texChanged = false;
+
+        //Camera camera = new Camera();
+        bool pointLight = false;
+
+        void InitializeScene()
+        {
+            //CreateLight();
+
+            //camera.FieldOfView = (float)(Math.PI / 4);
+            //camera.NearPlane = 0.0f;
+            //camera.FarPlane = 40.0f;
+            //camera.Location = new Vector3(0.0f, 7.0f, 20.0f);
+            //camera.Target = Vector3.Zero;
+        }
+
+        Light light;
+        void CreateLight()
+        {
+            // yes yes, icky fixed-function pipeline stuff
+            light = new Light();
+            light.Type = LightType.Directional;
+            light.Diffuse = System.Drawing.Color.ForestGreen;
+            light.Ambient = System.Drawing.Color.GhostWhite;
+            light.Direction = new Vector3(0.0f, 0.0f, 1.0f);
+
+            if (pointLight)
+            {
+                light.Type = LightType.Point;
+                light.Range = 100.0f;
+                light.Attenuation0 = 0.05f;
+                light.Attenuation1 = 0.05f;
+                light.Attenuation2 = 0.03f;
+                light.Diffuse = System.Drawing.Color.ForestGreen;
+                light.Ambient = System.Drawing.Color.GhostWhite;
+            }
+        }
 
         private void panel_MainLoop(object sender, EventArgs e)
         {
-            _sprite.Begin(SpriteFlags.AlphaBlend);
+            panel.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Black), 0, 0);
+            panel.Device.BeginScene();
 
-            _sprite.Draw(_texture, Vector3.Zero, Vector3.Zero, new Color4(System.Drawing.Color.AntiqueWhite));
+            _sprite.Begin(SpriteFlags.AlphaBlend);
+            _sprite.Draw(_texture, Vector3.Zero, Vector3.Zero, new Color4(System.Drawing.Color.White));
             _sprite.End();
+
+            panel.Device.EndScene();
+            panel.AllowRendering = false;
+
         }
 
 
@@ -208,7 +275,7 @@ namespace SlimDXNESViewer
 
             _texture.UnlockRectangle(0);
             _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
-            texChanged = true;
+            panel.AllowRendering = true;
         }
 
         public void DrawDefaultDisplay()
@@ -240,17 +307,12 @@ namespace SlimDXNESViewer
 
 
         string properties;
-        public string PropertiesPanel
+        
+        public object PropertiesPanel
         {
             get
             {
-                //if (properties == null)
-                //{
-                //    //XamlReader reader = new XamlReader();
-                //    TextReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.WpfControls.xaml"));
-                //    properties = reader.ReadToEnd();
-                //}
-                return properties;
+                return propertiesPanel;
             }
         }
         #endregion

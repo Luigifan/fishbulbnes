@@ -8,7 +8,7 @@ using System.Windows;
 using System.IO;
 using System.Reflection;
 
-namespace WPFamicom.GameDisplay
+namespace InstiBulb.GameDisplay
 {
     public enum DisplayContexts
     {

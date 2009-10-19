@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace WPFamicom
+namespace InstiBulb
 {
 	/// <summary>
 	/// Interaction logic for GameInfo.xaml

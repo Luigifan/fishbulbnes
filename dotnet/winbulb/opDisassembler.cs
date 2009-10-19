@@ -7,7 +7,7 @@ using NES.CPU.Fastendo;
 using System.Xml;
 using System.Reflection;
 
-namespace WPFamicom
+namespace InstiBulb
 {
     static class DisassemblyExtensions
     {

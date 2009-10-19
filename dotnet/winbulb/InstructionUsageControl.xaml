@@ -4,9 +4,9 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	x:Class="WPFamicom.InstructionUsageControl"
+	x:Class="InstiBulb.InstructionUsageControl"
 	x:Name="UserControl"
-	d:DesignWidth="558.955" d:DesignHeight="100" xmlns:WPFamicom="clr-namespace:WPFamicom">
+	d:DesignWidth="558.955" d:DesignHeight="100" xmlns:WPFamicom="clr-namespace:InstiBulb">
 
 	<UserControl.Resources>
 		<Style x:Key="NeonListStyle" TargetType="{x:Type ListBox}">

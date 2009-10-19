@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 
-namespace WPFamicom.HexViewer
+namespace InstiBulb.HexViewer
 {
     public class HexValueConverter : IValueConverter
     {
