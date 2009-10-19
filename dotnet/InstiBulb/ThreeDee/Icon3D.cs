@@ -69,8 +69,8 @@ namespace InstiBulb.ThreeDee
             
             MeshGeometry3D mesh = new MeshGeometry3D();
             mesh.Positions.Add(new Point3D(-1, 1, 0));
-            mesh.Positions.Add(new Point3D(-1, -1, 0));
-            mesh.Positions.Add(new Point3D(1, -1, 0));
+            mesh.Positions.Add(new Point3D(-1, 0, 0));
+            mesh.Positions.Add(new Point3D(1, 0, 0));
             mesh.Positions.Add(new Point3D(1, 1, 0));
 
             mesh.TextureCoordinates.Add(new System.Windows.Point(0, 0));
@@ -89,7 +89,7 @@ namespace InstiBulb.ThreeDee
             model.Geometry = mesh;
             
             mesh.Freeze();
-            model.Transform = new TranslateTransform3D(new Vector3D(0, 0.5, -1));
+            model.Transform = new TranslateTransform3D(new Vector3D(0, 0.2, -1));
             //model.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 90));
             return model;
 
