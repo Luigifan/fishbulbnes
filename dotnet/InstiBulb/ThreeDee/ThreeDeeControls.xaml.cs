@@ -410,14 +410,7 @@ namespace InstiBulb.ThreeDee
 
         }
 
-        private void ClosePopupPropertiesButton_Click(object sender, RoutedEventArgs e)
-        {
-            PopupPropertiesGrid.Visibility = Visibility.Hidden;
-            if (popup != null)
-                PopupPropertiesGrid.Child = null;
 
-            popup = null;
-        }
 
     }
 }

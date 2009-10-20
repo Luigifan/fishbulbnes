@@ -24,6 +24,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PublishUrl>\\fatbones\fishbulblive\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -40,7 +41,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -183,6 +183,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PopupPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SoundPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -247,6 +251,9 @@
       <DependentUpon>MachineStatus.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlatformDelegates.cs" />
+    <Compile Include="PopupPanel.xaml.cs">
+      <DependentUpon>PopupPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -300,7 +307,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Users\jhartrick.TIGERDEV1\Downloads\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
+    <ProjectReference Include="..\..\..\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
       <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
       <Name>3DTools</Name>
     </ProjectReference>

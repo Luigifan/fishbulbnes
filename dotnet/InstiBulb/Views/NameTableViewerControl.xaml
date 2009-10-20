@@ -8,29 +8,28 @@
 	x:Name="UserControl"
 	d:DesignWidth="580.785" MinHeight="50">
 
-	<StackPanel x:Name="LayoutRoot" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <ScrollViewer HorizontalAlignment="Stretch" >
+        <StackPanel x:Name="LayoutRoot" ScrollViewer.VerticalScrollBarVisibility="Auto">
 		<Label Style="{DynamicResource HeaderStyle}" Content="Name Tables" />
-		<Viewbox Stretch="Fill" StretchDirection="Both" >
-			<StackPanel Height="Auto">
-				<StackPanel Orientation="Horizontal">
-					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
-						<Image Width="256" Height="240" x:Name="imgPatternTableZero" Source="{Binding NameTable0}"/>
-					</Border>
-					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
-						<Image Width="256" Height="240" x:Name="imgPatternTableOne" Source="{Binding NameTable1}"/>
-					</Border>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
-						<Image Width="256" Height="240" x:Name="imgPatternTableZero1" Source="{Binding NameTable2}"/>
-					</Border>
-					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
-						<Image Width="256" Height="240" x:Name="imgPatternTableOne1" Source="{Binding NameTable3}"/>
-					</Border>
-				</StackPanel>
-			</StackPanel>
-		</Viewbox>
+            <StackPanel Height="Auto">
+                <StackPanel Orientation="Horizontal">
+                    <Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
+                        <Image Width="256" Height="240" x:Name="imgPatternTableZero" Source="{Binding NameTable0}"/>
+                    </Border>
+                    <Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
+                        <Image Width="256" Height="240" x:Name="imgPatternTableOne" Source="{Binding NameTable1}"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
+                        <Image Width="256" Height="240" x:Name="imgPatternTableZero1" Source="{Binding NameTable2}"/>
+                    </Border>
+                    <Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
+                        <Image Width="256" Height="240" x:Name="imgPatternTableOne1" Source="{Binding NameTable3}"/>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
         <Button Content="Refresh" Command="{Binding DrawNameTables}"  />
-
-	</StackPanel>
+	    </StackPanel>
+    </ScrollViewer>
 </UserControl>
