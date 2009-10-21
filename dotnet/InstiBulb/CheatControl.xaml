@@ -3,11 +3,16 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:effects="clr-namespace:InstiBulb.Effects"
 	mc:Ignorable="d"
 	x:Class="InstiBulb.CheatControl"
 	x:Name="UserControl"
     >
-	<Grid x:Name="LayoutRoot" VerticalAlignment="Top">
+    <UserControl.Resources>
+        <effects:RasterizeEffect x:Key="myEffect" />
+    </UserControl.Resources>
+    
+	<Grid x:Name="LayoutRoot" VerticalAlignment="Top" Effect="{StaticResource myEffect}">
         <Grid x:Name="CheatGrid" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

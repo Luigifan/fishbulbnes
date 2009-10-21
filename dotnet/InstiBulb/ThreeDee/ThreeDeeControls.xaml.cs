@@ -87,7 +87,7 @@ namespace InstiBulb.ThreeDee
             menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel"));
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad"));
             menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control"));
-            menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cart Info"));
+            menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info"));
 
             menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 3.5, 0);
             menuSpinner.JumpTo(0);
