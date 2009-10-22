@@ -195,5 +195,15 @@ namespace SlimDXBindings.Viewer
         }
 
         #endregion
+
+        #region ISlimDXRenderer Members
+
+
+        public NESPixelFormats PixelFormat
+        {
+            get { return NESPixelFormats.BGR; }
+        }
+
+        #endregion
     }
 }

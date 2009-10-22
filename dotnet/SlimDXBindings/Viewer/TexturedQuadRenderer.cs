@@ -10,6 +10,7 @@ using NES.CPU.nitenedo.Interaction;
 using System.Drawing;
 using NES.CPU.nitenedo;
 using System.Windows;
+using System.Reflection;
 
 namespace SlimDXBindings.Viewer
 {
@@ -42,7 +43,6 @@ namespace SlimDXBindings.Viewer
             panel.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Black), 0, 0);
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-
             panel.Device.BeginScene();
 
             var rext = _texture.LockRectangle(0, LockFlags.Discard);
@@ -56,13 +56,25 @@ namespace SlimDXBindings.Viewer
             Vector3 position = new Vector3(0, 0, 0);
             light.Direction = new Vector3(-1, 0, 0);
 
-            panel.Device.SetTransform(TransformState.World, Matrix.RotationZ((float)Math.PI));
-            panel.Device.SetTransform(TransformState.View, camera.ViewMatrix);
-            panel.Device.SetTransform(TransformState.Projection, camera.ProjectionMatrix);
+            //panel.Device.SetTransform(TransformState.World, Matrix.RotationZ((float)Math.PI));
+            //panel.Device.SetTransform(TransformState.View, camera.ViewMatrix);
+            //panel.Device.SetTransform(TransformState.Projection, camera.ProjectionMatrix);
 
-            panel.Device.SetTexture(0, _texture);
+            effectC.Technique = "TVertexShaderOnly";
+            Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
+            wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
+            
+            effectC.SetValue("matWorldViewProj", wvp);
+            effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
+            effectC.SetTexture("nesTexture", _texture);
+ 
+            effectC.Begin();
+            effectC.BeginPass(0);
+            
+            //panel.Device.SetTexture(0, _texture);
             mesh.DrawSubset(0);
-
+            effectC.EndPass();
+            effectC.End();
             panel.Device.EndScene();
         }
 
@@ -301,10 +313,16 @@ namespace SlimDXBindings.Viewer
             };
         }
 
+        Effect effectC;
+
         VertexBuffer vertices;
         protected void LoadContent()
         {
             InitializeScene();
+
+            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.Rasterize.fx"), ShaderFlags.None );
+            
+
             //mesh = Mesh.CreateSphere(panel.Device, 6.0f, 64, 64);
             mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
             mesh.ComputeNormals();
@@ -334,10 +352,7 @@ namespace SlimDXBindings.Viewer
         {
             if (mesh != null)
                 mesh.Dispose();
-            
-
         }
-
 
         Camera camera = new Camera();
         bool pointLight = false;
@@ -370,7 +385,17 @@ namespace SlimDXBindings.Viewer
         {
             mesh.Dispose();
             _texture.Dispose();
+            effectC.Dispose();
+        }
 
+        #endregion
+
+        #region ISlimDXRenderer Members
+
+
+        public NESPixelFormats PixelFormat
+        {
+            get { return NESPixelFormats.BGR; }
         }
 
         #endregion

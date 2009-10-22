@@ -56,7 +56,7 @@ namespace SlimDXNESViewer
         {
             get
             {
-                return NESPixelFormats.BGR;
+                return currentRenderer.PixelFormat;
             }
             set
             {
