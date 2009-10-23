@@ -67,6 +67,7 @@ namespace InstiBulb.Integration
 
             //container.RegisterType<WPFNesViewer>(new ContainerControlledLifetimeManager());
             //container.RegisterType<SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());

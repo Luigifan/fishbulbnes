@@ -310,7 +310,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\3DTools-1.01-src\3DTools-1.01-src\3DTools\3DTools.csproj">
+    <ProjectReference Include="..\..\Libs\3DTools\3DTools.csproj">
       <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
       <Name>3DTools</Name>
     </ProjectReference>

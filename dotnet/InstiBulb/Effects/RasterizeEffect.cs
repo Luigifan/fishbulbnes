@@ -45,7 +45,7 @@ namespace InstiBulb.Effects
     {
         static RasterizeEffect()
         {
-            _pixelShader.UriSource = Global.MakePackUri("Effects/Simple.ps");
+            _pixelShader.UriSource = Global.MakePackUri("Effects/Rasterize.ps");
             
         }
 
@@ -59,10 +59,6 @@ namespace InstiBulb.Effects
             // is needed to ensure the shader gets sent the proper default value.
             UpdateShaderValue(InputProperty);
             UpdateShaderValue(PaletteProperty);
-
-            var paletteBmp = new WriteableBitmap(64, 1, 96, 96, PixelFormats.Pbgra32, null);
-
-            Palette = new ImageBrush(paletteBmp);
         }
 
         public Brush Input
@@ -77,16 +73,24 @@ namespace InstiBulb.Effects
             set { SetValue(PaletteProperty, value); }
         }
 
+        public Brush NESPalette
+        {
+            get { return (Brush)GetValue(NESPaletteProperty); }
+            set { SetValue(NESPaletteProperty, value); }
+        }
+
 
         // Brush-valued properties turn into sampler-property in the shader.
         // This helper sets "ImplicitInput" as the default, meaning the default
         // sampler is whatever the rendering of the element it's being applied to is.
         public static readonly DependencyProperty InputProperty =
-            ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(RasterizeEffect), 0);
+            ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(RasterizeEffect), 0, SamplingMode.NearestNeighbor);
 
         public static readonly DependencyProperty PaletteProperty =
-            ShaderEffect.RegisterPixelShaderSamplerProperty("Palette", typeof(RasterizeEffect), 1);
+            ShaderEffect.RegisterPixelShaderSamplerProperty("Palette", typeof(RasterizeEffect), 1, SamplingMode.NearestNeighbor);
 
+        public static readonly DependencyProperty NESPaletteProperty =
+            ShaderEffect.RegisterPixelShaderSamplerProperty("NESPalette", typeof(RasterizeEffect), 2, SamplingMode.NearestNeighbor);
 
         private static PixelShader _pixelShader = new PixelShader();
 

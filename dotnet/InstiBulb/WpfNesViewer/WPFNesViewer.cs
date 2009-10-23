@@ -14,20 +14,30 @@ using System.Windows.Shapes;
 using NES.CPU.nitenedo.Interaction;
 using System.IO;
 using System.Windows.Markup;
+using InstiBulb.Effects;
+using NES.CPU.nitenedo;
+using NES.CPU.PPUClasses;
 
 namespace WpfNESViewer
 {
     [NESDisplayPluginAttribute]
     public class WPFNesViewer : Canvas, IDisplayContext
     {
+        readonly NESMachine nes;
+        public WPFNesViewer(NESMachine nes)
+        {
+            this.nes = nes;
+        }
 
         WriteableBitmap bitmap;
+        WriteableBitmap palette;
+        WriteableBitmap nesPalette;
 
         public NESPixelFormats PixelFormat
         {
             get
             {
-                return NESPixelFormats.BGR;
+                return NESPixelFormats.Indexed;
             }
             set
             {
@@ -35,10 +45,28 @@ namespace WpfNESViewer
             }
         }
 
+        RasterizeEffect rasterize = new RasterizeEffect();
+
+        ImageBrush bmpBrush;
         public void CreateDisplay()
         {
-            bitmap = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32,null);
-            this.Background = new ImageBrush(bitmap);
+            palette = new WriteableBitmap(256, 1, 96, 96, PixelFormats.Pbgra32, null);
+            palette.WritePixels(new Int32Rect(0,0,256,1), nes.PPU.LoadPalABGR(), stride, 0);
+            bitmap = new WriteableBitmap(256, 256, 96, 96, PixelFormats.Pbgra32,null);
+
+            nesPalette = new WriteableBitmap(32, 1, 96, 96, PixelFormats.Pbgra32, null);
+            // this.Background = new ImageBrush(bitmap);
+            //this.Width = 256;
+            //this.Height = 256;
+
+            this.SetValue(Canvas.EffectProperty, rasterize);
+            bmpBrush = new ImageBrush(bitmap);
+            this.Background = bmpBrush;
+            
+            //rasterize.SetValue(RasterizeEffect.InputProperty, this.Background);
+            rasterize.SetValue(RasterizeEffect.PaletteProperty, new ImageBrush(palette));
+            rasterize.SetValue(RasterizeEffect.NESPaletteProperty, new ImageBrush( nesPalette));
+
             //this.SnapsToDevicePixels = true;
         }
 
@@ -52,7 +80,8 @@ namespace WpfNESViewer
         public void UpdateNESScreen(int[] pixels)
         {
             
-            bitmap.WritePixels(new Int32Rect(0, 8, 256, 240), pixels, stride, 0, 0);
+            bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), pixels, stride, 0, 0);
+            nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
             if (isDefault)
             {
                 this.Background = new ImageBrush(bitmap);
@@ -88,13 +117,13 @@ namespace WpfNESViewer
         {
             get
             {
-                if (properties == null)
-                {
-                    //XamlReader reader = new XamlReader();
-                    TextReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.WpfControls.xaml"));
-                    properties = reader.ReadToEnd();
-                }
-                return XamlReader.Parse( properties);
+                //if (properties == null)
+                //{
+                //    //XamlReader reader = new XamlReader();
+                //    TextReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.WpfControls.xaml"));
+                //    properties = reader.ReadToEnd();
+                //}
+                return null;
             }
         }
 

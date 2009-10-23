@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <Model3DGroup x:Key="Sword">
+    <Canvas x:Key="fart" >
+        <TextBlock x:Name="fartyfart">fart</TextBlock>
+    </Canvas>
+        <Model3DGroup x:Key="Sword">
         <Model3DGroup >
             <Model3DGroup.Transform>
                 <Transform3DGroup>

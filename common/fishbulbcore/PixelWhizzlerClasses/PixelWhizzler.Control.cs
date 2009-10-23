@@ -68,13 +68,13 @@ namespace NES.CPU.PPUClasses
                         );
             }
 
-            for (int i = 0; i < _palette.Length; i += 4)
+            for (int i = 0; i < pal.Length; i += 4)
             {
 
-                writer.Enqueue((_palette[i] << 24) |
-                                    (_palette[i + 1] << 16) |
-                                    (_palette[i + 2] << 8) |
-                                    (_palette[i + 3])
+                writer.Enqueue((pal[i] << 24) |
+                                    (pal[i + 1] << 16) |
+                                    (pal[i + 2] << 8) |
+                                    (pal[i + 3])
                         );
             }
 
@@ -117,13 +117,13 @@ namespace NES.CPU.PPUClasses
                 spriteRAM[i + 3] = (byte)(packedByte);
             }
 
-            for (int i = 0; i < _palette.Length; i += 4)
+            for (int i = 0; i < pal.Length; i += 4)
             {
                 packedByte = state.Dequeue();
-                _palette[i] = (byte)(packedByte >> 24);
-                _palette[i + 1] = (byte)(packedByte >> 16);
-                _palette[i + 2] = (byte)(packedByte >> 8);
-                _palette[i + 3] = (byte)(packedByte);
+                pal[i] = (byte)(packedByte >> 24);
+                pal[i + 1] = (byte)(packedByte >> 16);
+                pal[i + 2] = (byte)(packedByte >> 8);
+                pal[i + 3] = (byte)(packedByte);
             }
 
 

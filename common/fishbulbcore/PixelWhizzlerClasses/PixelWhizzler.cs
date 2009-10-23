@@ -214,7 +214,7 @@ namespace NES.CPU.PPUClasses
 
         private bool PPUAddressLatchIsHigh = true;
 
-        public void LoadPalABGR()
+        public int[] LoadPalABGR()
         {
         //Open App.Path & "\" + file For Binary As #FileNum
 
@@ -231,6 +231,7 @@ namespace NES.CPU.PPUClasses
                     pal[n + 192] = pal[n];
                 }
             }
+            return pal;
         }
 
         public static int[] GetPalABGR()

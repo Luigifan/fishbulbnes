@@ -12,18 +12,21 @@ using NES.CPU.nitenedo;
 using System.Windows;
 using System.Reflection;
 using NES.CPU.PPUClasses;
+using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace SlimDXBindings.Viewer
 {
-    public class IndexedTexturedQuadRenderer : ISlimDXRenderer
+    public class VertexBasedRenderer : ISlimDXRenderer
     {
         SlimDXControl panel;
         NESMachine nes;
 
         private Texture _texture;
         private Texture _paletteTexture;
+        private Mesh mesh;
 
-        public IndexedTexturedQuadRenderer(SlimDXControl control, NESMachine nes)
+        public VertexBasedRenderer(SlimDXControl control, NESMachine nes)
         {
             panel = control;
             this.nes = nes;
@@ -35,8 +38,6 @@ namespace SlimDXBindings.Viewer
             panel.BackBufferSizeChanged += new EventHandler(panel_BackBufferSizeChanged);
 
         }
-
-        Mesh mesh;
 
         public virtual void Render()
         {
@@ -66,9 +67,12 @@ namespace SlimDXBindings.Viewer
             effectC.Begin();
             effectC.BeginPass(0);
 
-            panel.Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.Point);
+            panel.Device.SetStreamSource(0, vertices, 0, TransformedColoredTexturedVertex.SizeInBytes);
+            panel.Device.Indices = indexBuffer;
+            panel.Device.VertexFormat = TransformedColoredTexturedVertex.Format;
+            panel.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 16, 0, 7 * 7 * 2);
 
-            mesh.DrawSubset(0);
+            
             effectC.EndPass();
             effectC.End();
             panel.Device.EndScene();
@@ -300,37 +304,173 @@ namespace SlimDXBindings.Viewer
         }
 
 
-        static TransformedColoredVertex[] BuildVertexData()
+        /// <summary>
+        ///  custom vertex type, position, texcoord, color
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TransformedColoredTexturedVertex : IEquatable<TransformedColoredTexturedVertex>
         {
-            return new TransformedColoredVertex[4] {
-                new TransformedColoredVertex(new Vector4(600.0f, 100.0f, 0.5f, 1.0f), System.Drawing.Color.Red.ToArgb()),
-                new TransformedColoredVertex(new Vector4(600.0f, 500.0f, 0.5f, 1.0f), System.Drawing.Color.Blue.ToArgb()),
-                new TransformedColoredVertex(new Vector4(150.0f, 500.0f, 0.5f, 1.0f), System.Drawing.Color.Green.ToArgb()), 
-                new TransformedColoredVertex(new Vector4(150.0f, 100.0f, 0.5f, 1.0f), System.Drawing.Color.Purple.ToArgb()), 
-            };
+            /// <summary>
+            /// Gets or sets the transformed position of the vertex.
+            /// </summary>
+            /// <value>The transformed position of the vertex.</value>
+            [VertexElement(DeclarationType.Float4, DeclarationUsage.PositionTransformed)]
+            public Vector4 Position
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets the texture coordinate of the vertex
+            /// </summary>
+            [VertexElement(DeclarationType.Float2, DeclarationUsage.TextureCoordinate)]
+            public Vector2 TexCoord
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets the color of the vertex.
+            /// </summary>
+            /// <value>The color of the vertex.</value>
+            [VertexElement(DeclarationType.Color, DeclarationUsage.Color)]
+            public int Color
+            {
+                get;
+                set;
+            }
+
+ 
+
+            /// <summary>
+            /// Gets the size in bytes.
+            /// </summary>
+            /// <value>The size in bytes.</value>
+            public static int SizeInBytes
+            {
+                get { return Marshal.SizeOf(typeof(TransformedColoredTexturedVertex)); }
+            }
+
+            /// <summary>
+            /// Gets the format.
+            /// </summary>
+            /// <value>The format.</value>
+            public static VertexFormat Format
+            {
+                get { return VertexFormat.PositionRhw | VertexFormat.Diffuse | VertexFormat.Texture1; }
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TransformedColoredVertex"/> struct.
+            /// </summary>
+            /// <param name="position">The position.</param>
+            /// <param name="color">The color.</param>
+            public TransformedColoredTexturedVertex(Vector4 position, Vector2 texturePosition, int color)
+                : this()
+            {
+                Position = position;
+                Color = color;
+                TexCoord = texturePosition;
+            }
+
+            /// <summary>
+            /// Implements the operator ==.
+            /// </summary>
+            /// <param name="left">The left side of the operator.</param>
+            /// <param name="right">The right side of the operator.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator ==(TransformedColoredTexturedVertex left, TransformedColoredTexturedVertex right)
+            {
+                return left.Equals(right);
+            }
+
+            /// <summary>
+            /// Implements the operator !=.
+            /// </summary>
+            /// <param name="left">The left side of the operator.</param>
+            /// <param name="right">The right side of the operator.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator !=(TransformedColoredTexturedVertex left, TransformedColoredTexturedVertex right)
+            {
+                return !(left == right);
+            }
+
+            /// <summary>
+            /// Returns the hash code for this instance.
+            /// </summary>
+            /// <returns>
+            /// A 32-bit signed integer that is the hash code for this instance.
+            /// </returns>
+            public override int GetHashCode()
+            {
+                return Position.GetHashCode() + Color.GetHashCode() + TexCoord.GetHashCode();
+            }
+
+            /// <summary>
+            /// Indicates whether this instance and a specified object are equal.
+            /// </summary>
+            /// <param name="obj">Another object to compare to.</param>
+            /// <returns>
+            /// true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+            /// </returns>
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                    return false;
+
+                if (GetType() != obj.GetType())
+                    return false;
+
+                return Equals((TransformedColoredTexturedVertex)obj);
+            }
+
+            /// <summary>
+            /// Indicates whether the current object is equal to another object of the same type.
+            /// </summary>
+            /// <param name="other">An object to compare with this object.</param>
+            /// <returns>
+            /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            /// </returns>
+            public bool Equals(TransformedColoredTexturedVertex other)
+            {
+                return (Position == other.Position && Color == other.Color);
+            }
+
+            /// <summary>
+            /// Returns a string representation of the current object.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="T:System.String"/> representing the vertex.
+            /// </returns>
+            public override string ToString()
+            {
+                return string.Format(CultureInfo.CurrentCulture, "{0} ({1}) ({2})", Position.ToString(), System.Drawing.Color.FromArgb(Color).ToString(), TexCoord.ToString() );
+            }
         }
 
         Effect effectC;
 
         VertexBuffer vertices;
+        IndexBuffer indexBuffer;
+
         protected void LoadContent()
         {
             InitializeScene();
 
-            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.IndexedRasterize.fx"), ShaderFlags.None );
-            //mesh = Mesh.CreateSphere(panel.Device, 6.0f, 64, 64);
-            mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
-            mesh.ComputeNormals();
+            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.VertexRasterize.fx"), ShaderFlags.None );
+
+            //var p = CreateVertexPanel();
+            //mesh = Mesh.CreateBox(panel.Device, 4.0f, 4.0f, 4.0f);
+            CreateVertexPanel();
             
-            //ComputeTexCoords(panel.Device, ref mesh, true);
-            ComputeBoxTextureCoords(panel.Device, ref mesh, true);
 
             panel.Device.SetRenderState(RenderState.Lighting, true);
             panel.Device.SetRenderState(RenderState.ShadeMode, ShadeMode.Gouraud);
-            panel.Device.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.Anisotropic);
-            panel.Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.Anisotropic);
             panel.Device.SetLight(0, light);
             panel.Device.EnableLight(0, true);
+            panel.Device.SetRenderState(RenderState.CullMode, Cull.None);
 
             Material material = new Material();
             material.Diffuse = Color.White;
@@ -351,12 +491,87 @@ namespace SlimDXBindings.Viewer
 
         }
 
+        static VertexElement[] vertexDecl = new VertexElement[]
+            {
+                new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 16, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                new VertexElement(0, 24, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.Color, 0)
+            };
+
+
+        void CreateVertexPanel()
+        {
+
+            int vHeight = 8;
+            int vWidth = 8;
+            int Height = 7;
+            int Width = 7;
+
+            TransformedColoredTexturedVertex[] verts = new TransformedColoredTexturedVertex[vHeight * vWidth];
+            Vector4 pos = new Vector4();
+            Vector3 minBounds = new Vector3(0,0,0);
+            Vector3 maxBounds = new Vector3(1, 1, 1);
+            float stepX = (maxBounds.X - minBounds.X) / (float)Height;
+            float stepZ = (maxBounds.Z - minBounds.Z) / (float)Width;
+            
+            int count = 0;
+            // Loop across and up
+            for (int z = 0; z < vHeight; z++)
+            {
+                pos.X = minBounds.X;
+                for (int x = 0; x < vWidth; x++)
+                {
+                    // Create the verts
+                    verts[count].Position = pos;
+                    // Increment x across
+                    pos.X += stepX;
+                    count++;
+                }
+                // Increment Z
+                pos.Z += stepZ;
+            }
+
+            vertices = new VertexBuffer(panel.Device, TransformedColoredTexturedVertex.SizeInBytes * verts.Length, Usage.WriteOnly, VertexFormat.None, Pool.Default);
+            DataStream s = vertices.Lock(0, 0, LockFlags.None);
+            s.WriteRange<TransformedColoredTexturedVertex>(verts,0,0);
+            vertices.Unlock();
+
+
+            int[] indices = new int[vHeight * vWidth * 6];
+            count = 0;
+            int vIndex = 0;
+            for (int z = 0; z < Height; z++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    // first triangle
+                    indices[count++] = vIndex;
+                    indices[count++] = vIndex + vWidth;
+                    indices[count++] = vIndex + vWidth + 1;
+
+                    // second triangle
+                    indices[count++] = vIndex;
+                    indices[count++] = vIndex + vWidth + 1;
+                    indices[count++] = vIndex + 1;
+
+                    vIndex++;
+                }
+                vIndex++;
+            }
+
+            indexBuffer = new IndexBuffer(panel.Device, sizeof(int) * indices.Length, Usage.WriteOnly, Pool.Default, false);
+            DataStream i = indexBuffer.Lock(0, 0, LockFlags.None);
+            i.WriteRange<int>(indices, 0, 0);
+            indexBuffer.Unlock();
+
+        }
+
+
         protected void UnloadContent()
         {
-            if (mesh != null)
-                mesh.Dispose();
+
             if (effectC != null)
-                effectC.Dispose();
+                effectC.OnLostDevice();
             if (_texture != null)
                 _texture.Dispose();
             if (_paletteTexture != null)
@@ -373,7 +588,7 @@ namespace SlimDXBindings.Viewer
             camera.FieldOfView = (float)(Math.PI / 4);
             camera.NearPlane = 0.0f;
             camera.FarPlane = 40.0f;
-            camera.Location = new Vector3(0.0f, 0.0f, 10.5f);
+            camera.Location = new Vector3(0.0f, 12.0f, 0.0f);
             camera.Target = Vector3.Zero;
             
         }
@@ -392,7 +607,6 @@ namespace SlimDXBindings.Viewer
 
         public void Dispose()
         {
-            mesh.Dispose();
             _texture.Dispose();
             _paletteTexture.Dispose();
             effectC.Dispose();
@@ -403,7 +617,7 @@ namespace SlimDXBindings.Viewer
         #region ISlimDXRenderer Members
 
 
-        NESPixelFormats pizelFormat = NESPixelFormats.Indexed; 
+        NESPixelFormats pizelFormat = NESPixelFormats.BGR; 
         public NESPixelFormats PixelFormat
         {
             get { return pizelFormat; }
