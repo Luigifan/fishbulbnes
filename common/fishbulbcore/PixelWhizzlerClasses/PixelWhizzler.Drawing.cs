@@ -81,7 +81,8 @@ namespace NES.CPU.PPUClasses
                     break;
 
                 case frameClockEnd:
-//                    FillBuffer();
+                    if (fillRGB) FillBuffer();
+                    
                     SetupVINT();
                     frameFinished();
                     frameOn = false;
@@ -113,9 +114,7 @@ namespace NES.CPU.PPUClasses
                     else
                         DrawPixel();
 
-                    //curBufPos++;
                     vbufLocation++;
-                    //					nextPixel++;
                 }
 
                 currentXPosition++;
@@ -158,32 +157,22 @@ namespace NES.CPU.PPUClasses
 
         private int[] rgb32OutBuffer = new int[256*256];
 
+        private int[] outBuffer = new int[256 * 256];
+
+        public int[] OutBuffer
+        {
+            get { return outBuffer; }
+        }
+
         public void FillBuffer()
         {
 
-            if (fillRGB)
+            int i = 0;
+            while (i < 256 * 256 -1)
             {
-                int i = 0;
-                while (i < 256 * 256 -1)
-                {
-                    rgb32OutBuffer[i] = pal[_palette[rgb32OutBuffer[i]] & 0xFF];
-                    i++;
-                }
+                rgb32OutBuffer[i] = pal[outBuffer[i]];
+                i++;
             }
-            //else
-            //{
-            //    fixed (byte* pal = _palette)
-            //    {
-            //        byte* palPtr = pal;
-            //        outBufPtr += 255 * 256;
-            //        for (int i = 0; i < 32; ++i)
-            //        {
-            //            *outBufPtr++ = *palPtr++;
-            //        }
-            //    }
-
-            //}
-
         }
 
         public int[] VideoBuffer
@@ -191,7 +180,6 @@ namespace NES.CPU.PPUClasses
             get
             {
                 return rgb32OutBuffer;
-                // return rgb32OutBuffer; 
             }
         }
 
@@ -240,25 +228,15 @@ namespace NES.CPU.PPUClasses
             isForegroundPixel = false;
             int spritePixel =  _spritesAreVisible ? GetSpritePixel() : 0;
 
-
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {
                 hitSprite = true;
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            if (fillRGB)
-            {
-                //rgb32OutBuffer[i] = pal[_palette[rgb32OutBuffer[i]] & 0xFF];
-                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? pal[_palette[spritePixel]] : pal[_palette[tilePixel]];
-            }
-            else
-            {
-                rgb32OutBuffer[vbufLocation] =
-                    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? spritePixel : tilePixel;
-            }
+            outBuffer[vbufLocation] =
+                (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                ? _palette[spritePixel] : _palette[tilePixel];
         }
 
         private void DrawClipPixel()
@@ -282,17 +260,10 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            if (fillRGB)
-            {
-                rgb32OutBuffer[vbufLocation] = (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? pal[_palette[spritePixel]] : pal[_palette[tilePixel]];
-            }
-            else
-            {
-                rgb32OutBuffer[vbufLocation] =
-                    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                    ? spritePixel : tilePixel;
-            }
+
+            outBuffer[vbufLocation] =
+                (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+                ? _palette[spritePixel] : _palette[tilePixel];
         }
 
 

@@ -233,6 +233,46 @@ namespace NES.CPU.PPUClasses
             }
         }
 
+        public static int[] GetPalABGR()
+        {
+            //Open App.Path & "\" + file For Binary As #FileNum
+            int[] tPal = new int[256];
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal"))
+            {
+                for (int n = 0; n < 64; ++n)
+                {
+                    int r = stream.ReadByte();
+                    int g = stream.ReadByte();
+                    int b = stream.ReadByte();
+                    tPal[n] = (0xFF << 24) | (r << 16) | (g << 8) | b;
+                    tPal[n + 64] = pal[n];
+                    tPal[n + 128] = pal[n];
+                    tPal[n + 192] = pal[n];
+                }
+            }
+            return tPal;
+        }
+
+        public static int[] GetPalRGBA()
+        {
+            //Open App.Path & "\" + file For Binary As #FileNum
+            int[] tPal = new int[256];
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal"))
+            {
+                for (int n = 0; n < 64; ++n)
+                {
+                    byte r = (byte)stream.ReadByte();
+                    byte g = (byte)stream.ReadByte();
+                    byte b = (byte)stream.ReadByte();
+                    tPal[n] = (b << 16) | (g << 8) | (r << 0);
+                    tPal[n + 64] = pal[n];
+                    tPal[n + 128] = pal[n];
+                    tPal[n + 192] = pal[n];
+                }
+            }
+            return tPal;
+        }
+
 
         /// <summary>
         /// Initializes the rendering pallette with the bytes in a BGR format, instead of the default RGB format

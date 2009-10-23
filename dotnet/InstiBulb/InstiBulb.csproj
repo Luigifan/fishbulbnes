@@ -255,6 +255,7 @@
     <Compile Include="PopupPanel.xaml.cs">
       <DependentUpon>PopupPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Popups\PopupFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

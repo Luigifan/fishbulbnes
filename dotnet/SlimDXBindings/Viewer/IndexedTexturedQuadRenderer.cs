@@ -15,14 +15,15 @@ using NES.CPU.PPUClasses;
 
 namespace SlimDXBindings.Viewer
 {
-    public class TexturedQuadRenderer : ISlimDXRenderer
+    public class IndexedTexturedQuadRenderer : ISlimDXRenderer
     {
         SlimDXControl panel;
         NESMachine nes;
 
         private Texture _texture;
+        private Texture _paletteTexture;
 
-        public TexturedQuadRenderer(SlimDXControl control, NESMachine nes)
+        public IndexedTexturedQuadRenderer(SlimDXControl control, NESMachine nes)
         {
             panel = control;
             this.nes = nes;
@@ -39,28 +40,20 @@ namespace SlimDXBindings.Viewer
 
         public virtual void Render()
         {
+            
+            
+
             panel.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Black), 0, 0);
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             panel.Device.BeginScene();
 
             var rext = _texture.LockRectangle(0, LockFlags.Discard);
-            rext.Data.WriteRange<int>(nes.PPU.VideoBuffer);
+            rext.Data.WriteRange<int>(nes.PPU.OutBuffer);
 
             _texture.UnlockRectangle(0);
             _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
-
-            if (panel == null)
-            {
-                Result r = Texture.ToFile(_texture, "d:\\nesTexture32bpp.dds", ImageFileFormat.Dds);
-
-            }
-
-            panel.Device.SetLight(0, light);
-
-            Vector3 position = new Vector3(0, 0, 0);
-            light.Direction = new Vector3(-1, 0, 0);
-
+            
             effectC.Technique = "TVertexShaderOnly";
             Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
             wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
@@ -68,12 +61,13 @@ namespace SlimDXBindings.Viewer
             effectC.SetValue("matWorldViewProj", wvp);
             effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
             effectC.SetTexture("nesTexture", _texture);
-
+            effectC.SetTexture("nesPalette", _paletteTexture);
+ 
             effectC.Begin();
             effectC.BeginPass(0);
 
             panel.Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.Point);
-            //panel.Device.SetTexture(0, _texture);
+
             mesh.DrawSubset(0);
             effectC.EndPass();
             effectC.End();
@@ -268,6 +262,7 @@ namespace SlimDXBindings.Viewer
 
         private void panel_DeviceLost(object sender, EventArgs e)
         {
+            UnloadContent();
         }
 
         private void panel_DeviceReset(object sender, EventArgs e)
@@ -322,7 +317,7 @@ namespace SlimDXBindings.Viewer
         {
             InitializeScene();
 
-            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.Rasterize.fx"), ShaderFlags.None );
+            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.IndexedRasterize.fx"), ShaderFlags.None );
             //mesh = Mesh.CreateSphere(panel.Device, 6.0f, 64, 64);
             mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
             mesh.ComputeNormals();
@@ -345,7 +340,13 @@ namespace SlimDXBindings.Viewer
             panel.Device.Material = material;
 
             _texture = new Texture(panel.Device, 256, 256, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
+            _paletteTexture = new Texture(panel.Device, 256, 1, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
 
+            var rext = _paletteTexture.LockRectangle(0, LockFlags.Discard);
+            rext.Data.WriteRange<int>(PixelWhizzler.GetPalABGR(),0,256);
+
+            _paletteTexture.UnlockRectangle(0);
+            _paletteTexture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 1));
 
 
         }
@@ -354,6 +355,12 @@ namespace SlimDXBindings.Viewer
         {
             if (mesh != null)
                 mesh.Dispose();
+            if (effectC != null)
+                effectC.Dispose();
+            if (_texture != null)
+                _texture.Dispose();
+            if (_paletteTexture != null)
+                _paletteTexture.Dispose();
         }
 
         Camera camera = new Camera();
@@ -366,7 +373,7 @@ namespace SlimDXBindings.Viewer
             camera.FieldOfView = (float)(Math.PI / 4);
             camera.NearPlane = 0.0f;
             camera.FarPlane = 40.0f;
-            camera.Location = new Vector3(0.0f, 0.0f, 11.0f);
+            camera.Location = new Vector3(0.0f, 0.0f, 12.0f);
             camera.Target = Vector3.Zero;
             
         }
@@ -387,6 +394,7 @@ namespace SlimDXBindings.Viewer
         {
             mesh.Dispose();
             _texture.Dispose();
+            _paletteTexture.Dispose();
             effectC.Dispose();
         }
 
@@ -395,7 +403,7 @@ namespace SlimDXBindings.Viewer
         #region ISlimDXRenderer Members
 
 
-        NESPixelFormats pizelFormat = NESPixelFormats.BGR; 
+        NESPixelFormats pizelFormat = NESPixelFormats.Indexed; 
         public NESPixelFormats PixelFormat
         {
             get { return pizelFormat; }

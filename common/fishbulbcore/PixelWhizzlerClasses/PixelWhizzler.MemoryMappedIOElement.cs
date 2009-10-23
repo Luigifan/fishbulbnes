@@ -11,7 +11,13 @@ namespace NES.CPU.PPUClasses
 
         private bool vidRamIsRam = true;
 
-        byte[] _palette = new byte[0x20];
+        int[] _palette = new int[0x20];
+
+        public int[] Palette
+        {
+            get { return _palette; }
+            set { _palette = value; }
+        }
 
         public void SetByte(int Clock, int address, int data)
         {

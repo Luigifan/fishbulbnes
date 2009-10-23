@@ -42,7 +42,7 @@ namespace SlimDXNESViewer
             panel = new SlimDXControl();
 
             this.Child = panel;
-            currentRenderer = new TexturedQuadRenderer(panel, nes);
+            currentRenderer = new IndexedTexturedQuadRenderer(panel, nes);
             //CreateDisplay();
             propertiesPanel.DataContext = this;
         }

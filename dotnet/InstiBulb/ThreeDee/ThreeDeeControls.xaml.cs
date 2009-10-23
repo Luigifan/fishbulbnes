@@ -73,43 +73,22 @@ namespace InstiBulb.ThreeDee
         void ThreeDeeControls_Initialized(object sender, EventArgs e)
         {
             
-            
-            //vList[0] = container.Resolve<ControlPanelView>();
-            //vList[1] = container.Resolve<SoundPanelView>();
-            //vList[2] = container.Resolve<ControllerConfig>();
-            //vList[3] = container.Resolve<CheatControl>();
-            //vList[4] = container.Resolve<CartInfoPanel>();
-            //vList[5] = MakeRedBox();
-
             List<UIElement3D> menuIcons = new List<UIElement3D>();
-            //Model3DCollection doodleList = new Model3DCollection();
+
             menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel"));
             menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel"));
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad"));
             menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control"));
             menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info"));
 
-            menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 3.5, 0);
+            menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 5, 0);
             menuSpinner.JumpTo(0);
 
             if (watchedDisplay.Context != null && watchedDisplay.Context.PropertiesPanel is UIElement)
                 menuSpinner.UpdateVisual(5, (UIElement)watchedDisplay.Context.PropertiesPanel);
 
 
-            List<UIElement3D> icons = CreateIcons();
-
-            //Visual[] vList2 = new Visual[6];
-            //vList2[0] = container.Resolve<MachineStatus>();
-            //vList2[1] = container.Resolve<InstructionRolloutControl>();
-            //vList2[2] = container.Resolve<NameTableViewerControl>();
-            //vList2[3] = container.Resolve<PatternViewerControl>();
-
-            //for (int i = 4; i < 6; ++i)
-            //{
-            //    vList2[i] =  MakeRedBox( );
-            //}
-
-            debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, icons, 2.6, 90);
+            debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, CreateIcons(), 4, 90);
 
             activeSpinner = menuSpinner;
 
