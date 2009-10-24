@@ -197,6 +197,7 @@
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.VidRAMHandler.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
     <Compile Include="Sound\IWavStreamer.cs" />
     <Compile Include="Sound\SoundThread.cs" />

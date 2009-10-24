@@ -64,35 +64,6 @@ namespace NES.CPU
 
         #region IMemoryMappable Members
 
-        //public override int GetByte(int address)
-        //{
-        //    int bank = 0;
-
-        //    switch (address & 0xE000)
-        //    {
-        //            // i dont think these cart types need to implement persistant saveram
-        //        case 0x6000:
-        //            return prgRomBank6[address & 0x7FF];
-        //        case 0x8000:
-        //            bank = bank8start;
-        //            break;
-        //        case 0xA000:
-        //            bank = bankAstart;
-        //            break;
-        //        case 0xC000:
-        //            bank = bankCstart;
-        //            break;
-        //        case 0xE000:
-        //            bank = bankEstart;
-        //            break;
-        //    }
-        //    // if cart is half sized, adjust
-
-        //    return nesCart[bank + (address & 0x1FFF)];
-
-            
-        //}
-
         public override void SetByte(int clock, int address, int val)
         {
             if (address >= 0x6000 && address <= 0x7FFF)

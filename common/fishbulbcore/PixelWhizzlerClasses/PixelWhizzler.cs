@@ -80,19 +80,7 @@ namespace NES.CPU.PPUClasses
             get { return _frames; }
         }
 
-        private byte[] _vidRAM = new byte[0x4000];
 
-        public byte[] VidRAM
-        {
-            get { return _vidRAM; }
-            set { _vidRAM = value; }
-        }
-
-        public byte[] cartCopyVidRAM
-        {
-            get { return _vidRAM; }
-            set { _vidRAM = value; }
-        }
 
         public int VidRAM_GetNTByte(int address)
         {

@@ -390,20 +390,5 @@ namespace NES.CPU.PPUClasses
             set { frameFinished = value;  }
         }
 
-        //MachineEvent setFrameOn;
-
-        //public MachineEvent FrameOnHandler
-        //{
-        //    get { return setFrameOn; }
-        //    set { setFrameOn = value; }
-        //}
-
-        //MachineEvent setFrameOff;
-
-        //public MachineEvent FrameOffHandler
-        //{
-        //    get { return setFrameOff; }
-        //    set { setFrameOff = value; }
-        //}
     }
 }
