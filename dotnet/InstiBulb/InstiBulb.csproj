@@ -100,6 +100,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="3DTools, Version=1.0.2614.20437, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\3DTools\3DTools.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
@@ -310,10 +314,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\3DTools\3DTools.csproj">
-      <Project>{5F603892-DE40-4246-A969-1C6717AFE35D}</Project>
-      <Name>3DTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.VStudio.csproj">
       <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
       <Name>fishbulbcommonui.VStudio</Name>

@@ -16,7 +16,6 @@ namespace NES.CPU.PPUClasses
             set { _spriteCopyHasHappened = value; }
         }
 
-
         private bool spriteZeroHit;
         private bool isForegroundPixel;
         private NESSprite[] currentSprites;
@@ -29,7 +28,6 @@ namespace NES.CPU.PPUClasses
             get { return _maxSpritesPerScanline; }
             set { _maxSpritesPerScanline = value; }
         }
-
 
         private byte[] spriteRAM = new byte[256];
 

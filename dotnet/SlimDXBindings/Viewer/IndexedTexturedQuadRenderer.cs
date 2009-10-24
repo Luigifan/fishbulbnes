@@ -22,6 +22,7 @@ namespace SlimDXBindings.Viewer
 
         private Texture _texture;
         private Texture _paletteTexture;
+        private Texture _nesVidRAMTexture;
 
         public IndexedTexturedQuadRenderer(SlimDXControl control, NESMachine nes)
         {
@@ -48,11 +49,7 @@ namespace SlimDXBindings.Viewer
 
             panel.Device.BeginScene();
 
-            var rext = _texture.LockRectangle(0, LockFlags.Discard);
-            rext.Data.WriteRange<int>(nes.PPU.OutBuffer);
-
-            _texture.UnlockRectangle(0);
-            _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
+            UpdateNESTextures();
             
             effectC.Technique = "TVertexShaderOnly";
             Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
@@ -73,6 +70,29 @@ namespace SlimDXBindings.Viewer
             effectC.End();
             panel.Device.EndScene();
         }
+
+        void UpdateNESTextures()
+        {
+            var rext = _texture.LockRectangle(0, LockFlags.Discard);
+            rext.Data.WriteRange<int>(nes.PPU.OutBuffer);
+            _texture.UnlockRectangle(0);
+            _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
+
+            //int[] ram = new int[0x1000];
+            //Buffer.BlockCopy(nes.PPU.VidRAM, 0, ram, 0, 0x4000);
+
+            var ramRect = _nesVidRAMTexture.LockRectangle(0, LockFlags.Discard);
+            ramRect.Data.WriteRange<byte>(nes.PPU.VidRAM);
+            _nesVidRAMTexture.UnlockRectangle(0);
+            _nesVidRAMTexture.AddDirtyRectangle(new Rectangle(0, 0, 0x1000, 1));
+
+            if (ramRect == null)
+            {
+                Texture.ToFile(_nesVidRAMTexture, @"d:\nesVidRam.dds", ImageFileFormat.Dds);
+            }
+
+        }
+
 
         public static BoundingSphere ComputeBoundingSphere(Mesh mesh)
         {
@@ -313,37 +333,31 @@ namespace SlimDXBindings.Viewer
         Effect effectC;
 
         VertexBuffer vertices;
+        
         protected void LoadContent()
         {
             InitializeScene();
 
-            effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.IndexedRasterize.fx"), ShaderFlags.None );
-            //mesh = Mesh.CreateSphere(panel.Device, 6.0f, 64, 64);
+            CleanupContent();
+
+            effectC = Effect.FromStream(panel.Device, "SlimDXBindings.Viewer.IndexedRasterize.fx".StreamFromResource(), ShaderFlags.None);
+
             mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
             mesh.ComputeNormals();
-            
-            //ComputeTexCoords(panel.Device, ref mesh, true);
+
             ComputeBoxTextureCoords(panel.Device, ref mesh, true);
 
-            panel.Device.SetRenderState(RenderState.Lighting, true);
-            panel.Device.SetRenderState(RenderState.ShadeMode, ShadeMode.Gouraud);
-            panel.Device.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.Anisotropic);
-            panel.Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.Anisotropic);
-            panel.Device.SetLight(0, light);
-            panel.Device.EnableLight(0, true);
 
-            Material material = new Material();
-            material.Diffuse = Color.White;
-            material.Power = 0.1f;
-            material.Specular = Color.White;
-            material.Ambient = Color.White;
-            panel.Device.Material = material;
+            _texture = new Texture(panel.Device, 256, 256, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
+            byte[] pal = new byte[256 * 4];
+            int[] iPal = PixelWhizzler.GetPalABGR();
+            Buffer.BlockCopy(iPal,0,pal,0,1024);
+            _paletteTexture = new Texture(panel.Device, 256, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
 
-            _texture = new Texture(panel.Device, 256, 256, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
-            _paletteTexture = new Texture(panel.Device, 256, 1, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
+            _nesVidRAMTexture = new Texture(panel.Device, 0x1000, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
 
             var rext = _paletteTexture.LockRectangle(0, LockFlags.Discard);
-            rext.Data.WriteRange<int>(PixelWhizzler.GetPalABGR(),0,256);
+            rext.Data.WriteRange<int>(PixelWhizzler.GetPalABGR(), 0, 256);
 
             _paletteTexture.UnlockRectangle(0);
             _paletteTexture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 1));
@@ -351,16 +365,18 @@ namespace SlimDXBindings.Viewer
 
         }
 
+        private void CleanupContent()
+        {
+            if (effectC != null) effectC.Dispose();
+            if (mesh != null) mesh.Dispose();
+            if (_texture != null) _texture.Dispose();
+            if (_nesVidRAMTexture != null) _nesVidRAMTexture.Dispose();
+            if (_paletteTexture != null) _paletteTexture.Dispose();
+        }
+
         protected void UnloadContent()
         {
-            if (mesh != null)
-                mesh.Dispose();
-            if (effectC != null)
-                effectC.Dispose();
-            if (_texture != null)
-                _texture.Dispose();
-            if (_paletteTexture != null)
-                _paletteTexture.Dispose();
+            CleanupContent();
         }
 
         Camera camera = new Camera();
@@ -392,10 +408,7 @@ namespace SlimDXBindings.Viewer
 
         public void Dispose()
         {
-            mesh.Dispose();
-            _texture.Dispose();
-            _paletteTexture.Dispose();
-            effectC.Dispose();
+            CleanupContent();
         }
 
         #endregion

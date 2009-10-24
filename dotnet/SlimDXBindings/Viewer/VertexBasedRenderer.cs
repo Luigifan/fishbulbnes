@@ -67,11 +67,7 @@ namespace SlimDXBindings.Viewer
             effectC.Begin();
             effectC.BeginPass(0);
 
-            panel.Device.SetStreamSource(0, vertices, 0, TransformedColoredTexturedVertex.SizeInBytes);
-            panel.Device.Indices = indexBuffer;
-            panel.Device.VertexFormat = TransformedColoredTexturedVertex.Format;
-            panel.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 16, 0, 7 * 7 * 2);
-
+            mesh.DrawSubset(0);
             
             effectC.EndPass();
             effectC.End();
@@ -459,27 +455,17 @@ namespace SlimDXBindings.Viewer
         {
             InitializeScene();
 
+            if (effectC != null) effectC.Dispose();
             effectC = Effect.FromStream(panel.Device, Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.VertexRasterize.fx"), ShaderFlags.None );
 
-            //var p = CreateVertexPanel();
-            //mesh = Mesh.CreateBox(panel.Device, 4.0f, 4.0f, 4.0f);
-            CreateVertexPanel();
-            
+            if (mesh != null) mesh.Dispose();
+            mesh = Mesh.FromFile(panel.Device, @"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer\screenMesh.x", MeshFlags.Use32Bit) ;
 
-            panel.Device.SetRenderState(RenderState.Lighting, true);
-            panel.Device.SetRenderState(RenderState.ShadeMode, ShadeMode.Gouraud);
-            panel.Device.SetLight(0, light);
-            panel.Device.EnableLight(0, true);
             panel.Device.SetRenderState(RenderState.CullMode, Cull.None);
 
-            Material material = new Material();
-            material.Diffuse = Color.White;
-            material.Power = 0.1f;
-            material.Specular = Color.White;
-            material.Ambient = Color.White;
-            panel.Device.Material = material;
-
+            if (_texture != null) _texture.Dispose();
             _texture = new Texture(panel.Device, 256, 256, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
+            if (_paletteTexture != null) _paletteTexture.Dispose();
             _paletteTexture = new Texture(panel.Device, 256, 1, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
 
             var rext = _paletteTexture.LockRectangle(0, LockFlags.Discard);
