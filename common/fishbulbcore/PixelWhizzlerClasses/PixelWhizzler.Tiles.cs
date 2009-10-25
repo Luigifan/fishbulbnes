@@ -44,9 +44,6 @@ namespace NES.CPU.PPUClasses
         {
             int ppuNameTableMemoryStart = nameTableMemoryStart ^ xNTXor ^ yNTXor;
 
-
-            // ppuNameTableMemoryStart = nameTableMemoryStart ^ xNTXor ^ yNTXor;
-
             int xTilePosition = xPosition >> 3;
 
             int tileRow = (yPosition >> 3) % 30 << 5;

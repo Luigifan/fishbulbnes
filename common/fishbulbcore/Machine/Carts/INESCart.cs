@@ -30,5 +30,7 @@ namespace NES.CPU.Machine.Carts
         int NumberOfChrRoms { get;  }
         int MapperID { get;  }
 
+        byte GetPPUByte(int clock, int address);
+
     }
 }

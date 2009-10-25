@@ -381,11 +381,11 @@ namespace NES.CPU.Machine.Carts
 
         #endregion
 
-        int[] ppuBankStarts = new int[16];
+        internal int[] ppuBankStarts = new int[16];
 
         public byte GetPPUByte(int clock, int address)
         {
-            int bank = address & 0x400 >> 16;
+            int bank = address / 0x400;
             int newAddress = ppuBankStarts[bank] + address & 0x3FF;
             return chrRom[newAddress];
         }

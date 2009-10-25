@@ -59,7 +59,10 @@ namespace NES.CPU
         {
             whizzler.DrawTo(clock);
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
-            Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
+            ppuBankStarts[dest] = src * 0x2000;
+            ppuBankStarts[dest + 1] = src * 0x2000 + 0x1000;
+
+// Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
         }
 
         #region IMemoryMappable Members
