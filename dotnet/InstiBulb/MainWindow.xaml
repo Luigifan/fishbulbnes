@@ -7,9 +7,10 @@
         xmlns:threeD="clr-namespace:InstiBulb.ThreeDee"
         DataContext="{DynamicResource Container}"
     Title="InstiBulb" Height="480" Width="720"
-        WindowStyle="None"
-        ResizeMode="NoResize"
+        WindowStyle="ThreeDBorderWindow"
+        ResizeMode="CanResizeWithGrip"
         AllowsTransparency="False"
+        
         
         >
     <Window.Resources>
@@ -26,10 +27,7 @@
                                 SuspendNESDisplay="{Binding ElementName=ControlBoxer, Path=IsAnimating}"
                                     >-->
             <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Width="25" Height="25" Content="^" Click="Maximize" />
-            <Button Width="25" Height="25" Content="X" Click="Windows_Close" />
-        </StackPanel>
+
 
     </Grid>
     

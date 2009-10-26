@@ -37,12 +37,32 @@ namespace InstiBulb
             IUnityContainer container = (IUnityContainer)FindResource("Container");
 
             InitializeComponent();
+
             UIElement element = container.Resolve<InstiBulb.Integration.NESDisplay>();
             element.SetValue(Grid.RowSpanProperty, OuterGrid.RowDefinitions.Count);
             element.SetValue(Grid.RowProperty, 0);
             OuterGrid.Children.Insert(0,element);
             this.InvalidateArrange();
             return this;
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.ResizeMode = ResizeMode.NoResize;
+                this.WindowStyle = WindowStyle.None;
+            }
+        }
+
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+                this.ResizeMode = ResizeMode.CanResize;
+                this.WindowStyle = WindowStyle.ThreeDBorderWindow;
+            }
         }
 
         private void OuterGrid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -56,18 +76,7 @@ namespace InstiBulb
             }
         }
 
-        private void Windows_Close(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Maximize(object sender, RoutedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized)
-                this.WindowState = WindowState.Normal;
-            else
-                this.WindowState = WindowState.Maximized;
-        }
+        
 
     }
 }
