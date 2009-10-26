@@ -45,23 +45,87 @@ VS_OUTPUT VS(float4 Pos  : POSITION, float2 tex : TEXCOORD0)
   return Out;
 }
 
+float pixelWidth = 1/255;
 
-float4 PS(PS_INPUT input ) : COLOR
+float2 PixelKernel[13] =
 {
-			return tex1D(paletteSampler, 
-					tex2D(textureSampler, input.uv).b);
+    -6, -6,
+    -5, -5,
+    -4, -4,  
+    -3, -3,
+    -2, -2, 
+    -1, -1,
+     0, 0,
+     1, 1,
+     2, 2,
+     3, 3,
+     4, 4,
+     5, 5,
+     6, 6,
+};
+
+static const float BlurWeights[13] = 
+{
+    0.002216,
+    0.008764,
+    0.026995,
+    0.064759,
+    0.120985,
+    0.176033,
+    0.199471,
+    0.176033,
+    0.120985,
+    0.064759,
+    0.026995,
+    0.008764,
+    0.002216,
+};
+
+float4 LookupPixel(float2 uv)
+{
+	float4 result= tex1D(paletteSampler, 
+			tex2D(textureSampler, uv).b);
+			
+	return result;
 
 }
 
+float blurStrength = 0.8;
+
+// Effect function
+float4 EffectProcess( PS_INPUT input ) : COLOR
+{
+    // Apply surrounding pixels
+    float4 color = LookupPixel(input.uv);
+	color.a = 1.0;
+    return color;
+}
+
+float4 EffectProcess2( PS_INPUT input ) : COLOR
+{
+    // Apply surrounding pixels
+    float4 color = LookupPixel(input.uv - (3 / 255));
+	color.a = 0.8;
+    return color;
+}
 
 technique TVertexShaderOnly
 {
     pass P0
     {
-        // shaders
         VertexShader = compile vs_1_1 VS();
-        PixelShader = compile ps_2_0 PS();
-
+        PixelShader = compile ps_3_0 EffectProcess();
     }
+    
+	//pass P1
+    //{
+     //   // shaders
+     //   VertexShader = compile vs_1_1 VS();
+//        PixelShader = compile ps_3_0 EffectProcess2();
+        
+//        AlphaBlendEnable = True;
+//		SrcBlend = InvSrcAlpha;
+//		DestBlend = SrcAlpha;
+//    }
 	
 }

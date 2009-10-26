@@ -51,14 +51,7 @@ namespace SlimDXBindings.Viewer
 
             UpdateNESTextures();
             
-            effectC.Technique = "TVertexShaderOnly";
-            Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
-            wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
-            
-            effectC.SetValue("matWorldViewProj", wvp);
-            effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
-            effectC.SetTexture("nesTexture", _texture);
-            effectC.SetTexture("nesPalette", _paletteTexture);
+
  
             effectC.Begin();
             effectC.BeginPass(0);
@@ -81,15 +74,15 @@ namespace SlimDXBindings.Viewer
             //int[] ram = new int[0x1000];
             //Buffer.BlockCopy(nes.PPU.VidRAM, 0, ram, 0, 0x4000);
 
-            var ramRect = _nesVidRAMTexture.LockRectangle(0, LockFlags.Discard);
-            ramRect.Data.WriteRange<byte>(nes.PPU.VidRAM);
-            _nesVidRAMTexture.UnlockRectangle(0);
-            _nesVidRAMTexture.AddDirtyRectangle(new Rectangle(0, 0, 0x1000, 1));
+            //var ramRect = _nesVidRAMTexture.LockRectangle(0, LockFlags.Discard);
+            //ramRect.Data.WriteRange<byte>(nes.PPU.VidRAM);
+            //_nesVidRAMTexture.UnlockRectangle(0);
+            //_nesVidRAMTexture.AddDirtyRectangle(new Rectangle(0, 0, 0x1000, 1));
 
-            if (ramRect == null)
-            {
-                Texture.ToFile(_nesVidRAMTexture, @"d:\nesVidRam.dds", ImageFileFormat.Dds);
-            }
+            //if (ramRect == null)
+            //{
+            //    Texture.ToFile(_nesVidRAMTexture, @"d:\nesVidRam.dds", ImageFileFormat.Dds);
+            //}
 
         }
 
@@ -336,11 +329,12 @@ namespace SlimDXBindings.Viewer
         
         protected void LoadContent()
         {
-            InitializeScene();
 
             CleanupContent();
 
-            effectC = Effect.FromStream(panel.Device, "SlimDXBindings.Viewer.IndexedRasterize.fx".StreamFromResource(), ShaderFlags.None);
+            effectC = Effect.FromStream(panel.Device, 
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.IndexedRasterize.fx"), 
+                ShaderFlags.None);
 
             mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
             mesh.ComputeNormals();
@@ -362,6 +356,8 @@ namespace SlimDXBindings.Viewer
             _paletteTexture.UnlockRectangle(0);
             _paletteTexture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 1));
 
+
+            InitializeScene();
 
         }
 
@@ -391,7 +387,14 @@ namespace SlimDXBindings.Viewer
             camera.FarPlane = 40.0f;
             camera.Location = new Vector3(0.0f, 0.0f, 10.5f);
             camera.Target = Vector3.Zero;
-            
+
+            effectC.Technique = "TVertexShaderOnly";
+            Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
+            wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
+            effectC.SetValue("matWorldViewProj", wvp);
+            effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
+            effectC.SetTexture("nesTexture", _texture);
+            effectC.SetTexture("nesPalette", _paletteTexture);
         }
 
         Light light;

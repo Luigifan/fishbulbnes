@@ -188,6 +188,7 @@ namespace SlimDXNESViewer
         public void UpdateNESScreen()
         {
             panel.AllowRendering = true;
+            panel.Render();
         }
 
         #region IDisposable Members
