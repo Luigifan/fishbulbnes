@@ -168,7 +168,6 @@ namespace InstiBulb.ThreeDee
         AxisAngleRotation3D containerRotatation = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0);
         AxisAngleRotation3D containerRotation2 = new AxisAngleRotation3D(new Vector3D(1, 0, 0), 0);
         
-        List<InteractiveCanvas> iCanvas;
         List<UIElement3D> icons = new List<UIElement3D>();
         internal void BuildSpinner(ContainerUIElement3D container, List<UIElement3D> Icons)
         {
@@ -206,15 +205,7 @@ namespace InstiBulb.ThreeDee
 
         }
 
-        public void UpdateVisual(int index, Visual newVisual)
-        {
-            if (null != iCanvas && iCanvas.Count > index)
-            {
-                iCanvas[index].Visual = null;
-                iCanvas[index].Visual = newVisual;
-            }
-            
-        }
+
         
     }
 }

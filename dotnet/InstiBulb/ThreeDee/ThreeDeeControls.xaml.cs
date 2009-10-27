@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using _3DTools;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Animation;
 using Microsoft.Practices.Unity;
@@ -84,10 +83,6 @@ namespace InstiBulb.ThreeDee
             menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 5, 0);
             menuSpinner.JumpTo(0);
 
-            if (watchedDisplay.Context != null && watchedDisplay.Context.PropertiesPanel is UIElement)
-                menuSpinner.UpdateVisual(5, (UIElement)watchedDisplay.Context.PropertiesPanel);
-
-
             debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, CreateIcons(), 4, 90);
 
             activeSpinner = menuSpinner;
@@ -151,7 +146,7 @@ namespace InstiBulb.ThreeDee
 
         void watchedDisplay_ContextChanged(object sender, EventArgs e)
         {
-            menuSpinner.UpdateVisual(5, (UIElement)watchedDisplay.Context.PropertiesPanel); 
+           // menuSpinner.UpdateVisual(5, (UIElement)watchedDisplay.Context.PropertiesPanel); 
         }
 
         private static UIElement MakeRedBox( )
@@ -384,11 +379,6 @@ namespace InstiBulb.ThreeDee
                 menuActive = false;
 
             }
-            //camera.Transform = new RotateTransform3D(rotation);
-
         }
-
-
-
     }
 }

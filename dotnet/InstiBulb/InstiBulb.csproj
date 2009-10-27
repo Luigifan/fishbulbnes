@@ -100,10 +100,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="3DTools, Version=1.0.2614.20437, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\3DTools\3DTools.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
@@ -277,9 +273,7 @@
       <DependentUpon>SoundPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreeDee\Icon3D.cs" />
-    <Compile Include="ThreeDee\InteractiveCanvas.cs" />
     <Compile Include="ThreeDee\InteractiveCanvasSpinner.cs" />
-    <Compile Include="ThreeDee\InteractiveCylinder.cs" />
     <Compile Include="ThreeDee\SphereMeshGenerator.cs" />
     <Compile Include="ThreeDee\ThreeDeeControls.xaml.cs">
       <DependentUpon>ThreeDeeControls.xaml</DependentUpon>
