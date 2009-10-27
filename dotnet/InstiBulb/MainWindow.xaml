@@ -15,8 +15,9 @@
         >
     <Window.Resources>
         <ImageBrush x:Key="Wallpaper" ImageSource="nes_controller_wallpaper.jpg" />
+        <SolidColorBrush x:Key="WallpaperBlack" Color="Black"/>
     </Window.Resources>
-    <Grid x:Name="OuterGrid"  MouseDown="OuterGrid_MouseDown" Background="{StaticResource Wallpaper}">
+    <Grid x:Name="OuterGrid"  MouseDown="OuterGrid_MouseDown" Background="{StaticResource WallpaperBlack}">
         <Grid.RowDefinitions>
             <RowDefinition  Height="Auto"/>
             <RowDefinition Height="10*" />

@@ -36,22 +36,16 @@
                 <Viewport3D.Camera >
                     <PerspectiveCamera x:Name="camera"  Position="0,1.6,10" LookDirection="0,-0.2,-1"  />
                 </Viewport3D.Camera>
-
                 <Viewport3D.Children >
                     <ModelVisual3D>
                         <ModelVisual3D.Content>
-                            <DirectionalLight x:Name="HeadLight" Direction="-1,0.2,0" Color="AntiqueWhite"  />
-                        </ModelVisual3D.Content>
-
-                    </ModelVisual3D>
-                    <ModelVisual3D>
-                        <ModelVisual3D.Content>
-                            <DirectionalLight Direction="-1,-0.2,0" Color="Red"  />
+                            <AmbientLight  x:Name="HeadLight"   Color="AntiqueWhite"  />
                         </ModelVisual3D.Content>
 
                     </ModelVisual3D>
 
-                    <ContainerUIElement3D x:Name="debugContainer"/>
+                    <ContainerUIElement3D x:Name="debugContainer">
+                    </ContainerUIElement3D>
                     <ContainerUIElement3D x:Name="spinnerContainer"/>
                 </Viewport3D.Children>
             </Viewport3D>

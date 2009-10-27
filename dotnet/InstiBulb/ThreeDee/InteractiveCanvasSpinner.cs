@@ -193,6 +193,13 @@ namespace InstiBulb.ThreeDee
                 newContainer.Transform = tGroup;
 
                 newContainer.Children.Add(icons[i]);
+                //var light = new PointLight(Colors.AntiqueWhite, new Point3D(0, 0, radius * 2));
+                //light.Range = radius * 1.5;
+                ////light.LinearAttenuation = 0.1;
+                //var model = new ModelVisual3D();
+                //model.Content = light;
+                //newContainer.Children.Add(model);
+
                 container.Children.Add(newContainer);
 
             }

@@ -231,7 +231,7 @@ namespace InstiBulb.ThreeDee
             group.Children.Add(new RotateTransform3D(rotation));
 
             camera.Transform = group;
-            HeadLight.Transform = group;
+            //HeadLight.Transform = group;
 
             transFormanimation.Completed += Whizoff_Completed;
             translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
@@ -268,7 +268,7 @@ namespace InstiBulb.ThreeDee
             group.Children.Add(new RotateTransform3D(rotation));
 
             camera.Transform = group;
-            HeadLight.Transform = group;
+            //HeadLight.Transform = group;
 
             transFormanimation.Completed += new EventHandler(EndAnimation);
             translate.BeginAnimation(TranslateTransform3D.OffsetXProperty, transFormanimation);
@@ -332,11 +332,10 @@ namespace InstiBulb.ThreeDee
         private void viewer3d_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0)
-                menuSpinner.Previous();
+                activeSpinner.Previous();
             if (e.Delta < 0)
-                menuSpinner.Next();
+                activeSpinner.Next();
 
-               
             if (e.MiddleButton == MouseButtonState.Pressed)
                 WhizOff();
         }
