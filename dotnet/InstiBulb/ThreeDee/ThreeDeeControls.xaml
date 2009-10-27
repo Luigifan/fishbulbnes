@@ -34,7 +34,7 @@
         <threeDee:Interactive3DDecorator Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3">
             <Viewport3D x:Name="viewer3d"  >
                 <Viewport3D.Camera >
-                    <PerspectiveCamera x:Name="camera"  Position="10,1.6,0" LookDirection="-1,-0.2,0"  />
+                    <PerspectiveCamera x:Name="camera"  Position="0,1.6,10" LookDirection="0,-0.2,-1"  />
                 </Viewport3D.Camera>
 
                 <Viewport3D.Children >

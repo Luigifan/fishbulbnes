@@ -114,7 +114,7 @@ technique TVertexShaderOnly
     pass P0
     {
         VertexShader = compile vs_1_1 VS();
-        PixelShader = compile ps_3_0 EffectProcess();
+        PixelShader = compile ps_2_0 EffectProcess();
     }
     
 	//pass P1

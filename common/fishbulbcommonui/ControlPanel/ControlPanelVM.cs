@@ -228,14 +228,8 @@ namespace Fishbulb.Common.UI
         {
             if (_target.IsRunning) PowerOff();
 
-            try
-            {
-                _target.GoTendo(fileName);
-            }
-            catch (CartLoadException )
-            {
-                return;
-            }
+            _target.GoTendo(fileName);
+
 
             this.CartInfo = new CartInfo()
             {

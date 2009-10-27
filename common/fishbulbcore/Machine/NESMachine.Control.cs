@@ -95,14 +95,12 @@ namespace NES.CPU.nitenedo
                     _cart.SRAM = SRAMReader(_cart.CheckSum);
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                PowerOn();
             }
             else
             {
-                throw new CartLoadException("Couldn't load file");
-                
+                throw new CartLoadException("Unsupported ROM type - load failed.");
             }
-
-            PowerOn();
 
         }
 

@@ -13,21 +13,6 @@ namespace InstiBulb.ThreeDee
     public class InteractiveCanvasSpinnerFactory : FrameworkElement
     {
 
-        public InteractiveCanvasSpinnerFactory(ContainerUIElement3D container, Visual[] visuals, double radius)
-        {
-            this.container = container;
-            this.radius = radius;
-            BuildSpinner(container, visuals);
-        }
-
-        public InteractiveCanvasSpinnerFactory(ContainerUIElement3D container, Visual[] visuals, double radius, double rotateZ)
-        {
-            this.container = container;
-            this.radius = radius;
-            BuildSpinner(container, visuals);
-            this.RotateZ(rotateZ);
-        }
-
         public InteractiveCanvasSpinnerFactory(ContainerUIElement3D container, List<UIElement3D> icons, double radius, double rotateZ)
         {
             this.container = container;
@@ -67,7 +52,6 @@ namespace InstiBulb.ThreeDee
             RotateZTo(currentZAngle + 90, false);
         }
 
-
         public void JumpTo(int Panel)
         {
             if (Panel > 0 && Panel < angleLocks.Count)
@@ -83,7 +67,7 @@ namespace InstiBulb.ThreeDee
 
         public void RotateZ(double angle)
         {
-            containerZRotatation.Angle = angle;
+            containerRotation2.Angle = angle;
             currentZAngle = angle;
         }
 
@@ -126,7 +110,6 @@ namespace InstiBulb.ThreeDee
             
         }
 
-
         public void RotateZTo(double angle, bool clockWise)
         {
 
@@ -154,7 +137,7 @@ namespace InstiBulb.ThreeDee
 
             angleAnimation.Completed += new EventHandler(angleAnimation_Completed);
             angleAnimation.RemoveRequested += new EventHandler(angleAnimation_RemoveRequested);
-            containerZRotatation.BeginAnimation(AxisAngleRotation3D.AngleProperty, angleAnimation);
+            containerRotation2.BeginAnimation(AxisAngleRotation3D.AngleProperty, angleAnimation);
             currentZAngle = angle;
             while (currentZAngle > 360) currentZAngle -= 360;
             while (currentZAngle < 0) currentZAngle += 360;
@@ -183,43 +166,8 @@ namespace InstiBulb.ThreeDee
         
         ContainerUIElement3D container;
         AxisAngleRotation3D containerRotatation = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0);
-        AxisAngleRotation3D containerZRotatation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), 0);
+        AxisAngleRotation3D containerRotation2 = new AxisAngleRotation3D(new Vector3D(1, 0, 0), 0);
         
-        internal void BuildSpinner(ContainerUIElement3D container, Visual[] visuals )
-        {
-            iCanvas = new List<InteractiveCanvas>();
-            int panelCount = visuals.Length;
-            double angle = 360 / visuals.Length;
-            angleLocks = new List<double>();
-            double angleOffset = 180 / visuals.Length;
-            for (int ti = 0; ti <= visuals.Length; ti++)
-            {
-                double t = ti * angle;
-                angleLocks.Add(t );
-            }
-            for (int i = 0; i < panelCount; i++)
-            {
-                var newPanel = new InteractiveCanvas();
-                Transform3DGroup tGroup = new Transform3DGroup();
-                tGroup.Children.Add(new TranslateTransform3D(new Vector3D(0, 0, radius)));
-                tGroup.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0,1,0), angle * i)));
-                tGroup.Children.Add(new RotateTransform3D(containerRotatation));
-                tGroup.Children.Add(new RotateTransform3D(containerZRotatation));
-
-                newPanel.Transform = tGroup;
-
-                Border img = new Border();
-                img.Background = new SolidColorBrush(Color.FromRgb(248, 102, 3));
-                img.Child = visuals[i] as UIElement;
-
-                newPanel.IsBackVisible = true;
-                newPanel.Visual = img;
-                container.Children.Add(newPanel);
-                iCanvas.Add(newPanel);
-            }
-
-        }
-
         List<InteractiveCanvas> iCanvas;
         List<UIElement3D> icons = new List<UIElement3D>();
         internal void BuildSpinner(ContainerUIElement3D container, List<UIElement3D> Icons)
@@ -228,21 +176,19 @@ namespace InstiBulb.ThreeDee
             int panelCount = icons.Count;
             double angle = 360 / icons.Count;
             angleLocks = new List<double>();
-            double angleOffset = 180 / panelCount;
-            for (int ti = 0; ti <= panelCount; ti++)
-            {
-                double t = ti * angle;
-                angleLocks.Add(t);
-            }
             for (int i = 0; i < panelCount; i++)
             {
+                double t = i * angle;
+                if (t != 360)
+                    angleLocks.Add(t);
+
                 var newContainer = new ContainerUIElement3D();
                 Transform3DGroup tGroup = new Transform3DGroup();
 
                 tGroup.Children.Add(new TranslateTransform3D(new Vector3D(0, 0, radius)));
                 tGroup.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), angle * i)));
                 tGroup.Children.Add(new RotateTransform3D(containerRotatation));
-                tGroup.Children.Add(new RotateTransform3D(containerZRotatation));
+                tGroup.Children.Add(new RotateTransform3D(containerRotation2));
 
                 newContainer.Transform = tGroup;
 

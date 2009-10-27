@@ -234,5 +234,15 @@ namespace NES.CPU.Machine.Carts
         }
 
         #endregion
+
+        #region INESCart Members
+
+
+        public byte GetPPUByte(int clock, int address)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
