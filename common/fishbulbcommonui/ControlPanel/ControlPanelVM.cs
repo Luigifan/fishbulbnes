@@ -254,6 +254,7 @@ namespace Fishbulb.Common.UI
 
         void PowerOn()
         {
+            _target.IsDebugging = false;
             RunningStatuses oldState = runstate;
             switch (runstate)
             {
@@ -289,6 +290,8 @@ namespace Fishbulb.Common.UI
 
         void PowerOff()
         {
+            _target.IsDebugging = false;
+
             RunningStatuses oldState = runstate;
 
             if (_target.IsRunning)
@@ -306,6 +309,8 @@ namespace Fishbulb.Common.UI
         {
             get { return _target.Paused; }
             set {
+                _target.IsDebugging = false;
+
                 RunningStatuses oldState = runstate;
                 _target.Paused = value;
                 if (runstate == RunningStatuses.Paused)

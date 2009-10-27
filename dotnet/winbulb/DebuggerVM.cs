@@ -100,6 +100,7 @@ namespace InstiBulb
 
         public void Step()
         {
+            _nes.IsDebugging = true;
             if (_nes == null) return;
             _nes.ThreadStep();
 
@@ -109,6 +110,7 @@ namespace InstiBulb
 
         public void StepFrame()
         {
+            _nes.IsDebugging = true;
             if (_nes == null) return;
             _nes.ThreadFrame();
 

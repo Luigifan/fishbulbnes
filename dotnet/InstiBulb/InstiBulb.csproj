@@ -199,6 +199,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\InstructionHistoryControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\InstructionRolloutControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -277,6 +281,9 @@
     <Compile Include="ThreeDee\SphereMeshGenerator.cs" />
     <Compile Include="ThreeDee\ThreeDeeControls.xaml.cs">
       <DependentUpon>ThreeDeeControls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstructionHistoryControl.xaml.cs">
+      <DependentUpon>InstructionHistoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstructionRolloutControl.xaml.cs">
       <DependentUpon>InstructionRolloutControl.xaml</DependentUpon>

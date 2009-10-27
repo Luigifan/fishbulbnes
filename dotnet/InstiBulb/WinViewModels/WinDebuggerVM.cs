@@ -44,6 +44,9 @@ namespace InstiBulb.WinViewModels
                 {
                     futureOps.Add(p);
                 }
+                instructionHistory.Clear();
+                if (DebuggerInformation.InstructionHistory != null)
+                    instructionHistory.Concat(DebuggerInformation.InstructionHistory);
             }
         }
 
@@ -60,6 +63,16 @@ namespace InstiBulb.WinViewModels
             get
             {
                 return futureOps;
+            }
+        }
+
+        ObservableCollection<string> instructionHistory = new ObservableCollection<string>();
+
+        public ObservableCollection<string> InstructionHistory
+        {
+            get
+            {
+                return instructionHistory;
             }
         }
 

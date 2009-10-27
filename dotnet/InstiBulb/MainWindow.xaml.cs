@@ -49,8 +49,7 @@ namespace InstiBulb
         {
             if (this.WindowState == WindowState.Maximized)
             {
-                this.ResizeMode = ResizeMode.NoResize;
-                this.WindowStyle = WindowStyle.None;
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
             }
         }
 

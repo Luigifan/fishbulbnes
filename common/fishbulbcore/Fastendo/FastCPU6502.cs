@@ -308,22 +308,16 @@ namespace NES.CPU.Fastendo
             FetchInstructionParameters();
             Execute();
 
-            clock += cpuTiming[_currentInstruction.OpCode] + _currentInstruction.ExtraTiming;
-        }
-
-        public void StepDebug()
-        {
-            Step();
-
             if (_debugging)
             {
                 WriteInstructionHistoryAndUsage();
                 _operationCounter++;
             }
 
-            // clock += tickCount;
-            // handle events at the end of this instruction
+            clock += cpuTiming[_currentInstruction.OpCode] + _currentInstruction.ExtraTiming;
         }
+
+
 
         public void Run()
         {

@@ -73,7 +73,7 @@ namespace InstiBulb.ThreeDee
         {
             
             List<UIElement3D> menuIcons = new List<UIElement3D>();
-            double radius = GetSegmentLength(5, 72) * 0.25;
+            double radius = GetSegmentLength(5, 360 / 5) * 0.25;
             menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel", radius));
             menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel", radius));
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad", radius));
@@ -83,32 +83,24 @@ namespace InstiBulb.ThreeDee
             menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 5, 0);
             menuSpinner.JumpTo(0);
 
-            debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, CreateIcons(), 4, 90);
-
+            MakeDebugSpinner();
             activeSpinner = menuSpinner;
 
 
         }
-
-        List<UIElement3D> CreateIcons()
+        void  MakeDebugSpinner()
         {
             List<UIElement3D> icons = new List<UIElement3D>();
-            //Model3DCollection doodleList = new Model3DCollection();
-            double radius = GetSegmentLength(4, 60) * 0.25;
+
+            double radius = GetSegmentLength(4, 360/5) * 0.25;
+            icons.Add(MakeIcon<MachineStatus>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Machine Status", radius));
             icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables", radius));
             icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
             icons.Add(MakeIcon<InstructionRolloutControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent,"Future Instructions", radius));
+            icons.Add(MakeIcon<InstructionHistoryControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Past Instructions", radius));
 
-            for (int i = 0; i < 3; ++i)
-            {
-                    Icon3D icon = new Icon3D(typeof(Canvas));
-                    icon.IconPressedEvent += new EventHandler<IconPressedEventArgs>(icon_IconPressedEvent);
-                    icon.Model = TryFindResource("nes") as Model3DGroup;
-                    icon.DesiredRadius = radius;
-                    icon.Rebuild();
-                    icons.Add(icon as UIElement3D);
-            }
-            return icons;
+            debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, icons, 4, 90);
+
         }
 
         public double GetSegmentLength(double radius, double angle)
