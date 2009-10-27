@@ -73,12 +73,12 @@ namespace InstiBulb.ThreeDee
         {
             
             List<UIElement3D> menuIcons = new List<UIElement3D>();
-
-            menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel"));
-            menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel"));
-            menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad"));
-            menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control"));
-            menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info"));
+            double radius = GetSegmentLength(5, 72) * 0.25;
+            menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel", radius));
+            menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel", radius));
+            menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad", radius));
+            menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control", radius));
+            menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info", radius));
 
             menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 5, 0);
             menuSpinner.JumpTo(0);
@@ -94,41 +94,46 @@ namespace InstiBulb.ThreeDee
         {
             List<UIElement3D> icons = new List<UIElement3D>();
             //Model3DCollection doodleList = new Model3DCollection();
-            icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables"));
-            icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables"));
-            icons.Add(MakeIcon<InstructionRolloutControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent,"Future Instructions"));
+            double radius = GetSegmentLength(4, 60) * 0.25;
+            icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables", radius));
+            icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
+            icons.Add(MakeIcon<InstructionRolloutControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent,"Future Instructions", radius));
 
             for (int i = 0; i < 3; ++i)
             {
                     Icon3D icon = new Icon3D(typeof(Canvas));
                     icon.IconPressedEvent += new EventHandler<IconPressedEventArgs>(icon_IconPressedEvent);
                     icon.Model = TryFindResource("nes") as Model3DGroup;
+                    icon.DesiredRadius = radius;
+                    icon.Rebuild();
                     icons.Add(icon as UIElement3D);
             }
             return icons;
         }
 
-        public Icon3D MakeIcon<T>(string modelFileName, EventHandler<IconPressedEventArgs> handler ) where T:Visual
+        public double GetSegmentLength(double radius, double angle)
         {
-            Icon3D icon = new Icon3D(typeof(T));
-            icon.IconPressedEvent += handler;
-            using (FileStream file = File.OpenRead(modelFileName))
-            {
-                icon.Model = LoadModel(file);
-            }
-            return icon;
+            return Math.Sqrt((2 * Math.Pow(radius, 2)) * (1 - Math.Cos( ToRadians( angle ) )));
         }
 
-        public Icon3D MakeIcon<T>(Model3DGroup model, EventHandler<IconPressedEventArgs> handler, string billboardText) where T : Visual
+        double ToRadians(double degrees)
+        {
+            return  (Math.PI * degrees)/180;
+        }
+        
+        public Icon3D MakeIcon<T>(Model3DGroup model, EventHandler<IconPressedEventArgs> handler, string billboardText, double radius) where T : Visual
         {
             Icon3D icon = new Icon3D(typeof(T));
             icon.IconPressedEvent += handler;
-            icon.Model = model;
             Label l = new Label();
             l.Content = billboardText;
             l.Background = new SolidColorBrush(Color.FromArgb(50,128,128,128));
             l.Foreground = new SolidColorBrush(Colors.Yellow);
+
+            icon.Model = model;
             icon.Billboard = l;
+            icon.DesiredRadius = radius;
+            icon.Rebuild();
             return icon;
         }
 

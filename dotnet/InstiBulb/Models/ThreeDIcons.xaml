@@ -3,17 +3,16 @@
     <Canvas x:Key="fart" >
         <TextBlock x:Name="fartyfart">fart</TextBlock>
     </Canvas>
-        <Model3DGroup x:Key="Sword">
+    
+    <Model3DGroup x:Key="Sword">
         <Model3DGroup >
             <Model3DGroup.Transform>
                 <Transform3DGroup>
-                <ScaleTransform3D ScaleX="0.08" ScaleY="0.08" ScaleZ="0.08"/>
                 <RotateTransform3D >
                     <RotateTransform3D.Rotation >
                         <AxisAngleRotation3D Angle="90" Axis="1,0,0"/>
                     </RotateTransform3D.Rotation>
                 </RotateTransform3D>
-                    <TranslateTransform3D OffsetY="1"/>
                 </Transform3DGroup>
 
             </Model3DGroup.Transform>
@@ -147,6 +146,7 @@
             </Model3DGroup>
         </Model3DGroup>
     </Model3DGroup>
+    
     <Model3DGroup x:Key="nes">
         <Model3DGroup.Transform>
             <Transform3DGroup>
@@ -165,7 +165,6 @@
                         <AxisAngleRotation3D Angle="90" Axis="0,0,1"/>
                     </RotateTransform3D.Rotation>
                 </RotateTransform3D>
-                <ScaleTransform3D ScaleX="4" ScaleY="4" ScaleZ="4" />
             </Transform3DGroup>
         </Model3DGroup.Transform>
         <Model3DGroup >
@@ -353,31 +352,13 @@
                 </GeometryModel3D.Geometry>
             </GeometryModel3D>
         </Model3DGroup>
-        <Model3DGroup >
-            <Model3DGroup.Transform>
-                <Transform3DGroup>
-                    <RotateTransform3D>
-                        <RotateTransform3D.Rotation>
-                            <AxisAngleRotation3D Axis="0.205942,0.331517,0.920697" Angle="110.36735588645911"/>
 
-                        </RotateTransform3D.Rotation>
-                    </RotateTransform3D>
-                    <ScaleTransform3D ScaleX="1.0" ScaleY="1.0" ScaleZ="0.99999994039535522"/>
-                    <TranslateTransform3D OffsetX="4.0762453079223633" OffsetY="1.0054539442062378" OffsetZ="5.9038619995117188"/>
-
-                </Transform3DGroup>
-
-            </Model3DGroup.Transform>
-            <PointLight Color="#ffffff" Position="4.076245,1.005454,5.903862" LinearAttenuation="0.033333352406830573"/>
-        </Model3DGroup>
     </Model3DGroup>
+    
     <Model3DGroup x:Key="controlPad">
         <Model3DGroup >
             <Model3DGroup.Transform>
                 <Transform3DGroup>
-                    <ScaleTransform3D ScaleX="0.06" ScaleY="0.06" ScaleZ="0.06"/>
-                    <TranslateTransform3D OffsetX="-1.1249998807907104" OffsetY="0.4831119179725647" OffsetZ="-0.15476459264755249"/>
-
                 </Transform3DGroup>
 
             </Model3DGroup.Transform>
@@ -1157,7 +1138,6 @@
         <Model3DGroup >
             <Model3DGroup.Transform>
                 <Transform3DGroup>
-                    <ScaleTransform3D ScaleX="0.75" ScaleY="0.75" ScaleZ="0.75" />
                     <RotateTransform3D>
                         <RotateTransform3D.Rotation>
                             <AxisAngleRotation3D Angle="90" Axis="1,0,0" />

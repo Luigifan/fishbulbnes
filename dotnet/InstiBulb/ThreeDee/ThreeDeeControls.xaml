@@ -30,9 +30,9 @@
             <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-            <Viewport3D x:Name="viewer3d"  Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3">
+            <Viewport3D x:Name="viewer3d"  Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" >
                 <Viewport3D.Camera >
-                    <PerspectiveCamera x:Name="camera"  Position="0,1.6,10" LookDirection="0,-0.2,-1"  />
+                    <PerspectiveCamera x:Name="camera"  Position="0,1.6,15" LookDirection="0,-0.2,-1"  />
                 </Viewport3D.Camera>
                 <Viewport3D.Children >
                     <ModelVisual3D>

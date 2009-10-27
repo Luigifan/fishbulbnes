@@ -205,6 +205,11 @@ namespace InstiBulb.ThreeDee
 
         }
 
+        public double Angle
+        {
+            get { return 360 / icons.Count; }
+        }
+
 
         
     }
