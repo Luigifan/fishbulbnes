@@ -178,7 +178,6 @@ namespace InstiBulb.ThreeDee
 
         void angleAnimation_Completed(object sender, EventArgs e)
         {
-
         }
 
         public double Radius
@@ -220,6 +219,15 @@ namespace InstiBulb.ThreeDee
                 newContainer.Transform = tGroup;
 
                 newContainer.Children.Add(icons[i]);
+
+                var light = new PointLight(Colors.AntiqueWhite, new Point3D(0, 0, radius * 2));
+                light.Range = radius * 2.6;
+                
+                light.LinearAttenuation = 1.0 / (light.Range * 0.6);
+                
+                var model = new ModelVisual3D();
+                model.Content = light;
+                container.Children.Add(model);
 
                 container.Children.Add(newContainer);
 

@@ -33,7 +33,8 @@
         <Label Style="{StaticResource HeaderStyle}" Grid.ColumnSpan="2">Console Controls</Label>
         <Button Grid.Row="1" MinHeight="20" MinWidth="75" 
                 Content="{Binding CurrentCartName, Converter={StaticResource ShortFileNameConverter}}" 
-                Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" />
+                Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" 
+                />
         <Button Grid.Row="1" Grid.Column="1" MinWidth="25" Content="{Binding PowerStatusText}" Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=PowerToggle}" Style="{StaticResource PowerButtonStyle}" />
         <CheckBox Grid.Row="2" IsChecked="{Binding Paused}">Paused</CheckBox>
         <Label Grid.Row="3" Grid.ColumnSpan="2" Background="Red" Height="Auto"

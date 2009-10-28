@@ -23,19 +23,7 @@ namespace Fishbulb.Common.UI
         public NESMachine DebugTarget
         {
             get { return _nes; }
-            //set
-            //{
-            //    _nes = value;
-            //    _nes.DebugInfoChanged += new EventHandler<BreakEventArgs>(_nes_DebugInfoChanged);
-            //    if (_nes != null)
-            //    {
-            //        UpdateDebugInfo();
-            //        _breakpoints = new List<string>(
-            //            from b in _nes.BreakPoints select b.Address.ToString()
-            //            );
-            //        _nes.BreakpointHit += new EventHandler<BreakEventArgs>(_nes_BreakpointHit);
-            //    }
-            //}
+
         }
 
         void _nes_BreakpointHit(object sender, BreakEventArgs e)

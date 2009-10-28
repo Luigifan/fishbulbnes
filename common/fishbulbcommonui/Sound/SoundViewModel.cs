@@ -84,6 +84,33 @@ namespace GtkNes
             }
         }
 
+        public bool EnableSquareChannel0
+        {
+            get { return nes.SoundBopper.EnableSquare0; }
+            set
+            {
+                nes.SoundBopper.EnableSquare0 = value;
+            }
+        }
+
+        public bool EnableSquareChannel1
+        {
+            get { return nes.SoundBopper.EnableSquare1; }
+            set { nes.SoundBopper.EnableSquare1 = value; }
+        }
+
+        public bool EnableTriangleChannel
+        {
+            get { return nes.SoundBopper.EnableTriangle; }
+            set { nes.SoundBopper.EnableTriangle = value; }
+        }
+
+        public bool EnableNoiseChannel
+        {
+            get { return nes.SoundBopper.EnableNoise; }
+            set { nes.SoundBopper.EnableNoise = value; }
+        }
+
         #region INotifyPropertyChanged Members
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;

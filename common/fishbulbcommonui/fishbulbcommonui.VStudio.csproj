@@ -128,6 +128,7 @@
     <Compile Include="IProfileView.cs" />
     <Compile Include="IProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveStates\SaveStateVM.cs" />
     <Compile Include="Sound\SoundViewModel.cs" />
     <Compile Include="UIInstigator.cs" />
   </ItemGroup>

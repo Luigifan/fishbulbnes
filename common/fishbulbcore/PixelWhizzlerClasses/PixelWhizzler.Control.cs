@@ -47,6 +47,21 @@ namespace NES.CPU.PPUClasses
             writer.Enqueue(oneScreenMirrorOffset);
             writer.Enqueue((int)currentMirrorMask);
 
+
+            writer.Enqueue( patternEntry );
+            writer.Enqueue( patternEntryByte2);
+            writer.Enqueue(currentAttributeByte);
+            writer.Enqueue( xNTXor );
+            writer.Enqueue( yNTXor );
+            writer.Enqueue( fetchTile ? 0 : 1);
+            writer.Enqueue (xPosition);
+            writer.Enqueue(yPosition);
+
+
+            writer.Enqueue(lastcpuClock);
+            writer.Enqueue(vbufLocation);
+
+
             for (int i = 0; i < 0x4000; i += 4)
             {
 
@@ -78,6 +93,16 @@ namespace NES.CPU.PPUClasses
                         );
             }
 
+            for (int i = 0; i < _palette.Length; i += 4)
+            {
+
+                writer.Enqueue((_palette[i] << 24) |
+                                    (_palette[i + 1] << 16) |
+                                    (_palette[i + 2] << 8) |
+                                    (_palette[i + 3])
+                        );
+            }
+
         }
 
         public void ReadState(Queue<int> state)
@@ -95,6 +120,18 @@ namespace NES.CPU.PPUClasses
             _mirroring= state.Dequeue();
             oneScreenMirrorOffset= state.Dequeue();
             currentMirrorMask= state.Dequeue();
+
+            patternEntry = state.Dequeue();
+            patternEntryByte2 = state.Dequeue();
+            currentAttributeByte = state.Dequeue();
+            xNTXor = state.Dequeue();
+            yNTXor = state.Dequeue();
+            fetchTile = (state.Dequeue() == 1);
+            xPosition = state.Dequeue();
+            yPosition = state.Dequeue();
+
+            lastcpuClock = state.Dequeue();
+            vbufLocation = state.Dequeue();
 
             int packedByte = 0;
             for (int i = 0; i < 0x4000; i += 4)
@@ -126,6 +163,17 @@ namespace NES.CPU.PPUClasses
                 pal[i + 3] = (byte)(packedByte);
             }
 
+            for (int i = 0; i < _palette.Length; i += 4)
+            {
+                packedByte = state.Dequeue();
+                _palette[i] = (byte)(packedByte >> 24);
+                _palette[i + 1] = (byte)(packedByte >> 16);
+                _palette[i + 2] = (byte)(packedByte >> 8);
+                _palette[i + 3] = (byte)(packedByte);
+            }
+
+            UnpackSprites();
+            PreloadSprites(scanlineNum);
 
         }
     }

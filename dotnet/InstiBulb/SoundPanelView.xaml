@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="InstiBulb.SoundPanelView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    >
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -11,6 +10,18 @@
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <Slider Minimum="0" Maximum="1" Value="{Binding Volume, Mode=TwoWay}"/>
             <CheckBox IsChecked="{Binding Muted}" Content="Muted" />
+            <Border BorderBrush="Black" BorderThickness="2" CornerRadius="2" Background="Goldenrod">
+                <StackPanel>
+                    <CheckBox x:Name="enableChannel0" Content="Square Wave 0" IsChecked="{Binding Path=EnableSquareChannel0, Mode=Default}">
+                    </CheckBox>
+                    <CheckBox x:Name="enableChannel1" Content="Square Wave 1" IsChecked="{Binding Path=EnableSquareChannel1, Mode=Default}">
+                    </CheckBox>
+                    <CheckBox x:Name="enableChannel2" Content="Triangle Channel" IsChecked="{Binding Path=EnableTriangleChannel, Mode=Default}">
+                    </CheckBox>
+                    <CheckBox x:Name="enableChannel3" Content="Noise Channel" IsChecked="{Binding Path=EnableNoiseChannel, Mode=Default}">
+                    </CheckBox>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </Grid>
 </UserControl>

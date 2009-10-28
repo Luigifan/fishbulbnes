@@ -80,6 +80,7 @@ namespace InstiBulb.ThreeDee
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad", radius));
             menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control", radius));
             menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info", radius));
+            menuIcons.Add(MakeIcon<SaveStateView>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Save States", radius));
 
             menuSpinner = new InteractiveCanvasSpinnerFactory(spinnerContainer, menuIcons, 5, 0);
             menuSpinner.JumpTo(0);

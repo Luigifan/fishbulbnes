@@ -240,7 +240,7 @@ namespace NES.CPU.Machine.Carts
             get { return checkSum; }
         }
 
-        public void WriteState(Queue<int> state)
+        public virtual void WriteState(Queue<int> state)
         {
             /// taken from basicNES
             state.Enqueue( SRAMCanWrite ? 1 : 0);
@@ -268,7 +268,7 @@ namespace NES.CPU.Machine.Carts
             }
         }
 
-        public void ReadState(Queue<int> state)
+        public virtual void ReadState(Queue<int> state)
         {
             /// taken from basicNES
             SRAMCanWrite = state.Dequeue() == 1;

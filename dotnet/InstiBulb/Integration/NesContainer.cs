@@ -19,6 +19,7 @@ using NES.CPU.nitenedo.Interaction;
 using WpfNESViewer;
 using InstiBulb.Sound;
 using InstiBulb.Views;
+using fishbulbcommonui.SaveStates;
 
 namespace InstiBulb.Integration
 {
@@ -73,8 +74,15 @@ namespace InstiBulb.Integration
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
+            container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
+            container.RegisterInstance<SRAMReaderDelegate>(delegates.ReadSRAM, new ContainerControlledLifetimeManager());
             
             container.RegisterType<NESMachine>( new ContainerControlledLifetimeManager());
+            container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
+                    new InjectionProperty("SRAMWriter", new ResolvedParameter<SRAMWriterDelegate>()),
+                    new InjectionProperty("SRAMReader", new ResolvedParameter<SRAMReaderDelegate>())
+                );
+
 
             // register view models
             container.RegisterType<ControlPanelVM>();
@@ -85,6 +93,7 @@ namespace InstiBulb.Integration
             container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
             container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, SaveStateVM>("SaveStateVM", new ContainerControlledLifetimeManager());
             
             container.RegisterType<WpfKeyConfigVM>("KeyConfigVM", new ContainerControlledLifetimeManager());
 
@@ -106,6 +115,7 @@ namespace InstiBulb.Integration
             container.RegisterType<InstructionHistoryControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
             container.RegisterType<NameTableViewerControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
             container.RegisterType<PatternViewerControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
+            container.RegisterType<SaveStateView>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "SaveStateVM")));
 
             return container;
         }
