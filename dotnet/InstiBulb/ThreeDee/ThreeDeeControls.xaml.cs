@@ -20,6 +20,7 @@ using InstiBulb.Views;
 using System.IO;
 using InstiBulb;
 using InstiBulb.Integration;
+using System.Windows.Controls.Primitives;
 
 namespace InstiBulb.ThreeDee
 {
@@ -73,9 +74,9 @@ namespace InstiBulb.ThreeDee
         {
             
             List<UIElement3D> menuIcons = new List<UIElement3D>();
-            double radius = GetSegmentLength(5, 360 / 5) * 0.25;
+            double radius = GetSegmentLength(5, 360 / 5) * 0.20;
             menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel", radius));
-            menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Sound Panel", radius));
+            menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("Headphones") as Model3DGroup, icon_IconPressedEvent, "Sound Panel", radius));
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad", radius));
             menuIcons.Add(MakeIcon<CheatControl>(TryFindResource("Sword") as Model3DGroup, icon_IconPressedEvent, "Cheat Control", radius));
             menuIcons.Add(MakeIcon<CartInfoPanel>(TryFindResource("Heart") as Model3DGroup, icon_IconPressedEvent, "Cart Info", radius));
@@ -85,14 +86,13 @@ namespace InstiBulb.ThreeDee
 
             MakeDebugSpinner();
             activeSpinner = menuSpinner;
-
-
         }
+
         void  MakeDebugSpinner()
         {
             List<UIElement3D> icons = new List<UIElement3D>();
 
-            double radius = GetSegmentLength(4, 360/5) * 0.25;
+            double radius = GetSegmentLength(4, 360/4) * 0.20;
             icons.Add(MakeIcon<MachineStatus>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Machine Status", radius));
             icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables", radius));
             icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
@@ -117,13 +117,24 @@ namespace InstiBulb.ThreeDee
         {
             Icon3D icon = new Icon3D(typeof(T));
             icon.IconPressedEvent += handler;
-            Label l = new Label();
-            l.Content = billboardText;
-            l.Background = new SolidColorBrush(Color.FromArgb(50,128,128,128));
+            
+            TextBlock l = new TextBlock();
+            l.Text = billboardText;
+            l.Background = new SolidColorBrush(Colors.Transparent);
             l.Foreground = new SolidColorBrush(Colors.Yellow);
 
+            UniformGrid g = new UniformGrid();
+            g.Rows = 4;
+            g.Columns = 4;
+            for (int i = 0; i < 4; ++i)
+            {
+                g.Children.Add(new TextBlock());
+            }
+            g.Children.Add(l);
+            g.Background = new SolidColorBrush(Colors.Transparent);
+
             icon.Model = model;
-            icon.Billboard = l;
+            icon.Billboard = g;
             icon.DesiredRadius = radius;
             icon.Rebuild();
             return icon;

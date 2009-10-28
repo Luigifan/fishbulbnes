@@ -31,6 +31,7 @@ namespace InstiBulb.ThreeDee
                 currPanel = 0;
 
             RotateTo(angleLocks[currPanel], true);
+            SelectActiveIcon();
         }
 
         public void Previous()
@@ -40,16 +41,19 @@ namespace InstiBulb.ThreeDee
                 currPanel = angleLocks.Count - 1;
 
             RotateTo(angleLocks[currPanel], false);
+            SelectActiveIcon();
         }
 
         public void Up()
         {
             RotateZTo(currentZAngle + 90, true);
+            SelectActiveIcon();
         }
 
         public void Down()
         {
             RotateZTo(currentZAngle + 90, false);
+            SelectActiveIcon();
         }
 
         public void JumpTo(int Panel)
@@ -58,6 +62,35 @@ namespace InstiBulb.ThreeDee
             {
                 RotateTo(angleLocks[Panel], false);
                 currPanel = Panel;
+            }
+            SelectActiveIcon();
+        }
+
+        void SelectActiveIcon()
+        {
+            int activeIcon = (currPanel == 0)? 0 :  icons.Count - currPanel;
+
+            for (int i = 0; i < icons.Count; ++i )
+            {
+                var icon = icons[i] as Icon3D;
+                if (icon != null)
+                {
+                    icon.SetValue(Icon3D.IsActivatableProperty, (i == activeIcon));
+                }
+            }
+            container.InvalidateModel();
+
+            
+            
+        }
+
+        public void OrderBackToFront()
+        {
+            container.Children.Clear();
+            
+            foreach (var child in icons)
+            {
+                container.Children.Add(child);
             }
         }
 
@@ -95,12 +128,7 @@ namespace InstiBulb.ThreeDee
                 angleAnimation.To = angle;
 
             }
-            foreach (var p in icons)
-            {
-                if (p is Icon3D)
-                    (p as Icon3D).Dance();
 
-            }
             angleAnimation.Completed += angleAnimation_Completed;
             containerRotatation.BeginAnimation(AxisAngleRotation3D.AngleProperty, angleAnimation);
 
@@ -150,12 +178,7 @@ namespace InstiBulb.ThreeDee
 
         void angleAnimation_Completed(object sender, EventArgs e)
         {
-            foreach (var p in icons)
-            {
-                if (p is Icon3D)
-                    (p as Icon3D).UnDance();
 
-            }
         }
 
         public double Radius
@@ -183,7 +206,12 @@ namespace InstiBulb.ThreeDee
 
                 var newContainer = new ContainerUIElement3D();
                 Transform3DGroup tGroup = new Transform3DGroup();
-
+                Matrix3D m = Matrix3D.Identity;
+                m.Transform(new Vector3D(0, 0, radius));
+                Matrix3D m2 = Matrix3D.Identity;
+                m2.Rotate(new Quaternion(new Vector3D(0, 1, 0), angle * i));
+                //tGroup.Children.Add(new MatrixTransform3D(Matrix3D.Multiply(m, m2)));
+                
                 tGroup.Children.Add(new TranslateTransform3D(new Vector3D(0, 0, radius)));
                 tGroup.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), angle * i)));
                 tGroup.Children.Add(new RotateTransform3D(containerRotatation));
@@ -192,12 +220,6 @@ namespace InstiBulb.ThreeDee
                 newContainer.Transform = tGroup;
 
                 newContainer.Children.Add(icons[i]);
-                //var light = new PointLight(Colors.AntiqueWhite, new Point3D(0, 0, radius * 2));
-                //light.Range = radius * 1.5;
-                ////light.LinearAttenuation = 0.1;
-                //var model = new ModelVisual3D();
-                //model.Content = light;
-                //newContainer.Children.Add(model);
 
                 container.Children.Add(newContainer);
 

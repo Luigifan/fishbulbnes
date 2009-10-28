@@ -37,6 +37,11 @@ namespace InstiBulb.ThreeDee
     public class Icon3D : UIElement3D 
     {
 
+        public static DependencyProperty IsActivatableProperty =
+            DependencyProperty.Register("IsActivatable", typeof(bool), typeof(Icon3D),
+            new PropertyMetadata(false, new PropertyChangedCallback(IsActivatableChanged)));
+
+
         public static DependencyProperty BillboardProperty = 
             DependencyProperty.Register("BillboardText", typeof(UIElement), typeof(Icon3D), 
             new PropertyMetadata(null, new PropertyChangedCallback(BillboardChanged)));
@@ -53,6 +58,21 @@ namespace InstiBulb.ThreeDee
                 p.ResizeTo((double)args.NewValue);
         }
 
+        static void IsActivatableChanged(object o, DependencyPropertyChangedEventArgs args)
+        {
+            var p = o as Icon3D;
+            if (p == null) return;
+            if ((bool)args.NewValue)
+            {
+                p.Activate();
+            }
+            else
+            {
+                p.DeActivate();
+            }
+
+        }
+
         static void BillboardChanged(object o, DependencyPropertyChangedEventArgs args)
         {
             var p = o as Icon3D;
@@ -64,19 +84,16 @@ namespace InstiBulb.ThreeDee
         Visual visual;
         Brush billboardBrush;
 
+        public bool IsActivatable
+        {
+            get { return (bool)GetValue(Icon3D.IsActivatableProperty); }
+            set { SetValue(Icon3D.IsActivatableProperty, value); }
+        }
+
         internal void CreateBillboard(UIElement elem)
         {
-            UniformGrid g = new UniformGrid();
-            g.Rows = 4;
-            g.Columns = 4;
-            for (int i = 0; i < 4; ++i)
-            {
-                g.Children.Add(new Canvas());
-            }
-            g.Children.Add(elem);
-            g.Opacity = 0.5;
-            visual = g;
 
+            visual = elem;
             //Rebuild();
 
         }
@@ -187,8 +204,10 @@ namespace InstiBulb.ThreeDee
 
             //Make a bubble
             GeometryModel3D sphereModel = new GeometryModel3D();
-
+            
             SphereMeshGenerator gen2 = new SphereMeshGenerator();
+            gen2.Slices = 64;
+            gen2.Stacks = 32;
             gen2.Center = new Point3D(0, 0, 0);
             gen2.Radius = radius;
             sphereModel.Geometry = gen2.Geometry;
@@ -206,19 +225,14 @@ namespace InstiBulb.ThreeDee
                 var specMat = new EmissiveMaterial(new SolidColorBrush(Color.FromArgb(15, 0, 0, 255)));
                 matGrp.Children.Add(specMat);
             }
+            matGrp.Children.Add(new SpecularMaterial(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 0.8));
             sphereModel.Material = matGrp;
             sphereModel.BackMaterial = matGrp;
 
             // put some trouble in the bubble
             RotateTransform3D rotSphere = new RotateTransform3D();
-            var angle = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0);
+            var angle = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 135);
             rotSphere.Rotation = angle;
-            DoubleAnimation sphereSpin = new DoubleAnimation(360, new Duration(TimeSpan.FromSeconds(6)));
-            sphereSpin.RepeatBehavior = RepeatBehavior.Forever;
-            sphereSpin.AutoReverse = false;
-
-            angle.BeginAnimation(AxisAngleRotation3D.AngleProperty, sphereSpin);
-
             sphereModel.Transform = rotSphere;
 
             this.billboard = sphereModel;
@@ -259,17 +273,12 @@ namespace InstiBulb.ThreeDee
             : base()
         {
             type = t;
-            anim.RepeatBehavior = RepeatBehavior.Forever;
-            anim.FillBehavior = FillBehavior.HoldEnd;
-            anim.AutoReverse = true;
-            animX.RepeatBehavior = RepeatBehavior.Forever;
-            animX.FillBehavior = FillBehavior.HoldEnd;
-            animX.AutoReverse = true;
+
         }
 
         protected override void OnMouseDown(System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (IconPressedEvent != null)
+            if (IconPressedEvent != null && IsActivatable)
                 IconPressedEvent(this, new IconPressedEventArgs(type, null));
             
             base.OnMouseDown(e);
@@ -277,43 +286,48 @@ namespace InstiBulb.ThreeDee
 
         protected override void OnMouseEnter(System.Windows.Input.MouseEventArgs e)
         {
-            // Dance();
-            if (visual != null)
-                visual.SetValue(Label.BackgroundProperty, new SolidColorBrush(Color.FromArgb(76, 128, 128, 225)));
+            hasMouse = true;
+            UpdateColors();
 
-            base.OnMouseEnter(e);
         }
+
+        internal void Activate()
+        {
+            UpdateColors();
+        }
+
+        internal void DeActivate()
+        {
+            UpdateColors();
+        }
+
 
         protected override void OnMouseLeave(System.Windows.Input.MouseEventArgs e)
         {
+            hasMouse = false;
+            UpdateColors();
+        }
+
+        bool hasMouse = false;
+        void UpdateColors()
+        {
             if (visual != null)
-                visual.SetValue(Label.BackgroundProperty, new SolidColorBrush(Color.FromArgb(50, 128, 128, 128)));
-            // UnDance();
-            base.OnMouseLeave(e);
+            {
+                if (IsActivatable)
+                {
+                    if (hasMouse)
+                        visual.SetValue(UniformGrid.BackgroundProperty, new SolidColorBrush(Color.FromArgb(100, 255, 75, 75)));
+                    else
+                        visual.SetValue(UniformGrid.BackgroundProperty, new SolidColorBrush(Color.FromArgb(50, 255, 75, 75)));
+                }
+                else
+                {
+                    visual.SetValue(UniformGrid.BackgroundProperty, new SolidColorBrush(Color.FromArgb(50, 128, 128, 128)));
+                }
+            }
         }
 
         TranslateTransform3D modelTranslation = new TranslateTransform3D(0, 0, 0);
-        Storyboard danceSb ;
-
-        public void UnDance()
-        {
-           //if (danceSb != null)
-          ////  danceSb.Stop();
-            modelTranslation.BeginAnimation(TranslateTransform3D.OffsetXProperty, null);
-            modelTranslation.BeginAnimation(TranslateTransform3D.OffsetYProperty, null);
-
-        }
-
-        DoubleAnimation anim = new DoubleAnimation(-0.05, 0.05, new Duration(TimeSpan.FromSeconds(0.3)));
-        DoubleAnimation animX = new DoubleAnimation(0.05, -0.05, new Duration(TimeSpan.FromSeconds(0.2)));
-
-        public void Dance()
-        {
-            
-            modelTranslation.BeginAnimation(TranslateTransform3D.OffsetXProperty, anim);
-            modelTranslation.BeginAnimation(TranslateTransform3D.OffsetYProperty, animX);
-            
-        }
 
         private Model3DGroup _models = new Model3DGroup();
         private Model3D model;

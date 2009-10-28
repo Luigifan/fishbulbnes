@@ -61,15 +61,6 @@ namespace NES.CPU.FastendoDebugging
         {
             if (OpCodeInfo == null) SetupOpcodes();
             return mnemnonics[opCode];
-            //string result;
-            //string opcode = string.Format("${0:x2}", opCode).ToUpper();
-            //string format = string.Format("/Instructions/Instruction[Opcode/@Hex='{0}']/@Name", opcode);
-            //XmlNode n = OpCodeInfo.SelectSingleNode(format);
-            //if (n != null)
-            //    result = OpCodeInfo.SelectSingleNode(format).Value;
-            //else
-            //    result = "UNK";
-            //return result;
         }
 
         public static string Disassemble(this NES.CPU.Fastendo.CPU2A03.Instruction inst)

@@ -34,6 +34,7 @@ namespace InstiBulb
         public MainWindow Initialize()
         {
             IUnityContainer container = (IUnityContainer)FindResource("Container");
+            this.AllowsTransparency = false;
 
             InitializeComponent();
 
@@ -49,7 +50,7 @@ namespace InstiBulb
         {
             if (this.WindowState == WindowState.Maximized)
             {
-                this.WindowStyle = WindowStyle.SingleBorderWindow;
+                this.WindowStyle = WindowStyle.None;
             }
         }
 
@@ -74,7 +75,6 @@ namespace InstiBulb
             }
         }
 
-        
 
     }
 }

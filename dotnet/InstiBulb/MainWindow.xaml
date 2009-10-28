@@ -21,13 +21,9 @@
         <Grid.RowDefinitions>
             <RowDefinition  Height="Auto"/>
             <RowDefinition Height="10*" />
+            
         </Grid.RowDefinitions>
-        <!--<integration:NESDisplay Grid.RowSpan="2" x:Name="NesDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                        Target="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"  
-                        Context="{Binding Path=., Converter={StaticResource ContainerResolver},  Mode=OneTime}"
-                                SuspendNESDisplay="{Binding ElementName=ControlBoxer, Path=IsAnimating}"
-                                    >-->
-            <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
+        <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
 
 
     </Grid>

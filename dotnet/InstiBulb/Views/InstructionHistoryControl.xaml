@@ -1,0 +1,27 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="InstiBulb.InstructionHistoryControl"
+	x:Name="UserControl"
+	d:DesignWidth="555.345" d:DesignHeight="159.259" xmlns:WPFamicom="clr-namespace:InstiBulb">
+
+	<UserControl.Resources>
+		<DataTemplate x:Key="InstructionHistoryTemplate">
+			<TextBlock Text="{Binding}"/>
+		</DataTemplate>
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions >
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="1" >
+            <ListBox IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Path=DebuggerInformation.InstructionHistory, Mode=OneWay}" d:UseSampleData="True" ItemTemplate="{DynamicResource InstructionHistoryTemplate}" x:Name="InstructionHistory" />
+		</ScrollViewer>
+		<Label Style="{StaticResource HeaderStyle}" Content="Instruction History" />
+	</Grid>
+</UserControl>

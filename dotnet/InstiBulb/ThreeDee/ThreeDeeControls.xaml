@@ -32,12 +32,12 @@
         </Grid.RowDefinitions>
             <Viewport3D x:Name="viewer3d"  Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" >
                 <Viewport3D.Camera >
-                    <PerspectiveCamera x:Name="camera"  Position="0,1.6,15" LookDirection="0,-0.2,-1"  />
+                    <PerspectiveCamera x:Name="camera"  Position="0,1.6,15" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  />
                 </Viewport3D.Camera>
                 <Viewport3D.Children >
                     <ModelVisual3D>
                         <ModelVisual3D.Content>
-                            <AmbientLight  x:Name="HeadLight"   Color="AntiqueWhite"  />
+                            <PointLight x:Name="HeadLight" Color="AntiqueWhite" Range="20" Position="0,1.6,20" />
                         </ModelVisual3D.Content>
 
                     </ModelVisual3D>
