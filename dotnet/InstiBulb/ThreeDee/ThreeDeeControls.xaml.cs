@@ -74,7 +74,7 @@ namespace InstiBulb.ThreeDee
         {
             
             List<UIElement3D> menuIcons = new List<UIElement3D>();
-            double radius = GetSegmentLength(5, 360 / 5) * 0.20;
+            double radius = GetSegmentLength(5, 360 / 5) * 0.30;
             menuIcons.Add(MakeIcon<ControlPanelView>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Control Panel", radius));
             menuIcons.Add(MakeIcon<SoundPanelView>(TryFindResource("Headphones") as Model3DGroup, icon_IconPressedEvent, "Sound Panel", radius));
             menuIcons.Add(MakeIcon<ControllerConfig>(TryFindResource("controlPad") as Model3DGroup, icon_IconPressedEvent, "Control Pad", radius));
@@ -92,7 +92,7 @@ namespace InstiBulb.ThreeDee
         {
             List<UIElement3D> icons = new List<UIElement3D>();
 
-            double radius = GetSegmentLength(4, 360/4) * 0.20;
+            double radius = GetSegmentLength(4, 360/4) * 0.3;
             icons.Add(MakeIcon<MachineStatus>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Machine Status", radius));
             icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables", radius));
             icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
