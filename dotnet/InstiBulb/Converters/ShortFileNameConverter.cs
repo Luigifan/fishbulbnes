@@ -6,6 +6,7 @@ using System.Windows.Data;
 
 namespace InstiBulb.Converters
 {
+    [ValueConversion(typeof(string), typeof(string))]
     public class ShortFileNameConverter : IValueConverter
     {
         #region IValueConverter Members

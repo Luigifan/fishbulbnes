@@ -12,11 +12,9 @@ namespace NES.CPU
     {
 
         // sram
-        private byte[] prgRomBank6 = new byte[0x800];
+        private new byte[] prgRomBank6 = new byte[0x800];
 
         // prg roms
-
-        private int  mirroring, fourScreen, trainer;
 
         public override void InitializeCart()
         {

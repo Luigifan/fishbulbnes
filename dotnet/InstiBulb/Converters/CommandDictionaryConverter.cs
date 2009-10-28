@@ -79,6 +79,7 @@ namespace InstiBulb.Converters
         #endregion
     }
 
+    [ValueConversion(typeof(Dictionary<string, ICommandWrapper>), typeof(ICommand))]
     public class CommandDictionaryConverter : IValueConverter, INotifyPropertyChanged
     {
         public CommandDictionaryConverter()
@@ -131,6 +132,7 @@ namespace InstiBulb.Converters
         #endregion
 }
 
+    [ValueConversion(typeof(WrappedCommandErrorStateManager), typeof(string))]
     public class ErrorTextConverter : IValueConverter
     {
 

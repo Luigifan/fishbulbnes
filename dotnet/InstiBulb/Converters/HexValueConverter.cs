@@ -6,6 +6,7 @@ using System.Windows.Data;
 
 namespace InstiBulb.Converters
 {
+    [ValueConversion(typeof(int?), typeof(string))]
     public class HexValueConverter : IValueConverter
     {
 

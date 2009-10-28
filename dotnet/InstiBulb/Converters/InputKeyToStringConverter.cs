@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace InstiBulb.Converters
 {
+    [ValueConversion(typeof(Key),typeof(string))]
     public class InputKeyToStringConverter : IValueConverter
     {
         #region IValueConverter Members

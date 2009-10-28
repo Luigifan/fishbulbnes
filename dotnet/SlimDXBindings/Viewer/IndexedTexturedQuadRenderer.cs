@@ -23,6 +23,19 @@ namespace SlimDXBindings.Viewer
         private Texture _texture;
         private Texture _paletteTexture;
         private Texture _nesVidRAMTexture;
+        private Texture _nesRenderSurface;
+
+        Effect effectC;
+        Effect postEffect;
+
+        VertexBuffer vertices;
+
+        Surface surf ;
+        RenderToSurface rSurf ;
+        Viewport vp ;
+
+        Mesh mesh;
+        Mesh mesh2;
 
         public IndexedTexturedQuadRenderer(SlimDXControl control, NESMachine nes)
         {
@@ -37,30 +50,40 @@ namespace SlimDXBindings.Viewer
 
         }
 
-        Mesh mesh;
+        
 
         public virtual void Render()
         {
+
+            rSurf.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Black), 0, 0);
+            rSurf.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            rSurf.BeginScene(surf, vp);
+            //rSurf.Device.SetRenderState<System.Drawing.Color>(RenderState.Ambient, System.Drawing.Color.White);
+            rSurf.Device.SetRenderState<Cull>(RenderState.CullMode, Cull.None);
+            rSurf.Device.SetRenderState(RenderState.Lighting, false);
+
+            UpdateNESTextures();
+
+            effectC.Begin();
+            effectC.BeginPass(0);
+            mesh2.DrawSubset(0);
+            effectC.EndPass();
+            effectC.End();
+
+            rSurf.EndScene(Filter.Point);
             
-            
+            // now render the texture created above onto the actual screen
 
             panel.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Black), 0, 0);
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
             panel.Device.BeginScene();
 
-            UpdateNESTextures();
-            
-
- 
-            effectC.Begin();
-            effectC.BeginPass(0);
-
-            panel.Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.Point);
-
+            postEffect.Begin();
+            postEffect.BeginPass(0);
             mesh.DrawSubset(0);
-            effectC.EndPass();
-            effectC.End();
+            postEffect.EndPass();
+            postEffect.End();
+
             panel.Device.EndScene();
         }
 
@@ -70,19 +93,6 @@ namespace SlimDXBindings.Viewer
             rext.Data.WriteRange<int>(nes.PPU.OutBuffer);
             _texture.UnlockRectangle(0);
             _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
-
-            //int[] ram = new int[0x1000];
-            //Buffer.BlockCopy(nes.PPU.VidRAM, 0, ram, 0, 0x4000);
-
-            //var ramRect = _nesVidRAMTexture.LockRectangle(0, LockFlags.Discard);
-            //ramRect.Data.WriteRange<byte>(nes.PPU.VidRAM);
-            //_nesVidRAMTexture.UnlockRectangle(0);
-            //_nesVidRAMTexture.AddDirtyRectangle(new Rectangle(0, 0, 0x1000, 1));
-
-            //if (ramRect == null)
-            //{
-            //    Texture.ToFile(_nesVidRAMTexture, @"d:\nesVidRam.dds", ImageFileFormat.Dds);
-            //}
 
         }
 
@@ -312,49 +322,105 @@ namespace SlimDXBindings.Viewer
             InitializeD3D();
         }
 
-
-        static TransformedColoredVertex[] BuildVertexData()
+        static TransformedColoredTexturedVertex[] GetFSQuad()
         {
-            return new TransformedColoredVertex[4] {
-                new TransformedColoredVertex(new Vector4(600.0f, 100.0f, 0.5f, 1.0f), System.Drawing.Color.Red.ToArgb()),
-                new TransformedColoredVertex(new Vector4(600.0f, 500.0f, 0.5f, 1.0f), System.Drawing.Color.Blue.ToArgb()),
-                new TransformedColoredVertex(new Vector4(150.0f, 500.0f, 0.5f, 1.0f), System.Drawing.Color.Green.ToArgb()), 
-                new TransformedColoredVertex(new Vector4(150.0f, 100.0f, 0.5f, 1.0f), System.Drawing.Color.Purple.ToArgb()), 
+            return new TransformedColoredTexturedVertex[4]
+            {
+                new TransformedColoredTexturedVertex(new Vector4(1.0f, 1.0f, 1.0f, 1.0f), 
+                    System.Drawing.Color.White.ToArgb(), 
+                    new Vector2(1.0f, 0.0f)),
+                new TransformedColoredTexturedVertex(new Vector4(1.0f, -1.0f, 1.0f, 1.0f), 
+                    System.Drawing.Color.White.ToArgb(), 
+                    new Vector2(1.0f, 1.0f)),
+                new TransformedColoredTexturedVertex(new Vector4(-1.0f, 1.0f, 1.0f, 1.0f), 
+                    System.Drawing.Color.White.ToArgb(), 
+                    new Vector2(0.0f, 0.0f)),
+                new TransformedColoredTexturedVertex(new Vector4(-1.0f, -1.0f, 1.0f, 1.0f), 
+                    System.Drawing.Color.White.ToArgb(), 
+                    new Vector2(0.0f, 1.0f))
             };
+
         }
 
-        Effect effectC;
 
-        VertexBuffer vertices;
-        
+        //protected VertexBuffer CreateFullScreenQuad(VertexDeclaration vertexDeclaration)
+        //{
+        //    // Create a vertex buffer for the quad, and fill it in
+        //    VertexBuffer vertexBuffer = new VertexBuffer(graphicsDevice, typeof(QuadVertex), vertexDeclaration.GetVertexStrideSize(0) * 4, BufferUsage.None);
+        //    QuadVertex[] vbData = new QuadVertex[4];
+
+        //    // Upper right
+        //    vbData[0].position = new Vector3(1, 1, 1);
+        //    vbData[0].texCoordAndCornerIndex = new Vector3(1, 0, 1);
+
+        //    // Lower right
+        //    vbData[1].position = new Vector3(1, -1, 1);
+        //    vbData[1].texCoordAndCornerIndex = new Vector3(1, 1, 2);
+
+        //    // Upper left
+        //    vbData[2].position = new Vector3(-1, 1, 1);
+        //    vbData[2].texCoordAndCornerIndex = new Vector3(0, 0, 0);
+
+        //    // Lower left
+        //    vbData[3].position = new Vector3(-1, -1, 1);
+        //    vbData[3].texCoordAndCornerIndex = new Vector3(0, 1, 3);
+
+
+        //    vertexBuffer.SetData(vbData);
+        //    return vertexBuffer;
+        //}
+
+
         protected void LoadContent()
         {
 
             CleanupContent();
 
-            effectC = Effect.FromStream(panel.Device, 
+            // setup render target texture
+            _nesRenderSurface = new Texture(panel.Device, 512, 512, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+            surf = _nesRenderSurface.GetSurfaceLevel(0);
+            rSurf = new RenderToSurface(panel.Device, 512, 512, Format.A8R8G8B8);
+            vp = new Viewport(0, 0, 512, 512, 0f, 1.0f);
+
+            //vertices = new VertexBuffer(panel.Device, 4 * TransformedColoredTexturedVertex.SizeInBytes, Usage.Dynamic, VertexFormat.None, Pool.Default);
+            //DataStream stream = vertices.Lock(0, 0, LockFlags.None);
+            //stream.WriteRange(GetFSQuad());
+            //vertices.Unlock();
+
+            effectC = Effect.FromStream(rSurf.Device, 
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.IndexedRasterize.fx"), 
                 ShaderFlags.None);
 
-            mesh = Mesh.CreateBox(panel.Device, 6, 6, 6);
-            mesh.ComputeNormals();
+            postEffect = Effect.FromStream(panel.Device,
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.Rasterize.fx"),
+                ShaderFlags.None);
 
+            mesh = Mesh.CreateBox(panel.Device, 2, 2, 2);
+            //mesh = Mesh.CreateSphere(panel.Device, 1, 32, 16);
+            mesh.ComputeNormals();
+            //ComputeTexCoords(panel.Device, ref mesh, true);
             ComputeBoxTextureCoords(panel.Device, ref mesh, true);
 
+            mesh2 = Mesh.CreateBox(rSurf.Device, 2, 2, 2);
+            mesh2.ComputeNormals();
+            ComputeBoxTextureCoords(rSurf.Device, ref mesh2, true);
 
-            _texture = new Texture(panel.Device, 256, 256, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
+            _texture = new Texture(rSurf.Device, 256, 256, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
             byte[] pal = new byte[256 * 4];
             int[] iPal = PixelWhizzler.GetPalABGR();
             Buffer.BlockCopy(iPal,0,pal,0,1024);
-            _paletteTexture = new Texture(panel.Device, 256, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
+            _paletteTexture = new Texture(rSurf.Device, 256, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
 
-            _nesVidRAMTexture = new Texture(panel.Device, 0x1000, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
+            _nesVidRAMTexture = new Texture(rSurf.Device, 0x1000, 1, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
 
             var rext = _paletteTexture.LockRectangle(0, LockFlags.Discard);
             rext.Data.WriteRange<int>(PixelWhizzler.GetPalABGR(), 0, 256);
 
             _paletteTexture.UnlockRectangle(0);
             _paletteTexture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 1));
+
+
+
 
 
             InitializeScene();
@@ -364,10 +430,26 @@ namespace SlimDXBindings.Viewer
         private void CleanupContent()
         {
             if (effectC != null) effectC.Dispose();
+            if (postEffect != null) postEffect.Dispose();
+            if (surf != null) surf.Dispose();
+            if (rSurf != null) rSurf.Dispose();
+            if (vertices != null) vertices.Dispose();
             if (mesh != null) mesh.Dispose();
             if (_texture != null) _texture.Dispose();
             if (_nesVidRAMTexture != null) _nesVidRAMTexture.Dispose();
             if (_paletteTexture != null) _paletteTexture.Dispose();
+            if (_nesRenderSurface != null) _nesRenderSurface.Dispose();
+
+        //            private Texture _nesRenderSurface;
+
+        //Effect effectC;
+        //Effect postEffect;
+
+        //VertexBuffer vertices;
+
+        //Surface surf ;
+        //RenderToSurface rSurf ;
+        //Viewport vp ;
         }
 
         protected void UnloadContent()
@@ -385,16 +467,23 @@ namespace SlimDXBindings.Viewer
             camera.FieldOfView = (float)(Math.PI / 4);
             camera.NearPlane = 0.0f;
             camera.FarPlane = 40.0f;
-            camera.Location = new Vector3(0.0f, 0.0f, 10.5f);
+            camera.Location = new Vector3(0.0f, 0.0f, 3.5f);
             camera.Target = Vector3.Zero;
 
             effectC.Technique = "TVertexShaderOnly";
             Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
             wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
+
+
             effectC.SetValue("matWorldViewProj", wvp);
             effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
             effectC.SetTexture("nesTexture", _texture);
             effectC.SetTexture("nesPalette", _paletteTexture);
+
+            postEffect.SetValue("matWorldViewProj", wvp);
+            postEffect.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
+            postEffect.SetTexture("nesTexture", _nesRenderSurface);
+
         }
 
         Light light;

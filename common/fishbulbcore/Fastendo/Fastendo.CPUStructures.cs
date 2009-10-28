@@ -9,7 +9,6 @@ namespace NES.CPU.Fastendo
     {
         private struct smallInstruction
         {
-            uint instructionByte;
 
             public static Instruction UnpackInstruction(uint instruction)
             {

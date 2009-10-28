@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 
 namespace InstiBulb.Converters
 {
+    [ValueConversion(typeof(IUnityContainer), typeof(object))]
     public class ContainerResolverConverter : IValueConverter
     {
         #region IValueConverter Members

@@ -29,11 +29,7 @@ namespace InstiBulb.Integration
 
         public IUnityContainer RegisterNesTypes(IUnityContainer container)
         {
-
-            
             // register types needed to build a NES
-
-
             // platform specific wavestreamer
             container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
             // make it default
@@ -66,9 +62,7 @@ namespace InstiBulb.Integration
 
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
 
-            //container.RegisterType<WPFNesViewer>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<SlimDXNesViewer>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());

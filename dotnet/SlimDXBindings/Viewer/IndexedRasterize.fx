@@ -31,17 +31,20 @@ struct VS_OUTPUT
 {
     float4 Pos : POSITION;
     float2 tex : TEXCOORD0;
+    float4 col : COLOR;
 };
 
 struct PS_INPUT {
 	float2 uv : TEXCOORD;
 };
 
-VS_OUTPUT VS(float4 Pos  : POSITION, float2 tex : TEXCOORD0)
+VS_OUTPUT VS(float4 Pos  : POSITION, float4 col : COLOR, float2 tex : TEXCOORD0)
 {
   VS_OUTPUT Out = (VS_OUTPUT)0;
-  Out.Pos = mul(Pos,matWorldViewProj);
+    Out.Pos = mul(Pos,matWorldViewProj);
+	// Out.Pos = Pos;
     Out.tex = tex;
+    Out.col = col;
   return Out;
 }
 
@@ -117,15 +120,5 @@ technique TVertexShaderOnly
         PixelShader = compile ps_2_0 EffectProcess();
     }
     
-	//pass P1
-    //{
-     //   // shaders
-     //   VertexShader = compile vs_1_1 VS();
-//        PixelShader = compile ps_3_0 EffectProcess2();
-        
-//        AlphaBlendEnable = True;
-//		SrcBlend = InvSrcAlpha;
-//		DestBlend = SrcAlpha;
-//    }
-	
+
 }
