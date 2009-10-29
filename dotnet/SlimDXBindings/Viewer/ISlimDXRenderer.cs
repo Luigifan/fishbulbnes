@@ -6,6 +6,7 @@ namespace SlimDXBindings.Viewer
     {
         void InitializeScene();
         void Render();
+        void UpdateTime();
         NESPixelFormats PixelFormat { get; }
     }
 }

@@ -232,7 +232,7 @@ namespace SlimDXBindings.Viewer
                 if (_startThread)
                 {
                     
-                    //CompositionTarget.Rendering += OnRendering;
+                    CompositionTarget.Rendering += OnRendering;
                     doRender = true;
                     _d3dimage.IsFrontBufferAvailableChanged += new DependencyPropertyChangedEventHandler(OnIsFrontBufferAvailableChanged);
                 }
@@ -306,11 +306,6 @@ namespace SlimDXBindings.Viewer
         }
 
         public int BackBufferHeight { get { return (int)ActualHeight; } }
-
-        public void Render()
-        {
-            if (doRender) OnRendering(this, EventArgs.Empty); 
-        }
 
         private void OnRendering(object sender, EventArgs e)
         {

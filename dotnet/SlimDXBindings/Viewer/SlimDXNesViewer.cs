@@ -78,51 +78,9 @@ namespace SlimDXNESViewer
 
         }
 
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             panel.Initialize(true);
-        }
-
-
-
-
-        private BitmapPalette SetupNESPalette()
-        {
-            List<Color> colors = new List<Color>();
-
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.bnes.pal"))
-            {
-                for (int n = 0; n < 64; ++n)
-                {
-                    byte r = (byte)stream.ReadByte();
-                    byte g = (byte)stream.ReadByte();
-                    byte b = (byte)stream.ReadByte();
-                    colors.Add(Color.FromRgb(r, g, b));
-                }
-            }
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.bnes.pal"))
-            {
-                for (int n = 0; n < 64; ++n)
-                {
-                    byte r = (byte)stream.ReadByte();
-                    byte g = (byte)stream.ReadByte();
-                    byte b = (byte)stream.ReadByte();
-                    colors.Add(Color.FromRgb(r, g, b));
-                }
-            }
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.bnes.pal"))
-            {
-                for (int n = 0; n < 64; ++n)
-                {
-                    byte r = (byte)stream.ReadByte();
-                    byte g = (byte)stream.ReadByte();
-                    byte b = (byte)stream.ReadByte();
-                    colors.Add(Color.FromRgb(r, g, b));
-                }
-            }
-            return new BitmapPalette(colors);
         }
 
         public void TearDownDisplay()
@@ -187,8 +145,9 @@ namespace SlimDXNESViewer
 
         public void UpdateNESScreen()
         {
+            currentRenderer.UpdateTime();
+            panel.InvalidateVisual();
             panel.AllowRendering = true;
-            panel.Render();
         }
 
         #region IDisposable Members

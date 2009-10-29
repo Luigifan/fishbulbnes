@@ -111,16 +111,15 @@
     <Compile Include="InlineWavStreamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimDXKeyboardControlPad.cs" />
-    <Compile Include="Viewer\VertexBasedRenderer.cs" />
     <Compile Include="Viewer\IndexedTexturedQuadRenderer.cs" />
     <Compile Include="Viewer\ISlimDXRenderer.cs" />
+    <Compile Include="Viewer\MeshHelpers.cs" />
+    <Compile Include="Viewer\NesRenderSurface.cs" />
     <Compile Include="Viewer\PropertyPanel.xaml.cs">
       <DependentUpon>PropertyPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Viewer\SlimDXControl.cs" />
     <Compile Include="Viewer\SlimDXNesViewer.cs" />
-    <Compile Include="Viewer\SlimDXRenderer.cs" />
-    <Compile Include="Viewer\TexturedQuadRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.VStudio.csproj">
@@ -139,13 +138,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Viewer\Rasterize.fx" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Viewer\IndexedRasterize.fx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Viewer\VertexRasterize.fx" />
+    <EmbeddedResource Include="Viewer\PostProcess.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
