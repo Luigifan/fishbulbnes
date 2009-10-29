@@ -24,6 +24,7 @@ namespace SlimDXBindings.Viewer
         Effect postEffect;
 
         Mesh mesh;
+        Sprite sprite;
 
         public IndexedTexturedQuadRenderer(SlimDXControl control, NESMachine nes)
         {
@@ -63,11 +64,15 @@ namespace SlimDXBindings.Viewer
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             panel.Device.BeginScene();
 
-            postEffect.Technique = "TVertexShaderOnly";
+
+            postEffect.Technique = "Wave";
             postEffect.SetValue(timerHandle, timer);
             postEffect.Begin();
             postEffect.BeginPass(0);
-            mesh.DrawSubset(0);
+            //mesh.DrawSubset(0);
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            sprite.Draw(nesSurfaceDrawer.SurfaceTexture, new Color4(System.Drawing.Color.White));
+            sprite.End();
             postEffect.EndPass();
             postEffect.End();
 
@@ -114,6 +119,10 @@ namespace SlimDXBindings.Viewer
             else
             {
                 camera.AspectRatio = panel.BackBufferWidth / panel.BackBufferHeight;
+                scaleVector = new Vector2(panel.BackBufferWidth / 256, panel.BackBufferHeight / 240);
+                if (sprite != null)
+                    sprite.Transform = SlimDX.Matrix.Transformation2D(new Vector2(0, 0), 0, scaleVector, new Vector2(0, 0), 0, new Vector2(0, 0));
+
             }
         }
 
@@ -157,6 +166,8 @@ namespace SlimDXBindings.Viewer
 
             CleanupContent();
 
+            sprite = new Sprite(panel.Device);
+
             nesSurfaceDrawer = new NesRenderSurface(nes, panel.Device);
 
             postEffect = Effect.FromStream(panel.Device,
@@ -176,7 +187,7 @@ namespace SlimDXBindings.Viewer
             if (nesSurfaceDrawer != null) nesSurfaceDrawer.Dispose();
             if (postEffect != null) postEffect.Dispose();
             if (mesh != null) mesh.Dispose();
-
+            if (sprite != null) sprite.Dispose();
 
         }
 
