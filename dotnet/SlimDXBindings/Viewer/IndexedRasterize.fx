@@ -3,10 +3,22 @@ float4x4 matWorld  : WORLD;
 
 uniform extern texture nesTexture;
 uniform extern texture nesPalette;
+uniform extern texture lastTexture;
 
 sampler textureSampler = sampler_state
 {
     Texture = <nesTexture>;
+    mipfilter=None;
+    magfilter=Point;
+    minfilter=Point;
+    MaxMipLevel=1;
+    AddressU=Clamp;
+    AddressV=Clamp;
+};
+
+sampler lastTextureSampler = sampler_state
+{
+    Texture = <lastTexture>;
     mipfilter=None;
     magfilter=Point;
     minfilter=Point;
@@ -26,6 +38,7 @@ sampler paletteSampler = sampler_state
     AddressV=Clamp;
 
 };
+
 
 struct VS_OUTPUT
 {
@@ -84,40 +97,47 @@ static const float BlurWeights[13] =
     0.002216,
 };
 
-float4 LookupPixel(float2 uv)
-{
-	float4 result= tex1D(paletteSampler, 
-			tex2D(textureSampler, uv).b);
-			
-	return result;
-
-}
 
 float blurStrength = 0.8;
 
 // Effect function
 float4 EffectProcess( PS_INPUT input ) : COLOR
 {
-    // Apply surrounding pixels
-    float4 color = LookupPixel(input.uv);
-	color.a = 1.0;
-    return color;
+    float4 color;
+    
+    if (input.uv.y >= (255.0f/256.0f) )
+    {
+		// this is where sprite ram is copied, which fits nicely into a float4
+		//    - subtracting the last from this texture should leave nice velocity vectors 
+		//		for each sprite in the a and b components
+		return tex2D(textureSampler, input.uv) - tex2D(lastTextureSampler, input.uv);
+    }
+    else
+    {
+    
+		float drawTile = tex2D(textureSampler, input.uv).r;
+
+		if (drawTile > 0)
+		{
+			color = tex1D(paletteSampler, tex2D(textureSampler, input.uv).b);
+			color.a = 1.0;
+		} else 
+		{
+			color = tex1D(paletteSampler, tex2D(textureSampler, input.uv).g);
+			color.a = 1.0;
+		}
+		return color;
+	}
+    
 }
 
-float4 EffectProcess2( PS_INPUT input ) : COLOR
-{
-    // Apply surrounding pixels
-    float4 color = LookupPixel(input.uv - (3 / 255));
-	color.a = 0.8;
-    return color;
-}
 
 technique TVertexShaderOnly
 {
     pass P0
     {
         VertexShader = compile vs_1_1 VS();
-        PixelShader = compile ps_2_0 EffectProcess();
+        PixelShader = compile ps_3_0 EffectProcess();
     }
     
 

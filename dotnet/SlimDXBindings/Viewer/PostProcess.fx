@@ -2,6 +2,7 @@ float4x4 matWorldViewProj: WORLDVIEWPROJECTION;
 float4x4 matWorld  : WORLD;
 
 uniform extern texture nesTexture;
+uniform extern texture lastTexture;
 
 float timer;
 
@@ -18,6 +19,12 @@ struct PS_INPUT {
 sampler textureSampler = sampler_state
 {
     Texture = <nesTexture>;
+    mipfilter = POINT; 
+};
+
+sampler lastTextureSampler = sampler_state
+{
+    Texture = <lastTexture>;
     mipfilter = POINT; 
 };
 
@@ -44,8 +51,17 @@ float4 WAVE(PS_INPUT input) : COLOR
 	return c;
 }
 
+float4 BLUR(PS_INPUT input) : COLOR
+{
+	float4 c=tex2D(textureSampler,input.uv);
+	float4 d=tex2D(textureSampler,input.uv);
+	float4 result = (0.5 * c) + (0.5 * d);
+	result.a = 1.0;
+	return result;
+}
+
 // Effect technique to be used
-technique TVertexShaderOnly
+technique Plain
 {
     pass P0
     {
@@ -76,6 +92,30 @@ technique Wave
         // shaders
         VertexShader = compile vs_1_1 VS();
         PixelShader = compile ps_2_0 WAVE();
+
+        // sampler states
+        MinFilter[0] = LINEAR;
+        MagFilter[0] = LINEAR;
+        MipFilter[0] = POINT;
+
+        // set up texture stage states for single texture modulated by diffuse
+        ColorOp[0]   = MODULATE;
+        ColorArg1[0] = TEXTURE;
+        ColorArg2[0] = CURRENT;
+        AlphaOp[0]   = DISABLE;
+
+        ColorOp[1]   = DISABLE;
+        AlphaOp[1]   = DISABLE;
+    }
+}
+
+technique Blur
+{
+    pass P0
+    {
+        // shaders
+        VertexShader = compile vs_1_1 VS();
+        PixelShader = compile ps_2_0 BLUR();
 
         // sampler states
         MinFilter[0] = LINEAR;

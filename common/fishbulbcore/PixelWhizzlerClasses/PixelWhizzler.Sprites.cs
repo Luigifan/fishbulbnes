@@ -199,6 +199,7 @@ namespace NES.CPU.PPUClasses
 
         public void UnpackSprites()
         {
+            Buffer.BlockCopy(spriteRAM, 0, outBuffer, 255 * 256 * 4, 256);
             for (int currSprite = 0; currSprite < unpackedSprites.Length; ++currSprite)
             {
                 if (unpackedSprites[currSprite].Changed)

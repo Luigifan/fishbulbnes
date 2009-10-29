@@ -19,7 +19,9 @@ namespace SlimDXBindings.Viewer
     {
         SlimDXControl panel;
         NESMachine nes;
-        NesRenderSurface nesSurfaceDrawer;
+        NesRenderSurface[] nesSurfaceDrawer;
+        int historyFrames = 3;
+        int currentFrame = 0;
 
         Effect postEffect;
 
@@ -43,7 +45,7 @@ namespace SlimDXBindings.Viewer
         {
 
             // RenderNESToSurface();
-            nesSurfaceDrawer.RenderNESToSurface();
+            nesSurfaceDrawer[currentFrame].RenderNESToSurface();
             
             // now render the texture created above onto the actual screen
 
@@ -58,21 +60,30 @@ namespace SlimDXBindings.Viewer
             timer += 0.01f;
         }
         EffectHandle timerHandle = new EffectHandle("timer");
+        EffectHandle surfaceToDrawHandle = new EffectHandle("nesTexture");
+        EffectHandle lastSurfaceDrawnHandle = new EffectHandle("lastTexture");
         public void RenderScene()
         {
+            postEffect.SetTexture(surfaceToDrawHandle, nesSurfaceDrawer[currentFrame].SurfaceTexture);
+            
+            if (currentFrame == 0)
+                postEffect.SetTexture(lastSurfaceDrawnHandle, nesSurfaceDrawer[historyFrames - 1].SurfaceTexture);
+            else
+                postEffect.SetTexture(lastSurfaceDrawnHandle, nesSurfaceDrawer[currentFrame - 1].SurfaceTexture);
+
+
+            if (++currentFrame >= historyFrames)
+                currentFrame = 0;
+
             panel.Device.Clear(ClearFlags.Target, new Color4(System.Drawing.Color.Pink), 0, 0);
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             panel.Device.BeginScene();
 
-
-            postEffect.Technique = "Wave";
+            postEffect.Technique = "Blur";
             postEffect.SetValue(timerHandle, timer);
             postEffect.Begin();
             postEffect.BeginPass(0);
-            //mesh.DrawSubset(0);
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Draw(nesSurfaceDrawer.SurfaceTexture, new Color4(System.Drawing.Color.White));
-            sprite.End();
+            mesh.DrawSubset(0);
             postEffect.EndPass();
             postEffect.End();
 
@@ -168,7 +179,14 @@ namespace SlimDXBindings.Viewer
 
             sprite = new Sprite(panel.Device);
 
-            nesSurfaceDrawer = new NesRenderSurface(nes, panel.Device);
+            nesSurfaceDrawer = new NesRenderSurface[historyFrames];
+            for (int i = 0; i < historyFrames; ++i)
+            {
+                nesSurfaceDrawer[i] = new NesRenderSurface(nes, panel.Device);
+                
+            }
+
+            currentFrame = 0;
 
             postEffect = Effect.FromStream(panel.Device,
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("SlimDXBindings.Viewer.PostProcess.fx"),
@@ -184,7 +202,12 @@ namespace SlimDXBindings.Viewer
 
         private void CleanupContent()
         {
-            if (nesSurfaceDrawer != null) nesSurfaceDrawer.Dispose();
+            if (nesSurfaceDrawer != null)
+            {
+                foreach (NesRenderSurface surf in nesSurfaceDrawer)
+                    surf.Dispose();
+            }
+
             if (postEffect != null) postEffect.Dispose();
             if (mesh != null) mesh.Dispose();
             if (sprite != null) sprite.Dispose();
@@ -208,11 +231,11 @@ namespace SlimDXBindings.Viewer
             camera.Location = new Vector3(0.0f, 0.0f, 3.3f);
             camera.Target = Vector3.Zero;
 
-            postEffect.Technique = "TVertexShaderOnly";
+            postEffect.Technique = "Plain";
             Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
             wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
             postEffect.SetValue("matWorldViewProj", wvp);
-            postEffect.SetTexture("nesTexture", nesSurfaceDrawer.SurfaceTexture); 
+            
 
         }
 

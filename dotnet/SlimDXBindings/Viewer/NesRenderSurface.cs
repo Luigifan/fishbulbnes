@@ -40,6 +40,7 @@ namespace SlimDXBindings.Viewer
         {
             rSurf = new RenderToSurface(device, 256, 256, Format.A8R8G8B8);
             _nesRenderSurface = new Texture(device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+            
             // setup render target texture
             surf = _nesRenderSurface.GetSurfaceLevel(0);
             vp = new Viewport(0, 0, 256, 256, 0f, 1.0f);
