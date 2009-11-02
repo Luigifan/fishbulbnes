@@ -34,6 +34,7 @@ namespace NES.CPU.Machine.Carts
         void SetPPUByte(int clock, int address, byte data);
 
         byte[] FetchPixelEffect(int vramAddress);
+        int ActualChrRomOffset(int address);
 
     }
 }

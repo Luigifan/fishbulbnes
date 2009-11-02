@@ -22,8 +22,13 @@ namespace NES.CPU.Machine.Carts
         public BaseCart()
         {
             byte[] effect = new byte[8] { 1, 1, 1, 1, 1, 1, 1, 1};
-            pixelEffects.Add(0x4D60, effect);
-            pixelEffects.Add(0x5D30, effect);
+            pixelEffects.Add(0xD50, effect);
+            pixelEffects.Add(0x0, effect);
+
+            for (int i = 21264; i < 21696; i++)
+            {
+                pixelEffects.Add(i - 16400, effect);
+            }
 
             for (int i = 0; i < 16; ++i)
             {
@@ -398,8 +403,6 @@ namespace NES.CPU.Machine.Carts
         #endregion
 
         internal int[] ppuBankStarts = new int[16];
-
-        
 
         public byte GetPPUByte(int clock, int address)
         {

@@ -18,18 +18,33 @@ namespace NES.CPU.PPUClasses
         {
             _ppu = ppu;
 
+            patternEntryLocations = new int[32][][];
+            for (int i = 0; i < 32; ++i)
+            {
+                patternEntryLocations[i] = new int[30][];
+                for (int j = 0; j < 30; ++j)
+                {
+                    patternEntryLocations[i][j] = new int[8];
+                }
+            }
+
         }
 
         // get the 8x8 int[] array representing the tile to be drawn at x, y position (of 32x30 tiles)
         // assume no scrolling
-        public int[] GetPatternTableEntry(int PatternTable, int TileIndex, int attributeByte)
+        public int[] GetPatternTableEntry(int PatternTable, int TileIndex, int attributeByte, out int[] actualAddress)
         {
             // 8x8 tile
             int[] result = new int[64];
-            
+
+            actualAddress = new int[8];
+
             for (int i = 0; i < 8; ++i)
             {
                 int patternEntry = _ppu.ChrRomHandler.GetPPUByte(0,  PatternTable + TileIndex * 16 + i);
+                
+                actualAddress[i] = _ppu.ChrRomHandler.ActualChrRomOffset(PatternTable + TileIndex * 16 + i);
+
                 int patternEntryBit2 = _ppu.ChrRomHandler.GetPPUByte(0, PatternTable + TileIndex * 16 + i + 8);
 
                 for (int bit = 0; bit < 8; ++bit)
@@ -45,6 +60,7 @@ namespace NES.CPU.PPUClasses
                 }
 
             }
+
             return result;
         }
 
@@ -254,7 +270,9 @@ namespace NES.CPU.PPUClasses
                 }
             }
         }
-
+        
+        int[][][] patternEntryLocations = new int[32][][];
+        
         public void DrawAllTiles()
         {
             if (YOffset > 256) YOffset = YOffset & 0xFF;
@@ -279,7 +297,7 @@ namespace NES.CPU.PPUClasses
                     int TileIndex = (byte)_ppu.VidRAM_GetNTByte(0x2000 + _ppu.NameTableMemoryStart + i + (j * 32));
 
                     int addToCol = GetAttributeTableEntry(_ppu.NameTableMemoryStart, i, j);
-                    DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
+                    DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out patternEntryLocations[i][j]), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
 
                 }
             }
@@ -464,7 +482,7 @@ namespace NES.CPU.PPUClasses
             {
                 for (int i = 0; i < 16; ++i)
                 {
-                    tile = GetPatternTableEntry(PatternTable, (i) + j * 16, 0);
+                    tile = GetPatternTableEntry(PatternTable, (i) + j * 16, 0, out patternEntryLocations[i][j]);
                     DrawTile(ref patterns, 128, 128, tile, i * 8, j * 8);
                 }
             }
@@ -494,7 +512,7 @@ namespace NES.CPU.PPUClasses
                     int TileIndex = (byte)_ppu.ChrRomHandler.GetPPUByte(0, address & (int)mirrorMask);
 
                     int addToCol = GetAttributeTableEntry(NameTable, i, j);
-                    int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol);
+                    int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out patternEntryLocations[i][j]);
                     DrawTile(ref result, 256, 240, tile, i * 8, j * 8);
                     //DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
                 }
@@ -525,7 +543,10 @@ namespace NES.CPU.PPUClasses
             }
         }
 
-
+        public int GetPatternEntryLocation(int x, int y)
+        {
+            return patternEntryLocations[x / 32][y / 30][y & 7];
+        }
 
     }
 }
