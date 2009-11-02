@@ -206,13 +206,13 @@ namespace NES.CPU.PPUClasses
                         // if its a nametable byte, mask it according to current mirroring
                         if ((_PPUAddress & 0xF000) == 0x2000)
                         {
-                            _vidRAM[(_PPUAddress & currentMirrorMask) | oneScreenMirrorOffset] = (byte)data;
+                            chrRomHandler.SetPPUByte(Clock,(_PPUAddress & currentMirrorMask) | oneScreenMirrorOffset,(byte)data);
                         }
                         else
                         {
                             if (vidRamIsRam)
                             {
-                                _vidRAM[_PPUAddress] = (byte)data;
+                                chrRomHandler.SetPPUByte(Clock, _PPUAddress,  (byte)data);
                             }
                         }
                     }
@@ -291,18 +291,18 @@ namespace NES.CPU.PPUClasses
                         // will also fetch nametable data from the corresponding address (which is mirrored from PPU $2F00-$2FFF). 
 
                         // note: writes do not work this way 
-                        ppuReadBuffer = _vidRAM[(_PPUAddress - 0x1000)  & currentMirrorMask | oneScreenMirrorOffset];
+                        ppuReadBuffer = chrRomHandler.GetPPUByte(Clock,(_PPUAddress - 0x1000)  & currentMirrorMask | oneScreenMirrorOffset);
                     }
                     else
                     {
                         tmp = ppuReadBuffer;
                         if (_PPUAddress >= 0x2000 & _PPUAddress <= 0x2FFF)
                         {
-                            ppuReadBuffer = _vidRAM[(_PPUAddress & (int)currentMirrorMask) | oneScreenMirrorOffset];
+                            ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, (_PPUAddress & (int)currentMirrorMask) | oneScreenMirrorOffset);
                         }
                         else
                         {
-                            ppuReadBuffer = _vidRAM[_PPUAddress & 0x3FFF];
+                            ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, _PPUAddress & 0x3FFF);
                         }
                     }
                     if ((PPUControlByte0 & 0x4) == 0x4)

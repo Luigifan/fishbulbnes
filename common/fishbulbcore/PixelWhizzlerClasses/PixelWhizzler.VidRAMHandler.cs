@@ -10,18 +10,24 @@ namespace NES.CPU.PPUClasses
     {
         INESCart chrRomHandler;
 
-        private byte[] _vidRAM = new byte[0x4000];
-
-        public byte[] VidRAM
+        public INESCart ChrRomHandler
         {
-            get { return _vidRAM; }
-            set { _vidRAM = value; }
+            get { return chrRomHandler; }
+            set { chrRomHandler = value; }
         }
 
-        public byte[] cartCopyVidRAM
-        {
-            get { return _vidRAM; }
-            set { _vidRAM = value; }
-        }
+        //private byte[] _vidRAM = new byte[0x4000];
+
+        //public byte[] VidRAM
+        //{
+        //    get { return _vidRAM; }
+        //    set { _vidRAM = value; }
+        //}
+
+        //public byte[] cartCopyVidRAM
+        //{
+        //    get { return _vidRAM; }
+        //    set { _vidRAM = value; }
+        //}
     }
 }

@@ -5,7 +5,7 @@ namespace NES.CPU.Machine.Carts
 {
     public interface INESCart : IClockedMemoryMappedIOElement
     {
-        void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData);
+        void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset);
 
         NES.CPU.PPUClasses.PixelWhizzler Whizzler { get; set; }
         CPU2A03 CPU { get; set; }
@@ -31,6 +31,9 @@ namespace NES.CPU.Machine.Carts
         int MapperID { get;  }
 
         byte GetPPUByte(int clock, int address);
+        void SetPPUByte(int clock, int address, byte data);
+
+        byte[] FetchPixelEffect(int vramAddress);
 
     }
 }

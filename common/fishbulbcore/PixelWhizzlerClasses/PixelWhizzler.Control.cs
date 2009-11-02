@@ -64,11 +64,12 @@ namespace NES.CPU.PPUClasses
 
             for (int i = 0; i < 0x4000; i += 4)
             {
-
-                writer.Enqueue((_vidRAM[i] << 24) |
-                                    (_vidRAM[i + 1] << 16) |
-                                    (_vidRAM[i + 2] << 8) |
-                                    (_vidRAM[i + 3])
+                
+                writer.Enqueue(chrRomHandler.GetPPUByte(0, i) << 24 |
+                                    (chrRomHandler.GetPPUByte(0, i + 1) << 16) |
+                                    (chrRomHandler.GetPPUByte(0, i + 2) << 8) |
+                                    (chrRomHandler.GetPPUByte(0, i + 3) << 0) 
+                                    
                         );
             }
             writer.Enqueue(_spriteAddress);
@@ -137,10 +138,10 @@ namespace NES.CPU.PPUClasses
             for (int i = 0; i < 0x4000; i += 4)
             {
                 packedByte = state.Dequeue();
-                _vidRAM[i] = (byte)(packedByte >> 24);
-                _vidRAM[i + 1] = (byte)(packedByte >> 16);
-                _vidRAM[i + 2] = (byte)(packedByte >> 8);
-                _vidRAM[i + 3] = (byte)(packedByte);
+                chrRomHandler.SetByte(0, i, (byte)(packedByte >> 24));
+                chrRomHandler.SetByte(0, i + 1, (byte)(packedByte >> 16));
+                chrRomHandler.SetByte(0, i + 2, (byte)(packedByte >> 8));
+                chrRomHandler.SetByte(0, i + 3, (byte)(packedByte ));
             }
 
             _spriteAddress= state.Dequeue();

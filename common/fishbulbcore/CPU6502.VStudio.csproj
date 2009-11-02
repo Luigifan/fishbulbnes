@@ -161,7 +161,6 @@
     <Compile Include="Machine\Carts\BaseCart.cs" />
     <Compile Include="Machine\NESMachine.Timing.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.RomHandling.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
   </ItemGroup>
   <ItemGroup>

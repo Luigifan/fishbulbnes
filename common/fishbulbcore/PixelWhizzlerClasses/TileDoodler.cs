@@ -29,8 +29,8 @@ namespace NES.CPU.PPUClasses
             
             for (int i = 0; i < 8; ++i)
             {
-                int patternEntry = _ppu.VidRAM[PatternTable + TileIndex * 16 + i];
-                int patternEntryBit2 = _ppu.VidRAM[PatternTable + TileIndex * 16 + i + 8];
+                int patternEntry = _ppu.ChrRomHandler.GetPPUByte(0,  PatternTable + TileIndex * 16 + i);
+                int patternEntryBit2 = _ppu.ChrRomHandler.GetPPUByte(0, PatternTable + TileIndex * 16 + i + 8);
 
                 for (int bit = 0; bit < 8; ++bit)
                 {
@@ -491,7 +491,7 @@ namespace NES.CPU.PPUClasses
                 {
                     //int TileIndex = (byte)_ppu.NameTable[_ppu.Mirror[nt2], i + (j * 32)];
                     int address = 0x2000 + NameTable + i + (j * 32);
-                    int TileIndex = (byte)_ppu.VidRAM[address & (int)mirrorMask];
+                    int TileIndex = (byte)_ppu.ChrRomHandler.GetPPUByte(0, address & (int)mirrorMask);
 
                     int addToCol = GetAttributeTableEntry(NameTable, i, j);
                     int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol);

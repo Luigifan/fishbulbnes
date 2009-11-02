@@ -152,11 +152,6 @@
     <EmbeddedResource Include="Viewer\PostProcess.fx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Viewer10\TextureImage.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Viewer10\RenderNesOutput.fx">
     </EmbeddedResource>
   </ItemGroup>

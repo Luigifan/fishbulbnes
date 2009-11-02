@@ -77,7 +77,12 @@ namespace NES.CPU.Machine.Carts
             {
                 if (ChrRomCount > 0)
                 {
-                    Array.Copy(chrRom, src * 0x400, whizzler.cartCopyVidRAM, dest * 0x400, numberOf1kBanks * 0x400);
+                    for (int i = 0; i < numberOf1kBanks; ++i)
+                    {
+                        ppuBankStarts[dest + i] = (src + i) * 0x400;
+                    }
+
+                    //Array.Copy(chrRom, src * 0x400, whizzler.cartCopyVidRAM, dest * 0x400, numberOf1kBanks * 0x400);
                 }
             }
 

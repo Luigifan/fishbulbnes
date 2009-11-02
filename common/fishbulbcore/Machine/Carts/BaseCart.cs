@@ -17,8 +17,14 @@ namespace NES.CPU.Machine.Carts
     public abstract class BaseCart : INESCart
     {
 
+        private Dictionary<int, byte[]> pixelEffects = new Dictionary<int, byte[]>();
+
         public BaseCart()
         {
+            byte[] effect = new byte[8] { 1, 1, 1, 1, 1, 1, 1, 1};
+            pixelEffects.Add(0x4D60, effect);
+            pixelEffects.Add(0x5D30, effect);
+
             for (int i = 0; i < 16; ++i)
             {
                 ppuBankStarts[i] = i * 0x400;
@@ -66,8 +72,12 @@ namespace NES.CPU.Machine.Carts
             set { _ROMHashfunction = value; }
         }
 
-        public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData)
+        int chrRomOffset = 0;
+
+        public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset)
         {
+
+            this.chrRomOffset = chrRomOffset;
             /*
              .NES file format
             ---------------------------------------------------------------------------
@@ -99,6 +109,12 @@ namespace NES.CPU.Machine.Carts
 
             prgRomCount = iNesHeader[4];
             chrRomCount = iNesHeader[5];
+
+            if (chrRomCount == 0)
+            {
+                // chrRom is going to be RAM
+                chrRom = new byte[0x4000];
+            }
 
             romControlBytes[0] = iNesHeader[6];
             romControlBytes[1] = iNesHeader[7];
@@ -383,11 +399,42 @@ namespace NES.CPU.Machine.Carts
 
         internal int[] ppuBankStarts = new int[16];
 
+        
+
         public byte GetPPUByte(int clock, int address)
         {
             int bank = address / 0x400;
-            int newAddress = ppuBankStarts[bank] + address & 0x3FF;
+            int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
             return chrRom[newAddress];
+        }
+
+        // returns the absolute location of this address from the base of chrRom
+        public int ActualChrRomOffset(int address)
+        {
+            int bank = address / 0x400;
+            int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            return newAddress;
+        }
+
+        public void SetPPUByte(int clock, int address, byte data)
+        {
+            int bank = address / 0x400;
+            int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            chrRom[newAddress] = data;
+        }
+
+        byte[] nullEffect = new byte[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        public byte[] FetchPixelEffect(int vramAddress)
+        {
+            int bank = vramAddress / 0x400;
+            int newAddress = ppuBankStarts[bank] + (vramAddress & 0x3FF);
+
+            if (pixelEffects.ContainsKey(newAddress))
+                return pixelEffects[newAddress];
+            else
+                return nullEffect;
+
         }
     }
 }

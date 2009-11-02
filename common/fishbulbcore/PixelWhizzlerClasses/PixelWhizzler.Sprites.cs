@@ -152,8 +152,8 @@ namespace NES.CPU.PPUClasses
                 y += 8;
             }
 
-            patternEntry = _vidRAM[patternTableIndex + tileIndex * 16 + y];
-            patternEntryBit2 = _vidRAM[patternTableIndex + tileIndex * 16 + y + 8];
+            patternEntry = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y);
+            patternEntryBit2 = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y + 8);
 
             return (byte)
                 (sprite.FlipX ?

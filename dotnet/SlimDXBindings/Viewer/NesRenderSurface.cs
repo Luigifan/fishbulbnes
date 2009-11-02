@@ -108,7 +108,7 @@ namespace SlimDXBindings.Viewer
 
             effectC.Begin();
             effectC.BeginPass(0);
-            
+
             //mesh.DrawSubset(0);
 
             quad.Draw();

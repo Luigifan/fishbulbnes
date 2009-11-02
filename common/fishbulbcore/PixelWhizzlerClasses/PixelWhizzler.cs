@@ -88,12 +88,12 @@ namespace NES.CPU.PPUClasses
             if (address >= 0x2000 && address < 0x3000)
             {
 
-                result = _vidRAM[(address & (int)currentMirrorMask) | oneScreenMirrorOffset];
+                result = chrRomHandler.GetPPUByte(0,(address & (int)currentMirrorMask) | oneScreenMirrorOffset);
 
             }
-            else 
+            else
             {
-                result = _vidRAM[address];
+                result = chrRomHandler.GetPPUByte(0, address);
             }
             return result;
         }

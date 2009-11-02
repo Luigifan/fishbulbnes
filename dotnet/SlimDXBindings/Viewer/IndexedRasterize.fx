@@ -38,13 +38,12 @@ struct PS_INPUT {
 	float2 uv : TEXCOORD;
 };
 
-VS_OUTPUT VS(float4 Pos  : POSITION, float4 col : COLOR, float2 tex : TEXCOORD0)
+VS_OUTPUT VS(float4 Pos  : POSITION, float2 tex : TEXCOORD0)
 {
   VS_OUTPUT Out = (VS_OUTPUT)0;
     Out.Pos = mul(Pos,matWorldViewProj);
 	// Out.Pos = Pos;
     Out.tex = tex;
-    Out.col = col;
   return Out;
 }
 
@@ -93,7 +92,7 @@ technique DrawTilesTechnique
 {
     pass P0
     {
-        VertexShader = compile vs_1_1 VS();
+        VertexShader = compile vs_3_0 VS();
         PixelShader = compile ps_2_0 DrawTiles();
     }
     

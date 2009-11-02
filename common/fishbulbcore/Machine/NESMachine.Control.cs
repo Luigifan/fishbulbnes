@@ -95,6 +95,7 @@ namespace NES.CPU.nitenedo
                     _cart.SRAM = SRAMReader(_cart.CheckSum);
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _ppu.ChrRomHandler = _cart;
                 PowerOn();
             }
             else

@@ -85,8 +85,10 @@ namespace NES.CPU.Machine.ROMLoader
             byte[] theRom = new byte[prgRomCount * 0x4000];
             byte[] chrRom = new byte[chrRomCount * 0x4000];
 
+            int chrOffset = 0;
 
             bytesRead = zipStream.Read(theRom, 0, theRom.Length);
+            chrOffset = (int)zipStream.Position;
             bytesRead = zipStream.Read(chrRom, 0, chrRom.Length);
 
             switch (mapperId)
@@ -111,7 +113,7 @@ namespace NES.CPU.Machine.ROMLoader
             {
                 _cart.Whizzler = ppu;
                 _cart.ROMHashFunction = Hashers.HashFunction;
-                _cart.LoadiNESCart(iNesHeader, prgRomCount, chrRomCount, theRom, chrRom);
+                _cart.LoadiNESCart(iNesHeader, prgRomCount, chrRomCount, theRom, chrRom, chrOffset);
             }
 
             return _cart;
@@ -130,7 +132,7 @@ namespace NES.CPU.Machine.ROMLoader
             bytesRead = zipStream.Read(theRom, 0, theRom.Length);
 
             _cart = new NSFCart();
-            _cart.LoadiNESCart(iNesHeader, 0, 0, theRom, null);
+            _cart.LoadiNESCart(iNesHeader, 0, 0, theRom, null, 0);
             
             if (_cart != null)
             {

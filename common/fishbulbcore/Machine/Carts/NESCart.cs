@@ -53,15 +53,20 @@ namespace NES.CPU
         private int[] prevBSSrc = new int[8];
 
         // copy from dest to dest + count
+
+        // note, this function originally worked with 8k banks
         private void CopyBanks(int clock, int dest, int src, int numberOf8kBanks)
         {
             whizzler.DrawTo(clock);
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
-            //TODO: get whizzler reading ram from INesCart.GetPPUByte then be calling this
-            //ppuBankStarts[dest] = src * 0x2000;
-            //ppuBankStarts[dest + 1] = src * 0x2000 + 0x1000;
 
-            Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
+            int oneKdest = dest / 8;
+            //TODO: get whizzler reading ram from INesCart.GetPPUByte then be calling this
+            //  setup ppuBankStarts in 0x400 block chunks 
+            for (int i = 0; i < (numberOf8kBanks * 8); ++i)
+                ppuBankStarts[oneKdest + i] = (src + i) * 0x400;
+
+            // Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
         }
 
         #region IMemoryMappable Members

@@ -19,7 +19,7 @@ namespace NES.CPU.Machine.Carts
         string songname, artist, copyright;
         #region INESCart Members
 
-        public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData)
+        public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset)
         {
 
             banks = new byte[8][];
@@ -239,6 +239,26 @@ namespace NES.CPU.Machine.Carts
 
 
         public byte GetPPUByte(int clock, int address)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region INESCart Members
+
+
+        public byte[] FetchPixelEffect(int vramAddress)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region INESCart Members
+
+
+        public void SetPPUByte(int clock, int address, byte data)
         {
             throw new NotImplementedException();
         }

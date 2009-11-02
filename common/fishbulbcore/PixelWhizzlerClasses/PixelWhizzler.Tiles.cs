@@ -14,6 +14,7 @@ namespace NES.CPU.PPUClasses
         int patternEntryByte2=0;
         int currentAttributeByte;
 
+        byte[] currentPixelEffect = new byte[8];
 
         int xNTXor = 0;
         int yNTXor = 0;
@@ -49,14 +50,22 @@ namespace NES.CPU.PPUClasses
             int tileRow = (yPosition >> 3) % 30 << 5;
 
             int tileNametablePosition = 0x2000 + ppuNameTableMemoryStart + xTilePosition + tileRow;
-            tileNametablePosition &= currentMirrorMask; tileNametablePosition |= oneScreenMirrorOffset;
-            int TileIndex = _vidRAM[tileNametablePosition];
+            
+            tileNametablePosition &= currentMirrorMask; 
+            tileNametablePosition |= oneScreenMirrorOffset;
+
+            int TileIndex = chrRomHandler.GetPPUByte(0,tileNametablePosition);
 
             int patternTableYOffset = yPosition & 7;
 
             int patternID = _backgroundPatternTableIndex + (TileIndex * 16) + patternTableYOffset;
-            patternEntry = _vidRAM[patternID];
-            patternEntryByte2 = _vidRAM[patternID + 8];
+            //patternEntry = _vidRAM[patternID];
+            //patternEntryByte2 = _vidRAM[patternID + 8];
+            patternEntry = chrRomHandler.GetPPUByte(0, patternID);
+            patternEntryByte2 = chrRomHandler.GetPPUByte(0, patternID + 8);
+
+            currentPixelEffect = chrRomHandler.FetchPixelEffect(patternID);
+
             currentAttributeByte = GetAttributeTableEntry(ppuNameTableMemoryStart, xTilePosition, yPosition >> 3);
         }
 
@@ -101,14 +110,14 @@ namespace NES.CPU.PPUClasses
             tileNametablePosition &= currentMirrorMask;
             tileNametablePosition |= oneScreenMirrorOffset;
 
-            int TileIndex = _vidRAM[tileNametablePosition];
+            int TileIndex = chrRomHandler.GetPPUByte(0, tileNametablePosition);
 
 
             int patternTableYOffset = yPosition & 7;
 
 
-            int patternEntry = _vidRAM[_backgroundPatternTableIndex + (TileIndex * 16) + patternTableYOffset];
-            int patternEntryByte2 = _vidRAM[_backgroundPatternTableIndex + (TileIndex * 16) + 8 + patternTableYOffset];
+            int patternEntry = chrRomHandler.GetPPUByte(0,_backgroundPatternTableIndex + (TileIndex * 16) + patternTableYOffset);
+            int patternEntryByte2 = chrRomHandler.GetPPUByte(0,_backgroundPatternTableIndex + (TileIndex * 16) + 8 + patternTableYOffset);
 
 
             // i want the patternTableEntryIndex'th bit of patternEntry in the 1st bit of pixel
@@ -125,11 +134,11 @@ namespace NES.CPU.PPUClasses
 
         private int GetAttributeTableEntry(int ppuNameTableMemoryStart, int i, int j)
         {
-            int LookUp = _vidRAM[
+            int LookUp = chrRomHandler.GetPPUByte(0,
                 (
                 (0x2000 + ppuNameTableMemoryStart + 0x3C0 + (i / 4) + ((j / 4) * 0x8))
                     & currentMirrorMask) | oneScreenMirrorOffset
-                ]; 
+                ); 
 
             switch ((i & 2) | (j & 2) * 2)
             {
@@ -143,6 +152,12 @@ namespace NES.CPU.PPUClasses
                     return (LookUp >> 4) & 12;
             }
             return 0;
+        }
+
+        private int GetExtendedPixelInfo(int ppuNameTableMemoryStart, int i, int j)
+        {
+            return 0;
+
         }
 
     }

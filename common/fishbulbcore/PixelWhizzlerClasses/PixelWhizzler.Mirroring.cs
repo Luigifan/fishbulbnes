@@ -79,20 +79,23 @@ namespace NES.CPU.PPUClasses
                 case 1:
                     oneScreenMirrorOffset = 0;
                     currentMirrorMask = (int)MirrorMasks.VerticalMask;
-                    if (_mirroring == 2)
-                    {
-                        // copy bank from 0x800 to 0x400
-                        Buffer.BlockCopy(_vidRAM, 0x2800, _vidRAM, 0x2400, 0x400);
-                    }
+                    
+                    // TODO: fix in cart
+                    //if (_mirroring == 2)
+                    //{
+                    //    // copy bank from 0x800 to 0x400
+                    //    Buffer.BlockCopy(_vidRAM, 0x2800, _vidRAM, 0x2400, 0x400);
+                    //}
                     break;
                 case 2:
                     oneScreenMirrorOffset = 0;
                     currentMirrorMask = (int)MirrorMasks.HorizontalMask;
-                    if (_mirroring == 1)
-                    {
-                        // copy bank from 0x800 to 0x400
-                        Buffer.BlockCopy(_vidRAM, 0x2400, _vidRAM, 0x2800, 0x400);
-                    }
+                    // todo: fix in cart
+                    //if (_mirroring == 1)
+                    //{
+                    //    // copy bank from 0x800 to 0x400
+                    //    Buffer.BlockCopy(_vidRAM, 0x2400, _vidRAM, 0x2800, 0x400);
+                    //}
                     break;
                 case 3:
                     oneScreenMirrorOffset = 0;

@@ -164,6 +164,15 @@ namespace NES.CPU.PPUClasses
             get { return outBuffer; }
         }
 
+        private int[] pixelEffectBuffer = new int[256 * 256];
+
+        public int[] PixelEffectBuffer
+        {
+            get { return pixelEffectBuffer; }
+            set { pixelEffectBuffer = value; }
+        }
+
+
         public void FillBuffer()
         {
 
@@ -221,6 +230,7 @@ namespace NES.CPU.PPUClasses
             set { fillRGB = value; }
         }
 
+        int tileEffectPixel = 0;
 
         private void DrawPixel()
         {
@@ -235,6 +245,9 @@ namespace NES.CPU.PPUClasses
             }
 
             outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
+
+            pixelEffectBuffer[vbufLocation] = tileEffectPixel;
+
             //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 //? _palette[spritePixel] : _palette[tilePixel];
         }
