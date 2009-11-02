@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SlimDX.Direct3D9;
 using System.Runtime.InteropServices;
+using SlimDX;
 
 namespace SlimDXBindings.Viewer.Filters
 {
@@ -22,17 +23,32 @@ namespace SlimDXBindings.Viewer.Filters
             this.v1 = v1;
             this.v2 = v2;
 
-            verts[0].Position.X = v2.X; //-1
-            verts[0].Position.Y = v1.Y; //1
+            //VertexBufferDescription description = new VertexBufferDescription();
+            //description.FVF = (VertexFormat.PositionW | VertexFormat.Texture0);
+            //description.Pool = Pool.Default;
+            //description.SizeInBytes = Marshal.SizeOf(typeof(VertexPositionTexture)) * 4;
+            //description.Type = ResourceType.VertexBuffer;
+            //description.Usage = Usage.Dynamic;
 
-            verts[1].Position.X = v1.X; //1
-            verts[1].Position.Y = v1.Y; //1
+            //VertexBuffer buffer = new VertexBuffer(device, Marshal.SizeOf(typeof(VertexPositionTexture)) * 4,
+            //    Usage.Dynamic, (VertexFormat.PositionW | VertexFormat.Texture0), Pool.Default);
 
-            verts[2].Position.X = v1.X; //1
-            verts[2].Position.Y = v2.Y; //-1
+            //DataStream stream = buffer.Lock(0, Marshal.SizeOf(typeof(VertexPositionTexture)) * 4, LockFlags.Discard);
+            //stream.WriteRange<VertexPositionTexture>(BasicQuad);
+            //stream.Position = 0;
+            //buffer.Unlock();
+            
+            //verts[0].Position.X = v2.X; //-1
+            //verts[0].Position.Y = v1.Y; //1
 
-            verts[3].Position.X = v2.X; //-1
-            verts[3].Position.Y = v2.Y; //-1
+            //verts[1].Position.X = v1.X; //1
+            //verts[1].Position.Y = v1.Y; //1
+
+            //verts[2].Position.X = v1.X; //1
+            //verts[2].Position.Y = v2.Y; //-1
+
+            //verts[3].Position.X = v2.X; //-1
+            //verts[3].Position.Y = v2.Y; //-1
 
         }
 
@@ -56,33 +72,49 @@ namespace SlimDXBindings.Viewer.Filters
                 VertexElement.VertexDeclarationEnd
             };
 
+
+            //        vertexPositions.Add(new Vector4(-0.5f, -0.5f, 0.5f, 1.0f));
+            //vertexPositions.Add(new Vector4(-0.5f, 0.5f, 0.5f, 1.0f));
+            //vertexPositions.Add(new Vector4(0.5f, -0.5f, 0.5f, 1.0f));
+            //vertexPositions.Add(new Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+            
+            //textureCoords.Add(new Vector2(0.0f, 1.0f));
+            //textureCoords.Add(new Vector2(0.0f, 0.0f));
+            //textureCoords.Add(new Vector2(1.0f, 1.0f));
+            //textureCoords.Add(new Vector2(1.0f, 0.0f));
+
         static VertexPositionTexture[] BasicQuad = new VertexPositionTexture[]
             {
                 new VertexPositionTexture(
-                    new SlimDX.Vector4(0,0,1,0),
-                    new SlimDX.Vector2(1,1)),
+                    new Vector4(-0.5f, -0.5f, 0.5f, 1.0f),
+                    new Vector2(0.0f, 1.0f)),
                 new VertexPositionTexture(
-                    new SlimDX.Vector4(0,0,1,0),
-                    new SlimDX.Vector2(0,1)),
+                    new Vector4(-0.5f, 0.5f, 0.5f, 1.0f),
+                    new Vector2(0.0f, 0.0f)),
                 new VertexPositionTexture(
-                    new SlimDX.Vector4(0,0,1,0),
-                    new SlimDX.Vector2(0,0)),
+                    new Vector4(0.5f, -0.5f, 0.5f, 1.0f),
+                    new Vector2(1.0f, 1.0f)),
                 new VertexPositionTexture(
-                    new SlimDX.Vector4(0,0,1,0),
-                    new SlimDX.Vector2(1,0))
+                    new Vector4(0.5f, 0.5f, 0.5f, 1.0f),
+                    new Vector2(1.0f, 0.0f))
             };
 
         static short[] ib = new short[] { 0, 1, 2, 2, 3, 0 };
 
         public void Draw()
         {
-            device.VertexFormat = (VertexFormat.PositionW | VertexFormat.Texture0 );
+            device.VertexFormat = (VertexFormat.PositionW | VertexFormat.Texture1 );
             device.VertexDeclaration = vd;
 
             device.DrawIndexedUserPrimitives<short, VertexPositionTexture>
-                (PrimitiveType.TriangleList, 0, 4, 2, ib, Format.Index16, verts, Marshal.SizeOf(typeof(VertexPositionTexture)));
+                (PrimitiveType.TriangleStrip, 0, 4, 2, ib, Format.Index16, verts, Marshal.SizeOf(typeof(VertexPositionTexture)));
 
         }
+
+        VertexBuffer _vb;
+        int _totalNumberOfVertices;
+
+
 
         #region IDisposable Members
 

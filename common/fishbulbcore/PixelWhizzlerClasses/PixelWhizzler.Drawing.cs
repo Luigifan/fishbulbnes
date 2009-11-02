@@ -234,7 +234,7 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 0 : 1) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
+            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
             //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 //? _palette[spritePixel] : _palette[tilePixel];
         }
@@ -260,7 +260,7 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 0 : 1) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
+            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
 
             //outBuffer[vbufLocation] =
             //    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))

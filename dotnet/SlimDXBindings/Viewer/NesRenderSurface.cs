@@ -8,12 +8,14 @@ using System.Drawing;
 using NES.CPU.nitenedo;
 using System.Reflection;
 using NES.CPU.PPUClasses;
+using SlimDXBindings.Viewer.Filters;
 
 namespace SlimDXBindings.Viewer
 {
     public class NesRenderSurface : IDisposable
     {
 
+        QuadRenderer quad;
         NESMachine nes;
         Surface surf;
         RenderToSurface rSurf;
@@ -24,14 +26,16 @@ namespace SlimDXBindings.Viewer
         private Texture _texture;
         private Texture _paletteTexture;
         Texture _nesRenderSurface;
+        EffectHandle technique;
 
         public Texture SurfaceTexture
         {
             get { return _nesRenderSurface; }
         }
 
-        public NesRenderSurface(NESMachine nes, Device device)
+        public NesRenderSurface(NESMachine nes, Device device, string Technique)
         {
+            this.technique = new EffectHandle(Technique);
             this.nes = nes;
             LoadContent(device);
         }
@@ -51,29 +55,31 @@ namespace SlimDXBindings.Viewer
 
             //_sprite = new Sprite(rSurf.Device);
 
-            mesh = Mesh.CreateBox(rSurf.Device, 2, 2, 2);
+            mesh = Mesh.CreateBox(rSurf.Device, 1, 1, 0.0f);
             mesh.ComputeNormals();
             MeshHelpers.ComputeBoxTextureCoords(rSurf.Device, ref mesh, true);
+
+            quad = new QuadRenderer(rSurf.Device, new Vector2(1), new Vector2(-1));
 
             _texture = new Texture(rSurf.Device, 256, 256, 1, Usage.Dynamic, Format.A8R8G8B8, Pool.Default);
 
             CreatePaletteTexture();
 
-            effectC.Technique = "TVertexShaderOnly";
+            effectC.Technique = technique;
 
             SampleFramework.Camera camera = new SampleFramework.Camera();
             camera.FieldOfView = (float)(Math.PI / 4);
             camera.NearPlane = 0.0f;
             camera.FarPlane = 40.0f;
-            camera.Location = new Vector3(0.0f, 0.0f, 3.41f);
+            camera.Location = new Vector3(0.0f, 0.0f, 1.0f);
             camera.Target = Vector3.Zero;
             camera.AspectRatio = 256 / 256;
             
-            Matrix wvp = Matrix.Multiply(Matrix.RotationZ((float)Math.PI), camera.ViewMatrix);
+            Matrix wvp = Matrix.Multiply(Matrix.RotationZ(0.0f), camera.ViewMatrix);
             wvp = Matrix.Multiply(wvp, camera.ProjectionMatrix);
 
             effectC.SetValue("matWorldViewProj", wvp);
-            effectC.SetValue("matWorld", Matrix.RotationZ((float)Math.PI));
+            effectC.SetValue("matWorld", Matrix.RotationZ(0.0f));
             effectC.SetTexture("nesTexture", _texture);
             effectC.SetTexture("nesPalette", _paletteTexture);
         }
@@ -103,7 +109,9 @@ namespace SlimDXBindings.Viewer
             effectC.Begin();
             effectC.BeginPass(0);
             
-            mesh.DrawSubset(0);
+            //mesh.DrawSubset(0);
+
+            quad.Draw();
 
             effectC.EndPass();
             effectC.End();

@@ -2,6 +2,7 @@ float4x4 matWorldViewProj: WORLDVIEWPROJECTION;
 float4x4 matWorld  : WORLD;
 
 uniform extern texture nesTexture;
+uniform extern texture tilesTexture;
 uniform extern texture lastTexture;
 
 float timer;
@@ -20,12 +21,23 @@ sampler textureSampler = sampler_state
 {
     Texture = <nesTexture>;
     mipfilter = POINT; 
+    minfilter = POINT;
+    magfilter = POINT;
 };
+
+sampler tilesTextureSampler = sampler_state
+{
+    Texture = <tilesTexture>;
+    mipfilter = LINEAR; 
+    minfilter = LINEAR;
+    magfilter = LINEAR;
+};
+
 
 sampler lastTextureSampler = sampler_state
 {
     Texture = <lastTexture>;
-    mipfilter = POINT; 
+    mipfilter = LINEAR; 
 };
 
 VS_OUTPUT VS(float4 Pos  : POSITION, float2 tex : TEXCOORD0)
@@ -39,7 +51,11 @@ VS_OUTPUT VS(float4 Pos  : POSITION, float2 tex : TEXCOORD0)
 
 float4 PS(PS_INPUT input ) : COLOR
 {
-	return tex2D(textureSampler, input.uv);
+	float4 color = tex2D(tilesTextureSampler, input.uv);
+	float4 sprite = tex2D(textureSampler, input.uv);
+	float4 result = (sprite * sprite.a) + (color * color.a);
+	result.a = 1.0;
+	return result;
 }
 
 float4 WAVE(PS_INPUT input) : COLOR
@@ -54,8 +70,14 @@ float4 WAVE(PS_INPUT input) : COLOR
 float4 BLUR(PS_INPUT input) : COLOR
 {
 	float4 c=tex2D(textureSampler,input.uv);
-	float4 d=tex2D(textureSampler,input.uv);
-	float4 result = (0.5 * c) + (0.5 * d);
+	float4 d=tex2D(lastTextureSampler,input.uv);
+	
+	float4 dlt = c - d;
+	dlt = dlt * -0.5;
+	dlt.r = dlt.r * 2.0;
+	
+	float4 result = c + (0.4 * dlt);
+	
 	result.a = 1.0;
 	return result;
 }

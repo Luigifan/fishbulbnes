@@ -20,7 +20,8 @@ namespace SlimDXBindings.Viewer
         SlimDXControl panel;
         NESMachine nes;
         NesRenderSurface[] nesSurfaceDrawer;
-        int historyFrames = 3;
+        NesRenderSurface[] nesTileDrawer;
+        int historyFrames = 2;
         int currentFrame = 0;
 
         Effect postEffect;
@@ -46,7 +47,7 @@ namespace SlimDXBindings.Viewer
 
             // RenderNESToSurface();
             nesSurfaceDrawer[currentFrame].RenderNESToSurface();
-            
+            nesTileDrawer[currentFrame].RenderNESToSurface();
             // now render the texture created above onto the actual screen
 
             RenderScene();
@@ -61,10 +62,12 @@ namespace SlimDXBindings.Viewer
         }
         EffectHandle timerHandle = new EffectHandle("timer");
         EffectHandle surfaceToDrawHandle = new EffectHandle("nesTexture");
+        EffectHandle tilesToDrawHandle = new EffectHandle("tilesTexture");
         EffectHandle lastSurfaceDrawnHandle = new EffectHandle("lastTexture");
         public void RenderScene()
         {
             postEffect.SetTexture(surfaceToDrawHandle, nesSurfaceDrawer[currentFrame].SurfaceTexture);
+            postEffect.SetTexture(tilesToDrawHandle, nesTileDrawer[currentFrame].SurfaceTexture);
             
             if (currentFrame == 0)
                 postEffect.SetTexture(lastSurfaceDrawnHandle, nesSurfaceDrawer[historyFrames - 1].SurfaceTexture);
@@ -79,7 +82,6 @@ namespace SlimDXBindings.Viewer
             panel.Device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             panel.Device.BeginScene();
 
-            postEffect.Technique = "Blur";
             postEffect.SetValue(timerHandle, timer);
             postEffect.Begin();
             postEffect.BeginPass(0);
@@ -182,8 +184,15 @@ namespace SlimDXBindings.Viewer
             nesSurfaceDrawer = new NesRenderSurface[historyFrames];
             for (int i = 0; i < historyFrames; ++i)
             {
-                nesSurfaceDrawer[i] = new NesRenderSurface(nes, panel.Device);
+                nesSurfaceDrawer[i] = new NesRenderSurface(nes, panel.Device, "DrawSpritesTechnique");
                 
+            }
+
+            nesTileDrawer = new NesRenderSurface[historyFrames];
+            for (int i = 0; i < historyFrames; ++i)
+            {
+                nesTileDrawer[i] = new NesRenderSurface(nes, panel.Device, "DrawTilesTechnique");
+
             }
 
             currentFrame = 0;

@@ -20,6 +20,7 @@ using WpfNESViewer;
 using InstiBulb.Sound;
 using InstiBulb.Views;
 using fishbulbcommonui.SaveStates;
+using SlimDXBindings.Viewer10;
 
 namespace InstiBulb.Integration
 {
@@ -63,7 +64,8 @@ namespace InstiBulb.Integration
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
 
             //container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IDisplayContext, DirectX10NesViewer>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
