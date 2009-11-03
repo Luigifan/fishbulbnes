@@ -227,5 +227,12 @@ namespace InstiBulb.WinViewModels
             private set;
         }
 
+        public string WhichTileAddress(int table, int x, int y)
+        {
+            if (DebugTarget == null) return "Unknown";
+
+            return string.Format("Address: {0}", DebugTarget.Tiler.GetPatternEntryLocation(table, x, y));
+        }
+
     }
 }

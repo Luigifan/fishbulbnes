@@ -264,5 +264,15 @@ namespace NES.CPU.Machine.Carts
         }
 
         #endregion
+
+        #region INESCart Members
+
+
+        public int ActualChrRomOffset(int address)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

@@ -219,6 +219,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TileEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WpfNesViewer\Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -300,6 +304,9 @@
     </Compile>
     <Compile Include="Views\SaveStateView.xaml.cs">
       <DependentUpon>SaveStateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TileEditor.xaml.cs">
+      <DependentUpon>TileEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinViewModels\DisplayNameTablesCommand.cs" />
     <Compile Include="WinViewModels\DisplayTilesCommand.cs" />

@@ -96,9 +96,10 @@ namespace InstiBulb.ThreeDee
             double radius = GetSegmentLength(4, 360/4) * 0.3;
             icons.Add(MakeIcon<MachineStatus>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Machine Status", radius));
             icons.Add(MakeIcon<NameTableViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Name Tables", radius));
-            icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
+            //icons.Add(MakeIcon<PatternViewerControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Pattern Tables", radius));
             icons.Add(MakeIcon<InstructionRolloutControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent,"Future Instructions", radius));
             icons.Add(MakeIcon<InstructionHistoryControl>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Past Instructions", radius));
+            icons.Add(MakeIcon<TileEditor>(TryFindResource("nes") as Model3DGroup, icon_IconPressedEvent, "Tile Editor", radius));
 
             debugSpinner = new InteractiveCanvasSpinnerFactory(debugContainer, icons, 4, 90);
 

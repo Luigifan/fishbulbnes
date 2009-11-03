@@ -18,13 +18,28 @@ namespace NES.CPU.PPUClasses
         {
             _ppu = ppu;
 
-            patternEntryLocations = new int[32][][];
+            currentPatternTableEntries = new int[2][][][];
+            for (int pt = 0; pt < 2; pt++)
+            {
+                currentPatternTableEntries[pt] = new int[32][][];
+                for (int x = 0;x < 32; ++x)
+                {
+                    currentPatternTableEntries[pt][x] = new int[30][];
+                    for (int y = 0; y < 30; ++y)
+                    {
+                        currentPatternTableEntries[pt][x][y] = new int[8];
+                    }
+
+                }
+            }
+
+            currentNameTableEntries = new int[32][][];
             for (int i = 0; i < 32; ++i)
             {
-                patternEntryLocations[i] = new int[30][];
+                currentNameTableEntries[i] = new int[30][];
                 for (int j = 0; j < 30; ++j)
                 {
-                    patternEntryLocations[i][j] = new int[8];
+                    currentNameTableEntries[i][j] = new int[8];
                 }
             }
 
@@ -271,7 +286,7 @@ namespace NES.CPU.PPUClasses
             }
         }
         
-        int[][][] patternEntryLocations = new int[32][][];
+        int[][][] currentNameTableEntries = new int[32][][];
         
         public void DrawAllTiles()
         {
@@ -297,7 +312,7 @@ namespace NES.CPU.PPUClasses
                     int TileIndex = (byte)_ppu.VidRAM_GetNTByte(0x2000 + _ppu.NameTableMemoryStart + i + (j * 32));
 
                     int addToCol = GetAttributeTableEntry(_ppu.NameTableMemoryStart, i, j);
-                    DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out patternEntryLocations[i][j]), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
+                    DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out currentNameTableEntries[i][j]), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
 
                 }
             }
@@ -468,6 +483,9 @@ namespace NES.CPU.PPUClasses
             }
         }
 
+
+
+        int[][][][] currentPatternTableEntries = new int[2][][][];
         /// <summary>
         /// returns a 128x128 buffer for the tiles
         /// </summary>
@@ -475,6 +493,17 @@ namespace NES.CPU.PPUClasses
         /// <returns></returns>
         public int[] DoodlePatternTable(int PatternTable)
         {
+            int patTable = 0;
+            switch (PatternTable)
+            {
+                case 0x1000:
+                    patTable = 1;
+                    break;
+                case 0x0:
+                    patTable = 0;
+                    break;
+            }
+
             // return a 16x16 x 64 per tile pattern table for display
             int[] patterns = new int[0x4000];
             int[] tile;
@@ -482,7 +511,7 @@ namespace NES.CPU.PPUClasses
             {
                 for (int i = 0; i < 16; ++i)
                 {
-                    tile = GetPatternTableEntry(PatternTable, (i) + j * 16, 0, out patternEntryLocations[i][j]);
+                    tile = GetPatternTableEntry(PatternTable, (i) + j * 16, 0, out currentPatternTableEntries[patTable][i][j]);
                     DrawTile(ref patterns, 128, 128, tile, i * 8, j * 8);
                 }
             }
@@ -512,7 +541,7 @@ namespace NES.CPU.PPUClasses
                     int TileIndex = (byte)_ppu.ChrRomHandler.GetPPUByte(0, address & (int)mirrorMask);
 
                     int addToCol = GetAttributeTableEntry(NameTable, i, j);
-                    int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out patternEntryLocations[i][j]);
+                    int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out currentNameTableEntries[i][j]);
                     DrawTile(ref result, 256, 240, tile, i * 8, j * 8);
                     //DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
                 }
@@ -543,9 +572,14 @@ namespace NES.CPU.PPUClasses
             }
         }
 
-        public int GetPatternEntryLocation(int x, int y)
+        public int GetNameTableEntryLocation(int x, int y)
         {
-            return patternEntryLocations[x / 32][y / 30][y & 7];
+            return currentNameTableEntries[x / 32][y / 30][y & 7];
+        }
+
+        public int GetPatternEntryLocation(int table, int x, int y)
+        {
+            return currentPatternTableEntries[table][x / 32][y / 30][y & 7];
         }
 
     }

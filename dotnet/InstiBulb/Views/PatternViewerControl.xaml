@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	x:Class="InstiBulb.PatternViewerControl"
+	x:Class="InstiBulb.Views.PatternViewerControl"
 	x:Name="UserControl"
 	d:DesignWidth="580.785" MaxHeight="349" MinHeight="50">
 
@@ -20,7 +20,7 @@
 			<Viewbox Stretch="Fill" StretchDirection="Both" >
 				<StackPanel Orientation="Horizontal">
 					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
-						<Image Width="128" Height="128" Source="{Binding PatternTable0}"/>
+						<Image Width="128" Height="128" Source="{Binding PatternTable0}" MouseDown="Image_MouseDown"/>
 					</Border>
 					<Border BorderBrush="#FF20C541" BorderThickness="1,1,1,1" Background="#FF000000">
 						<Image Width="128" Height="128" Source="{Binding PatternTable1}" />
