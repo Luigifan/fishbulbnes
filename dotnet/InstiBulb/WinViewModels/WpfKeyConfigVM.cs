@@ -76,6 +76,7 @@ namespace InstiBulb.WinViewModels
             keyBindings.Clear();
             foreach (Key k in dataModel.NesKeyBindings.Keys)
             {
+             
                 keyBindings.Add(new NesKeyBinding() { Key = k, BoundValue = dataModel.NesKeyBindings[k] });
             }
         }

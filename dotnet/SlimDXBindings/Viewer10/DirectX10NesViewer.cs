@@ -13,6 +13,7 @@ namespace SlimDXBindings.Viewer10
         NESMachine nes;
         public DirectX10NesViewer(NESMachine nes)
         {
+            this.nes = nes;
             myQuad = new D3D10Host(nes);
         }
 
@@ -48,6 +49,7 @@ namespace SlimDXBindings.Viewer10
             {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(run));
             }
+
             
         }
 
@@ -57,9 +59,12 @@ namespace SlimDXBindings.Viewer10
         }
 
         void run(object o)
-
         {
-            myQuad.QuadUp(); 
+            myQuad.QuadUp();
+
+            //var pad = nes.PadOne as SlimDXKeyboardControlPad;
+            //if (pad != null)
+            //    pad.Viewer = this;
         }
 
 
@@ -107,6 +112,11 @@ namespace SlimDXBindings.Viewer10
         public string DisplayName
         {
             get { return "DirectX10Viewer"; }
+        }
+
+        public IntPtr WindowHandle()
+        {
+            return myQuad.WindowHandler;
         }
 
         #endregion

@@ -7,6 +7,8 @@ using SlimDX.DirectInput;
 using System.Windows.Interop;
 using SlimDX;
 using System.Windows;
+using NES.CPU.nitenedo.Interaction;
+using SlimDXBindings.Viewer10;
 
 namespace SlimDXBindings
 {
@@ -19,10 +21,24 @@ namespace SlimDXBindings
 
         bool exclusive = false, foreground = true, disable = false;
 
+        SlimDXBindings.Viewer10.DirectX10NesViewer viewer;
+
+        public SlimDXBindings.Viewer10.DirectX10NesViewer Viewer
+        {
+            get { return viewer; }
+            set { 
+                viewer = value;
+                if (viewer is DirectX10NesViewer)
+                {
+                    CreateDevice(null);
+                }
+            }
+        }
+
         public SlimDXKeyboardControlPad()
         {
             // make sure that DirectInput has been initialized
-            
+
             
             keyboard = new Device<KeyboardState>(dInput, SystemGuid.Keyboard);
             
@@ -50,10 +66,17 @@ namespace SlimDXBindings
             // create the device
             try
             {
-                WindowInteropHelper helper = new WindowInteropHelper(host);
+                IntPtr windowHandle = IntPtr.Zero;
+                if (viewer != null && viewer.WindowHandle() != IntPtr.Zero)
+                {
+                    windowHandle = viewer.WindowHandle();
+                }
+                else
+                {
+                    WindowInteropHelper helper = new WindowInteropHelper(host);
 
-                IntPtr windowHandle = helper.Handle;
-                
+                    windowHandle = helper.Handle;
+                }
                 keyboard.SetCooperativeLevel(windowHandle, cooperativeLevel);
             }
             catch (DirectInputException e)
@@ -92,10 +115,10 @@ namespace SlimDXBindings
                     case Key.Z:
                         PadOneState = PadOneState | 2;
                         break;
-                    case Key.W:
+                    case Key.Space:
                         PadOneState = PadOneState | 4;
                         break;
-                    case Key.Q:
+                    case Key.Return:
                         PadOneState = PadOneState | 8;
                         break;
                     case Key.UpArrow:

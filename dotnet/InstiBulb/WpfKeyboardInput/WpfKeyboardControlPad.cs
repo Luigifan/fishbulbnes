@@ -10,8 +10,6 @@ using System.ComponentModel;
 
 namespace InstiBulb.WpfKeyboardInput
 {
-
-
     public enum PadValues : int
     {
         A = 1,
@@ -59,14 +57,6 @@ namespace InstiBulb.WpfKeyboardInput
             NesKeyBindings.Add(Key.Left, PadValues.Left);
             NesKeyBindings.Add(Key.Right, PadValues.Right);
 
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.B, Key = Key.LeftCtrl });
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Select, Key = Key.Space });
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Start, Key = Key.Enter });
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Up, Key = Key.Up });
-
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Down, Key = Key.Down });
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Left, Key = Key.Left });
-            //keyBindings.Add(new NesKeyBinding() { BoundValue = PadValues.Right, Key = Key.Right });
         }
 
 

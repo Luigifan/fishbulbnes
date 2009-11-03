@@ -51,6 +51,19 @@ namespace SlimDXBindings.Viewer10
 
          List<IDisposable> disposables = new List<IDisposable>();
 
+         public IntPtr WindowHandler
+         {
+             get { 
+                if (RenderForm != null && !RenderForm.IsDisposed) return RenderForm.Handle;
+                return IntPtr.Zero;
+             }
+         }
+
+         public void ToggleFullScreen()
+         {
+
+         }
+
         private Texture2D CreateNoiseMap(int resolution)
          {
              Random rand = new Random();
@@ -83,15 +96,17 @@ namespace SlimDXBindings.Viewer10
 
         D3D10.Texture2D resource;
 
+        DXGI.SwapChainDescription swapChainDescription = new SlimDX.DXGI.SwapChainDescription();
+        DXGI.ModeDescription modeDescription = new DXGI.ModeDescription();
+        DXGI.SampleDescription sampleDescription = new DXGI.SampleDescription();
+
         public  void QuadUp()
         {
             RenderForm = new Form();
             RenderForm.ClientSize = new Size(800, 600);
             RenderForm.Text = "InstiBulb - DirectX 10";
 
-            DXGI.SwapChainDescription swapChainDescription = new SlimDX.DXGI.SwapChainDescription();
-            DXGI.ModeDescription modeDescription = new DXGI.ModeDescription();
-            DXGI.SampleDescription sampleDescription = new DXGI.SampleDescription();
+            RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
 
             modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
             modeDescription.RefreshRate = new Rational(60, 1);
@@ -222,6 +237,18 @@ namespace SlimDXBindings.Viewer10
             Application.Run( context);
         }
 
+        void RenderForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F11)
+            {
+                SwapChain.SetFullScreenState(true, null);
+            }
+            else if (e.KeyCode == Keys.F12)
+            {
+                SwapChain.SetFullScreenState(false, null);
+            }
+        }
+
         internal  bool IsRunning
         {
             get {
@@ -294,7 +321,7 @@ namespace SlimDXBindings.Viewer10
             
         }
 
-         void Application_Idle(object sender, EventArgs e)
+        void Application_Idle(object sender, EventArgs e)
         {
 
         }
