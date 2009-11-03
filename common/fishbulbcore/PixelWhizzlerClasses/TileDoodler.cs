@@ -549,8 +549,6 @@ namespace NES.CPU.PPUClasses
             return result;
         }
 
-
-
         // width and height are of destBuffer, tile is assumed to be 8x8
         void DrawTile(ref int[] destBuffer, int width, int height, int[] tile, int xPos, int yPos)
         {

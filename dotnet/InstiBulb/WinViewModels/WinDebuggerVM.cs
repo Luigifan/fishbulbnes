@@ -14,6 +14,67 @@ using System.Windows.Input;
 
 namespace InstiBulb.WinViewModels
 {
+
+    public class TileInformation
+    {
+        int[] lineAddresses;
+        int tileIndex;
+
+        public int TileIndex
+        {
+            get { return tileIndex; }
+            set { tileIndex = value; }
+        }
+
+        public int[] LineAddresses
+        {
+            get { return lineAddresses; }
+            set { lineAddresses = value; }
+        }
+
+        public int[] TileData
+        {
+            get;
+            private set;
+        }
+
+        WriteableBitmap bitmap = new WriteableBitmap(8, 8, 96, 96, PixelFormats.Pbgra32, null);
+
+        public WriteableBitmap Bitmap
+        {
+            get { return bitmap; }
+            set { bitmap = value; }
+        }
+
+        public TileInformation(int tileIndex, int[] data, int[] addresses)
+        {
+            int stride = (8 * 32 + 7) / 8;
+
+            uint[] colors = new uint[64];
+            for (int i = 0; i < 64; ++i)
+            {
+                switch (data[i])
+                {
+                    case 0:
+                        colors[i] = 0xFF000000;
+                        break;
+                    case 1:
+                        colors[i] = 0xFFFF0000;
+                        break;
+                    case 2:
+                        colors[i] = 0xFF0000FF;
+                        break;
+                }
+            }
+            TileData = data;
+            
+            bitmap.WritePixels(new Int32Rect(0, 0, 8, 8), colors, stride, 0);
+            this.tileIndex = tileIndex;
+            lineAddresses = addresses;
+        }
+
+    }
+
     public class WinDebuggerVM : DebuggerVM
     {
 
@@ -232,6 +293,19 @@ namespace InstiBulb.WinViewModels
             if (DebugTarget == null) return "Unknown";
 
             return string.Format("Address: {0}", DebugTarget.Tiler.GetPatternEntryLocation(table, x, y));
+        }
+
+        public TileInformation GetTileInfo(int table, int tileIndex)
+        {
+            if (DebugTarget == null) return null;
+            int[][] result = new int[2][];
+            result[0] = new int[64];
+            result[1] = new int[8];
+
+            result[0] = DebugTarget.Tiler.GetPatternTableEntry(table, tileIndex, 0, out result[1]);
+
+            return new TileInformation(tileIndex, result[0], result[1]);
+
         }
 
     }

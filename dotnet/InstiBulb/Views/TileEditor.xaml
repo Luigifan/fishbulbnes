@@ -13,8 +13,23 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Tile Effect Editor"/>
-        <Grid MinHeight="150" MinWidth="150" Grid.Row="1" Background="LightGray" x:Name="TileLayout">
+        <Label Grid.Column="1"  DataContextChanged="Image_DataContextChanged" 
+                DataContext="{Binding ElementName=PatternDoodler, Path=CurrentTile}" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Tile Effect Editor</TextBlock>
+                <Separator Width="10"/>
+                <TextBlock Text="{Binding TileIndex}" />
+                <Separator Width="10"/>
+                <Border Height="32" Width="32" Background="White">
+                    <Image Stretch="UniformToFill"
+                        Source="{Binding Path=Bitmap, Mode=OneWay}" 
+                        SourceUpdated="Image_SourceUpdated"  />
+                </Border>
+            </StackPanel>
+        </Label>
+        <Grid Grid.Column="1" MinHeight="150" MinWidth="150" Grid.Row="1" Background="LightGray" x:Name="TileLayout"
+              DataContext="{Binding ElementName=PatternDoodler, Path=CurrentTile }"
+              >
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -34,10 +49,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
         </Grid>
-        <Border Grid.Row="2" Background="LemonChiffon">
+        <Border Grid.Column="1" Grid.Row="2" Background="LemonChiffon">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Pixel Effect"></TextBlock>
                 <ComboBox>
@@ -46,7 +62,7 @@
                 </ComboBox>
             </StackPanel>
         </Border>
-        <vm:PatternViewerControl Grid.Column="1" Grid.RowSpan="3" />
+        <vm:PatternViewerControl x:Name="PatternDoodler"  Grid.Column="0" Grid.RowSpan="3" />
         
     </Grid>
 </UserControl>

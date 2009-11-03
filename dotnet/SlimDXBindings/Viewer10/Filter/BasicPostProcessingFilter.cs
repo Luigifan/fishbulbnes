@@ -118,11 +118,16 @@ namespace SlimDXBindings.Viewer10.Filter
         {
             get { return texture; }
         }
-
+        Dictionary<string, ShaderResourceView> shaderResources = new Dictionary<string, ShaderResourceView>();
         public void SetShaderResource(string variableName, Resource resource)
         {
-            EffectResourceVariable variable = Effect.GetVariableByName(variableName).AsResource();
-            variable.SetResource( new ShaderResourceView(device, resource));
+            if (!shaderResources.ContainsKey(variableName))
+            {
+                EffectResourceVariable variable = Effect.GetVariableByName(variableName).AsResource();
+                var shaderRes = new ShaderResourceView(device, resource);
+                shaderResources.Add(variableName, shaderRes);
+                variable.SetResource(shaderRes);
+            }
         }
 
         public virtual void ProcessEffect()
@@ -156,7 +161,16 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void Dispose()
         {
+
+            texture.Dispose();
+            Effect.Dispose();
+            renderTarget.Dispose();
             quad.Dispose();
+
+            foreach (var shaderRes in shaderResources.Values)
+            {
+                shaderRes.Dispose();
+            }
         }
 
         #endregion
@@ -187,9 +201,15 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public BasicPostProcessingFilter SetStaticResource(string name, Resource res)
         {
-            EffectResourceVariable variable = Effect.GetVariableByName(name).AsResource();
-            variable.SetResource(new ShaderResourceView(device, res));
-            
+
+            if (!shaderResources.ContainsKey(name))
+            {
+                EffectResourceVariable variable = Effect.GetVariableByName(name).AsResource();
+                var shaderRes = new ShaderResourceView(device, res);
+                shaderResources.Add(name, shaderRes);
+                variable.SetResource(shaderRes);
+            }
+           
             return this;
         }
     }

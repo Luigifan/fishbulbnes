@@ -37,6 +37,9 @@ namespace SlimDXBindings.Viewer10
          D3D10.Buffer Vertices;
          D3D10.RenderTargetView RenderTarget;
          
+         ShaderResourceView textureView;
+
+
          FullscreenQuad quad;
          FilterChain tileFilters;
          FilterChain spriteFilters;
@@ -74,8 +77,11 @@ namespace SlimDXBindings.Viewer10
              noiseImage.Unmap(0);
 
              disposables.Add(noiseImage);
+
              return noiseImage;
          }
+
+        D3D10.Texture2D resource;
 
         public  void QuadUp()
         {
@@ -108,10 +114,8 @@ namespace SlimDXBindings.Viewer10
 
             D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
 
-            using (D3D10.Texture2D resource = SwapChain.GetBuffer<D3D10.Texture2D>(0))
-            {
-                RenderTarget = new D3D10.RenderTargetView(Device, resource);
-            }
+            resource = SwapChain.GetBuffer<D3D10.Texture2D>(0);
+            RenderTarget = new D3D10.RenderTargetView(Device, resource);
 
             ViewArea = new Viewport();
             ViewArea.X = 0;
@@ -147,8 +151,11 @@ namespace SlimDXBindings.Viewer10
             
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
-            ShaderResourceView textureView = new ShaderResourceView(Device, texture);
+            textureView = new ShaderResourceView(Device, texture);
             shaderTexture.SetResource(textureView);
+
+
+
 
             Texture2DDescription targetDesc = new Texture2DDescription();
             targetDesc.Usage = ResourceUsage.Default;
@@ -161,6 +168,7 @@ namespace SlimDXBindings.Viewer10
             targetDesc.SampleDescription = sampleDescription;
 
             targetTexture = new Texture2D(Device, targetDesc);
+            disposables.Add(targetTexture);
 
             quad = new FullscreenQuad(Device, Pass.Description.Signature);
 
@@ -198,6 +206,14 @@ namespace SlimDXBindings.Viewer10
                     .AddNeededResource("combined", "texture2d")
                     );
 
+            disposables.Add(resource);
+            disposables.Add(Effect);
+            disposables.Add(quad);
+            disposables.Add(Layout);
+            disposables.Add(textureView);
+            disposables.Add(texture);
+            disposables.Add(tileFilters);
+
             context = new ApplicationContext(RenderForm);
             
             context.ThreadExit += new EventHandler(context_ThreadExit);
@@ -213,11 +229,13 @@ namespace SlimDXBindings.Viewer10
             }
         }
 
-         void context_ThreadExit(object sender, EventArgs e)
+        void context_ThreadExit(object sender, EventArgs e)
         {
         }
 
-         float timer = 0.0f;
+        float timer = 0.0f;
+        ShaderResourceView texView;
+
         public  void DrawFrame()
         {
             // update nes texture
@@ -237,32 +255,43 @@ namespace SlimDXBindings.Viewer10
 
             Device.ClearRenderTargetView(RenderTarget, Color.Black);
 
-            EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
-            ShaderResourceView textureView = new ShaderResourceView(Device, tileFilters.Result);
-            shaderTexture.SetResource(textureView);
+            EffectResourceVariable shaderTexture2 = Effect.GetVariableByName("texture2d").AsResource();
 
-            quad.SetupDraw();
-            for (int pass = 0; pass < Technique.Description.PassCount; ++pass)
-            {
-                Pass.Apply();
-                quad.Draw();
-            }
+            if (texView == null) texView = new ShaderResourceView(Device, tileFilters.Result);
+            
+                shaderTexture2.SetResource(texView);
 
+                quad.SetupDraw();
+                for (int pass = 0; pass < Technique.Description.PassCount; ++pass)
+                {
+                    Pass.Apply();
+                    quad.Draw();
+                }
+            
             SwapChain.Present(0, DXGI.PresentFlags.None);
         }
 
+        private delegate void NoArgDelegate();
+
         public  void Die()
         {
+            foreach (var p in disposables)
+            {
+                if (p != null) p.Dispose();
+            }
+
+            if (texView != null) texView.Dispose();
+
             Device.ClearState();
             RenderTarget.Dispose();
-            Effect.Dispose();
-            quad.Dispose();
-            Layout.Dispose();
-            Device.Dispose();
-            SwapChain.Dispose();
-            RenderForm.Dispose();
-           // RenderForm.Close();
-            //context.Dispose();
+            if (Layout != null) Layout.Dispose();
+
+            if (Device != null)  Device.Dispose();
+            if (SwapChain != null) SwapChain.Dispose();
+
+            RenderForm.Invoke( new NoArgDelegate( RenderForm.Close ));
+            
+            
         }
 
          void Application_Idle(object sender, EventArgs e)

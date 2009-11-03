@@ -154,11 +154,6 @@ namespace NES.CPU.PPUClasses
             return 0;
         }
 
-        private int GetExtendedPixelInfo(int ppuNameTableMemoryStart, int i, int j)
-        {
-            return 0;
-
-        }
 
     }
 }

@@ -48,6 +48,9 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void Dispose()
         {
+            if (result != null)
+                result.Dispose(); 
+            
             foreach (var p in this)
             {
                 p.Dispose();

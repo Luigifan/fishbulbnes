@@ -11,14 +11,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using InstiBulb.WinViewModels;
+using System.ComponentModel;
 
 namespace InstiBulb.Views
 {
 	/// <summary>
 	/// Interaction logic for PatternViewerControl.xaml
 	/// </summary>
-	public partial class PatternViewerControl
+	public partial class PatternViewerControl : INotifyPropertyChanged
 	{
+
+        public static DependencyProperty CurrentTileProperty =
+            DependencyProperty.Register("CurrentTile", typeof(TileInformation), typeof(PatternViewerControl));
+
+        public TileInformation CurrentTile
+        {
+            get { return (TileInformation)GetValue(CurrentTileProperty); }
+            set { SetValue(CurrentTileProperty, value); }
+        }
+
 		public PatternViewerControl()
 		{
 			this.InitializeComponent();
@@ -28,16 +39,28 @@ namespace InstiBulb.Views
         {
             var p = DataContext as WinDebuggerVM;
             var img = sender as Image;
+            TileInformation tile; 
+
             if (p != null && img != null)
             {
                 Point pt = e.GetPosition(img);
-                int x = (int)((pt.X / img.ActualWidth) * 255.0);
-                int y = (int)((pt.Y / img.ActualHeight) * 255.0);
+                int x = (int)((pt.X / img.ActualWidth) * 16.0);
+                int y = (int)((pt.Y / img.ActualHeight) * 16.0);
 
-                MessageBox.Show(p.WhichTileAddress(0, x, y));
+
+                CurrentTile = p.GetTileInfo(0, x +  y * 16);
+
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentTile"));
+
             }
         }
 
 
-	}
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+    }
 }
