@@ -88,7 +88,7 @@ namespace NES.CPU.PPUClasses
             if (address >= 0x2000 && address < 0x3000)
             {
 
-                result = chrRomHandler.GetPPUByte(0,(address & (int)currentMirrorMask) | oneScreenMirrorOffset);
+                result = chrRomHandler.GetPPUByte(0, address );
 
             }
             else

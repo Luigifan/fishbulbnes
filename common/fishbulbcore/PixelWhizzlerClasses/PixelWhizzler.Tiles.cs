@@ -51,9 +51,6 @@ namespace NES.CPU.PPUClasses
 
             int tileNametablePosition = 0x2000 + ppuNameTableMemoryStart + xTilePosition + tileRow;
             
-            tileNametablePosition &= currentMirrorMask; 
-            tileNametablePosition |= oneScreenMirrorOffset;
-
             int TileIndex = chrRomHandler.GetPPUByte(0,tileNametablePosition);
 
             int patternTableYOffset = yPosition & 7;
@@ -107,8 +104,6 @@ namespace NES.CPU.PPUClasses
             int tileRow = (yPosition / 8) % 30;
 
             int tileNametablePosition = 0x2000 + ppuNameTableMemoryStart + (xPosition / 8) + (tileRow * 32);
-            tileNametablePosition &= currentMirrorMask;
-            tileNametablePosition |= oneScreenMirrorOffset;
 
             int TileIndex = chrRomHandler.GetPPUByte(0, tileNametablePosition);
 
@@ -134,11 +129,7 @@ namespace NES.CPU.PPUClasses
 
         private int GetAttributeTableEntry(int ppuNameTableMemoryStart, int i, int j)
         {
-            int LookUp = chrRomHandler.GetPPUByte(0,
-                (
-                (0x2000 + ppuNameTableMemoryStart + 0x3C0 + (i / 4) + ((j / 4) * 0x8))
-                    & currentMirrorMask) | oneScreenMirrorOffset
-                ); 
+            int LookUp = chrRomHandler.GetPPUByte(0, 0x2000 + ppuNameTableMemoryStart + 0x3C0 + (i / 4) + ((j / 4) * 0x8)); 
 
             switch ((i & 2) | (j & 2) * 2)
             {

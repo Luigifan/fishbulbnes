@@ -206,7 +206,7 @@ namespace NES.CPU.PPUClasses
                         // if its a nametable byte, mask it according to current mirroring
                         if ((_PPUAddress & 0xF000) == 0x2000)
                         {
-                            chrRomHandler.SetPPUByte(Clock,(_PPUAddress & currentMirrorMask) | oneScreenMirrorOffset,(byte)data);
+                            chrRomHandler.SetPPUByte(Clock,_PPUAddress ,(byte)data);
                         }
                         else
                         {
@@ -291,14 +291,14 @@ namespace NES.CPU.PPUClasses
                         // will also fetch nametable data from the corresponding address (which is mirrored from PPU $2F00-$2FFF). 
 
                         // note: writes do not work this way 
-                        ppuReadBuffer = chrRomHandler.GetPPUByte(Clock,(_PPUAddress - 0x1000)  & currentMirrorMask | oneScreenMirrorOffset);
+                        ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, _PPUAddress - 0x1000);
                     }
                     else
                     {
                         tmp = ppuReadBuffer;
                         if (_PPUAddress >= 0x2000 & _PPUAddress <= 0x2FFF)
                         {
-                            ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, (_PPUAddress & (int)currentMirrorMask) | oneScreenMirrorOffset);
+                            ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, _PPUAddress );
                         }
                         else
                         {

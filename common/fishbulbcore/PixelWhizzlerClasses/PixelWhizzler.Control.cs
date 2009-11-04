@@ -43,9 +43,6 @@ namespace NES.CPU.PPUClasses
             writer.Enqueue(currentXPosition);
             writer.Enqueue(nameTableIndex);
             writer.Enqueue(_backgroundPatternTableIndex);
-            writer.Enqueue(_mirroring);
-            writer.Enqueue(oneScreenMirrorOffset);
-            writer.Enqueue((int)currentMirrorMask);
 
 
             writer.Enqueue( patternEntry );
@@ -118,9 +115,9 @@ namespace NES.CPU.PPUClasses
             currentXPosition= state.Dequeue();
             nameTableIndex= state.Dequeue();
             _backgroundPatternTableIndex= state.Dequeue();
-            _mirroring= state.Dequeue();
-            oneScreenMirrorOffset= state.Dequeue();
-            currentMirrorMask= state.Dequeue();
+            //_mirroring= state.Dequeue();
+            //oneScreenMirrorOffset= state.Dequeue();
+            //currentMirrorMask= state.Dequeue();
 
             patternEntry = state.Dequeue();
             patternEntryByte2 = state.Dequeue();

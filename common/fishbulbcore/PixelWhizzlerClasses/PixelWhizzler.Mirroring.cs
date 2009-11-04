@@ -74,11 +74,11 @@ namespace NES.CPU.PPUClasses
             {
                     // mask out 
                 case 0:
-                    currentMirrorMask = (int)MirrorMasks.OneScreenMask;
+                    currentMirrorMask = (int)MirrorMasks.FourScreenMask;
                     break;
                 case 1:
                     oneScreenMirrorOffset = 0;
-                    currentMirrorMask = (int)MirrorMasks.VerticalMask;
+                    currentMirrorMask = (int)MirrorMasks.FourScreenMask;
                     
                     // TODO: fix in cart
                     //if (_mirroring == 2)
@@ -89,7 +89,7 @@ namespace NES.CPU.PPUClasses
                     break;
                 case 2:
                     oneScreenMirrorOffset = 0;
-                    currentMirrorMask = (int)MirrorMasks.HorizontalMask;
+                    currentMirrorMask = (int)MirrorMasks.FourScreenMask;
                     // todo: fix in cart
                     //if (_mirroring == 1)
                     //{

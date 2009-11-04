@@ -42,7 +42,7 @@ namespace NES.CPU
 
                     //SetupBanks(0, 1, 2, 3);
                     SetupBankStarts(0, 1, 2, 3);
-                    whizzler.Mirroring = 0;
+                    Mirror( 0);
                     break;
 
                 default:
@@ -92,15 +92,15 @@ namespace NES.CPU
                 // SetupBanks(newbank8, newbank8 + 1, newbank8 + 2, newbank8 + 3);
                 SetupBankStarts(newbank8, newbank8 + 1, newbank8 + 2, newbank8 + 3);
                 whizzler.DrawTo(clock);
-                if ((val & 16) == 16)
-                {
-                    whizzler.OneScreenMirrorOffset = 0x400;
-                }
-                else
-                {
-                    whizzler.OneScreenMirrorOffset = 0;
-                }
-                whizzler.Mirroring = 0;
+               // if ((val & 16) == 16)
+               // {
+                    //whizzler.OneScreenMirrorOffset = 0x400;
+               // }
+                //else
+                //{
+                    //whizzler.OneScreenMirrorOffset = 0;
+                //}
+                Mirror( 0);
             }
 
             if (mapperId == 3)

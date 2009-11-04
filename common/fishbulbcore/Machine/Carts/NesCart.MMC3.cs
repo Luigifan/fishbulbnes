@@ -219,11 +219,11 @@ namespace NES.CPU.Machine.Carts
                     case 0xA000:
                         if ((val & 1) == 1)
                         {
-                            whizzler.Mirroring = 2;
+                            Mirror(2);
                         }
                         else
                         {
-                            whizzler.Mirroring = 1;
+                            Mirror(1);
                         }
                         break;
                     case 0xA001:

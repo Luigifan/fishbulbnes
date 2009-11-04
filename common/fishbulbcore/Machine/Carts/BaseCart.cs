@@ -79,6 +79,8 @@ namespace NES.CPU.Machine.Carts
 
         int chrRomOffset = 0;
 
+        int chrRamStart = 0;
+
         public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset)
         {
 
@@ -110,16 +112,21 @@ namespace NES.CPU.Machine.Carts
             nesCart = new byte[prgRomData.Length];
             Array.Copy(prgRomData, nesCart, prgRomData.Length);
 
-            chrRom = chrRomData;
+            
+            chrRom = new byte[chrRomData.Length + 0x4000];
+
+            chrRamStart = chrRomData.Length;
+
+            Buffer.BlockCopy(chrRomData, 0, chrRom, 0, chrRomData.Length);
 
             prgRomCount = iNesHeader[4];
             chrRomCount = iNesHeader[5];
 
-            if (chrRomCount == 0)
-            {
-                // chrRom is going to be RAM
-                chrRom = new byte[0x4000];
-            }
+            //if (chrRomCount == 0)
+            //{
+            //    // chrRom is going to be RAM
+            //    chrRom = new byte[0x4000];
+            //}
 
             romControlBytes[0] = iNesHeader[6];
             romControlBytes[1] = iNesHeader[7];
@@ -130,22 +137,21 @@ namespace NES.CPU.Machine.Carts
             mapperId += romControlBytes[1] & 0xF0;
 
             // rom0.0=0 is horizontal mirroring, rom0.0=1 is vertical mirroring
-
+            Mirror(0);
             if ((romControlBytes[0] & 0x01) == 1)
             {
-                whizzler.Mirroring = 1;
+                Mirror( 1);
             }
             else
             {
-                whizzler.Mirroring = 2;
+                Mirror(2);
             }
 
             if ((romControlBytes[0] & 0x08) == 0x08)
             {
-                whizzler.Mirroring = 3;
+                Mirror(3);
             }
 
-            mirroring = whizzler.Mirroring;
 
             checkSum = ROMHashFunction(nesCart, chrRom);
 
@@ -438,6 +444,70 @@ namespace NES.CPU.Machine.Carts
             else
                 return nullEffect;
 
+        }
+
+        int oneScreenOffset;
+        internal int OneScreenOffset
+        {
+            get { return oneScreenOffset; }
+            set { oneScreenOffset = value; }
+        }
+
+        internal void Mirror(int mirroring)
+        {
+            //    //            A11 A10 Effect
+            //    //----------------------------------------------------------
+            //    // 0   0  All four screen buffers are mapped to the same
+            //    //        area of memory which repeats at $2000, $2400,
+            //    //        $2800, and $2C00.
+            //    // 0   x  "Upper" and "lower" screen buffers are mapped to
+            //    //        separate areas of memory at $2000, $2400 and
+            //    //        $2800, $2C00. ( horizontal mirroring)
+            //    // x   0  "Left" and "right" screen buffers are mapped to
+            //    //        separate areas of memory at $2000, $2800 and
+            //    //        $2400,$2C00.  (vertical mirroring)
+            //    // x   x  All four screen buffers are mapped to separate
+            //    //        areas of memory. In this case, the cartridge
+            //    //        must contain 2kB of additional VRAM (i got vram up the wazoo)
+            //    // 0xC00 = 110000000000
+            //    // 0x800 = 100000000000
+            //    // 0x400 = 010000000000
+            //    // 0x000 = 000000000000
+
+            switch (mirroring)
+            {
+                // mask out 
+                case 0:
+                    ppuBankStarts[8] = chrRamStart + 0x2000 + oneScreenOffset;
+                    ppuBankStarts[9] = chrRamStart + 0x2000 + oneScreenOffset;
+                    ppuBankStarts[10] = chrRamStart + 0x2000 + oneScreenOffset;
+                    ppuBankStarts[11] = chrRamStart + 0x2000 + oneScreenOffset;
+                    break;
+                case 2:
+                    ppuBankStarts[8] = chrRamStart + 0x2000;
+                    ppuBankStarts[9] = chrRamStart + 0x2000;
+                    ppuBankStarts[10] = chrRamStart + 0x2400;
+                    ppuBankStarts[11] = chrRamStart + 0x2400;
+                    break;
+                case 1:
+                    ppuBankStarts[8] = chrRamStart + 0x2000;
+                    ppuBankStarts[9] = chrRamStart + 0x2400;
+                    ppuBankStarts[10] = chrRamStart + 0x2000;
+                    ppuBankStarts[11] = chrRamStart + 0x2400;
+                    // todo: fix in cart
+                    //if (_mirroring == 1)
+                    //{
+                    //    // copy bank from 0x800 to 0x400
+                    //    Buffer.BlockCopy(_vidRAM, 0x2400, _vidRAM, 0x2800, 0x400);
+                    //}
+                    break;
+                case 3:
+                    ppuBankStarts[8] = chrRamStart + 0x2000;
+                    ppuBankStarts[9] = chrRamStart + 0x2400;
+                    ppuBankStarts[10] = chrRamStart + 0x2800;
+                    ppuBankStarts[11] = chrRamStart + 0x2C00;
+                    break;
+            }
         }
     }
 }

@@ -133,7 +133,6 @@
     <Compile Include="Machine\NESMachineDebugger.cs" />
     <Compile Include="Machine\ROMLoader\iNESFileHandler.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Mirroring.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
     <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

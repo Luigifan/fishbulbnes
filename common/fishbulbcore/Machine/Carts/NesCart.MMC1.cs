@@ -201,18 +201,18 @@ namespace NES.CPU.Machine.Carts
                 switch (_registers[0] & 3)
                 {
                     case 0:
-                        whizzler.Mirroring = 0;
-                        whizzler.OneScreenMirrorOffset = 0x0;
+                        Mirror(0);
+                        OneScreenOffset = 0;
                         break;
                     case 1:
-                        whizzler.Mirroring = 0;
-                        whizzler.OneScreenMirrorOffset = 0x400;
+                        Mirror(0);
+                        OneScreenOffset = 0x400;
                         break;
                     case 2:
-                        whizzler.Mirroring = 1; // vertical
+                        Mirror(1); // vertical
                         break;
                     case 3:
-                        whizzler.Mirroring = 2; // horizontal
+                        Mirror(2); // horizontal
                         break;
                 }
             }
