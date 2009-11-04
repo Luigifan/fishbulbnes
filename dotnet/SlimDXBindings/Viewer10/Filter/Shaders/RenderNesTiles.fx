@@ -325,13 +325,14 @@ float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
 	// tileIndex in r, spriteIndex in g, isSprite in b
 	// calculate the address of the nes palette value in the palCache
 	
-	float2 palAddy = float2( (finalColor.r * 7.0) , 0 );
+	float col = finalColor.r * 31.0;
+	
+	float2 palAddy = float2( col / 4.0 , 0 );
 
 	// get the nes palette entry (will contain 4 values)
 	float4 rVal = nesPal.Sample(palSampler, palAddy);
 	
-	int index = (finalColor.r * 31.0) ;
-	index = index & 3;
+	int index = ((int)( col)) % 4;
 	
 	float palindex;
 	// decode nes pal entry 
