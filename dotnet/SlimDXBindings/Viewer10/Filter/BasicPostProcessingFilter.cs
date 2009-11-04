@@ -205,9 +205,12 @@ namespace SlimDXBindings.Viewer10.Filter
             if (!shaderResources.ContainsKey(name))
             {
                 EffectResourceVariable variable = Effect.GetVariableByName(name).AsResource();
-                var shaderRes = new ShaderResourceView(device, res);
-                shaderResources.Add(name, shaderRes);
-                variable.SetResource(shaderRes);
+                if (variable != null)
+                {
+                    var shaderRes = new ShaderResourceView(device, res);
+                    shaderResources.Add(name, shaderRes);
+                    variable.SetResource(shaderRes);
+                }
             }
            
             return this;

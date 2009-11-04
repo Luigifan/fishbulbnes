@@ -11,9 +11,9 @@ namespace NES.CPU.PPUClasses
 
         private bool vidRamIsRam = true;
 
-        int[] _palette = new int[0x20];
+        byte[] _palette = new byte[0x20];
 
-        public int[] Palette
+        public byte[] Palette
         {
             get { return _palette; }
             set { _palette = value; }
@@ -189,15 +189,10 @@ namespace NES.CPU.PPUClasses
                     // ppuLatch = data;
                     if ((_PPUAddress & 0xFF00) == 0x3F00)
                     {
+
+                        WriteToNESPalette(_PPUAddress, (byte)data);
                         // these palettes are all mirrored every 0x10 bytes
-                        int palAddress = (_PPUAddress) & 0x1F;
-                        _palette[palAddress] = (byte)data;
-                        // rgb32OutBuffer[255 * 256 + palAddress] = data;
-                        if ((_PPUAddress & 0xFFEF) == 0x3F00)
-                        {
-                           _palette[(palAddress ^ 0x10) & 0x1F] = (byte)data;
-                          // rgb32OutBuffer[255 * 256 + palAddress ^ 0x10] = data;
-                        }
+
 
                         // _vidRAM[_PPUAddress ^ 0x1000] = (byte)data;
                     }
@@ -320,6 +315,39 @@ namespace NES.CPU.PPUClasses
             }
             //throw new NotImplementedException(string.Format("PPU.GetByte() recieved invalid address {0,4:x}", address));
             return 0;
+        }
+
+
+        byte[][] palCache = new byte[256][];
+
+        public byte[][] PalCache
+        {
+            get { return palCache; }
+            set { palCache = value; }
+        }
+        int currentPalette = 0;
+
+        public int CurrentPalette
+        {
+            get { return currentPalette; }
+        }
+
+        void WriteToNESPalette(int address, byte data)
+        {
+
+            palCache[currentPalette] = new byte[32];
+            Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
+            currentPalette++;
+
+            int palAddress = (address) & 0x1F;
+            _palette[palAddress] = data;
+            // rgb32OutBuffer[255 * 256 + palAddress] = data;
+            if ((_PPUAddress & 0xFFEF) == 0x3F00)
+            {
+                _palette[(palAddress ^ 0x10) & 0x1F] = data;
+                // rgb32OutBuffer[255 * 256 + palAddress ^ 0x10] = data;
+            }
+            
         }
 
 

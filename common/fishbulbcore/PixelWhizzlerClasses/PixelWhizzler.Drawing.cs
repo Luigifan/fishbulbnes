@@ -55,6 +55,10 @@ namespace NES.CPU.PPUClasses
                     break;
                 case 6820:
                     frameOn = true;
+                    //
+                    currentPalette = 0;
+                    palCache[currentPalette] = new byte[32];
+                    Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
                     // setFrameOn();
                     if (spriteChanges)
                     {
@@ -157,9 +161,9 @@ namespace NES.CPU.PPUClasses
 
         private int[] rgb32OutBuffer = new int[256*256];
 
-        private int[] outBuffer = new int[256 * 256];
+        private uint[] outBuffer = new uint[256 * 256];
 
-        public int[] OutBuffer
+        public uint[] OutBuffer
         {
             get { return outBuffer; }
         }
@@ -177,9 +181,23 @@ namespace NES.CPU.PPUClasses
         {
 
             int i = 0;
-            while (i < 256 * 256 -1)
+            while (i < 256 * 240 )
             {
-                rgb32OutBuffer[i] = pal[outBuffer[i]];
+                uint tile = (outBuffer[i] & 0xFF);
+                uint sprite = (outBuffer[i] >> 8) & 0xFF;
+                uint isSprite = (outBuffer[i] >> 16) & 0xFF;
+                uint curPal = (outBuffer[i] >> 24) & 0xFF;
+
+                uint pixel;
+                if (isSprite > 0)
+                {
+                    pixel = palCache[curPal][sprite];
+                }
+                else
+                {
+                    pixel = palCache[curPal][tile];
+                }
+                rgb32OutBuffer[i] = pal[pixel];
                 i++;
             }
         }
@@ -232,9 +250,9 @@ namespace NES.CPU.PPUClasses
 
         private void DrawPixel()
         {
-            int tilePixel = _tilesAreVisible ? GetNameTablePixel() : 0;
+            byte tilePixel = _tilesAreVisible ? GetNameTablePixel() :(byte)0;
             isForegroundPixel = false;
-            int spritePixel =  _spritesAreVisible ? GetSpritePixel() : 0;
+            byte spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
 
             if (!hitSprite && spriteZeroHit && tilePixel !=0 )
             {
@@ -249,8 +267,11 @@ namespace NES.CPU.PPUClasses
             //           bit 1 : tiles visible
             //           bit 2 : sprites visible
             //  byte 4 : current palette  (future project)
-            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 
-                | _palette[spritePixel] << 8 | _palette[tilePixel];
+            outBuffer[vbufLocation] =  (uint)(
+                currentPalette << 24 |
+                ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
+                spritePixel << 8 | 
+                tilePixel);
 
             pixelEffectBuffer[vbufLocation] = currentTileIndex;
 
@@ -279,7 +300,11 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
+            outBuffer[vbufLocation] = (uint)(
+                currentPalette << 24 |
+                ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
+                spritePixel << 8 |
+                tilePixel);
 
             //outBuffer[vbufLocation] =
             //    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))

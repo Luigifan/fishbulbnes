@@ -195,6 +195,9 @@ namespace NES.CPU.PPUClasses
             vBuffer = new byte[240 * 256];
 
             LoadPalABGR();
+
+            for (int i = 0; i < 256; ++i)
+                palCache[i] = new byte[32];
         }
 
         private int ppuReadBuffer;

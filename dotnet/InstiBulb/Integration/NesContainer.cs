@@ -63,7 +63,7 @@ namespace InstiBulb.Integration
             //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
-
+           
             //container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
             //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, DirectX10NesViewer>(new ContainerControlledLifetimeManager());

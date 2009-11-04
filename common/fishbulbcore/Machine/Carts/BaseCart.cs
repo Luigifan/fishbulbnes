@@ -412,6 +412,9 @@ namespace NES.CPU.Machine.Carts
 
         internal int[] ppuBankStarts = new int[16];
 
+        internal List<int[]> bankStartCache = new List<int[]>();
+
+
         public byte GetPPUByte(int clock, int address)
         {
             int bank = address / 0x400;
@@ -475,6 +478,7 @@ namespace NES.CPU.Machine.Carts
             //    // 0x800 = 100000000000
             //    // 0x400 = 010000000000
             //    // 0x000 = 000000000000
+
 
             switch (mirroring)
             {

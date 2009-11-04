@@ -17,6 +17,9 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void Draw(Texture2D input)
         {
+            if (dumpFiles)
+                Texture2D.ToFile(input, ImageFileFormat.Dds, "c:\\00filterChainInput.dds");
+
             for (int i = 0; i < this.Count; ++i)
             {
                 foreach (KeyValuePair<string, string> pair in this[i].NeededResources)
@@ -35,14 +38,24 @@ namespace SlimDXBindings.Viewer10.Filter
                         {
                             this[i].SetShaderResource(resName, p.results);
                         }
+
                     }
                 }
                 this[i].ProcessEffect();
+                if (dumpFiles)
+                    Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, "c:\\" + i.ToString() + this[i].FilterName + ".dds");
+
                 if (this[i].FeedsNextStage)
                     input = this[i].results;
             }
             result = this[this.Count - 1].results;
+            if (dumpFiles)
+                Texture2D.ToFile(result, ImageFileFormat.Dds, "c:\\99filterChainResult.dds");
+
+            dumpFiles = false;
         }
+
+        bool dumpFiles = false;
 
         #region IDisposable Members
 
@@ -65,6 +78,14 @@ namespace SlimDXBindings.Viewer10.Filter
             foreach (BasicPostProcessingFilter b in this)
             {
                 b.SetScalar(name, constant);
+            }
+        }
+
+        public void SetResource(string name, Resource res)
+        {
+            foreach (BasicPostProcessingFilter b in this)
+            {
+                b.SetStaticResource(name, res);
             }
         }
     }

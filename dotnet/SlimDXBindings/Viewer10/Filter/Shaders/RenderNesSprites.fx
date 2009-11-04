@@ -1,4 +1,5 @@
 Texture2D texture2d;
+Texture2D nesPal;
 
 SamplerState linearSampler
 {
@@ -6,6 +7,14 @@ SamplerState linearSampler
     AddressU = Wrap;
     AddressV = Wrap;
 };
+
+SamplerState palSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = Clamp;
+    AddressV = Clamp;
+};
+
 
 struct VS_IN
 {
@@ -306,7 +315,40 @@ float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 
 	if (finalColor.b > 0)
 	{
-		return palette[finalColor.g * 255.0 ];
+		// current palette index in a
+		// tileIndex in r, spriteIndex in g, isSprite in b
+		
+		// calculate the address of the nes palette value in the palCache
+		float2 palAddy = float2( finalColor.g / 4, finalColor.a );
+
+		// get the nes palette entry (will contain 4 values)
+		float4 rVal = nesPal.Sample(palSampler, palAddy);
+
+		float palindex;
+		
+		int pixVal =  (int)( finalColor.g * 255.0);
+		
+		// decode nes pal entry 
+		int i = pixVal % 4;
+		
+		switch (i)
+		{
+			case 0:
+				palindex = rVal.r;
+				break;
+			case 1:
+				palindex = rVal.g;
+				break;
+			case 2:
+				palindex = rVal.b;
+				break;
+			case 3:
+				palindex = rVal.a;
+				break;
+		}
+
+		// lookup actual pixel
+		return palette[palindex * 255.0 ];
 	} else 
 	{
 		return float4(0,0,0,0);

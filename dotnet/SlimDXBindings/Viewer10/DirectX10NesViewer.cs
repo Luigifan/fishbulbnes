@@ -55,6 +55,7 @@ namespace SlimDXBindings.Viewer10
 
         void tick(object o)
         {
+            myQuad.UpdateTextures();
             myQuad.DrawFrame();
         }
 
@@ -75,6 +76,7 @@ namespace SlimDXBindings.Viewer10
 
         public void UpdateNESScreen()
         {
+
             tick(null);
         }
 

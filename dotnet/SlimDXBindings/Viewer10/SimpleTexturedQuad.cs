@@ -23,6 +23,8 @@ namespace SlimDXBindings.Viewer10
              this.nes = nes;
          }
 
+         Texture2D nesPalTexture;
+
          Texture2D texture;
          Texture2D targetTexture;
          ApplicationContext context;
@@ -163,13 +165,24 @@ namespace SlimDXBindings.Viewer10
 
 
             texture = new Texture2D(Device, desc);
-            
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
             textureView = new ShaderResourceView(Device, texture);
             shaderTexture.SetResource(textureView);
 
+            Texture2DDescription palDesc = new Texture2DDescription();
+            palDesc.Usage = ResourceUsage.Dynamic;
+            palDesc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+            palDesc.ArraySize = 1;
+            palDesc.MipLevels = 1;
+            palDesc.Width = 8;
+            palDesc.Height = 256;
+            palDesc.BindFlags = BindFlags.ShaderResource;
+            palDesc.CpuAccessFlags = CpuAccessFlags.Write;
+            palDesc.SampleDescription = sampleDescription;
 
+
+            nesPalTexture = new Texture2D(Device, palDesc);
 
 
             Texture2DDescription targetDesc = new Texture2DDescription();
@@ -190,7 +203,9 @@ namespace SlimDXBindings.Viewer10
             tileFilters = new FilterChain();
             tileFilters.Add( 
                 new BasicPostProcessingFilter(Device, "tiles", 256, 256, "RenderNesTiles", "Render")
-                .DontFeedNextStage());
+                .DontFeedNextStage()
+                .SetStaticResource("nesPal", nesPalTexture)
+                );
 
             tileFilters.Add(
                 new BasicPostProcessingFilter(Device, "wavyTiles", 512, 512, "blue", "Wave")
@@ -203,6 +218,7 @@ namespace SlimDXBindings.Viewer10
 
             tileFilters.Add(
                 new BasicPostProcessingFilter(Device, "sprites", 256, 256, "RenderNesSprites", "Render")
+                .SetStaticResource("nesPal", nesPalTexture)
                 .DontFeedNextStage());
             tileFilters.Add(
                     new BasicPostProcessingFilter(Device, "blurredSprites", 1024, 1024, "simpleBlur", "Render")
@@ -228,6 +244,7 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(textureView);
             disposables.Add(texture);
             disposables.Add(tileFilters);
+            disposables.Add(nesPalTexture);
 
             context = new ApplicationContext(RenderForm);
             
@@ -263,14 +280,25 @@ namespace SlimDXBindings.Viewer10
         float timer = 0.0f;
         ShaderResourceView texView;
 
+        public void UpdateTextures()
+        {
+            DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            d.Data.WriteRange<uint>(this.nes.PPU.OutBuffer);
+            texture.Unmap(0);
+
+            DataRectangle palD = nesPalTexture.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            for (int i = 0; i < nes.PPU.CurrentPalette + 1; ++i)
+                palD.Data.WriteRange<byte>(this.nes.PPU.PalCache[i]);
+
+            nesPalTexture.Unmap(0);
+        }
+
         public  void DrawFrame()
         {
             // update nes texture
 
-            DataRectangle d =  texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            d.Data.WriteRange<int>(this.nes.PPU.OutBuffer);
-            texture.Unmap(0);
 
+            tileFilters.SetResource("nesPal", nesPalTexture);
             tileFilters.SetVariable("timer", timer);
             timer += 0.1f;
             tileFilters.Draw(texture);

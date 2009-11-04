@@ -37,15 +37,15 @@ namespace WpfNESViewer
         {
             get
             {
-                return NESPixelFormats.Indexed;
+                return NESPixelFormats.BGR;
             }
-            set
+        set
             {
                 throw new NotImplementedException();
             }
         }
 
-        RasterizeEffect rasterize = new RasterizeEffect();
+        //RasterizeEffect rasterize = new RasterizeEffect();
 
         ImageBrush bmpBrush;
         public void CreateDisplay()
@@ -59,13 +59,13 @@ namespace WpfNESViewer
             //this.Width = 256;
             //this.Height = 256;
 
-            this.SetValue(Canvas.EffectProperty, rasterize);
+            //this.SetValue(Canvas.EffectProperty, rasterize);
             bmpBrush = new ImageBrush(bitmap);
             this.Background = bmpBrush;
             
             //rasterize.SetValue(RasterizeEffect.InputProperty, this.Background);
-            rasterize.SetValue(RasterizeEffect.PaletteProperty, new ImageBrush(palette));
-            rasterize.SetValue(RasterizeEffect.NESPaletteProperty, new ImageBrush( nesPalette));
+            //rasterize.SetValue(RasterizeEffect.PaletteProperty, new ImageBrush(palette));
+            //rasterize.SetValue(RasterizeEffect.NESPaletteProperty, new ImageBrush( nesPalette));
 
             //this.SnapsToDevicePixels = true;
         }
@@ -81,7 +81,7 @@ namespace WpfNESViewer
         {
             
             bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), pixels, stride, 0, 0);
-            nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
+           //  nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
             if (isDefault)
             {
                 this.Background = new ImageBrush(bitmap);

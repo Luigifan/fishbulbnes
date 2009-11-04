@@ -1,6 +1,14 @@
 Texture2D texture2d;
+Texture2D nesPal;
 
 SamplerState linearSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
+SamplerState palSampler
 {
     Filter = MIN_MAG_MIP_POINT;
     AddressU = Wrap;
@@ -313,8 +321,23 @@ float4 DrawTogether( PS_IN pixelShaderIn ) : SV_Target
 float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	// current palette index in a
 	// tileIndex in r, spriteIndex in g, isSprite in b
-	return palette[finalColor.r * 255.0 ];
+	// calculate the address of the nes palette value in the palCache
+	
+	float2 palAddy = float2( (finalColor.r * 7.0) , 0 );
+
+	// get the nes palette entry (will contain 4 values)
+	float4 rVal = nesPal.Sample(palSampler, palAddy);
+	
+	int index = (finalColor.r * 31.0) ;
+	index = index & 3;
+	
+	float palindex;
+	// decode nes pal entry 
+	// lookup actual pixel
+	
+	return palette[rVal[index] * 255.0 ];
 }
 
 float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
@@ -327,14 +350,14 @@ float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 }
 
 
-	technique10 Render
+technique10 Render
+{
+	pass P0
 	{
-		pass P0
-		{
-			SetGeometryShader( 0 );
-			SetVertexShader( CompileShader( vs_4_0, VS() ) );
-			SetPixelShader( CompileShader( ps_4_0, DrawTilesOnly() ) );
-		}
-		
+		SetGeometryShader( 0 );
+		SetVertexShader( CompileShader( vs_4_0, VS() ) );
+		SetPixelShader( CompileShader( ps_4_0, DrawTilesOnly() ) );
 	}
+	
+}
 
