@@ -60,7 +60,7 @@ namespace NES.CPU
             whizzler.DrawTo(clock);
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
 
-            int oneKdest = dest / 8;
+            int oneKdest = dest * 8;
             //TODO: get whizzler reading ram from INesCart.GetPPUByte then be calling this
             //  setup ppuBankStarts in 0x400 block chunks 
             for (int i = 0; i < (numberOf8kBanks * 8); ++i)
@@ -89,17 +89,16 @@ namespace NES.CPU
                 int newbank8 = 0;
                 newbank8 = 4 * (val & 0xF);
 
-                // SetupBanks(newbank8, newbank8 + 1, newbank8 + 2, newbank8 + 3);
                 SetupBankStarts(newbank8, newbank8 + 1, newbank8 + 2, newbank8 + 3);
                 whizzler.DrawTo(clock);
-               // if ((val & 16) == 16)
-               // {
-                    //whizzler.OneScreenMirrorOffset = 0x400;
-               // }
-                //else
-                //{
-                    //whizzler.OneScreenMirrorOffset = 0;
-                //}
+                if ((val & 16) == 16)
+                {
+                    OneScreenOffset = 0x400;
+                }
+                else
+                {
+                    OneScreenOffset = 0;
+                }
                 Mirror( 0);
             }
 

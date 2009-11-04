@@ -230,8 +230,6 @@ namespace NES.CPU.PPUClasses
             set { fillRGB = value; }
         }
 
-        int tileEffectPixel = 0;
-
         private void DrawPixel()
         {
             int tilePixel = _tilesAreVisible ? GetNameTablePixel() : 0;
@@ -244,9 +242,17 @@ namespace NES.CPU.PPUClasses
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
-            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 | _palette[spritePixel] << 8 | _palette[tilePixel];
+            // the int is packed like this:
+            //  byte 0 : the current tile pixel
+            //  byte 1 : the current sprite pixel
+            //  byte 2 : bit 0 : is foreground sprite
+            //           bit 1 : tiles visible
+            //           bit 2 : sprites visible
+            //  byte 4 : current palette  (future project)
+            outBuffer[vbufLocation] = ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 
+                | _palette[spritePixel] << 8 | _palette[tilePixel];
 
-            pixelEffectBuffer[vbufLocation] = tileEffectPixel;
+            pixelEffectBuffer[vbufLocation] = currentTileIndex;
 
             //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 //? _palette[spritePixel] : _palette[tilePixel];
@@ -258,12 +264,12 @@ namespace NES.CPU.PPUClasses
 
 
             // if we're clipping the left 8 pixels, or bg is not visible, set color to background byte
-            if (_tilesAreVisible && !ClippingTilePixels())
+            if (_tilesAreVisible && !_clipTiles)
             {
                 tilePixel = GetNameTablePixel();
             }
             isForegroundPixel = false;
-            int spritePixel = _spritesAreVisible && !ClippingSpritePixels() ? GetSpritePixel() : 0;
+            int spritePixel = _spritesAreVisible && !_clipSprites ? GetSpritePixel() : 0;
 
 
             //&& (newbyte & 3) != 0
@@ -286,12 +292,12 @@ namespace NES.CPU.PPUClasses
 
         private bool ClippingTilePixels()
         {
-            return _clipTiles && currentXPosition < 8;
+            return _clipTiles ;
         }
 
         private bool ClippingSpritePixels()
         {
-            return _clipSprites && currentXPosition < 8;
+            return _clipSprites ;
         }
     }
 }

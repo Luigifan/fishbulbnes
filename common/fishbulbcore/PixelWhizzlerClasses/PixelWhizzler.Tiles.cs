@@ -14,7 +14,7 @@ namespace NES.CPU.PPUClasses
         int patternEntryByte2=0;
         int currentAttributeByte;
 
-        byte[] currentPixelEffect = new byte[8];
+        int currentTileIndex = 0;
 
         int xNTXor = 0;
         int yNTXor = 0;
@@ -61,7 +61,7 @@ namespace NES.CPU.PPUClasses
             patternEntry = chrRomHandler.GetPPUByte(0, patternID);
             patternEntryByte2 = chrRomHandler.GetPPUByte(0, patternID + 8);
 
-            currentPixelEffect = chrRomHandler.FetchPixelEffect(patternID);
+            currentTileIndex = chrRomHandler.ActualChrRomOffset(patternID);
 
             currentAttributeByte = GetAttributeTableEntry(ppuNameTableMemoryStart, xTilePosition, yPosition >> 3);
         }

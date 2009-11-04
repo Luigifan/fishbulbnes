@@ -112,8 +112,13 @@ namespace NES.CPU.Machine.Carts
             nesCart = new byte[prgRomData.Length];
             Array.Copy(prgRomData, nesCart, prgRomData.Length);
 
+            if (chrRomCount == 0)
+            {
+                // chrRom is going to be RAM
+                chrRomData = new byte[0x4000];
+            }
             
-            chrRom = new byte[chrRomData.Length + 0x4000];
+            chrRom = new byte[chrRomData.Length + 0x1000];
 
             chrRamStart = chrRomData.Length;
 
@@ -122,11 +127,6 @@ namespace NES.CPU.Machine.Carts
             prgRomCount = iNesHeader[4];
             chrRomCount = iNesHeader[5];
 
-            //if (chrRomCount == 0)
-            //{
-            //    // chrRom is going to be RAM
-            //    chrRom = new byte[0x4000];
-            //}
 
             romControlBytes[0] = iNesHeader[6];
             romControlBytes[1] = iNesHeader[7];
@@ -137,6 +137,8 @@ namespace NES.CPU.Machine.Carts
             mapperId += romControlBytes[1] & 0xF0;
 
             // rom0.0=0 is horizontal mirroring, rom0.0=1 is vertical mirroring
+
+            // by default we have to call Mirror() at least once to set up the bank offsets
             Mirror(0);
             if ((romControlBytes[0] & 0x01) == 1)
             {
@@ -476,36 +478,32 @@ namespace NES.CPU.Machine.Carts
 
             switch (mirroring)
             {
-                // mask out 
+                // onescreen mirroring, all four banks point to the same spot (which is defined by the offset)
                 case 0:
-                    ppuBankStarts[8] = chrRamStart + 0x2000 + oneScreenOffset;
-                    ppuBankStarts[9] = chrRamStart + 0x2000 + oneScreenOffset;
-                    ppuBankStarts[10] = chrRamStart + 0x2000 + oneScreenOffset;
-                    ppuBankStarts[11] = chrRamStart + 0x2000 + oneScreenOffset;
+                    ppuBankStarts[8] = chrRamStart + 0x0 + oneScreenOffset;
+                    ppuBankStarts[9] = chrRamStart + 0x0 + oneScreenOffset;
+                    ppuBankStarts[10] = chrRamStart + 0x0 + oneScreenOffset;
+                    ppuBankStarts[11] = chrRamStart + 0x0 + oneScreenOffset;
+                    break;
+                // vertical and horizontal mirror modes share the same 2k rams, just in different ways.  That's all the nes has
+                case 1:
+                    ppuBankStarts[8] = chrRamStart + 0x0;
+                    ppuBankStarts[9] = chrRamStart + 0x400;
+                    ppuBankStarts[10] = chrRamStart + 0x000;
+                    ppuBankStarts[11] = chrRamStart + 0x400;
                     break;
                 case 2:
-                    ppuBankStarts[8] = chrRamStart + 0x2000;
-                    ppuBankStarts[9] = chrRamStart + 0x2000;
-                    ppuBankStarts[10] = chrRamStart + 0x2400;
-                    ppuBankStarts[11] = chrRamStart + 0x2400;
+                    ppuBankStarts[8] = chrRamStart + 0x000;
+                    ppuBankStarts[9] = chrRamStart + 0x000;
+                    ppuBankStarts[10] = chrRamStart + 0x400;
+                    ppuBankStarts[11] = chrRamStart + 0x400;
                     break;
-                case 1:
-                    ppuBankStarts[8] = chrRamStart + 0x2000;
-                    ppuBankStarts[9] = chrRamStart + 0x2400;
-                    ppuBankStarts[10] = chrRamStart + 0x2000;
-                    ppuBankStarts[11] = chrRamStart + 0x2400;
-                    // todo: fix in cart
-                    //if (_mirroring == 1)
-                    //{
-                    //    // copy bank from 0x800 to 0x400
-                    //    Buffer.BlockCopy(_vidRAM, 0x2400, _vidRAM, 0x2800, 0x400);
-                    //}
-                    break;
+                // fourscreen mirroring uses the extra 2k (on the 'cart') from 0x2800-0x2FFF
                 case 3:
-                    ppuBankStarts[8] = chrRamStart + 0x2000;
-                    ppuBankStarts[9] = chrRamStart + 0x2400;
-                    ppuBankStarts[10] = chrRamStart + 0x2800;
-                    ppuBankStarts[11] = chrRamStart + 0x2C00;
+                    ppuBankStarts[8] = chrRamStart + 0x000;
+                    ppuBankStarts[9] = chrRamStart + 0x400;
+                    ppuBankStarts[10] = chrRamStart + 0x800;
+                    ppuBankStarts[11] = chrRamStart + 0xC00;
                     break;
             }
         }
