@@ -16,6 +16,9 @@ namespace SlimDXBindings.Viewer10
 {
      public class D3D10Host 
     {
+         int fullScreenWidth = 1280;
+         int fullScreenHeight = 1024;
+
          NESMachine nes;
 
          public D3D10Host(NESMachine nes)
@@ -254,15 +257,35 @@ namespace SlimDXBindings.Viewer10
             Application.Run( context);
         }
 
+        int oldHeight;
+        int oldWidth;
         void RenderForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F11)
             {
+                oldWidth = RenderForm.ClientRectangle.Width;
+                oldHeight = RenderForm.ClientRectangle.Height;
+
+                modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
+                modeDescription.RefreshRate = new Rational(75, 1);
+                modeDescription.Scaling = DXGI.DisplayModeScaling.Unspecified;
+                modeDescription.ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Progressive;
+                modeDescription.Width = 1280;
+                modeDescription.Height = 1024;
+                SwapChain.ResizeTarget(modeDescription);
                 SwapChain.SetFullScreenState(true, null);
             }
             else if (e.KeyCode == Keys.F12)
             {
+                modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
+                modeDescription.RefreshRate = new Rational(60, 1);
+                modeDescription.Scaling = DXGI.DisplayModeScaling.Unspecified;
+                modeDescription.ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Unspecified;
+                modeDescription.Width = oldWidth;
+                modeDescription.Height = oldHeight;
+                
                 SwapChain.SetFullScreenState(false, null);
+                SwapChain.ResizeTarget(modeDescription);
             }
         }
 

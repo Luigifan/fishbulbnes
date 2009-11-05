@@ -113,10 +113,7 @@ namespace NES.CPU.PPUClasses
                         FetchNextTile();
                     }
 
-                    if (currentXPosition < 8)
-                        DrawClipPixel();
-                    else
-                        DrawPixel();
+                    DrawPixel();
 
                     vbufLocation++;
                 }
@@ -183,9 +180,9 @@ namespace NES.CPU.PPUClasses
             int i = 0;
             while (i < 256 * 240 )
             {
-                uint tile = (outBuffer[i] & 0xFF);
-                uint sprite = (outBuffer[i] >> 8) & 0xFF;
-                uint isSprite = (outBuffer[i] >> 16) & 0xFF;
+                uint tile = (outBuffer[i] & 0x0F);
+                uint sprite = ((outBuffer[i] >> 4) & 0x0F) + 16;
+                uint isSprite = (outBuffer[i] >> 8) & 64;
                 uint curPal = (outBuffer[i] >> 24) & 0xFF;
 
                 uint pixel;
@@ -254,62 +251,72 @@ namespace NES.CPU.PPUClasses
             isForegroundPixel = false;
             byte spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
 
-            if (!hitSprite && spriteZeroHit && tilePixel !=0 )
+            if (!hitSprite && spriteZeroHit && tilePixel != 0)
             {
                 hitSprite = true;
                 _PPUStatus = _PPUStatus | 0x40;
             }
 
             // the int is packed like this:
-            //  byte 0 : the current tile pixel
-            //  byte 1 : the current sprite pixel
-            //  byte 2 : bit 0 : is foreground sprite
-            //           bit 1 : tiles visible
-            //           bit 2 : sprites visible
+            //  byte 0 : the current tile pixel in lower 4 bits, current sprite pixel in upper four bits
+            //  byte 1 : ppuControlByte0
+            //  byte 2 : ppuControlByte1
             //  byte 4 : current palette  (future project)
+            int b0 = _PPUControlByte0;
+            if (isForegroundPixel)
+            {
+                b0 |= 64;
+            }
+            else
+            {
+                b0 &= ~64;
+            }
+
             outBuffer[vbufLocation] =  (uint)(
                 currentPalette << 24 |
-                ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
-                spritePixel << 8 | 
-                tilePixel);
+                _PPUControlByte1 << 16 |
+                b0 << 8 |
+                (spritePixel & 15) << 4 | tilePixel & 15);
 
-            pixelEffectBuffer[vbufLocation] = currentTileIndex;
+
+
+            // pixelEffectBuffer[vbufLocation] = currentTileIndex;
 
             //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 //? _palette[spritePixel] : _palette[tilePixel];
         }
 
-        private void DrawClipPixel()
-        {
-            int tilePixel = 0;
+        //private void DrawClipPixel()
+        //{
+        //    int tilePixel = 0;
 
 
-            // if we're clipping the left 8 pixels, or bg is not visible, set color to background byte
-            if (_tilesAreVisible && !_clipTiles)
-            {
-                tilePixel = GetNameTablePixel();
-            }
-            isForegroundPixel = false;
-            int spritePixel = _spritesAreVisible && !_clipSprites ? GetSpritePixel() : 0;
+        //    // if we're clipping the left 8 pixels, or bg is not visible, set color to background byte
+        //    if (_tilesAreVisible && !_clipTiles)
+        //    {
+        //        tilePixel = GetNameTablePixel();
+        //    }
+        //    isForegroundPixel = false;
+        //    int spritePixel = _spritesAreVisible && !_clipSprites ? GetSpritePixel() : 0;
 
 
-            //&& (newbyte & 3) != 0
-            if (!hitSprite && spriteZeroHit)
-            {
-                hitSprite = true;
-                _PPUStatus = _PPUStatus | 0x40;
-            }
+        //    //&& (newbyte & 3) != 0
+        //    if (!hitSprite && spriteZeroHit)
+        //    {
+        //        hitSprite = true;
+        //        _PPUStatus = _PPUStatus | 0x40;
+        //    }
 
-            outBuffer[vbufLocation] = (uint)(
-                currentPalette << 24 |
-                ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
-                spritePixel << 8 |
-                tilePixel);
+        //    outBuffer[vbufLocation] = (uint)(
+        //        currentPalette << 24 |
+        //        ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
+        //        spritePixel << 8 |
+        //        tilePixel);
 
-            //outBuffer[vbufLocation] =
-            //    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-            //    ? _palette[spritePixel] : _palette[tilePixel];
-        }
+        //    //outBuffer[vbufLocation] =
+        //    //    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
+        //    //    ? _palette[spritePixel] : _palette[tilePixel];
+        //}
 
 
         private bool _clipTiles;

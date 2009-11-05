@@ -327,6 +327,7 @@ float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
 	// calculate the address of the nes palette value in the palCache
 	
 	int col = finalColor.r * 255.0;
+	col &= 15;
 	float r = col / 32.0;
 	// this lookup is 8 columns wide
 	float2 palAddy = float2( r, finalColor.a  );

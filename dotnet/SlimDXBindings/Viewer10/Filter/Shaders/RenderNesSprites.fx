@@ -312,14 +312,19 @@ float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	// tileIndex in r, spriteIndex in g, isSprite in b
-
-	if (finalColor.b > 0)
+	
+	int ppuByte = finalColor.g * 255.0;
+	int col = (int)(finalColor.r * 255.0) >> 4;
+	col &= 15;
+	int tileCol = (int)(finalColor.r * 255.0);
+	tileCol &= 15;
+	
+	if ( col != 0)
 	{
+		col +=16;
 		// current palette index in a
 		// tileIndex in r, spriteIndex in g, isSprite in b
 		// calculate the address of the nes palette value in the palCache
-		
-		int col = finalColor.g * 255.0;
 		float r = col / 32.0;
 		// this lookup is 8 columns wide
 		float2 palAddy = float2( r, finalColor.a  );
@@ -327,8 +332,14 @@ float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 		// get the nes palette entry (will contain 4 values)
 		float4 rVal = nesPal.Sample(palSampler, palAddy);
 
-		return palette[rVal[col % 4] * 255.0];
-	} else 
+		float4 finalCol = palette[rVal[col % 4] * 255.0];
+		 if ((ppuByte & 64 != 64) && tileCol > 0)
+		 {
+			finalCol.a = 0;
+		 } 
+		return finalCol;
+	} 
+	else 
 	{
 		return float4(0,0,0,0);
 	}

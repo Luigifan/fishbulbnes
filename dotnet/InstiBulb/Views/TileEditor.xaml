@@ -55,11 +55,8 @@
         </Grid>
         <Border Grid.Column="1" Grid.Row="2" Background="LemonChiffon">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Pixel Effect"></TextBlock>
-                <ComboBox>
-                    <ComboBoxItem>Wave</ComboBoxItem>
-                    <ComboBoxItem>Blur</ComboBoxItem>
-                </ComboBox>
+                <Button Content="Save" />
+
             </StackPanel>
         </Border>
         <vm:PatternViewerControl x:Name="PatternDoodler"  Grid.Column="0" Grid.RowSpan="3" />
