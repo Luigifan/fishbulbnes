@@ -96,7 +96,7 @@ namespace InstiBulb.Integration
 
         void target_Drawscreen(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(doTheDraw, DispatcherPriority.Normal, null);
+            Dispatcher.BeginInvoke(doTheDraw, DispatcherPriority.Send, null);
         }
 
         public NESMachine Target

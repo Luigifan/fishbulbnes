@@ -245,7 +245,7 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(texture);
             disposables.Add(tileFilters);
             disposables.Add(nesPalTexture);
-
+            
             context = new ApplicationContext(RenderForm);
             
             context.ThreadExit += new EventHandler(context_ThreadExit);
@@ -295,10 +295,7 @@ namespace SlimDXBindings.Viewer10
 
         public  void DrawFrame()
         {
-            // update nes texture
 
-
-            tileFilters.SetResource("nesPal", nesPalTexture);
             tileFilters.SetVariable("timer", timer);
             timer += 0.1f;
             tileFilters.Draw(texture);

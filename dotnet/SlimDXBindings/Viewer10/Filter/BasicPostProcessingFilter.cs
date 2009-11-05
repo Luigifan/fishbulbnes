@@ -33,7 +33,7 @@ namespace SlimDXBindings.Viewer10.Filter
         SlimDX.DXGI.SampleDescription sampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
         string shaderName;
         string techniqueName;
-        readonly int width, height;
+        readonly internal int width, height;
 
         private List<string> boundScalars = new List<string>();
 
