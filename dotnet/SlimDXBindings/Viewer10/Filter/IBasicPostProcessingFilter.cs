@@ -9,6 +9,5 @@ namespace SlimDXBindings.Viewer10.Filter
         void ProcessEffect();
         SlimDX.Direct3D10.Texture2D results { get; }
         void SetShaderResource(string variableName, SlimDX.Direct3D10.Resource resource);
-        void SetScalar(string variableName, float constant);
     }
 }

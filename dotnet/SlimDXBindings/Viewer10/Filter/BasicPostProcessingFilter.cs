@@ -148,13 +148,14 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
 
-        public void SetScalar(string variableName, float constant) 
+        public BasicPostProcessingFilter SetScalar(string variableName, float constant) 
         {
             if (boundScalars.Contains(variableName))
             {
                 EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
                 variable.Set(constant);
             }
+            return this;
         }
 
         #region IDisposable Members

@@ -5,6 +5,8 @@ Texture2D backgroundPic;
 Texture2D spriteMask;
 Texture2D tileMask;
 
+float BackgroundBlendFactor;
+
 SamplerState nesSampler
 {
     Filter = MIN_MAG_MIP_POINT;
@@ -66,10 +68,10 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
     if (tileMaskColor.r < 1.0 )
 	{
 		float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
-		finalColor = (bg * 0.5) + (finalColor * 0.5);
+		finalColor = (bg * BackgroundBlendFactor) + (finalColor * (1 - BackgroundBlendFactor));
 		if (spriteMaskColor.g > 0)
 		{
-			finalSpriteColor.a = spriteMaskColor.g;
+			finalSpriteColor.a = spriteMaskColor.g - tileMaskColor.r;
 		}
 	} 
 	

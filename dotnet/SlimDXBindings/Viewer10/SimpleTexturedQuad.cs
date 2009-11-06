@@ -228,12 +228,14 @@ namespace SlimDXBindings.Viewer10
             tileFilters.Add(
                 new BasicPostProcessingFilter(Device, "combined", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "CombineNesOutput", "Render")
                 .ClearNeededResources()
+                .BindScalar("BackgroundBlendFactor")
+                .SetScalar("BackgroundBlendFactor", 0.4f)
                 .AddNeededResource("wavyTiles", "screenOne")
                 .AddNeededResource("blurredSprites", "screenTwo")
                 .AddNeededResource("spriteMask", "spriteMask")
                 .AddNeededResource("wavyTileMask", "tileMask")
                 .SetStaticResource("nesTexture", texture)
-                .SetStaticResource("backgroundPic",  textureBuddy.LoadFile(@"C:\Users\strat\Pictures\water.jpg"))
+                .SetStaticResource("backgroundPic", textureBuddy.LoadFile(@"C:\Users\jhartrick.TIGERDEV1\Pictures\mariobg.jpg"))
                 );
             //tileFilters.Add( 
             //        new BasicPostProcessingFilter(Device, "finalBlur", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "simpleBlur", "Render")
