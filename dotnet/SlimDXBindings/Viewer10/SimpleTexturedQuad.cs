@@ -26,6 +26,8 @@ namespace SlimDXBindings.Viewer10
              this.nes = nes;
          }
 
+         TextureBuddy textureBuddy;
+
          Texture2D nesPalTexture;
 
          Texture2D texture;
@@ -64,40 +66,6 @@ namespace SlimDXBindings.Viewer10
              }
          }
 
-         public void ToggleFullScreen()
-         {
-
-         }
-
-        private Texture2D CreateNoiseMap(int resolution)
-         {
-             Random rand = new Random();
-             Vector4[] noisyColors = new Vector4[resolution * resolution];
-             for (int x = 0; x < resolution; x++)
-                 for (int y = 0; y < resolution; y++)
-                     noisyColors[x + y * resolution] = new Vector4((float)rand.Next(1000) / 1000.0f, (float)rand.Next(1000) / 1000.0f, (float)rand.Next(1000) / 1000.0f, (float)rand.Next(1000) / 1000.0f);
-
-
-             Texture2DDescription desc = new Texture2DDescription();
-             desc.Usage = ResourceUsage.Dynamic;
-             desc.Format = SlimDX.DXGI.Format.R32G32B32A32_Float;
-             desc.ArraySize = 1;
-             desc.MipLevels = 1;
-             desc.Width = resolution;
-             desc.Height = resolution;
-             desc.BindFlags = BindFlags.ShaderResource;
-             desc.CpuAccessFlags = CpuAccessFlags.Write;
-             desc.SampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
-
-             Texture2D noiseImage = new Texture2D(Device, desc);
-             DataRectangle r = noiseImage.Map(0, MapMode.WriteDiscard, MapFlags.None);
-             r.Data.WriteRange<Vector4>(noisyColors);
-             noiseImage.Unmap(0);
-
-             disposables.Add(noiseImage);
-
-             return noiseImage;
-         }
 
         D3D10.Texture2D resource;
 
@@ -107,6 +75,8 @@ namespace SlimDXBindings.Viewer10
 
         public  void QuadUp()
         {
+
+
             RenderForm = new Form();
             RenderForm.ClientSize = new Size(800, 600);
             RenderForm.Text = "InstiBulb - DirectX 10";
@@ -133,6 +103,8 @@ namespace SlimDXBindings.Viewer10
             swapChainDescription.Usage = DXGI.Usage.RenderTargetOutput;
 
             D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
+
+            textureBuddy = new TextureBuddy(Device);
 
             resource = SwapChain.GetBuffer<D3D10.Texture2D>(0);
             RenderTarget = new D3D10.RenderTargetView(Device, resource);
@@ -202,7 +174,7 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(targetTexture);
 
             quad = new FullscreenQuad(Device, Pass.Description.Signature);
-
+            Texture2D noise = textureBuddy.CreateNoiseMap(128);
             tileFilters = new FilterChain();
             tileFilters.Add( 
                 new BasicPostProcessingFilter(Device, "tiles", 256, 256, "RenderNesTiles", "Render")
@@ -210,35 +182,64 @@ namespace SlimDXBindings.Viewer10
                 .SetStaticResource("nesPal", nesPalTexture)
                 );
 
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "wavyTiles", 512, 512, "blue", "Wave")
-                .ClearNeededResources()
-                .AddNeededResource("tiles", "texture2d")
-                .BindScalar("timer")
-                .SetStaticResource("noiseTex", this.CreateNoiseMap(128))
-                .DontFeedNextStage()
-                );
+
 
             tileFilters.Add(
                 new BasicPostProcessingFilter(Device, "sprites", 256, 256, "RenderNesSprites", "Render")
                 .SetStaticResource("nesPal", nesPalTexture)
                 .DontFeedNextStage());
+
+            tileFilters.Add(
+                new BasicPostProcessingFilter(Device, "spriteMask", 256, 256, "RenderNesSprites", "SpriteMask")
+                .SetStaticResource("nesPal", nesPalTexture)
+                .DontFeedNextStage());
+
+            tileFilters.Add(
+                new BasicPostProcessingFilter(Device, "tileMask", 256, 256, "RenderNesSprites", "TileMask")
+                .SetStaticResource("nesPal", nesPalTexture)
+                .DontFeedNextStage());
+
+            tileFilters.Add(
+                new BasicPostProcessingFilter(Device, "wavyTiles", 1024, 512, "blue", "Wave")
+                .ClearNeededResources()
+                .AddNeededResource("tiles", "texture2d")
+                .BindScalar("timer")
+                .SetStaticResource("noiseTex", noise)
+                .DontFeedNextStage()
+                );
+
+            tileFilters.Add(
+                new BasicPostProcessingFilter(Device, "wavyTileMask", 1024, 512, "blue", "Wave")
+                .ClearNeededResources()
+                .AddNeededResource("tileMask", "texture2d")
+                .BindScalar("timer")
+                .SetStaticResource("noiseTex", noise)
+                .DontFeedNextStage()
+                );
+
+
+
             tileFilters.Add(
                     new BasicPostProcessingFilter(Device, "blurredSprites", 1024, 1024, "simpleBlur", "Render")
                         .ClearNeededResources()
                         .AddNeededResource("sprites", "texture2d").DontFeedNextStage()
                         );
+
             tileFilters.Add(
                 new BasicPostProcessingFilter(Device, "combined", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "CombineNesOutput", "Render")
                 .ClearNeededResources()
                 .AddNeededResource("wavyTiles", "screenOne")
                 .AddNeededResource("blurredSprites", "screenTwo")
+                .AddNeededResource("spriteMask", "spriteMask")
+                .AddNeededResource("wavyTileMask", "tileMask")
+                .SetStaticResource("nesTexture", texture)
+                .SetStaticResource("backgroundPic",  textureBuddy.LoadFile(@"C:\Users\strat\Pictures\water.jpg"))
                 );
-            tileFilters.Add( 
-                    new BasicPostProcessingFilter(Device, "finalBlur", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "simpleBlur", "Render")
-                    .ClearNeededResources()
-                    .AddNeededResource("combined", "texture2d")
-                    );
+            //tileFilters.Add( 
+            //        new BasicPostProcessingFilter(Device, "finalBlur", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "simpleBlur", "Render")
+            //        .ClearNeededResources()
+            //        .AddNeededResource("combined", "texture2d")
+            //        );
 
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -248,6 +249,7 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(texture);
             disposables.Add(tileFilters);
             disposables.Add(nesPalTexture);
+            disposables.Add(textureBuddy);
             
             context = new ApplicationContext(RenderForm);
             
@@ -286,6 +288,11 @@ namespace SlimDXBindings.Viewer10
                 
                 SwapChain.SetFullScreenState(false, null);
                 SwapChain.ResizeTarget(modeDescription);
+            }
+            else if (e.KeyCode == Keys.D)
+            {
+                if (tileFilters != null && nes != null && nes.IsRunning)
+                    tileFilters.DumpFiles = true;
             }
         }
 

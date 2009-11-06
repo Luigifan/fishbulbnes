@@ -21,7 +21,7 @@ namespace NES.CPU.PPUClasses
         private NESSprite[] currentSprites;
         private NESSprite[] unpackedSprites;
 
-        private int _maxSpritesPerScanline = 8;
+        private int _maxSpritesPerScanline = 64;
 
         public int MaxSpritesPerScanline
         {

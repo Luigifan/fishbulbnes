@@ -1,18 +1,19 @@
+Texture2D nesTexture;
 Texture2D screenOne;
 Texture2D screenTwo;
+Texture2D backgroundPic;
+Texture2D spriteMask;
+Texture2D tileMask;
+
+SamplerState nesSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = Clamp;
+    AddressV = Clamp;
+};
 
 SamplerState linearSampler
 {
-	Texture = <screenOne>;
-    Filter = ANISOTROPIC;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-
-SamplerState spriteSampler
-{
-	Texture = <screenTwo>;
     Filter = ANISOTROPIC;
     AddressU = Wrap;
     AddressV = Wrap;
@@ -47,9 +48,37 @@ PS_IN VS( VS_IN vertexShaderIn )
 float4 PS( PS_IN pixelShaderIn ) : SV_Target
 {
     float4 finalColor = screenOne.Sample( linearSampler, pixelShaderIn.UV );
-    float4 finalSpriteColor = screenTwo.Sample( spriteSampler, pixelShaderIn.UV );
-	finalColor.a = (1.0 - finalSpriteColor.a);
-	return (finalColor * finalColor.a) + (finalSpriteColor * finalSpriteColor.a);	
+    float4 finalSpriteColor = screenTwo.Sample( linearSampler, pixelShaderIn.UV );
+    
+    float4 spriteMaskColor = spriteMask.Sample( linearSampler, pixelShaderIn.UV );
+    float4 tileMaskColor = tileMask.Sample( linearSampler, pixelShaderIn.UV );
+    
+	finalSpriteColor.a = 0;
+	
+	// if this is a foreground sprite, its alpha is the red component (foreground sprite) of the mask
+	
+	if (spriteMaskColor.r > 0.0 )
+	{
+		finalSpriteColor.a = spriteMaskColor.r;
+	} 
+	
+	// if this is a background pixel, and there is a sprite here, the sprites alpha is green component (background sprite) of the mask
+    if (tileMaskColor.r < 1.0 )
+	{
+		float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
+		finalColor = (bg * 0.5) + (finalColor * 0.5);
+		if (spriteMaskColor.g > 0)
+		{
+			finalSpriteColor.a = spriteMaskColor.g;
+		}
+	} 
+	
+	float4 result = (finalSpriteColor * finalSpriteColor.a) + (finalColor * (1 - finalSpriteColor.a));
+	result.a = 1.0;
+	return result;
+	
+	
+    
 }
 
 

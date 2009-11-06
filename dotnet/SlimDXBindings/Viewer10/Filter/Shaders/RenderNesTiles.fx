@@ -328,14 +328,30 @@ float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
 	
 	int col = finalColor.r * 255.0;
 	col &= 15;
+    int ppuByte1 = finalColor.b * 255.0;
+	
+	bool clipTiles = (ppuByte1 & 0x2) == 0x0;
+
+
+
 	float r = col / 32.0;
 	// this lookup is 8 columns wide
 	float2 palAddy = float2( r, finalColor.a  );
 
 	// get the nes palette entry (will contain 4 values)
 	float4 rVal = nesPal.Sample(palSampler, palAddy);
-
-	return palette[rVal[col % 4] * 255.0];
+    bool clipSprites = (ppuByte1 & 0x4) == 0x0;
+    
+    if ( clipTiles && pixelShaderIn.UV.x  < 0.03125)
+	{
+		return float4(0,0,0,0);
+	}else
+	{
+	
+		float4 result = palette[rVal[col % 4] * 255.0];
+		if (col == 0) result.a = 0;
+		return result;
+	}
 }
 
 float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target

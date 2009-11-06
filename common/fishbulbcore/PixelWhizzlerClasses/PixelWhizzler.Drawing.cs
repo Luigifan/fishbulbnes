@@ -262,23 +262,23 @@ namespace NES.CPU.PPUClasses
             //  byte 1 : ppuControlByte0
             //  byte 2 : ppuControlByte1
             //  byte 4 : current palette  (future project)
-            int b0 = _PPUControlByte0;
+            
+            // shoving isForegroundPixel over top of the ppu output pin (unused)
+            int b0 = _PPUControlByte0 ;
             if (isForegroundPixel)
             {
-                b0 |= 64;
+                b0 = b0 | 64;
             }
             else
             {
-                b0 &= ~64;
+                b0 = b0 & ~64;
             }
 
             outBuffer[vbufLocation] =  (uint)(
                 currentPalette << 24 |
-                _PPUControlByte1 << 16 |
-                b0 << 8 |
+                (_PPUControlByte1 ) << 16 |
+                (b0 ) << 8 |
                 (spritePixel & 15) << 4 | tilePixel & 15);
-
-
 
             // pixelEffectBuffer[vbufLocation] = currentTileIndex;
 

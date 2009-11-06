@@ -57,6 +57,12 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool dumpFiles = false;
 
+        public bool DumpFiles
+        {
+            get { return dumpFiles; }
+            set { dumpFiles = value; }
+        }
+
         #region IDisposable Members
 
         public void Dispose()

@@ -117,6 +117,7 @@
     <Compile Include="Viewer10\Filter\FilterChain.cs" />
     <Compile Include="Viewer10\Filter\IBasicPostProcessingFilter.cs" />
     <Compile Include="Viewer10\Filter\IFilterChainLink.cs" />
+    <Compile Include="Viewer10\Filter\TextureBuddy.cs" />
     <Compile Include="Viewer10\FullscreenQuad.cs" />
     <Compile Include="Viewer10\SimpleTexturedQuad.cs" />
     <Compile Include="Viewer\Filters\QuadRenderer.cs" />
