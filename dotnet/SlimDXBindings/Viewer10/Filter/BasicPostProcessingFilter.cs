@@ -69,9 +69,7 @@ namespace SlimDXBindings.Viewer10.Filter
             this.shaderName = shader;
             this.techniqueName = technique;
             this.filterName = name;
-            
-            this.neededResources.Add("input", "texture2d");
-            
+                        
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
             SetupFilter();
         }
@@ -121,7 +119,7 @@ namespace SlimDXBindings.Viewer10.Filter
         Dictionary<string, ShaderResourceView> shaderResources = new Dictionary<string, ShaderResourceView>();
         public void SetShaderResource(string variableName, Resource resource)
         {
-            if (!shaderResources.ContainsKey(variableName))
+            if (!shaderResources.ContainsKey(variableName) && resource != null)
             {
                 EffectResourceVariable variable = Effect.GetVariableByName(variableName).AsResource();
                 var shaderRes = new ShaderResourceView(device, resource);
@@ -216,5 +214,8 @@ namespace SlimDXBindings.Viewer10.Filter
            
             return this;
         }
+
+
+
     }
 }

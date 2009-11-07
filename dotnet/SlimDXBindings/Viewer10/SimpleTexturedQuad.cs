@@ -174,75 +174,15 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(targetTexture);
 
             quad = new FullscreenQuad(Device, Pass.Description.Signature);
-            Texture2D noise = textureBuddy.CreateNoiseMap(128);
-            tileFilters = new FilterChain();
-            tileFilters.Add( 
-                new BasicPostProcessingFilter(Device, "tiles", 256, 256, "RenderNesTiles", "Render")
-                .DontFeedNextStage()
-                .SetStaticResource("nesPal", nesPalTexture)
-                );
+            Texture2D noise = textureBuddy.CreateNoiseMap2D(128);
+
+            FilterChainLoader loader = new FilterChainLoader(Device);
+
+            // TODO: make this array match the elements in the new filterchains Input collection
 
 
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "sprites", 256, 256, "RenderNesSprites", "Render")
-                .SetStaticResource("nesPal", nesPalTexture)
-                .DontFeedNextStage());
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "spriteMask", 256, 256, "RenderNesSprites", "SpriteMask")
-                .SetStaticResource("nesPal", nesPalTexture)
-                .DontFeedNextStage());
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "tileMask", 256, 256, "RenderNesSprites", "TileMask")
-                .SetStaticResource("nesPal", nesPalTexture)
-                .DontFeedNextStage());
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "wavyTiles", 1024, 512, "blue", "Wave")
-                .ClearNeededResources()
-                .AddNeededResource("tiles", "texture2d")
-                .BindScalar("timer")
-                .SetStaticResource("noiseTex", noise)
-                .DontFeedNextStage()
-                );
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "wavyTileMask", 1024, 512, "blue", "Wave")
-                .ClearNeededResources()
-                .AddNeededResource("tileMask", "texture2d")
-                .BindScalar("timer")
-                .SetStaticResource("noiseTex", noise)
-                .DontFeedNextStage()
-                );
-
-
-
-            tileFilters.Add(
-                    new BasicPostProcessingFilter(Device, "blurredSprites", 1024, 1024, "simpleBlur", "Render")
-                        .ClearNeededResources()
-                        .AddNeededResource("sprites", "texture2d").DontFeedNextStage()
-                        );
-
-            tileFilters.Add(
-                new BasicPostProcessingFilter(Device, "combined", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "CombineNesOutput", "Render")
-                .ClearNeededResources()
-                .BindScalar("BackgroundBlendFactor")
-                .SetScalar("BackgroundBlendFactor", 0.4f)
-                .AddNeededResource("wavyTiles", "screenOne")
-                .AddNeededResource("blurredSprites", "screenTwo")
-                .AddNeededResource("spriteMask", "spriteMask")
-                .AddNeededResource("wavyTileMask", "tileMask")
-                .SetStaticResource("nesTexture", texture)
-                .SetStaticResource("backgroundPic", textureBuddy.LoadFile(@"C:\Users\jhartrick.TIGERDEV1\Pictures\mariobg.jpg"))
-                );
-            //tileFilters.Add( 
-            //        new BasicPostProcessingFilter(Device, "finalBlur", RenderForm.ClientRectangle.Width, RenderForm.ClientRectangle.Height, "simpleBlur", "Render")
-            //        .ClearNeededResources()
-            //        .AddNeededResource("combined", "texture2d")
-            //        );
-
+            tileFilters = (FilterChain)loader.ReadFile(@"d:\\testFilter.xml");
+            
             disposables.Add(resource);
             disposables.Add(Effect);
             disposables.Add(quad);
@@ -325,12 +265,16 @@ namespace SlimDXBindings.Viewer10
             nesPalTexture.Unmap(0);
         }
 
+        Texture2D[] texArrayForRender = new Texture2D[2];
+
         public  void DrawFrame()
         {
 
             tileFilters.SetVariable("timer", timer);
             timer += 0.1f;
-            tileFilters.Draw(texture);
+            texArrayForRender[0] = texture;
+            texArrayForRender[1] = nesPalTexture;
+            tileFilters.Draw(texArrayForRender);
 
 
             // render output of filter

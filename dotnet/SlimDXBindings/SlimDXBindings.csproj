@@ -115,6 +115,7 @@
     <Compile Include="Viewer10\Filter\BasicHDRFilter.cs" />
     <Compile Include="Viewer10\Filter\BasicPostProcessingFilter.cs" />
     <Compile Include="Viewer10\Filter\FilterChain.cs" />
+    <Compile Include="Viewer10\Filter\FilterChainLoader.cs" />
     <Compile Include="Viewer10\Filter\IBasicPostProcessingFilter.cs" />
     <Compile Include="Viewer10\Filter\IFilterChainLink.cs" />
     <Compile Include="Viewer10\Filter\TextureBuddy.cs" />

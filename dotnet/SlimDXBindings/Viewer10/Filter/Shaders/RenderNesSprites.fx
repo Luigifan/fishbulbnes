@@ -350,6 +350,43 @@ float4 CreateTileMask( PS_IN pixelShaderIn ) : SV_Target
 	return finalCol;
 }
 
+
+float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
+{
+	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	// current palette index in a
+	// tileIndex in r, spriteIndex in g, isSprite in b
+	// calculate the address of the nes palette value in the palCache
+	
+	int col = finalColor.r * 255.0;
+	col &= 15;
+    int ppuByte1 = finalColor.b * 255.0;
+	
+	bool clipTiles = (ppuByte1 & 0x2) == 0x0;
+
+
+
+	float r = col / 32.0;
+	// this lookup is 8 columns wide
+	float2 palAddy = float2( r, finalColor.a  );
+
+	// get the nes palette entry (will contain 4 values)
+	float4 rVal = nesPal.Sample(palSampler, palAddy);
+    bool clipSprites = (ppuByte1 & 0x4) == 0x0;
+    
+    if ( clipTiles && pixelShaderIn.UV.x  < 0.03125)
+	{
+		return float4(0,0,0,0);
+	}else
+	{
+	
+		float4 result = palette[rVal[col % 4] * 255.0];
+		if (col == 0) result.a = 0;
+		return result;
+	}
+}
+
+
 float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
@@ -376,7 +413,18 @@ float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
 }
 
 
-technique10 Render
+technique10 RenderTiles
+{
+	pass P0
+	{
+		SetGeometryShader( 0 );
+		SetVertexShader( CompileShader( vs_4_0, VS() ) );
+		SetPixelShader( CompileShader( ps_4_0, DrawTilesOnly() ) );
+	}
+	
+}
+
+technique10 RenderSprites
 {
 	pass P0
 	{
@@ -387,7 +435,8 @@ technique10 Render
 	
 }
 
-technique10 SpriteMask
+
+technique10 RenderSpriteMask
 {
 	pass P0
 	{
@@ -398,7 +447,7 @@ technique10 SpriteMask
 	
 }
 
-technique10 TileMask
+technique10 RenderTileMask
 {
 	pass P0
 	{

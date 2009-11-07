@@ -14,10 +14,33 @@ namespace SlimDXBindings.Viewer10.Filter
         {
             this.device = device;
         }
-
+        Dictionary<string, Texture> createdTextures = new Dictionary<string, Texture>();
         List<IDisposable> disposables = new List<IDisposable>();
 
-        public Texture2D CreateNoiseMap(int resolution)
+        /// <summary>
+        /// Fetches a texture out of the dictionary by name
+        /// </summary>
+        /// <typeparam name="T">SlimDX.Direct3D10.Texture, or a subclass thereof</typeparam>
+        /// <param name="name">The name of the texture</param>
+        /// <returns>The texture if found, else null</returns>
+        public T GetTexture<T>(string name) where T: Texture
+        {
+            if (createdTextures.ContainsKey(name))
+            {
+                return createdTextures[name] as T;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Creates a 2D texture of the specified resolution full of Perlin noise 
+        /// 
+        /// The new texture is tracked in the textureBuddys disposables collection, and is managed by the TextureBuddy
+        /// the new texture is not available in the dictionary
+        /// </summary>
+        /// <param name="resolution">The resolution of the final texture (both height and width)</param>
+        /// <returns>The new texture</returns>
+        public Texture2D CreateNoiseMap2D(int resolution)
         {
             Random rand = new Random();
             int[] noisyColors = new int[resolution * resolution];
@@ -47,19 +70,66 @@ namespace SlimDXBindings.Viewer10.Filter
             return noiseImage;
         }
 
-        public Texture2D LoadFile(string fileName)
+        /// <summary>
+        /// Creates a 2D texture of the specified resolution full of Perlin noise 
+        /// 
+        /// The new texture is tracked in the textureBuddys disposables collection, and is managed by the TextureBuddy
+        /// The new texture is available in the dictionary
+        /// </summary>
+        /// <param name="name">The name of the texture to add to the dictionary</param>
+        /// <param name="resolution">the resolution of the new texture</param>
+        /// <returns>the new texture</returns>
+        public Texture2D CreateNoiseMap2D(string name,int resolution)
         {
+            Random rand = new Random();
+            int[] noisyColors = new int[resolution * resolution];
+            for (int x = 0; x < resolution; x++)
+                for (int y = 0; y < resolution; y++)
+                    noisyColors[x + y * resolution] = rand.Next(int.MaxValue);
 
+
+            Texture2DDescription desc = new Texture2DDescription();
+            desc.Usage = ResourceUsage.Dynamic;
+            desc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+            desc.ArraySize = 1;
+            desc.MipLevels = 1;
+            desc.Width = resolution;
+            desc.Height = resolution;
+            desc.BindFlags = BindFlags.ShaderResource;
+            desc.CpuAccessFlags = CpuAccessFlags.Write;
+            desc.SampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
+
+            Texture2D noiseImage = new Texture2D(device, desc);
+            DataRectangle r = noiseImage.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            r.Data.WriteRange<int>(noisyColors);
+            noiseImage.Unmap(0);
+
+            // disposables.Add(noiseImage);
+            createdTextures.Add(name, noiseImage);
+            return noiseImage;
+        }
+
+
+        public Texture2D FromFile(string fileName)
+        {
+            if (createdTextures.ContainsKey(fileName))
+            {
+                return (Texture2D)createdTextures[fileName];
+            }
+
+            Texture2D tex;
             if (System.IO.File.Exists(fileName))
             {
-                Texture2D tex = Texture2D.FromFile(device, fileName);
+                tex = Texture2D.FromFile(device, fileName);
                 disposables.Add(tex);
                 return tex;
             }
             else
             {
-                return CreateNoiseMap(64);
+                tex = CreateNoiseMap2D(64);
             }
+            createdTextures.Add(fileName, tex);
+            return tex;
         }
 
         #region IDisposable Members
@@ -69,6 +139,11 @@ namespace SlimDXBindings.Viewer10.Filter
             foreach (IDisposable i in disposables)
             {
                 i.Dispose();
+            }
+
+            foreach (var p in createdTextures.Values)
+            {
+                p.Dispose();
             }
         }
 

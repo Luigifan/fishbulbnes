@@ -8,6 +8,21 @@ namespace SlimDXBindings.Viewer10.Filter
 {
     public class FilterChain : List<IFilterChainLink>, IFilterChain, IDisposable
     {
+        private TextureBuddy myTextureBuddy;
+
+        public TextureBuddy MyTextureBuddy
+        {
+            get { return myTextureBuddy; }
+            set { myTextureBuddy = value; }
+        }
+
+        List<string> inputs = new List<string>();
+
+        public void RegisterInput(string name, string item)
+        {
+            inputs.Add(name);
+        }
+
         private Texture2D result;
 
         public Texture2D Result
@@ -15,10 +30,16 @@ namespace SlimDXBindings.Viewer10.Filter
             get { return result; }
         }
 
-        public void Draw(Texture2D input)
+        public void Draw(Texture2D[] input)
         {
             if (dumpFiles)
-                Texture2D.ToFile(input, ImageFileFormat.Dds, "c:\\00filterChainInput.dds");
+            {
+                for (int i = 0; i < input.Length; ++i)
+                {
+                    Texture2D tex = input[i];
+                    Texture2D.ToFile(tex, ImageFileFormat.Dds, string.Format("c:\\00-{0}-filterChainInput.dds", inputs[i]) );
+                }
+            }
 
             for (int i = 0; i < this.Count; ++i)
             {
@@ -26,9 +47,9 @@ namespace SlimDXBindings.Viewer10.Filter
                 {
                     string s = pair.Key;
                     string resName = pair.Value;
-                    if (s == "input")
+                    if (inputs.Contains( s) )
                     {
-                        this[i].SetShaderResource(resName, input);
+                        this[i].SetShaderResource(resName, input[inputs.IndexOf(s)]);
                     }
                     else
                     {
@@ -45,8 +66,6 @@ namespace SlimDXBindings.Viewer10.Filter
                 if (dumpFiles)
                     Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, "c:\\" + i.ToString() + this[i].FilterName + ".dds");
 
-                if (this[i].FeedsNextStage)
-                    input = this[i].results;
             }
             result = this[this.Count - 1].results;
             if (dumpFiles)
