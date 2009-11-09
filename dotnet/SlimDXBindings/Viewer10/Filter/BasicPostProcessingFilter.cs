@@ -156,6 +156,32 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
+        public BasicPostProcessingFilter SetScalar(string variableName, int[] constant)
+        {
+            if (boundScalars.Contains(variableName))
+            {
+                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
+                variable.Set(constant);
+            }
+            return this;
+        }
+
+        public BasicPostProcessingFilter SetScalar<T>(string variableName, T constant) 
+        {
+            if (boundScalars.Contains(variableName))
+            {
+                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
+                if (typeof(T) == typeof(bool))
+                    variable.Set((constant as bool?).GetValueOrDefault(false));
+                if (typeof(T) == typeof(float))
+                    variable.Set((constant as float?).Value);
+                if (typeof(T) == typeof(int[]))
+                    variable.Set((constant as int[]));
+                
+            }
+            return this;
+        }
+
         #region IDisposable Members
 
         public void Dispose()

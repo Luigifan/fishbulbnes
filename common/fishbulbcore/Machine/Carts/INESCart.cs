@@ -19,6 +19,10 @@ namespace NES.CPU.Machine.Carts
         void WriteState(Queue<int> state);
         void ReadState(Queue<int> state);
 
+        byte[] ChrRom { get; set; }
+        int ChrRamStart { get; }
+        int[] PPUBankStarts { get; set; }
+
         ROMHashFunctionDelegate ROMHashFunction { get; set; }
         string CheckSum { get;  }
 

@@ -279,12 +279,23 @@ namespace NES.CPU.PPUClasses
                 (_PPUControlByte1 ) << 16 |
                 (b0 ) << 8 |
                 (spritePixel & 15) << 4 | tilePixel & 15);
+            
+            //lockedHScroll, lockedVScroll 
+
+            // drawInfo[vbufLocation] =
+            //    ((ulong)(nameTableMemoryStart ^ xNTXor ^ yNTXor) << 48
+            //        | (ulong)0 << 32 // current bankswitch mapping
+            //        | (ulong)(lockedHScroll & 0xFF << 24)
+            //        | (ulong)(lockedVScroll & 0xFF << 16)
+            //        | (ulong)_backgroundPatternTableIndex);
 
             // pixelEffectBuffer[vbufLocation] = currentTileIndex;
 
             //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
                 //? _palette[spritePixel] : _palette[tilePixel];
         }
+
+        int[] drawInfo= new int[256*256];
 
         //private void DrawClipPixel()
         //{

@@ -17,6 +17,29 @@ namespace SlimDXBindings.Viewer10.Filter
         Dictionary<string, Texture> createdTextures = new Dictionary<string, Texture>();
         List<IDisposable> disposables = new List<IDisposable>();
 
+
+        public Texture2D SetupTexture2D(string name, Texture2DDescription description)
+        {
+            Texture2D newTex;
+            try
+            {
+                newTex = new Texture2D(device, description);
+
+                if (description.Usage == ResourceUsage.Dynamic)
+                {
+                    DataRectangle r = newTex.Map(0, MapMode.WriteDiscard, MapFlags.None);
+                    r.Data.WriteRange<int>(new int[description.Width * description.Height]);
+                    newTex.Unmap(0);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            createdTextures.Add(name, newTex);
+            return newTex;
+        }
+
         /// <summary>
         /// Fetches a texture out of the dictionary by name
         /// </summary>

@@ -37,7 +37,8 @@ namespace SlimDXBindings.Viewer10.Filter
                 for (int i = 0; i < input.Length; ++i)
                 {
                     Texture2D tex = input[i];
-                    Texture2D.ToFile(tex, ImageFileFormat.Dds, string.Format("c:\\00-{0}-filterChainInput.dds", inputs[i]) );
+                    string s = (i < inputs.Count  ) ? inputs[i] : "unknown" + i.ToString();
+                    Texture2D.ToFile(tex, ImageFileFormat.Dds, string.Format("c:\\00-{0}-filterChainInput.dds", s) );
                 }
             }
 
@@ -105,6 +106,15 @@ namespace SlimDXBindings.Viewer10.Filter
                 b.SetScalar(name, constant);
             }
         }
+
+        public void SetVariable<T>(string name, T constant)
+        {
+            foreach (BasicPostProcessingFilter b in this)
+            {
+                b.SetScalar(name, constant);
+            }
+        }
+
 
         public void SetResource(string name, Resource res)
         {

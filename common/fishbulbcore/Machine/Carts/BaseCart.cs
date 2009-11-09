@@ -41,7 +41,14 @@ namespace NES.CPU.Machine.Carts
         internal byte[] iNesHeader = new byte[16];
         internal byte[] romControlBytes = new byte[2];
         internal byte[] nesCart;
-        internal byte[] chrRom;
+        private byte[] chrRom;
+
+        public byte[] ChrRom
+        {
+            get { return chrRom; }
+            set { chrRom = value; }
+        }
+
         /// taken from basicNES
         internal int current8 = -1;
         internal int currentA = -1;
@@ -410,7 +417,13 @@ namespace NES.CPU.Machine.Carts
 
         #endregion
 
-        internal int[] ppuBankStarts = new int[16];
+        private int[] ppuBankStarts = new int[16];
+
+        public int[] PpuBankStarts
+        {
+            get { return ppuBankStarts; }
+            set { ppuBankStarts = value; }
+        }
 
         internal List<int[]> bankStartCache = new List<int[]>();
 
@@ -419,9 +432,13 @@ namespace NES.CPU.Machine.Carts
         {
             int bank = address / 0x400;
             int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            //while (newAddress > chrRamStart)
+            //{
+            //    newAddress -= chrRamStart;
+            //}
             return chrRom[newAddress];
         }
-
+        
         // returns the absolute location of this address from the base of chrRom
         public int ActualChrRomOffset(int address)
         {
@@ -511,5 +528,27 @@ namespace NES.CPU.Machine.Carts
                     break;
             }
         }
+
+        #region INESCart Members
+
+
+        public int ChrRamStart
+        {
+            get { return chrRamStart; }
+        }
+
+        public int[] PPUBankStarts
+        {
+            get
+            {
+                return ppuBankStarts;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

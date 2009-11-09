@@ -67,8 +67,8 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 	// if this is a background pixel, and there is a sprite here, the sprites alpha is green component (background sprite) of the mask
     if (tileMaskColor.r < 1.0 )
 	{
-		float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
-		finalColor = (bg * BackgroundBlendFactor) + (finalColor * (1 - BackgroundBlendFactor));
+		//float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
+		//finalColor = (bg * BackgroundBlendFactor) + (finalColor * (1 - BackgroundBlendFactor));
 		if (spriteMaskColor.g > 0)
 		{
 			finalSpriteColor.a = spriteMaskColor.g - tileMaskColor.r;

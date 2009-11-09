@@ -24,11 +24,12 @@ namespace NES.CPU.Machine.ROMLoader
 
             if (fileName.IndexOf(".nsf") > 0)
             {
-                using (FileStream stream = File.Open(fileName, FileMode.Open))
-                {
-                    _cart = LoadNSF(stream);
-                }
-                return _cart;
+                throw new CartLoadException("NSF SUPPORT IS NOT SUPPORTED.  please fund development the ultimate edition for full nsf support.");
+                //using (FileStream stream = File.Open(fileName, FileMode.Open))
+                //{
+                //    _cart = LoadNSF(stream);
+                //}
+                //return _cart;
             }
 
             using (FileStream stream = File.Open(fileName, FileMode.Open))
@@ -120,29 +121,29 @@ namespace NES.CPU.Machine.ROMLoader
 
         }
 
-        private static INESCart LoadNSF(Stream zipStream)
-        {
-            INESCart _cart = null;
-            byte[] iNesHeader = new byte[0x7F];
-            int bytesRead = zipStream.Read(iNesHeader, 0, 0x7F);
+        //private static INESCart LoadNSF(Stream zipStream)
+        //{
+        //    INESCart _cart = null;
+        //    byte[] iNesHeader = new byte[0x7F];
+        //    int bytesRead = zipStream.Read(iNesHeader, 0, 0x7F);
 
-            byte[] theRom = new byte[zipStream.Length - 0x7F];
+        //    byte[] theRom = new byte[zipStream.Length - 0x7F];
 
 
-            bytesRead = zipStream.Read(theRom, 0, theRom.Length);
+        //    bytesRead = zipStream.Read(theRom, 0, theRom.Length);
 
-            _cart = new NSFCart();
-            _cart.LoadiNESCart(iNesHeader, 0, 0, theRom, null, 0);
+        //    _cart = new NSFCart();
+        //    _cart.LoadiNESCart(iNesHeader, 0, 0, theRom, null, 0);
             
-            if (_cart != null)
-            {
-                _cart.Whizzler = null;
-                _cart.ROMHashFunction = Hashers.HashFunction;
-            }
+        //    if (_cart != null)
+        //    {
+        //        _cart.Whizzler = null;
+        //        _cart.ROMHashFunction = Hashers.HashFunction;
+        //    }
 
-            return _cart;
+        //    return _cart;
 
-        }
+        //}
 
 
 

@@ -70,7 +70,7 @@ namespace NES.CPU.Machine.Carts
                     //TODO: get whizzler reading ram from INesCart.GetPPUByte then be calling this
                     //  setup ppuBankStarts in 0x400 block chunks 
                     for (int i = 0; i < (numberOf4kBanks * 4); ++i)
-                        ppuBankStarts[oneKdest + i] = (oneKsrc + i) * 0x400;
+                        PpuBankStarts[oneKdest + i] = (oneKsrc + i) * 0x400;
 
                     //Array.Copy(chrRom, src * 0x1000, whizzler.cartCopyVidRAM, dest * 0x1000, numberOf4kBanks * 0x1000);
                 }

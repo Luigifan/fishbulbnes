@@ -29,7 +29,7 @@ namespace SlimDXBindings.Viewer10
          TextureBuddy textureBuddy;
 
          Texture2D nesPalTexture;
-
+         Texture2D chrRomTex;
          Texture2D texture;
          Texture2D targetTexture;
          ApplicationContext context;
@@ -73,9 +73,53 @@ namespace SlimDXBindings.Viewer10
         DXGI.ModeDescription modeDescription = new DXGI.ModeDescription();
         DXGI.SampleDescription sampleDescription = new DXGI.SampleDescription();
 
+        Vector3[] YIQtoRGBMatrix = new Vector3[3];
+
+        static float[] default_decoder = new float[6] { 0.956f, 0.621f, -0.272f, -0.647f, -1.105f, 1.702f };
+
+        void makeYiqToRgbMatrix()
+        {   
+            int burst_count = 3;
+            int std_decoder_hue = -15;
+            int ext_decoder_hue = std_decoder_hue + 15;
+
+		    float hue = (float)(1.0 * Math.PI + Math.PI / 180.0 * ext_decoder_hue);
+		    float sat = 1;
+
+            float[] outBuf = new float[burst_count * 6];
+			float s = (float) Math.Sin( hue ) * sat;
+			float c = (float) Math.Cos( hue ) * sat;
+			//float* out = impl->to_rgb;
+            int outPos = 0;
+			
+			for (int n1 = 0; n1 < burst_count; ++n1)
+			{
+                int inBuf =0;
+				for (int n = 0; n < 3; ++n)
+				{
+					float i = default_decoder[inBuf++];
+					float q = default_decoder[inBuf++];
+					outBuf[outPos++] = i * c - q * s;
+					outBuf[outPos++] = i * s + q * c;
+				}
+
+				if ( burst_count <= 1 )
+					break;
+				ROTATE_IQ( ref s, ref c, 0.866025f, -0.5f ); /* +120 degrees */
+			}
+
+        }
+
+        void ROTATE_IQ( ref float i, ref float q, float sin_b, float cos_b ) {
+	        float t;
+	        t = i * cos_b - q * sin_b;
+	        q = i * sin_b + q * cos_b;
+	        i = t;
+        }
+
         public  void QuadUp()
         {
-
+            makeYiqToRgbMatrix();
 
             RenderForm = new Form();
             RenderForm.ClientSize = new Size(800, 600);
@@ -139,7 +183,34 @@ namespace SlimDXBindings.Viewer10
             desc.SampleDescription = sampleDescription;
 
 
-            texture = new Texture2D(Device, desc);
+            texture = textureBuddy.SetupTexture2D("nesOutput", desc);
+
+            Texture2DDescription chrRomDesc = new Texture2DDescription();
+            chrRomDesc.Usage = ResourceUsage.Dynamic;
+            chrRomDesc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+            chrRomDesc.ArraySize = 1;
+            chrRomDesc.MipLevels = 1;
+            chrRomDesc.Width = 256;
+            // (8 megabytes of mega chr rom) (67 108 864 bits / 128 bits per pixel) / 8 bits per pixel
+            chrRomDesc.Height = 1024;
+            chrRomDesc.BindFlags = BindFlags.ShaderResource;
+            chrRomDesc.CpuAccessFlags = CpuAccessFlags.Write;
+            chrRomDesc.SampleDescription = sampleDescription;
+
+            chrRomTex = textureBuddy.SetupTexture2D("chrRAM", chrRomDesc);
+
+            //Texture2D pixelInformation = textureBuddy.SetupTexture2D("pixelInfo", new Texture2DDescription()
+            //    {
+            //        Usage = ResourceUsage.Dynamic,
+            //        Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm,
+            //        ArraySize= 1,
+            //        MipLevels = 1,
+            //        Width = 256,
+            //        Height = 256,
+            //        BindFlags = BindFlags.ShaderResource,
+            //        CpuAccessFlags = CpuAccessFlags.Write,
+            //        SampleDescription = new SlimDX.DXGI.SampleDescription(0,1),
+            //    });
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
             textureView = new ShaderResourceView(Device, texture);
@@ -181,7 +252,7 @@ namespace SlimDXBindings.Viewer10
             // TODO: make this array match the elements in the new filterchains Input collection
 
 
-            tileFilters = (FilterChain)loader.ReadFile(@"d:\\testFilter.xml");
+            tileFilters = (FilterChain)loader.ReadFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Shaders\testFilter.xml");
             
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -194,6 +265,10 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(textureBuddy);
             
             context = new ApplicationContext(RenderForm);
+
+            texArrayForRender[0] = texture;
+            texArrayForRender[1] = nesPalTexture;
+            texArrayForRender[2] = chrRomTex;
             
             context.ThreadExit += new EventHandler(context_ThreadExit);
             Application.Idle += new EventHandler(Application_Idle);
@@ -252,8 +327,12 @@ namespace SlimDXBindings.Viewer10
         float timer = 0.0f;
         ShaderResourceView texView;
 
+        int[] spriteRam = new int[256/4];
+
         public void UpdateTextures()
         {
+            System.Buffer.BlockCopy(nes.PPU.SpriteRam,0,spriteRam,0,256);
+
             DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             d.Data.WriteRange<uint>(this.nes.PPU.OutBuffer);
             texture.Unmap(0);
@@ -261,19 +340,30 @@ namespace SlimDXBindings.Viewer10
             DataRectangle palD = nesPalTexture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             for (int i = 0; i < nes.PPU.CurrentPalette + 1; ++i)
                 palD.Data.WriteRange<byte>(this.nes.PPU.PalCache[i]);
-
             nesPalTexture.Unmap(0);
+
+            DataRectangle ramRect = chrRomTex.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom, 0, this.nes.Cart.ChrRom.Length );
+            //ramRect.Data.WriteRange<byte>(new byte[1048576 - nes.Cart.ChrRom.Length]);
+
+            chrRomTex.Unmap(0);
+
+            
         }
 
-        Texture2D[] texArrayForRender = new Texture2D[2];
+        Texture2D[] texArrayForRender = new Texture2D[3];
 
         public  void DrawFrame()
         {
 
             tileFilters.SetVariable("timer", timer);
+            tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
+            tileFilters.SetVariable("spriteRam", spriteRam);            
+
             timer += 0.1f;
-            texArrayForRender[0] = texture;
-            texArrayForRender[1] = nesPalTexture;
+
+            //texArrayForRender[3] = bankSwitchTex;
+
             tileFilters.Draw(texArrayForRender);
 
 
