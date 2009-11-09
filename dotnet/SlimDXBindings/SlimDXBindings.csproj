@@ -177,6 +177,9 @@
     <EmbeddedResource Include="Viewer10\Filter\Shaders\RenderNesTiles.fx" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Viewer10\Filter\BasicFilterChain.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Viewer10\Filter\Shaders\RenderNesSprites.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

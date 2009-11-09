@@ -30,6 +30,7 @@ namespace SlimDXBindings.Viewer10
 
          Texture2D nesPalTexture;
          Texture2D chrRomTex;
+         Texture2D spriteList;
          Texture2D texture;
          Texture2D targetTexture;
          ApplicationContext context;
@@ -199,18 +200,19 @@ namespace SlimDXBindings.Viewer10
 
             chrRomTex = textureBuddy.SetupTexture2D("chrRAM", chrRomDesc);
 
-            //Texture2D pixelInformation = textureBuddy.SetupTexture2D("pixelInfo", new Texture2DDescription()
-            //    {
-            //        Usage = ResourceUsage.Dynamic,
-            //        Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm,
-            //        ArraySize= 1,
-            //        MipLevels = 1,
-            //        Width = 256,
-            //        Height = 256,
-            //        BindFlags = BindFlags.ShaderResource,
-            //        CpuAccessFlags = CpuAccessFlags.Write,
-            //        SampleDescription = new SlimDX.DXGI.SampleDescription(0,1),
-            //    });
+            spriteList = textureBuddy.SetupTexture2D("spriteList", new Texture2DDescription()
+                {
+                    Usage = ResourceUsage.Dynamic,
+                    Format = SlimDX.DXGI.Format.R16G16B16A16_UInt,
+                    ArraySize = 1,
+                    MipLevels = 1,
+                    Width = 1,
+                    Height = 256,
+                    BindFlags = BindFlags.ShaderResource,
+                    CpuAccessFlags = CpuAccessFlags.Write,
+                    SampleDescription = sampleDescription,
+                    OptionFlags = ResourceOptionFlags.None
+                });
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
             textureView = new ShaderResourceView(Device, texture);
@@ -252,7 +254,7 @@ namespace SlimDXBindings.Viewer10
             // TODO: make this array match the elements in the new filterchains Input collection
 
 
-            tileFilters = (FilterChain)loader.ReadFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Shaders\testFilter.xml");
+            tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.Viewer10.Filter.BasicFilterChain.xml");
             
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -269,6 +271,7 @@ namespace SlimDXBindings.Viewer10
             texArrayForRender[0] = texture;
             texArrayForRender[1] = nesPalTexture;
             texArrayForRender[2] = chrRomTex;
+            texArrayForRender[3] = spriteList;
             
             context.ThreadExit += new EventHandler(context_ThreadExit);
             Application.Idle += new EventHandler(Application_Idle);
@@ -331,7 +334,7 @@ namespace SlimDXBindings.Viewer10
 
         public void UpdateTextures()
         {
-            System.Buffer.BlockCopy(nes.PPU.SpriteRam,0,spriteRam,0,256);
+            System.Buffer.BlockCopy(nes.PPU.OutBuffer, 255 * 256 * 4, spriteRam, 0, 256);
 
             DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             d.Data.WriteRange<uint>(this.nes.PPU.OutBuffer);
@@ -348,10 +351,13 @@ namespace SlimDXBindings.Viewer10
 
             chrRomTex.Unmap(0);
 
+            DataRectangle sprRec = spriteList.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            sprRec.Data.WriteRange<ulong>(this.nes.PPU.SpritesOnLine, 0, 256);
+            spriteList.Unmap(0);
             
         }
 
-        Texture2D[] texArrayForRender = new Texture2D[3];
+        Texture2D[] texArrayForRender = new Texture2D[4];
 
         public  void DrawFrame()
         {

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using SlimDX.Direct3D10;
+using System.IO;
+using System.Reflection;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -25,13 +27,13 @@ namespace SlimDXBindings.Viewer10.Filter
             this.device = device;
         }
 
-        public IFilterChain ReadFile(string fileName)
+        public IFilterChain Load(Stream stream)
         {
             FilterChain newChain = new FilterChain();
-            
+
             newChain.MyTextureBuddy = new TextureBuddy(device);
 
-            XDocument doc = XDocument.Load(System.Xml.XmlReader.Create(fileName));
+            XDocument doc = XDocument.Load(System.Xml.XmlReader.Create(stream));
 
             // load up resources
             ReadResources(newChain, doc.Element("FilterChain"));
@@ -39,6 +41,26 @@ namespace SlimDXBindings.Viewer10.Filter
             // load up filters
             ReadFilters(newChain, doc.Element("FilterChain"));
 
+            return newChain;
+        }
+
+        public IFilterChain ReadFile(string fileName)
+        {
+            IFilterChain newChain = null;
+            using (FileStream fs = new FileStream(fileName, FileMode.Open))
+            {
+                newChain = Load(fs);
+            }
+            return newChain;
+        }
+
+        public IFilterChain ReadResource(string resName)
+        {
+            IFilterChain newChain = null;
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resName))
+            {
+                newChain = Load(s);
+            }
             return newChain;
         }
 

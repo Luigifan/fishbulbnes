@@ -17,7 +17,7 @@
 			<Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
 			<Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
       <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
-      <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
+      <!--<Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>-->
     </Inputs>
 	</Filter>
 

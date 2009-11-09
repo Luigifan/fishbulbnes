@@ -164,6 +164,14 @@ namespace NES.CPU.PPUClasses
         int spritesOnThisScanline;
 
         int spriteSize;
+
+        ulong[] spritesOnLine = new ulong[256];
+
+        public ulong[] SpritesOnLine
+        {
+            get { return spritesOnLine; }
+        }
+
         /// <summary>
         /// populates the currentSpritesXXX arrays with the first 8 visible sprites on the 
         /// denoted scanline. 
@@ -172,6 +180,7 @@ namespace NES.CPU.PPUClasses
         public void PreloadSprites(int scanline)
         {
             spritesOnThisScanline = 0;
+            spritesOnLine[scanline] = 0;
             for (int spriteNum = 0; spriteNum < 0x100; spriteNum += 4)
             {
                 int spriteID = ((spriteNum + _spriteAddress) & 0xFF) >> 2;
@@ -180,6 +189,7 @@ namespace NES.CPU.PPUClasses
 
                 if (scanline >= y && scanline < y + spriteSize)
                 {
+                    spritesOnLine[scanline] |= ((ulong)1) << (((spriteNum + _spriteAddress) & 0xFF) >> 2);
 
                     currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
                     currentSprites[spritesOnThisScanline].IsVisible = true;
