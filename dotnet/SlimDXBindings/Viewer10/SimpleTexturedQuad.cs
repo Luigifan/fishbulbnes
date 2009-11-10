@@ -203,15 +203,14 @@ namespace SlimDXBindings.Viewer10
             spriteList = textureBuddy.SetupTexture2D("spriteList", new Texture2DDescription()
                 {
                     Usage = ResourceUsage.Dynamic,
-                    Format = SlimDX.DXGI.Format.R16G16B16A16_UInt,
+                    Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm,
                     ArraySize = 1,
                     MipLevels = 1,
-                    Width = 1,
+                    Width = 2,
                     Height = 256,
                     BindFlags = BindFlags.ShaderResource,
                     CpuAccessFlags = CpuAccessFlags.Write,
                     SampleDescription = sampleDescription,
-                    OptionFlags = ResourceOptionFlags.None
                 });
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
@@ -336,6 +335,19 @@ namespace SlimDXBindings.Viewer10
         {
             System.Buffer.BlockCopy(nes.PPU.OutBuffer, 255 * 256 * 4, spriteRam, 0, 256);
 
+            if (tileFilters.DumpFiles)
+            {
+                for (int i = 0; i < 64; ++i)
+                {
+                    Console.WriteLine("{0}, ", spriteRam[i]);
+                }
+                Console.WriteLine("SpriteLines");
+                for (int i = 0; i < 512; ++i)
+                {
+                    Console.WriteLine("{0}, ", nes.PPU.SpritesOnLine[i]);
+                }
+            }
+
             DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             d.Data.WriteRange<uint>(this.nes.PPU.OutBuffer);
             texture.Unmap(0);
@@ -351,9 +363,7 @@ namespace SlimDXBindings.Viewer10
 
             chrRomTex.Unmap(0);
 
-            DataRectangle sprRec = spriteList.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            sprRec.Data.WriteRange<ulong>(this.nes.PPU.SpritesOnLine, 0, 256);
-            spriteList.Unmap(0);
+ 
             
         }
 
@@ -364,7 +374,8 @@ namespace SlimDXBindings.Viewer10
 
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
-            tileFilters.SetVariable("spriteRam", spriteRam);            
+            tileFilters.SetVariable("spriteRam", spriteRam);
+            tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
 
             timer += 0.1f;
 

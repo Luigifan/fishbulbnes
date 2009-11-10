@@ -38,11 +38,12 @@
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="spriteList" EffectVariable="spriteList" />
         <Input Type="Scalar" EffectVariable="spriteRam" Source="spriteRam"/>
+        <Input Type="Scalar" EffectVariable="spritesOnLine" Source="spritesOnLine"/>
       </Inputs>
     </Filter>
 
       <!--Sprite RAM pass two-->
-    <Filter Name="sprites" Height="256" Width="256" Effect="RenderNesSprites" Technique="DrawActualSprites" >
+    <!--<Filter Name="sprites" Height="256" Width="256" Effect="RenderNesSprites" Technique="DrawActualSprites" >
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
@@ -50,7 +51,7 @@
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
         <Input Type="Scalar" EffectVariable="spriteRam" Source="spriteRam"/>
       </Inputs>
-    </Filter>
+    </Filter>-->
 
       <!--Sprite Mask-->
     <Filter Name="spriteMask" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderSpriteMask" >
@@ -81,7 +82,7 @@
     <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
         <Input Type="FilterOutput" Filter="wavyTiles" EffectVariable="screenOne" />
-        <Input Type="FilterOutput" Filter="sprites" EffectVariable="screenTwo" />
+        <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
         <Input Type="FilterOutput" Filter="spriteMask" EffectVariable="spriteMask" />
         <Input Type="FilterOutput" Filter="wavyTileMask" EffectVariable="tileMask" />
       </Inputs>

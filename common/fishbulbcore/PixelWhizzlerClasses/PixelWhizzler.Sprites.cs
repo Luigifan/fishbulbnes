@@ -165,9 +165,9 @@ namespace NES.CPU.PPUClasses
 
         int spriteSize;
 
-        ulong[] spritesOnLine = new ulong[256];
+        int[] spritesOnLine = new int[256 * 2];
 
-        public ulong[] SpritesOnLine
+        public int[] SpritesOnLine
         {
             get { return spritesOnLine; }
         }
@@ -180,7 +180,8 @@ namespace NES.CPU.PPUClasses
         public void PreloadSprites(int scanline)
         {
             spritesOnThisScanline = 0;
-            spritesOnLine[scanline] = 0;
+            spritesOnLine[currentYPosition]=0;
+
             for (int spriteNum = 0; spriteNum < 0x100; spriteNum += 4)
             {
                 int spriteID = ((spriteNum + _spriteAddress) & 0xFF) >> 2;
@@ -189,7 +190,11 @@ namespace NES.CPU.PPUClasses
 
                 if (scanline >= y && scanline < y + spriteSize)
                 {
-                    spritesOnLine[scanline] |= ((ulong)1) << (((spriteNum + _spriteAddress) & 0xFF) >> 2);
+                    int spId = spriteNum / 4;
+                    if (spId < 32)
+                        spritesOnLine[2 * currentYPosition] |=  1 << spId;
+                    else
+                        spritesOnLine[2 * currentYPosition + 1] |= 1 << spId - 32;
 
                     currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
                     currentSprites[spritesOnThisScanline].IsVisible = true;
