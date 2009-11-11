@@ -1040,7 +1040,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 		spritePatternTable = 0x1000;
 	}
 	int xPos = currentXPosition - x;
-	int yLine = currentYPosition - y - 1;
+	int yLine = currentYPosition - y ;
 
 	yLine = yLine & (spriteSize - 1);
 
