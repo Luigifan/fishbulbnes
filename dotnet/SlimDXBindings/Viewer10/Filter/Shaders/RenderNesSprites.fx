@@ -123,7 +123,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 	PS_IN vertexShaderOut = (PS_IN)0;
 	
 	vertexShaderOut.position = vertexShaderIn.position;
-	//vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
+	// vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
 
 	vertexShaderOut.color = vertexShaderIn.color;
 	vertexShaderOut.UV = vertexShaderIn.UV;
@@ -479,7 +479,10 @@ float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	int ppuByte0 = finalColor.g * 255.0;	
     int ppuByte1 = finalColor.b * 255.0;	
-    int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
+	int hScroll = finalColor.a * 255;
+	int vScroll = finalColor.r * 255;
+	
+	int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
 	
 	int ntPixel =(ppuByte1 & 0x08) ? GetNameTablePixel(pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1, nameTableMemoryStart) : 0;
 
@@ -591,7 +594,10 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	int ppuByte0 = finalColor.g * 255.0;	
-	int ppuByte1 = finalColor.b * 255.0;	
+	int ppuByte1 = finalColor.b * 255.0;
+	
+
+	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
     // first 32 sprites
 	int spriteCount=0;
