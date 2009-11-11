@@ -51,7 +51,7 @@ namespace NES.CPU.PPUClasses
             switch (frameClock++)
             {
                 case 0:
-                    frameFinished();
+                    //frameFinished();
                     break;
                 case 6820:
                     frameOn = true;
@@ -86,11 +86,9 @@ namespace NES.CPU.PPUClasses
 
                 case frameClockEnd:
                     if (fillRGB) FillBuffer();
-                    
-                    SetupVINT();
                     frameFinished();
+                    SetupVINT();
                     frameOn = false;
-
                     frameClock = 0;
                     break;
             }

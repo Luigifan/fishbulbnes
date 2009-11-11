@@ -180,8 +180,9 @@ namespace NES.CPU.PPUClasses
         public void PreloadSprites(int scanline)
         {
             spritesOnThisScanline = 0;
-            spritesOnLine[currentYPosition]=0;
-
+            int yLine = currentYPosition - 1;
+            spritesOnLine[2 * yLine] = 0;
+            spritesOnLine[2 * yLine + 1] = 0;
             for (int spriteNum = 0; spriteNum < 0x100; spriteNum += 4)
             {
                 int spriteID = ((spriteNum + _spriteAddress) & 0xFF) >> 2;
@@ -192,9 +193,9 @@ namespace NES.CPU.PPUClasses
                 {
                     int spId = spriteNum / 4;
                     if (spId < 32)
-                        spritesOnLine[2 * currentYPosition] |=  1 << spId;
+                        spritesOnLine[2 * yLine] |= 1 << spId;
                     else
-                        spritesOnLine[2 * currentYPosition + 1] |= 1 << spId - 32;
+                        spritesOnLine[(2 * yLine) + 1] |= 1 << (spId - 32);
 
                     currentSprites[spritesOnThisScanline] = unpackedSprites[spriteID];
                     currentSprites[spritesOnThisScanline].IsVisible = true;

@@ -312,7 +312,7 @@ float3 DecodePixel(int pixel, int tintBits)
 	return rgb1 * rgb_bias;
 }
 
-int spritesOnLine[256 * 2] =
+int spritesOnLine[512] =
 {
 0, 
 0, 
@@ -363,8 +363,6 @@ int spritesOnLine[256 * 2] =
 0, 
 0, 
 0, 
-0, 
-0, 
 201326592, 
 0, 
 201326592, 
@@ -375,43 +373,43 @@ int spritesOnLine[256 * 2] =
 0, 
 201326592, 
 0, 
+201326592, 
 0, 
+201326592, 
 0, 
+201326592, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+1342177280, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
+-1610612736, 
 0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
+-1610612736, 
 0, 
 0, 
 0, 
@@ -570,21 +568,21 @@ int spritesOnLine[256 * 2] =
 0, 
 0, 
 0, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
-1, 
+0, 
 1048576, 
 0, 
 2097152, 
@@ -706,6 +704,7 @@ int spritesOnLine[256 * 2] =
 0, 
 0, 
 0, 
+
 0, 
 0, 
 0, 
@@ -745,6 +744,8 @@ int spritesOnLine[256 * 2] =
 10, 
 0, 
 10, 
+0, 
+0, 
 0, 
 0, 
 0, 
@@ -827,6 +828,7 @@ int spritesOnLine[256 * 2] =
 0, 
 0, 
 };
+
 
 int spriteRam[64] = 
 {
@@ -955,11 +957,14 @@ int GetByte(int address)
 	int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
 	
 	// four bytes per texel, 256 cols in the row (1k per row)
-	int y = (newAddress >> 10);
+	//int y = (newAddress >> 10);
+	//int x = (newAddress & 1023);
+	//float4 byte = chrRam.Sample(linearSampler, 
+	//	float2((x/1024.0),(y/1024.0))
+	//	);
+	int y = (newAddress / 1024);
 	int x = (newAddress & 1023);
-	float4 byte = chrRam.Sample(linearSampler, 
-		float2((x/1024.0),(y/1024.0))
-		);
+	float4 byte = chrRam.Load(int3(x/4,y,0));
 	
 	int result = byte[x & 3] * 255;
 	return result;
@@ -1013,7 +1018,6 @@ bool PeepSprite(int spriteNum, int currentXPosition, int currentYPosition)
 
 int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int ppuByte0, int ppuByte1)
 {
-
 	// if these are 8x16 sprites, read high and low, draw
 	uint spriteData = spriteRam[spriteNum];
 	
@@ -1022,10 +1026,6 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 	uint tileIndex = (spriteData >> 8) & 0xFF;
 	uint y = spriteData & 0xFF;
 	
-		if ( !(x > 0 && currentXPosition >= x && currentXPosition < x + 8) )
-		{
-			return 0;
-		};
 
 	int attrColor = ((attributeByte & 0x03) << 2) | 16;
 	bool isInFront = (attributeByte & 32) != 32;
@@ -1059,16 +1059,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 	}
 	int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, flipX, flipY, spriteSize, tileIndex);
 
-	if (result != 0)
-	{
-
-		//if (isInFront)
-		//	result +=128;
-		return result;
-	}
-
-	
-	return 0;
+	return result;
 }
 
 int _backgroundPatternTableIndex=4096;
@@ -1138,8 +1129,6 @@ int GetNameTablePixel(int xPosition, int yPosition, int ppuByte0, int ppuByte1, 
 	
 }
 
-
-
 float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
@@ -1154,96 +1143,102 @@ float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	float2 palAddy = float2( r, finalColor.a  );
 
 	// get the nes palette entry (will contain 4 values)
-	float4 rVal = nesPal.Sample(palSampler, palAddy );	
-	
+	//float4 rVal = nesPal.Sample(palSampler, palAddy );	
+	float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
+
 	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), 1.0 );
 }
+
+int spriteStart=0;
 
 
 float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
-	int x = pixelShaderIn.UV.x * 255.0;
-	int y = pixelShaderIn.UV.y * 255.0;
+	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	int ppuByte0 = finalColor.g * 255.0;	
+	int ppuByte1 = finalColor.b * 255.0;	
 	
-    y *=2;
+	float2 xy = (pixelShaderIn.UV) * 255.0;
+	
+    int y = xy.y;
+	y *=2;
+	
     // first 32 sprites
-	for (int j = 0; j < 32; ++j)
-	{
-		if (spritesOnLine[y] & (1 << j))
-		{
-			if (PeepSprite(j, x, y))
-			{
-				return float4(1,0,0,1);
-			}
-		}
-
-	}
-	// next 32 sprites
-	for (int j = 0; j < 32; ++j)
-	{	
-		if (spritesOnLine[y+1] & (1 << j))
-		{
-			if (PeepSprite(j * 2, x, y))
-			{
-				return float4(1,0,0,1);
-			}
-		}
-	}
+	int spriteCount=0;
 	
-	return float4(0,0,0,0);
+	//for (int spriteNum = spriteStart; spriteNum < spriteStart + 8; ++spriteNum)
+	for(int spriteNum=0; spriteNum < 64; ++spriteNum)
+	{
+		int j;
+		int offset=0;
+		if (spriteNum < 32)
+		{
+			j = spriteNum;
+		}
+		else
+		{
+			j = spriteNum - 32;
+			offset=1;
+		}
+		
+		if (spritesOnLine[y + offset] & (1 << j) && PeepSprite(spriteNum, xy.x, xy.y))
+		{
+			spriteCount++;
+			if (spriteCount > 64) 
+				return float4(0,0,0,0);
+			int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
+			if (ntPixel > 0)
+			{
+				ntPixel |=16;
+				// get the nes palette entry (will contain 4 values)
+				//float4 rVal = nesPal.Sample(palSampler, palAddy );	
+				float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
+				int pixel = rVal[ntPixel & 3] * 255;
+				return float4(DecodePixel(pixel, 0), 1.0 );
+			}
+
+		}
+		
+	}
+	return float4(0,0,0,1);
 }
-		//int pixel = DrawSprite(sprites[j], pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1);
-		//if (pixel > 0)
-		//{
-		//	return float4(DecodePixel(pixel, 0), 1.0 ); 
-		//} 
-float4 DrawVisibleSprites( PS_IN pixelShaderIn) : SV_Target
+
+
+float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
-
-	float4 res = spriteSheet.Sample(linearSampler, pixelShaderIn.UV);
 	
-	int input[4];
-	input[0] = res.a * 255.0;
-	input[1] = res.b * 255.0;
-	input[2] = res.g * 255.0;
-	input[3] = res.r * 255.0;
-	float4 output = float4(0,0,0,0);
+	int tintBits = (ppuByte1 >>5) & 0x7;
+	float2 xy = (pixelShaderIn.UV) * 255.0;
 	
-	for (int ctr = 0; ctr < 3; ++ctr)
+    int y = xy.y;
+	y *=2;
+	
+    // first 32 sprites
+	int spriteCount=0;
+	int spriteNum=0;
+	while (spriteNum++ < 64)
 	{
-		//int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
-		// sprite pixel is out of 65 (as to distinguish sprite 0 from no sprite at all)
-		if (input[ctr] > 0)
+		int j;
+		int offset=0;
+		if (spriteNum < 32)
 		{
-			int ntPixel = DrawSprite(input[ctr] - 1, pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1);
-			float alpha = 0.5;
-			if (ntPixel & 128)
-			{
-				alpha = 1.0;
-			}
-			ntPixel &= 31;
-			
-			float r = ntPixel / 32.0;
-			// this lookup is 8 columns wide
-			float2 palAddy = float2( r, finalColor.a  );
-
-			// get the nes palette entry (will contain 4 values)
-			float4 rVal = nesPal.Sample(palSampler, palAddy );	
-			int pixel = rVal[ntPixel & 3] * 255;
-			if (pixel > 0)
-			{
-				output = float4(DecodePixel(pixel, 0), alpha );
-				break;
-			}
-			
+			j = spriteNum;
+		}
+		else
+		{
+			j = spriteNum - 32;
+			offset=1;
 		}
 		
-	} 
-	return output;
-	
+		if (spritesOnLine[y + offset] & (1 << j) && PeepSprite(spriteNum, xy.x, xy.y))
+		{
+			return float4(DecodePixel(spriteNum + 1,tintBits),1.0);
+		}
+	}
+	return float4(0,0,0,1);
 }
 
 float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
@@ -1377,13 +1372,14 @@ technique10 RenderSpriteRAM
 	
 }
 
-technique10 DrawActualSprites
+
+technique10 RenderSpriteSquares
 {
 	pass P0
 	{
 		SetGeometryShader( 0 );
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
-		SetPixelShader( CompileShader( ps_4_0, DrawVisibleSprites() ) );
+		SetPixelShader( CompileShader( ps_4_0, DrawSpriteSquaresFromRAM() ) );
 	}
-
+	
 }

@@ -53,8 +53,6 @@ namespace NES.CPU.nitenedo
 
             }
 
-            if (Drawscreen != null)
-                Drawscreen(this, new EventArgs());
 
             PadOne.Refresh();
 
@@ -69,6 +67,9 @@ namespace NES.CPU.nitenedo
 
         void StartDraw()
         {
+
+            if (Drawscreen != null)
+                Drawscreen(this, new EventArgs());
 
             frameOn = false;
 
