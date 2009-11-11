@@ -9,12 +9,13 @@ using NES.CPU.PPUClasses;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Checksums;
 using System.Security.Cryptography;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.Machine.ROMLoader
 {
     public static class iNESFileHandler
     {
-        public static INESCart GetCart(string fileName, PixelWhizzler ppu)
+        public static INESCart GetCart(string fileName, IPPU ppu)
         {
             INESCart _cart = null;
             if (fileName.IndexOf(".zip") > 0)
@@ -39,7 +40,7 @@ namespace NES.CPU.Machine.ROMLoader
             return _cart;
         }
 
-        public static INESCart GetZippedCart(string fileName, PixelWhizzler ppu)
+        public static INESCart GetZippedCart(string fileName, IPPU ppu)
         {
             INESCart _cart = null;
 
@@ -70,7 +71,7 @@ namespace NES.CPU.Machine.ROMLoader
             return _cart;
         }
 
-        private static INESCart LoadROM(PixelWhizzler ppu, Stream zipStream)
+        private static INESCart LoadROM(IPPU ppu, Stream zipStream)
         {
             INESCart _cart = null;
             byte[] iNesHeader = new byte[16];

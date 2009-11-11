@@ -329,18 +329,17 @@ namespace SlimDXBindings.Viewer10
         float timer = 0.0f;
         ShaderResourceView texView;
 
-        int[] spriteRam = new int[256/4];
-
         public void UpdateTextures()
         {
-            System.Buffer.BlockCopy(nes.PPU.OutBuffer, 255 * 256 * 4, spriteRam, 0, 256);
+            // System.Buffer.BlockCopy(nes.PPU.OutBuffer, 255 * 256 * 4, spriteRam, 0, 256);
 
             if (tileFilters.DumpFiles)
             {
-                for (int i = 0; i < 64; ++i)
-                {
-                    Console.WriteLine("{0}, ", spriteRam[i]);
-                }
+                //for (int i = 0; i < 64; ++i)
+                //{
+                //    Console.WriteLine("{0}, ", spriteRam[i]);
+                //}
+
                 Console.WriteLine("SpriteLines");
                 for (int i = 0; i < 512; ++i)
                 {
@@ -349,7 +348,7 @@ namespace SlimDXBindings.Viewer10
             }
 
             DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            d.Data.WriteRange<uint>(this.nes.PPU.OutBuffer);
+            d.Data.WriteRange<int>(this.nes.PPU.OutBuffer);
             texture.Unmap(0);
 
             DataRectangle palD = nesPalTexture.Map(0, MapMode.WriteDiscard, MapFlags.None);
@@ -374,8 +373,8 @@ namespace SlimDXBindings.Viewer10
 
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
-            tileFilters.SetVariable("spriteRam", spriteRam);
-            tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
+           // tileFilters.SetVariable("spriteRam", spriteRam);
+            //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
 
             timer += 0.1f;
 

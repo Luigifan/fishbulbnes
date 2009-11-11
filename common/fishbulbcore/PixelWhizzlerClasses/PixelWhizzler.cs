@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using NES.CPU.Fastendo;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.PPUClasses
 {

@@ -21,6 +21,7 @@ using InstiBulb.Sound;
 using InstiBulb.Views;
 using fishbulbcommonui.SaveStates;
 using SlimDXBindings.Viewer10;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace InstiBulb.Integration
 {
@@ -45,9 +46,12 @@ namespace InstiBulb.Integration
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
 
             // Select and setup the default PPU engine
-            //    TODO: add UnsafePixelWhizzler as an option
-            container.RegisterType<PixelWhizzler>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IPPU, PixelWhizzler>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<PixelWhizzler>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IPPU, PixelWhizzler>(new ContainerControlledLifetimeManager());
+
+            container.RegisterType<HardWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IPPU, HardWhizzler>(new ContainerControlledLifetimeManager());
+
 
             // Setup a TileDoodler (used by the debugger)
             container.RegisterType<TileDoodler>(new ContainerControlledLifetimeManager());

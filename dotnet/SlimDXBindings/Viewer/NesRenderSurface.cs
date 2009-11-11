@@ -122,7 +122,7 @@ namespace SlimDXBindings.Viewer
         void UpdateNESTextures()
         {
             var rext = _texture.LockRectangle(0, LockFlags.Discard);
-            rext.Data.WriteRange<uint>(nes.PPU.OutBuffer);
+            rext.Data.WriteRange<int>(nes.PPU.OutBuffer);
             _texture.UnlockRectangle(0);
             _texture.AddDirtyRectangle(new System.Drawing.Rectangle(0, 0, 256, 256));
 

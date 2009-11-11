@@ -6,7 +6,7 @@ using System.IO;
 
 namespace NES.CPU.PPUClasses
 {
-	public partial class PixelWhizzler
+	public partial class PixelWhizzler : NES.CPU.PixelWhizzlerClasses.IPPU
 	{
 
         private bool _isDebugging;

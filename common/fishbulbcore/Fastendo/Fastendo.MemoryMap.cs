@@ -5,6 +5,7 @@ using System.Text;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.Carts;
 using NES.CPU.Machine.BeepsBoops;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.Fastendo
 {

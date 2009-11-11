@@ -55,7 +55,12 @@ namespace NES.CPU.PPUClasses
     {
 
 
-        public Queue<PPUWriteEvent> Events = new Queue<PPUWriteEvent>();
+        private Queue<PPUWriteEvent> events = new Queue<PPUWriteEvent>();
+
+        public Queue<PPUWriteEvent> Events
+        {
+            get { return events; }
+        }
         /// <summary>
         /// A class to encapsulate a PPU "event" for debugging/tracing purposes
         /// </summary>

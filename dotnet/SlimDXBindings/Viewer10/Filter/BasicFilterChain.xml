@@ -28,6 +28,8 @@
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
+        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
       </Inputs>
     </Filter>
     
@@ -37,8 +39,6 @@
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
-        <Input Type="Scalar" EffectVariable="spriteRam" Source="spriteRam"/>
-        <Input Type="Scalar" EffectVariable="spritesOnLine" Source="spritesOnLine"/>
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
       </Inputs>
     </Filter>
@@ -57,8 +57,11 @@
       <!--Sprite Mask-->
     <Filter Name="spriteMask" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderSpriteMask" >
       <Inputs>
-        <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d" />
+        <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
+        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
+
       </Inputs>
     </Filter>
 

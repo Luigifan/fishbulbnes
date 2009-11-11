@@ -1,13 +1,14 @@
 ﻿using System;
 using NES.CPU.Fastendo;
 using System.Collections.Generic;
+using NES.CPU.PixelWhizzlerClasses;
 namespace NES.CPU.Machine.Carts
 {
     public interface INESCart : IClockedMemoryMappedIOElement
     {
         void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset);
 
-        NES.CPU.PPUClasses.PixelWhizzler Whizzler { get; set; }
+        IPPU Whizzler { get; set; }
         CPU2A03 CPU { get; set; }
 
         bool IrqRaised { get; set; }

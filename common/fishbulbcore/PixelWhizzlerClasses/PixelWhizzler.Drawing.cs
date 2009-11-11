@@ -156,9 +156,9 @@ namespace NES.CPU.PPUClasses
 
         private int[] rgb32OutBuffer = new int[256*256];
 
-        private uint[] outBuffer = new uint[256 * 256];
+        private int[] outBuffer = new int[256 * 256];
 
-        public uint[] OutBuffer
+        public int[] OutBuffer
         {
             get { return outBuffer; }
         }
@@ -178,10 +178,10 @@ namespace NES.CPU.PPUClasses
             int i = 0;
             while (i < 256 * 240 )
             {
-                uint tile = (outBuffer[i] & 0x0F);
-                uint sprite = ((outBuffer[i] >> 4) & 0x0F) + 16;
-                uint isSprite = (outBuffer[i] >> 8) & 64;
-                uint curPal = (outBuffer[i] >> 24) & 0xFF;
+                int tile = (outBuffer[i] & 0x0F);
+                int sprite = ((outBuffer[i] >> 4) & 0x0F) + 16;
+                int isSprite = (outBuffer[i] >> 8) & 64;
+                int curPal = (outBuffer[i] >> 24) & 0xFF;
 
                 uint pixel;
                 if (isSprite > 0)
@@ -272,7 +272,7 @@ namespace NES.CPU.PPUClasses
                 b0 = b0 & ~64;
             }
 
-            outBuffer[vbufLocation] =  (uint)(
+            outBuffer[vbufLocation] = (
                 currentPalette << 24 |
                 (_PPUControlByte1 ) << 16 |
                 (b0 ) << 8 |

@@ -5,6 +5,7 @@ using System.Text;
 using NES.CPU.PPUClasses;
 using System.Security.Cryptography;
 using NES.CPU.Fastendo;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.Machine.Carts
 {
@@ -170,9 +171,9 @@ namespace NES.CPU.Machine.Carts
 
         public abstract void InitializeCart();
 
-        internal PixelWhizzler whizzler;
+        internal IPPU whizzler;
 
-        public PixelWhizzler Whizzler
+        public IPPU Whizzler
         {
             get { return whizzler; }
             set { whizzler = value; }

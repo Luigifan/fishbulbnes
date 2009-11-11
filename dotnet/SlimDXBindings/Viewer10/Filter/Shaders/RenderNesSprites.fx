@@ -1,4 +1,4 @@
-float4x4 matWorldViewProj: WORLDVIEWPROJECTION;
+float4x4 matWorldViewProj : WORLDVIEWPROJECTION;
 
 Texture2D texture2d;
 Texture2D nesPal;
@@ -201,49 +201,6 @@ float3x3 YIQToRGBMatrix =
  1.0, -1.10500014, 1.7019999 
 };
 
-float3x3 YIQToRGBMatrix2 = 
-{
- 1.0, -0.0598016381, 1.13841987,
- 1.0, 0.424318224, -0.5590588, 
- 1.0, -2.02647448, -0.105957814 
-};
-
-float3x3 YIQToRGBMatrix3 = 
-{
- 1.0, -1.01580083, 0.5174202,
- 1.0, 0.696318, 0.0879408, 
- 1.0, -0.9214751, -1.80795646 
-};
-
-
-//    [0]: -0.9559999
-//    [1]: -0.621000051
-//    [2]: 0.271999955
-//    [3]: 0.647
-//    [4]: 1.10500014
-//    [5]: -1.7019999
-
-//    [6]: -0.0598016381
-//    [7]: 1.13841987
-//    [8]: 0.424318224
-//    [9]: -0.5590588
-//    [10]: -2.02647448
-//    [11]: -0.105957814
-
-//    [12]: 1.01580083
-//    [13]: -0.5174202
-//    [14]: -0.696318
-//    [15]: -0.0879408
-//    [16]: 0.9214751
-//    [17]: 1.80795646
-
-
-#define ROTATE_IQ( i, q, sin_b, cos_b ) {\
-	float t;\
-	t = i * cos_b - q * sin_b;\
-	q = i * sin_b + q * cos_b;\
-	i = t;\
-}
 
 // 1.0, -9
 float3 DecodePixel(int pixel, int tintBits)
@@ -303,651 +260,41 @@ float3 DecodePixel(int pixel, int tintBits)
 
 	float3 rgb1 = mul( yiq , YIQToRGBMatrix);// * rgb_bias;
 
-//	ROTATE_IQ( i, q, -0.866025f, -0.5f );
-//	float3 rgb2 = mul(float3(y,i,q), YIQToRGBMatrix2);// * rgb_bias;
-//	ROTATE_IQ( i, q, -0.866025f, -0.5f );
-//	float3 rgb3 = mul(float3(y,i,q), YIQToRGBMatrix3o);// * rgb_bias;
-	
-
 	return rgb1 * rgb_bias;
 }
 
-int spritesOnLine[512] =
+
+uint4 FetchSpriteRam(int spriteIndex)
 {
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-201326592, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
-1342177280, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
--1610612736, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-4194304, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-8388608, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-1048576, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-2097152, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-5, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-10, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-0, 
-};
-
-
-int spriteRam[64] = 
-{
--1337981270, 
--1337981006, 
--1203764054, 
--1203763790, 
-1812110535, 
-1812110799, 
-1946328775, 
-1946329039, 
-131327, 
-131327, 
-131327, 
-131327, 
-1073972307, 
-1073972571, 
-1208190547, 
-1208190811, 
-1778617425, 
-1778617689, 
-1912835665, 
-1912835929, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-196863, 
-65791, 
-65791, 
-65791, 
-65791, 
-537130623, 
-537130887, 
-537130566, 
-537130830, 
-537066688, 
-671284672, 
-1342297368, 
-1476515352, 
-1342297888, 
-1342298152, 
-1476516128, 
-1476516392, 
-};
-
-
-float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
-{
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	
-	int ppuByte = finalColor.g * 255.0;
-	int col = (int)(finalColor.r * 255.0) >> 4;
-	
-	float4 finalCol = float4(0,0,0,0);
-
-		// is a foreground sprite, mark red, else mark green
-	
-	if (col > 0)
-	{
-		if ((ppuByte & 64) > 0)
-		{
-			finalCol = float4(1,0,0,1);
-		} 
-		else
-		{
-			finalCol = float4(0,1,0,1);
-		}
-	} 
-	return finalCol;
+	float4 ramEntry = texture2d.Load(int3(spriteIndex,  255 , 0));
+	return uint4( ramEntry[0] * 255.0,
+		ramEntry[1] * 255.0,
+		ramEntry[2] * 255.0,
+		ramEntry[3] * 255.0);
 }
 
-float4 CreateTileMask( PS_IN pixelShaderIn ) : SV_Target
-{
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	// tileIndex in r, spriteIndex in g, isSprite in b
-	
-	int ppuByte = finalColor.g * 255.0;
-	int col = (int)(finalColor.r * 255.0);
-	col &= 15;
-	
-	float4 finalCol;
 
-	if (col == 0)
-	{
-		finalCol = float4(0,0,0,0);
-	} else 
-	{
-		// mark non-bg pixels red
-			finalCol = float4(1,0,0,1);
-	}
-	
-	return finalCol;
-}
 
-int ppuBankStarts[16];// =  
+
+
+int ppuBankStarts[16] = {
+    0,
+    1024,
+    2048,
+    3072,
+    4096,
+    5120,
+    6144,
+    7168,
+    8192,
+    9216,
+    10240,
+    11264,
+    12288,
+    13312,
+    14336,
+    15360	
+};// =  
 
 
 int GetByte(int address)
@@ -956,12 +303,6 @@ int GetByte(int address)
 	int bank = address / 0x400;
 	int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
 	
-	// four bytes per texel, 256 cols in the row (1k per row)
-	//int y = (newAddress >> 10);
-	//int x = (newAddress & 1023);
-	//float4 byte = chrRam.Sample(linearSampler, 
-	//	float2((x/1024.0),(y/1024.0))
-	//	);
 	int y = (newAddress / 1024);
 	int x = (newAddress & 1023);
 	float4 byte = chrRam.Load(int3(x/4,y,0));
@@ -1000,11 +341,11 @@ bool PeepSprite(int spriteNum, int currentXPosition, int currentYPosition)
 {
 
 	// if these are 8x16 sprites, read high and low, draw
-
-	int spriteData = spriteRam[spriteNum];
+	uint4 spriteData = FetchSpriteRam(spriteNum);
+	//int spriteData = spriteRam[spriteNum];
 	
-	uint y = spriteData & 0xFF;
-	uint x = (spriteData >> 24) & 0xFF ;
+	uint y = spriteData[0];
+	uint x = spriteData[3];
 	
 	if ( (x > 0 && currentXPosition >= x && currentXPosition < x + 8) )
 		{
@@ -1019,14 +360,14 @@ bool PeepSprite(int spriteNum, int currentXPosition, int currentYPosition)
 int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int ppuByte0, int ppuByte1)
 {
 	// if these are 8x16 sprites, read high and low, draw
-	uint spriteData = spriteRam[spriteNum];
+	//uint spriteData = spriteRam[spriteNum];
+	int4 spriteData = FetchSpriteRam(spriteNum);
 	
-	uint x = (spriteData >> 24) & 0xFF ;
-	uint attributeByte  = (spriteData >> 16) & 0xFF;
-	uint tileIndex = (spriteData >> 8) & 0xFF;
-	uint y = spriteData & 0xFF;
+	uint x = spriteData[3];//  (spriteData >> 24) & 0xFF ;
+	uint attributeByte  = spriteData[2]; // (spriteData >> 16) & 0xFF;
+	uint tileIndex = spriteData[1]; // (spriteData >> 8) & 0xFF;
+	uint y = spriteData[0]; // spriteData & 0xFF;
 	
-
 	int attrColor = ((attributeByte & 0x03) << 2) | 16;
 	bool isInFront = (attributeByte & 32) != 32;
 	bool flipX = (attributeByte & 0x40) == 0x40;
@@ -1058,6 +399,10 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 		}
 	}
 	int result = WhissaSpritePixel(spritePatternTable, xPos, yLine, flipX, flipY, spriteSize, tileIndex);
+	if (isInFront)
+	{
+		result |= 128;
+	}
 
 	return result;
 }
@@ -1149,20 +494,58 @@ float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), 1.0 );
 }
 
+float4 CreateTileMask( PS_IN pixelShaderIn ) : SV_Target
+{
+	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	int ppuByte0 = finalColor.g * 255.0;	
+    int ppuByte1 = finalColor.b * 255.0;	
+    int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
+	
+	int ntPixel =(ppuByte1 & 0x08) ? GetNameTablePixel(pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1, nameTableMemoryStart) : 0;
+
+	if (ntPixel > 0)
+		return float4(1,0,0,1);
+	else
+		return float4 (0,0,0,0);
+
+}
+
+
 int spriteStart=0;
 
+uint UnpackUINT(float4 data)
+{
+	uint l = (uint)(data[3] * 255.0) << 24;
+	l |= (uint)(data[2] * 255.0) << 16;
+	l |= (uint)(data[1] * 255.0) << 8;
+	l |= (uint)(data[0] * 255.0);
+	return l;
+}
+
+bool IsSpriteOnLine(int lineNum, int spriteNum)
+{
+
+	if (spriteNum < 32)
+	{
+		float4 lineData = texture2d.Load(int3(lineNum, 253, 0));
+		uint l = UnpackUINT(lineData);
+
+		return (l & (1 << (spriteNum )));
+	} else
+	{
+		float4 lineData = texture2d.Load(int3(lineNum, 254, 0));
+		uint l = UnpackUINT(lineData);
+		return (l & (1 << (spriteNum - 32 )));
+	}
+	return false;
+}
 
 float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
-	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
-	
-    int y = xy.y;
-	y *=2;
-	
     // first 32 sprites
 	int spriteCount=0;
 	
@@ -1181,12 +564,13 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 			offset=1;
 		}
 		
-		if (spritesOnLine[y + offset] & (1 << j) && PeepSprite(spriteNum, xy.x, xy.y))
+		if (IsSpriteOnLine(xy.y, spriteNum) && PeepSprite(spriteNum, xy.x, xy.y))
 		{
 			spriteCount++;
 			if (spriteCount > 64) 
 				return float4(0,0,0,0);
 			int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
+			ntPixel &=31;
 			if (ntPixel > 0)
 			{
 				ntPixel |=16;
@@ -1200,26 +584,20 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 		}
 		
 	}
-	return float4(0,0,0,1);
+	return float4(0,0,0,0);
 }
 
-
-float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
+float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 {
 	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
-	
-	int tintBits = (ppuByte1 >>5) & 0x7;
 	float2 xy = (pixelShaderIn.UV) * 255.0;
-	
-    int y = xy.y;
-	y *=2;
-	
     // first 32 sprites
 	int spriteCount=0;
-	int spriteNum=0;
-	while (spriteNum++ < 64)
+	
+	//for (int spriteNum = spriteStart; spriteNum < spriteStart + 8; ++spriteNum)
+	for(int spriteNum=0; spriteNum < 64; ++spriteNum)
 	{
 		int j;
 		int offset=0;
@@ -1233,7 +611,48 @@ float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
 			offset=1;
 		}
 		
-		if (spritesOnLine[y + offset] & (1 << j) && PeepSprite(spriteNum, xy.x, xy.y))
+		if (IsSpriteOnLine(xy.y, spriteNum) && PeepSprite(spriteNum, xy.x, xy.y))
+		{
+			spriteCount++;
+			if (spriteCount > 64) 
+				return float4(0,0,0,0);
+			int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
+			if (ntPixel > 0 && ntPixel != 128)
+			{
+				if (ntPixel > 128)
+				{
+					return float4(1,0,0, 1.0 );
+				} else 
+				{
+					return float4(0,1,0,1);
+				}
+			}
+
+		}
+		
+	}
+	return float4(0,0,0,0);
+
+}
+
+
+
+
+float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
+{
+	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	int ppuByte0 = finalColor.g * 255.0;	
+	int ppuByte1 = finalColor.b * 255.0;	
+	
+	int tintBits = (ppuByte1 >>5) & 0x7;
+	float2 xy = (pixelShaderIn.UV) * 255.0;
+	
+
+	int spriteNum=0;
+	while (spriteNum++ < 64)
+	{
+
+		if (IsSpriteOnLine(xy.y, spriteNum) && PeepSprite(spriteNum, xy.x, xy.y))
 		{
 			return float4(DecodePixel(spriteNum + 1,tintBits),1.0);
 		}

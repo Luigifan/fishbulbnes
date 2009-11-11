@@ -11,6 +11,7 @@ using NES.CPU.Machine.BeepsBoops;
 using NES.CPU.Machine;
 using NES.CPU.Machine.ROMLoader;
 using NES.Sound;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.nitenedo
 {
@@ -23,7 +24,7 @@ namespace NES.CPU.nitenedo
             get { return _cpu; }
             set { _cpu = value; }
         }
-        private PixelWhizzler _ppu;
+        private IPPU _ppu;
         private INESCart _cart;
 
         public INESCart Cart
@@ -96,7 +97,7 @@ namespace NES.CPU.nitenedo
 
         SoundThreader soundThreader;
         //zzzz bloop;
-        public NESMachine(CPU2A03 cpu, PixelWhizzler ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper, SoundThreader soundThread)
+        public NESMachine(CPU2A03 cpu, IPPU ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper, SoundThreader soundThread)
         {
             
             _cpu = cpu;
@@ -163,7 +164,7 @@ namespace NES.CPU.nitenedo
             get { return true; }
         }
 
-        public PixelWhizzler PPU
+        public IPPU PPU
         {
             get { return _ppu; }
         }

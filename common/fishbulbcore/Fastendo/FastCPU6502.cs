@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using NES.CPU.nitenedo;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.Fastendo
 {

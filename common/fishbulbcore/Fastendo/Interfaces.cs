@@ -26,13 +26,5 @@ namespace NES.CPU.Fastendo
         void ResetClock(int Clock);
     }
 
-    public interface IPPU : IClockedMemoryMappedIOElement
-    {
-        // needed for dma transfers
-        bool SpriteCopyHasHappened { get; set; }
-        void CopySprites(ref byte[] ram, int from);
-        MachineEvent FrameFinishHandler { get; set; }
-    }
-
-    
+   
 }

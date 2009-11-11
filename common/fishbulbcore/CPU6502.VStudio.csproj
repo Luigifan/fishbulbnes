@@ -132,9 +132,8 @@
     <Compile Include="Machine\NESMachine.Threading.cs" />
     <Compile Include="Machine\NESMachineDebugger.cs" />
     <Compile Include="Machine\ROMLoader\iNESFileHandler.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
-    <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Tiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,15 +151,15 @@
   <ItemGroup>
     <Compile Include="Machine\ControlPanel\RunningStatuses.cs" />
     <Compile Include="Machine\NESMachine.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Constants.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.ScanlineEvents.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Constants.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.ScanlineEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fastendo\Fastendo.CPUTiming.cs" />
     <Compile Include="Machine\Carts\BaseCart.cs" />
     <Compile Include="Machine\NESMachine.Timing.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Control.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Scrolling.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fastendo\Fastendo.Cheating.cs" />
@@ -185,18 +184,29 @@
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
     <Compile Include="Machine\ROMLoader\CartLoadException.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
-    <Compile Include="PixelWhizzlerClasses\NESSprite.cs">
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Drawing.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.MemoryMappedIOElement.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.Sprites.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.VidRAMHandler.cs" />
+    <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.WriteLog.cs" />
+    <Compile Include="PixelWhizzlerClasses\IPPU.cs" />
+    <Compile Include="PixelWhizzlerClasses\NESSprite.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Constants.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.ScanlineEvents.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs" />
+    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.VidRAMHandler.cs" />
     <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
+    <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
     <Compile Include="Sound\IWavStreamer.cs" />
     <Compile Include="Sound\SoundThread.cs" />
   </ItemGroup>
