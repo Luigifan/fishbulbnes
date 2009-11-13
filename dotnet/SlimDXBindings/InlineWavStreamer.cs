@@ -7,6 +7,7 @@ using SlimDX.Multimedia;
 using System.Threading;
 using NES.CPU.Machine.BeepsBoops;
 using System.IO;
+using SlimDX;
 
 namespace SlimDXBindings
 {
@@ -18,7 +19,7 @@ namespace SlimDXBindings
         const int BUFFER_COUNT = 8;
         int buffersInPlay = 0;
         byte[][] buffers = new byte[BUFFER_COUNT][];
-        MemoryStream[] memStream = new MemoryStream[BUFFER_COUNT];
+        DataStream[] memStream = new DataStream[BUFFER_COUNT];
         XAudio2 device;
         MasteringVoice masteringVoice;
         SourceVoice sourceVoice = null;
@@ -31,7 +32,7 @@ namespace SlimDXBindings
             for (int i = 0; i < BUFFER_COUNT; ++i)
             {
                 buffers[i] = new byte[BUFFER_STREAM_SIZE];
-                memStream[i] = new MemoryStream();
+                memStream[i] = new DataStream(BUFFER_STREAM_SIZE, true, true );
             }
             device = new XAudio2();
             buffer = new AudioBuffer();
@@ -143,8 +144,9 @@ namespace SlimDXBindings
         {
             buffer.AudioBytes = _wavSource.SharedBufferLength;
             buffer.PlayLength = _wavSource.SharedBufferLength / 2;
-            //memStream[currentBuffer].Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
-            buffer.AudioData = new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            memStream[currentBuffer].Position = 0;
+            memStream[currentBuffer].Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            buffer.AudioData = memStream[currentBuffer]; //  new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
 
             sourceVoice.SubmitSourceBuffer(buffer);
             currentBuffer++;

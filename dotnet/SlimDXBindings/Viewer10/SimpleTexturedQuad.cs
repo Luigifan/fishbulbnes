@@ -332,6 +332,11 @@ namespace SlimDXBindings.Viewer10
                 if (tileFilters != null && nes != null && nes.IsRunning)
                     tileFilters.DumpFiles = true;
             }
+            else if (e.KeyCode == Keys.F4)
+            {
+                hue += 15;
+                if (hue > 360) hue = 0;
+            }
         }
 
         internal  bool IsRunning
@@ -345,6 +350,7 @@ namespace SlimDXBindings.Viewer10
         {
         }
 
+        float hue = 25.0f;
         float timer = 0.0f;
         ShaderResourceView texView;
 
@@ -407,6 +413,7 @@ namespace SlimDXBindings.Viewer10
         {
 
             tileFilters.SetVariable("timer", timer);
+            tileFilters.SetVariable("hue", hue);
             //tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
            // tileFilters.SetVariable("spriteRam", spriteRam);
             //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
@@ -436,7 +443,7 @@ namespace SlimDXBindings.Viewer10
                     Pass.Apply();
                     quad.Draw();
                 }
-            
+
             SwapChain.Present(0, DXGI.PresentFlags.None);
         }
 

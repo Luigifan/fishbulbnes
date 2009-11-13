@@ -29,59 +29,80 @@ namespace InstiBulb.Integration
     {
         PlatformDelegates delegates = new PlatformDelegates();
 
-        public IUnityContainer RegisterNesTypes(IUnityContainer container)
+        public IUnityContainer RegisterNESCommon(IUnityContainer container)
         {
-            // register types needed to build a NES
-            // platform specific wavestreamer
-            container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
-            // make it default
-            //container.RegisterType<IWavStreamer, InlineWavStreamer>();
-            container.RegisterType<IWavStreamer, OpenALInlineWavStreamer>();
-            // the shared buffer between the IWavStreamer and the NES
+
             container.RegisterType<WavSharer>(new ContainerControlledLifetimeManager());
             container.Configure<InjectedMembers>().ConfigureInjectionFor<WavSharer>(new InjectionConstructor((float)44100.0));
-
             container.RegisterType<IWavReader, WavSharer>();
+
             // the component that creates the sound thread
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
 
-            // Select and setup the default PPU engine
-            //container.RegisterType<PixelWhizzler>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IPPU, PixelWhizzler>(new ContainerControlledLifetimeManager());
-
-            container.RegisterType<HardWhizzler>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IPPU, HardWhizzler>(new ContainerControlledLifetimeManager());
-
-            // Setup a TileDoodler (used by the debugger)
-            container.RegisterType<TileDoodler>(new ContainerControlledLifetimeManager());
-            
-            container.RegisterType<Bopper>(new ContainerControlledLifetimeManager());
-
-            container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
-                , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
-
-            container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-
-            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-
             container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
-           
-            //container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IDisplayContext, DirectX10NesViewer>(new ContainerControlledLifetimeManager());
+
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMReaderDelegate>(delegates.ReadSRAM, new ContainerControlledLifetimeManager());
-            
-            container.RegisterType<NESMachine>( new ContainerControlledLifetimeManager());
+
+            container.RegisterType<NESMachine>(new ContainerControlledLifetimeManager());
+
             container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
                     new InjectionProperty("SRAMWriter", new ResolvedParameter<SRAMWriterDelegate>()),
                     new InjectionProperty("SRAMReader", new ResolvedParameter<SRAMReaderDelegate>())
                 );
+
+            // Setup a TileDoodler (used by the debugger)
+            container.RegisterType<TileDoodler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<Bopper>(new ContainerControlledLifetimeManager());
+
+
+            return container;
+        }
+
+        public IUnityContainer RegisterHardwareNES(IUnityContainer container)
+        {
+            container.RegisterType<HardWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IPPU, HardWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IDisplayContext, DirectX10NesViewer>(new ContainerControlledLifetimeManager());
+
+            return container;
+        }
+
+        public IUnityContainer RegisterSoftwareNES(IUnityContainer container)
+        {
+            container.RegisterType<PixelWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IPPU, PixelWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IDisplayContext, SlimDXNesViewer>(new ContainerControlledLifetimeManager());
+
+            return container;
+        }
+
+
+        public IUnityContainer RegisterNesTypes(IUnityContainer container)
+        {
+
+            RegisterNESCommon(container);
+            RegisterHardwareNES(container);
+            //RegisterSoftwareNES(container);
+            
+            // register types needed to build a NES
+            // platform specific wavestreamer
+            container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IWavStreamer, InlineWavStreamer>();
+            // Select and setup the default PPU engine
+
+
+            //container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
+            //    , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
+
+            container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
 
 
             // register view models

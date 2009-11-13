@@ -12,6 +12,7 @@
   </Resources>
   <Variables>
     <Variable Name="Timer" Type="Float" Source="nes:framecount" />
+    <Variable Name="hue" Type="Float" Source="nes:framecount" />
   </Variables>
 
   <Filters>
@@ -24,6 +25,7 @@
         <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
         <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
+        <Input Type="Scalar" EffectVariable="hue" Source="hue"/>
         <!--<Input Type="Scalar" EffectVariable="timer" Source="Timer"/>-->
       </Inputs>
     </Filter>
@@ -76,18 +78,18 @@
     </Filter>
 
     <!-- SFX -->
-    <Filter Name="wavyTiles" Height="512" Width="512" Effect="blue" Technique="Wave" >
+    <!--<Filter Name="wavyTiles" Height="512" Width="512" Effect="blue" Technique="Wave" >
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="texture2d" />
         <Input Type="Resource" ResourceName="Noise" EffectVariable="noiseTex" />
         <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
       </Inputs>
-    </Filter>
+    </Filter>-->
 
     <!--Put it all together now-->
-    <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
+    <Filter Name="combined" Height="256" Width="256" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
-        <Input Type="FilterOutput" Filter="wavyTiles" EffectVariable="screenOne" />
+        <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
         <Input Type="FilterOutput" Filter="spriteMask" EffectVariable="spriteMask" />
         

@@ -168,7 +168,7 @@ namespace NES.CPU.PPUClasses
             
             
             spritesOnThisScanline = 0;
-            int yLine = currentYPosition - 1;
+            int yLine = scanline ;
             outBuffer[(253 * 256) + yLine] = 0;
             outBuffer[(254 * 256) + yLine] = 0;
             //spritesOnLine[2 * yLine] = 0;

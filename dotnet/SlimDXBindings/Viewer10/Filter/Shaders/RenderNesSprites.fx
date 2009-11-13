@@ -174,8 +174,8 @@ float phases [0x10 + 3] = {
 //||++----- Value
 //++------- Unused
 
-float contrast = 0.10;   /* -1 = dark (0.5)       +1 = light (1.5) */
-float brightness = 0.2; /* -1 = dark (0.5)       +1 = light (1.5) */
+float contrast = 0.30;   /* -1 = dark (0.5)       +1 = light (1.5) */
+float brightness = 0.1; /* -1 = dark (0.5)       +1 = light (1.5) */
 
 float3x3 YIQToRGBMatrix = 
 {
@@ -234,16 +234,15 @@ float3 DecodePixel(int pixel, int tintBits)
 				sat *= 0.6f;
 				yiq.x -= sat;
 			}
-			yiq.y += TO_ANGLE_SIN( tint_color ) * sat;
-			yiq.z += TO_ANGLE_COS( tint_color ) * sat;
+			yiq.y += sin(radians(colorAngles[color] + hue )) * sat;
+			yiq.z += cos( radians(colorAngles[color] + hue) ) * sat * -1;
 		}
 	}
-
-	float3 rgb_bias = float3(1.0, 1.0, 1.0);
-
-	float3 rgb1 = mul( yiq , YIQToRGBMatrix);// * rgb_bias;
-
-	return rgb1 * rgb_bias;
+	float3 rgb1 = mul( yiq , YIQToRGBMatrix);
+	// note: i need to figure out what to put here to match a common tv sets 2.65 gamma to a monitors 2.2
+	float gamma = 1/2.2;
+	rgb1 = ((rgb1 * gamma) - gamma) * rgb1 + rgb1;
+	return rgb1 ;
 }
 
 
@@ -367,7 +366,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 		spritePatternTable = 0x1000;
 	}
 	int xPos = currentXPosition - x;
-	int yLine = currentYPosition - y ;
+	int yLine = currentYPosition - y -1;
 
 	yLine = yLine & (spriteSize - 1);
 
