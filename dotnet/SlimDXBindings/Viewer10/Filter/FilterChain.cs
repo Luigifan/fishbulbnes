@@ -16,6 +16,15 @@ namespace SlimDXBindings.Viewer10.Filter
             set { myTextureBuddy = value; }
         }
 
+        private EffectBuddy myEffectBuddy;
+
+        public EffectBuddy MyEffectBuddy
+        {
+            get { return myEffectBuddy; }
+            set { myEffectBuddy = value; }
+        }
+
+
         List<string> inputs = new List<string>();
 
         public void RegisterInput(string name, string item)
@@ -30,6 +39,8 @@ namespace SlimDXBindings.Viewer10.Filter
             get { return result; }
         }
 
+        bool isSetup = false;
+
         public void Draw(Texture2D[] input)
         {
             if (dumpFiles)
@@ -42,20 +53,45 @@ namespace SlimDXBindings.Viewer10.Filter
                 }
             }
 
+            if (isSetup)
+            {
+                for (int i = 0; i < this.Count; ++i)
+                {
+                    this[i].ProcessEffect();
+                    if (dumpFiles)
+                        Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, "c:\\" + i.ToString() + this[i].FilterName + ".dds");
+
+                }
+            }
+
+            else
+            {
+                SetupAndDraw(input);
+            }
+            if (dumpFiles)
+            {
+                Texture2D.ToFile(result, ImageFileFormat.Dds, "c:\\99filterChainResult.dds");
+                dumpFiles = false;
+            }
+        }
+
+        void SetupAndDraw(Texture2D[] input)
+        {
             for (int i = 0; i < this.Count; ++i)
             {
                 foreach (KeyValuePair<string, string> pair in this[i].NeededResources)
                 {
                     string s = pair.Key;
                     string resName = pair.Value;
-                    if (inputs.Contains( s) )
+                    if (inputs.Contains(s))
                     {
                         this[i].SetShaderResource(resName, input[inputs.IndexOf(s)]);
                     }
                     else
                     {
-                        var p = (from BasicPostProcessingFilter filter in this 
-                                 where filter.FilterName == s select filter).FirstOrDefault<BasicPostProcessingFilter>();
+                        var p = (from BasicPostProcessingFilter filter in this
+                                 where filter.FilterName == s
+                                 select filter).FirstOrDefault<BasicPostProcessingFilter>();
                         if (p != null)
                         {
                             this[i].SetShaderResource(resName, p.results);
@@ -66,13 +102,10 @@ namespace SlimDXBindings.Viewer10.Filter
                 this[i].ProcessEffect();
                 if (dumpFiles)
                     Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, "c:\\" + i.ToString() + this[i].FilterName + ".dds");
-
+                
             }
             result = this[this.Count - 1].results;
-            if (dumpFiles)
-                Texture2D.ToFile(result, ImageFileFormat.Dds, "c:\\99filterChainResult.dds");
-
-            dumpFiles = false;
+            isSetup = true;
         }
 
         bool dumpFiles = false;
@@ -95,6 +128,8 @@ namespace SlimDXBindings.Viewer10.Filter
                 p.Dispose();
             }
 
+            myEffectBuddy.Dispose();
+            
         }
 
         #endregion

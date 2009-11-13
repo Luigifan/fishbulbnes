@@ -22,6 +22,11 @@ namespace NES.CPU.Machine.Carts
 
         public BaseCart()
         {
+            for (int i = 0; i < bankStartCache.Length; ++i)
+            {
+                bankStartCache[i] = new int[16];
+            }
+
             byte[] effect = new byte[8] { 1, 1, 1, 1, 1, 1, 1, 1};
             pixelEffects.Add(0xD50, effect);
             pixelEffects.Add(0x0, effect);
@@ -426,8 +431,44 @@ namespace NES.CPU.Machine.Carts
             set { ppuBankStarts = value; }
         }
 
-        internal List<int[]> bankStartCache = new List<int[]>();
+        int[][] bankStartCache = new int[256 * 256][];
 
+        public int[][] BankStartCache
+        {
+            get { return bankStartCache; }
+        }
+
+        uint currentBank = 0;
+
+        public uint CurrentBank
+        {
+            get { return currentBank; }
+        }
+        public void ResetBankStartCache()
+        {
+            currentBank = 0;
+            Buffer.BlockCopy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16 * 4);
+        }
+        
+        //gets called by the ppu 
+        public int UpdateBankStartCache()
+        {
+            if (bankSwitchesChanged)
+            {
+                currentBank++;
+                Buffer.BlockCopy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16 * 4);
+                bankSwitchesChanged = false;
+            }
+            return (int)currentBank;
+        }
+
+        bool bankSwitchesChanged = false;
+
+        public bool BankSwitchesChanged
+        {
+            get { return bankSwitchesChanged; }
+            set { bankSwitchesChanged = value; }
+        }
 
         public byte GetPPUByte(int clock, int address)
         {
@@ -528,6 +569,7 @@ namespace NES.CPU.Machine.Carts
                     ppuBankStarts[11] = chrRamStart + 0xC00;
                     break;
             }
+            bankSwitchesChanged = true;
         }
 
         #region INESCart Members

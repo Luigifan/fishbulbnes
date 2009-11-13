@@ -76,67 +76,53 @@ namespace NES.CPU.PPUClasses
         }
 
 
-        //well, this is somethin
-        // which is better than nothin
-        public byte GetSpritePixel()
+        public bool SpriteZeroTest()
         {
-            spriteZeroHit = false;
-            isForegroundPixel = false;
+            if (!_spritesAreVisible) return false;
+
             byte result = 0;
             int yLine = 0;
             int xPos = 0;
             int tileIndex = 0;
 
-            for (int i = 0; i < spritesOnThisScanline; ++i)
+            NESSprite currSprite = currentSprites[0];
+            if (
+                currSprite.XPosition > 0
+                && currentXPosition >= currSprite.XPosition
+                && currentXPosition < currSprite.XPosition + 8)
             {
-                NESSprite currSprite = currentSprites[i];
-                if (
-                    currSprite.XPosition > 0
-                    && currentXPosition >= currSprite.XPosition
-                    && currentXPosition < currSprite.XPosition + 8)
-                {
 
-                    int spritePatternTable = 0;
-                    if ((_PPUControlByte0 & 0x08) == 0x08)
+                int spritePatternTable = 0;
+                if ((_PPUControlByte0 & 0x08) == 0x08)
+                {
+                    spritePatternTable = 0x1000;
+                }
+                xPos = currentXPosition - currSprite.XPosition;
+                yLine = currentYPosition - currSprite.YPosition - 1;
+
+                yLine = yLine & (spriteSize - 1);
+
+                tileIndex = currSprite.TileIndex;
+
+                if ((_PPUControlByte0 & 0x20) == 0x20)
+                {
+                    if ((tileIndex & 1) == 1)
                     {
                         spritePatternTable = 0x1000;
+                        tileIndex = tileIndex ^ 1;
                     }
-                    xPos = currentXPosition - currSprite.XPosition;
-                    yLine = currentYPosition - currSprite.YPosition - 1;
-
-                    yLine = yLine & (spriteSize - 1);
-
-                    tileIndex = currSprite.TileIndex;
-
-                    if ((_PPUControlByte0 & 0x20) == 0x20)
+                    else
                     {
-                        if ((tileIndex & 1) == 1)
-                        {
-                            spritePatternTable = 0x1000;
-                            tileIndex = tileIndex ^ 1;
-                        }
-                        else
-                        {
-                            spritePatternTable = 0;
-                        }
-                    }
-
-                    result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
-                    if (result != 0)
-                    {
-                        if (currSprite.SpriteNumber == 0)
-                        {
-                            spriteZeroHit = true;
-                        }
-                        isForegroundPixel = currSprite.Foreground;
-                        return (byte)(result | currSprite.AttributeByte);
+                        spritePatternTable = 0;
                     }
                 }
+
+                return WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
             }
-            return 0;
+            return false ;
         }
 
-        private byte WhissaSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
+        private bool WhissaSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
         {
             // 8x8 tile
             int patternEntry;
@@ -155,10 +141,10 @@ namespace NES.CPU.PPUClasses
             patternEntry = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y);
             patternEntryBit2 = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y + 8);
 
-            return (byte)
+            return 
                 (sprite.FlipX ?
                 ((patternEntry >> x) & 0x1) | (((patternEntryBit2 >> x) << 1) & 0x2)
-                : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2));
+                : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2)) > 0;
         }
 
         int spritesOnThisScanline;
@@ -179,6 +165,8 @@ namespace NES.CPU.PPUClasses
         /// <param name="scanline">the scanline to preload sprites for</param>
         public void PreloadSprites(int scanline)
         {
+            
+            
             spritesOnThisScanline = 0;
             int yLine = currentYPosition - 1;
             outBuffer[(253 * 256) + yLine] = 0;
@@ -193,6 +181,12 @@ namespace NES.CPU.PPUClasses
 
                 if (scanline >= y && scanline < y + spriteSize)
                 {
+                    if (spriteID == 0)
+                    {
+                        sprite0scanline = scanline;
+                        sprite0x = unpackedSprites[spriteID].XPosition;
+                    }
+
                     int spId = spriteNum / 4;
                     if (spId < 32)
                         outBuffer[(253 * 256) + yLine] |= 1 << spId;
@@ -216,6 +210,8 @@ namespace NES.CPU.PPUClasses
 
         public void UnpackSprites()
         {
+            sprite0scanline = -1;
+            sprite0x = -1;
             Buffer.BlockCopy(spriteRAM, 0, outBuffer, 255 * 256 * 4, 256);
             for (int currSprite = 0; currSprite < unpackedSprites.Length; ++currSprite)
             {

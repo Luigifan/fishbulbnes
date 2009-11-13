@@ -32,6 +32,7 @@ namespace SlimDXBindings.Viewer10.Filter
             FilterChain newChain = new FilterChain();
 
             newChain.MyTextureBuddy = new TextureBuddy(device);
+            newChain.MyEffectBuddy = new EffectBuddy(device);
 
             XDocument doc = XDocument.Load(System.Xml.XmlReader.Create(stream));
 
@@ -79,7 +80,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
             foreach (var c in filters)
             {
-                BasicPostProcessingFilter newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique);
+                BasicPostProcessingFilter newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
 
                 // set up this filters inputs
                 

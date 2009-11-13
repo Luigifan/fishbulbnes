@@ -41,5 +41,14 @@ namespace NES.CPU.Machine.Carts
         byte[] FetchPixelEffect(int vramAddress);
         int ActualChrRomOffset(int address);
 
+        /// <summary>
+        /// Used for bankswitching
+        /// </summary>
+        bool BankSwitchesChanged { get; set; }
+        int UpdateBankStartCache();
+        void ResetBankStartCache();
+        int[][] BankStartCache { get; }
+        uint CurrentBank { get; }
+
     }
 }

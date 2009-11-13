@@ -3,7 +3,6 @@ Texture2D screenOne;
 Texture2D screenTwo;
 Texture2D backgroundPic;
 Texture2D spriteMask;
-Texture2D tileMask;
 
 float BackgroundBlendFactor;
 
@@ -16,7 +15,7 @@ SamplerState nesSampler
 
 SamplerState linearSampler
 {
-    Filter = ANISOTROPIC;
+    Filter = MIN_MAG_MIP_LINEAR;
     AddressU = Wrap;
     AddressV = Wrap;
 };
@@ -51,9 +50,7 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 {
     float4 finalColor = screenOne.Sample( linearSampler, pixelShaderIn.UV );
     float4 finalSpriteColor = screenTwo.Sample( linearSampler, pixelShaderIn.UV );
-    
     float4 spriteMaskColor = spriteMask.Sample( linearSampler, pixelShaderIn.UV );
-    float4 tileMaskColor = tileMask.Sample( linearSampler, pixelShaderIn.UV );
     
 	finalSpriteColor.a = 0;
 	
@@ -65,13 +62,13 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 	} 
 	
 	// if this is a background pixel, and there is a sprite here, the sprites alpha is green component (background sprite) of the mask
-    if (tileMaskColor.r < 1.0 )
+    if (finalColor.a < 1.0 )
 	{
 		//float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
 		//finalColor = (bg * BackgroundBlendFactor) + (finalColor * (1 - BackgroundBlendFactor));
 		if (spriteMaskColor.g > 0)
 		{
-			finalSpriteColor.a = spriteMaskColor.g - tileMaskColor.r;
+			finalSpriteColor.a = spriteMaskColor.g;
 		}
 	} 
 	

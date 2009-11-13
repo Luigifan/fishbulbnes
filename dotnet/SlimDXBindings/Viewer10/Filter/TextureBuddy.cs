@@ -7,6 +7,50 @@ using SlimDX.Direct3D10;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
+    public class EffectBuddy : IDisposable
+    {
+        Device device;
+        Dictionary<string, Effect> createdEffects = new Dictionary<string, Effect>();
+
+        public EffectBuddy(Device device)
+        {
+            this.device = device;
+        }
+
+        static System.IO.Stream GetShaderStreamFromResource(string name)
+        {
+            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                string.Format("SlimDXBindings.Viewer10.Filter.Shaders.{0}.fx", name)
+                );
+        }
+
+        public Effect GetEffect( string resourceName)
+        {
+            if (createdEffects.ContainsKey(resourceName))
+                return createdEffects[resourceName];
+
+            Effect e = Effect.FromStream(device,
+                GetShaderStreamFromResource(resourceName),
+                "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
+
+
+            createdEffects.Add(resourceName, e);
+            return e;
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            foreach (var p in createdEffects)
+            {
+                p.Value.Dispose();
+            }
+        }
+
+        #endregion
+    }
+
     public class TextureBuddy : IDisposable
     {
         Device device;

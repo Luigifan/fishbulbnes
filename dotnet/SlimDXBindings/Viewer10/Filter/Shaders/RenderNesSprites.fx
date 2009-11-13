@@ -1,15 +1,18 @@
 float4x4 matWorldViewProj : WORLDVIEWPROJECTION;
 
 Texture2D texture2d;
+Texture2D nesOut2;
+
 Texture2D nesPal;
 Texture2D chrRam;
-Texture2D spriteSheet;
-Texture2D spriteList;
+
+Texture2D bankSwitches;
 
 int nesRamStart;
 int NameTableMemoryStart;
 int HScroll;
 int VScroll;
+
 
 
 SamplerState linearSampler
@@ -123,7 +126,8 @@ PS_IN VS( VS_IN vertexShaderIn )
 	PS_IN vertexShaderOut = (PS_IN)0;
 	
 	vertexShaderOut.position = vertexShaderIn.position;
-	// vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
+	//note: uncomment this for easy play in various shader designer uis which dont provide a screen aligned quad
+	//vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
 
 	vertexShaderOut.color = vertexShaderIn.color;
 	vertexShaderOut.UV = vertexShaderIn.UV;
@@ -131,28 +135,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 	return vertexShaderOut;
 }
 
-
-float4 hsv_to_rgb(float3 HSV)
-{
-    float3 RGB = HSV.z;
-    if ( HSV.y != 0 ) {
-       float var_h = HSV.x * 6;
-       float var_i = floor(var_h);   // Or ... var_i = floor( var_h )
-       float var_1 = HSV.z * (1.0 - HSV.y);
-       float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
-       float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
-       if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
-       else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
-       else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
-       else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
-       else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
-       else                 { RGB = float3(HSV.z, var_1, var_2); }
-   }
-   return float4(RGB.x, RGB.y, RGB.z, 1.0);
-}
-
-
-float hue = 15;
+float hue = 0;
 //float colorAngles[16] = {0,240,210,180,150,120,90,60,30,0,330,300,270,0,0,0};
 float colorAngles[16] = 
 {0, // sin =  -1.0f, cos = 0
@@ -191,7 +174,7 @@ float phases [0x10 + 3] = {
 //||++----- Value
 //++------- Unused
 
-float contrast = 0.40;   /* -1 = dark (0.5)       +1 = light (1.5) */
+float contrast = 0.10;   /* -1 = dark (0.5)       +1 = light (1.5) */
 float brightness = 0.2; /* -1 = dark (0.5)       +1 = light (1.5) */
 
 float3x3 YIQToRGBMatrix = 
@@ -273,38 +256,42 @@ uint4 FetchSpriteRam(int spriteIndex)
 		ramEntry[3] * 255.0);
 }
 
-
-
-
-
-int ppuBankStarts[16] = {
-    0,
-    1024,
-    2048,
-    3072,
-    4096,
-    5120,
-    6144,
-    7168,
-    8192,
-    9216,
-    10240,
-    11264,
-    12288,
-    13312,
-    14336,
-    15360	
-};// =  
-
-
-int GetByte(int address)
+int PPUBankStarts(int index, int currentBank)
 {
+	uint ppuBankStart; 
+	int y = currentBank ;//currentBank /( 16 * 256);
+	int x = 0;// (currentBank & (255)) * 16;
+
+	float4 bank = bankSwitches.Load(int3(x + index,
+	y,
+	0));
 	
-	int bank = address / 0x400;
-	int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+	uint4 banks = bank * 255.0;
+	ppuBankStart = banks[3] << 24 ;
+	ppuBankStart |= banks[2] << 16 ;
+	ppuBankStart |= banks[1] << 8 ;
+	ppuBankStart |= banks[0]  ;
+
+	return ppuBankStart;
+}
+
+static int ppuBankStarts[16] = 
+	{-1, -1, -1, -1,
+	-1, -1, -1, -1,
+	-1, -1, -1, -1,
+	-1, -1, -1, -1,}
+;
 	
-	int y = (newAddress / 1024);
-	int x = (newAddress & 1023);
+uint GetByte(uint address)
+{
+
+	
+	uint bank = address / 0x400;
+	
+	uint newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+	
+	uint y = (newAddress / 1024);
+	uint x = (newAddress & 1023);
 	float4 byte = chrRam.Load(int3(x/4,y,0));
 	
 	int result = byte[x & 3] * 255;
@@ -328,7 +315,7 @@ int WhissaSpritePixel(int patternTableIndex, int x, int y, bool flipX, bool flip
 	}
 
 	patternEntry = GetByte(patternTableIndex + (tileIndex * 16) + y);
-	patternEntryBit2 = GetByte(patternTableIndex + (tileIndex * 16) + y + spriteSize);
+	patternEntryBit2 = GetByte(patternTableIndex + (tileIndex * 16) + y + 8);
 
 	return 
 		(flipX ?
@@ -372,9 +359,8 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 	bool isInFront = (attributeByte & 32) != 32;
 	bool flipX = (attributeByte & 0x40) == 0x40;
 	bool flipY = (attributeByte & 0x80) == 0x80;
-	int spriteSize= (ppuByte0 & 32) ? 16 : 8;
-
-
+	int spriteSize = ((ppuByte0 & 0x20) == 0x20) ? 16 : 8;
+	
 	int spritePatternTable = 0;
 	if ((ppuByte0 & 0x08) == 0x08)
 	{
@@ -386,7 +372,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 	yLine = yLine & (spriteSize - 1);
 
 
-	if ((ppuByte0 & 0x20) == 0x20)
+	if (spriteSize == 16)
 	{
 		if ((tileIndex & 1) == 1)
 		{
@@ -404,7 +390,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 		result |= 128;
 	}
 
-	return result;
+	return result | attrColor;
 }
 
 int _backgroundPatternTableIndex=4096;
@@ -427,19 +413,45 @@ int GetAttributeTableEntry(int ppuNameTableMemoryStart, int i, int j)
 	return 0;
 }
 
-int GetNameTablePixel(int xPosition, int yPosition, int ppuByte0, int ppuByte1, int nameTableMemoryStart)
+uint GetNameTablePixel(int xPosition, int yPosition, uint _backgroundPatternTableIndex, uint nameTableMemoryStart, int lockedHScroll, int lockedVScroll)
 {
 	// current palette index in a
 	// tileIndex in r, spriteIndex in g, isSprite in b
 	// calculate the address of the nes palette value in the palCache
 	
-	int _backgroundPatternTableIndex = ((ppuByte0 & 0x10) >> 4) * 0x1000;	
 	
 	int ppuNameTableMemoryStart = nameTableMemoryStart;
+	
+	xPosition += lockedHScroll;
+
+	if (xPosition > 255)
+	{
+		xPosition -= 256;
+		// from loopy's doc
+		// you can think of bits 0,1,2,3,4 of the vram address as the "x scroll"(*8)
+		//that the ppu increments as it draws.  as it wraps from 31 to 0, bit 10 is
+		//switched.  you should see how this causes horizontal wrapping between name
+		//tables (0,1) and (2,3).
+
+		ppuNameTableMemoryStart = ppuNameTableMemoryStart ^ 0x400;
+	}
+
+	yPosition += lockedVScroll;
+	
+	if (yPosition < 0)
+	{
+		yPosition += 240;
+	}
+	if (yPosition >= 240)
+	{
+		yPosition -= 240;
+		ppuNameTableMemoryStart = ppuNameTableMemoryStart ^ 0x800;
+	}	
+	
 
 	int xTilePosition = xPosition >> 3;
 
-	uint tileRow = (yPosition >> 3) % 30 << 5;
+	uint tileRow = ((yPosition >> 3) % 30) << 5;
 
 	int tileNametablePosition = 0x2000 + ppuNameTableMemoryStart 
 		+ xTilePosition + tileRow;
@@ -456,8 +468,6 @@ int GetNameTablePixel(int xPosition, int yPosition, int ppuByte0, int ppuByte1, 
 
 	int patternTableEntryIndex = 7 - (xPosition & 7);
 
-	// return 3;
-	//currentAttributeByte = 
 	int result = (((patternEntry >> patternTableEntryIndex) & 1)
 		| (((patternEntryByte2 >> patternTableEntryIndex) & 1) << 1)
 					);
@@ -469,44 +479,100 @@ int GetNameTablePixel(int xPosition, int yPosition, int ppuByte0, int ppuByte1, 
 	}
 	
 	return result;
-
-	
 	
 }
 
+int GetTilePixel(float2 texposition)
+{
+	int3 texPos = int3( texposition * 255.0,0);
+	float4 finalColor = texture2d.Load(texPos);
+	float4 nesOutdata2 = nesOut2.Load(texPos);	
+	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
+	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	for (int i = 0; i < 15; ++i)
+	{
+		// hack: right now i'm really only tracking 256 switches per frame,
+		// should be as many as needed though
+		ppuBankStarts[i] = PPUBankStarts(i, bnk[1]);
+	}
+	
+	uint ntBits = finalColor[0] * 255.0;
+	uint ppuByte0 = finalColor[1] * 255.0;	
+    uint ppuByte1 = finalColor[2] * 255.0;	
+	
+    int vScroll = nesOutdata2[3] * 255.0;
+	
+	if (ntBits & 4) // vscroll is negative
+	{
+		vScroll *= -1;
+	}
+	
+	uint hScroll = nesOutdata2[2] * 255.0;
+
+	uint nameTableMemoryStart = (0x400 * (ntBits & 3));
+	int _backgroundPatternTableIndex = ((ppuByte0 & 0x10) >> 4) * 0x1000;	
+	
+	
+	uint ntPixel =(ppuByte1 & 0x08) ? 
+	GetNameTablePixel(texPos.x,	texPos.y, _backgroundPatternTableIndex, 
+		nameTableMemoryStart, hScroll, vScroll) : 0;
+	
+	return ntPixel;
+}
+
+
+
 float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	int ppuByte0 = finalColor.g * 255.0;	
-    int ppuByte1 = finalColor.b * 255.0;	
-	int hScroll = finalColor.a * 255;
-	int vScroll = finalColor.r * 255;
+	float4 finalColor = texture2d.Load( int3( pixelShaderIn.UV *255,0));
 	
-	int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
-	
-	int ntPixel =(ppuByte1 & 0x08) ? GetNameTablePixel(pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1, nameTableMemoryStart) : 0;
-
+	uint ntPixel = GetTilePixel(pixelShaderIn.UV);
+	float alpha = (ntPixel & 3) > 0 ? 1.0 : 0.0;
 	float r = ntPixel / 32.0;
 	// this lookup is 8 columns wide
 	float2 palAddy = float2( r, finalColor.a  );
 
 	// get the nes palette entry (will contain 4 values)
 	//float4 rVal = nesPal.Sample(palSampler, palAddy );	
-	float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
+	float4 rVal = nesPal.Load(int3(ntPixel/4, finalColor[3] * 255,0));
 
-	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), 1.0 );
+	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), alpha );
+}
+
+int nametable;
+int patterntable;
+
+float4 DumpNameTable(PS_IN pixelShaderIn) : SV_Target
+{
+	int3 texPos = int3( pixelShaderIn.UV * 255.0,0);
+
+	float4 nesOutdata2 = nesOut2.Load(texPos);	
+	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
+	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	for (int i = 0; i < 15; ++i)
+	{
+		// hack: right now i'm really only tracking 256 switches per frame,
+		// should be as many as needed though
+		ppuBankStarts[i] = PPUBankStarts(i, 0);
+	}	
+	
+	uint ntPixel = 	GetNameTablePixel(texPos.x,	texPos.y, 4096 * patterntable, 
+		 0x400 * nametable, 0, 0);
+	float r = ntPixel / 32.0;
+	// this lookup is 8 columns wide
+	// get the nes palette entry (will contain 4 values)
+	//float4 rVal = nesPal.Sample(palSampler, palAddy );	
+	float4 rVal = nesPal.Load(int3(ntPixel/4, 0,0));
+
+	float alpha = ntPixel & 3 ? 1.0 : 0.0;
+	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), alpha );
 }
 
 float4 CreateTileMask( PS_IN pixelShaderIn ) : SV_Target
 {
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	int ppuByte0 = finalColor.g * 255.0;	
-    int ppuByte1 = finalColor.b * 255.0;	
-    int nameTableMemoryStart = (0x400 * (ppuByte0 & 0x3));
-	
-	int ntPixel =(ppuByte1 & 0x08) ? GetNameTablePixel(pixelShaderIn.UV.x * 255.0, pixelShaderIn.UV.y * 255.0, ppuByte0, ppuByte1, nameTableMemoryStart) : 0;
+	int ntPixel = GetTilePixel(pixelShaderIn.UV);
 
-	if (ntPixel > 0)
+	if ((ntPixel & 3) > 0)
 		return float4(1,0,0,1);
 	else
 		return float4 (0,0,0,0);
@@ -545,14 +611,24 @@ bool IsSpriteOnLine(int lineNum, int spriteNum)
 
 float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
+	float4 finalColor = texture2d.Load( int3( pixelShaderIn.UV * 255.0, 0) );
+	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
+	
+	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
+	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	for (int i = 0; i < 15; ++i)
+	{
+		// hack: right now i'm really only tracking 256 switches per frame,
+		// should be as many as needed though
+		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
+	}
+
+	
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
-    // first 32 sprites
+
 	int spriteCount=0;
-	
-	//for (int spriteNum = spriteStart; spriteNum < spriteStart + 8; ++spriteNum)
 	for(int spriteNum=0; spriteNum < 64; ++spriteNum)
 	{
 		int j;
@@ -573,17 +649,17 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 			if (spriteCount > 64) 
 				return float4(0,0,0,0);
 			int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
+			
+			float alpha = (ntPixel & 128) ? 1.0 : 0.5;
+			
 			ntPixel &=31;
-			if (ntPixel > 0)
+			if ((ntPixel & 3) > 0)
 			{
-				ntPixel |=16;
 				// get the nes palette entry (will contain 4 values)
-				//float4 rVal = nesPal.Sample(palSampler, palAddy );	
 				float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
 				int pixel = rVal[ntPixel & 3] * 255;
-				return float4(DecodePixel(pixel, 0), 1.0 );
+				return float4(DecodePixel(pixel, 0), alpha);
 			}
-
 		}
 		
 	}
@@ -592,16 +668,24 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 
 float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 {
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	int ppuByte0 = finalColor.g * 255.0;	
+	float4 finalColor = texture2d.Load( int3( pixelShaderIn.UV * 255.0, 0) );
+	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
+	
+	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
+	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	for (int i = 0; i < 15; ++i)
+	{
+		// hack: right now i'm really only tracking 256 switches per frame,
+		// should be as many as is needed until i add some crazier mappers
+		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
+	}
+	int ppuByte0 = finalColor.g * 255.0;
 	int ppuByte1 = finalColor.b * 255.0;
-	
 
-	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
     // first 32 sprites
 	int spriteCount=0;
-	
+
 	//for (int spriteNum = spriteStart; spriteNum < spriteStart + 8; ++spriteNum)
 	for(int spriteNum=0; spriteNum < 64; ++spriteNum)
 	{
@@ -623,7 +707,7 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 			if (spriteCount > 64) 
 				return float4(0,0,0,0);
 			int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
-			if (ntPixel > 0 && ntPixel != 128)
+			if ((ntPixel  & 3) > 0 )
 			{
 				if (ntPixel > 128)
 				{
@@ -633,16 +717,10 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 					return float4(0,1,0,1);
 				}
 			}
-
 		}
-		
 	}
 	return float4(0,0,0,0);
-
 }
-
-
-
 
 float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
 {
@@ -666,93 +744,6 @@ float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
 	return float4(0,0,0,1);
 }
 
-float4 DrawTilesOnly( PS_IN pixelShaderIn ) : SV_Target
-{
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	// current palette index in a
-	// tileIndex in r, spriteIndex in g, isSprite in b
-	// calculate the address of the nes palette value in the palCache
-	
-	int col = finalColor.r * 255.0;
-	col &= 15;
-    int ppuByte1 = finalColor.b * 255.0;
-	
-	int tintBits = (ppuByte1 >>5) & 0x7;
-	
-	bool clipTiles = (ppuByte1 & 0x2) == 0x0;
-
-	float r = col / 32.0;
-	// this lookup is 8 columns wide
-	float2 palAddy = float2( r, finalColor.a  );
-
-	// get the nes palette entry (will contain 4 values)
-	float4 rVal = nesPal.Sample(palSampler, palAddy);
-    bool clipSprites = (ppuByte1 & 0x4) == 0x0;
-    
-    if ( clipTiles && pixelShaderIn.UV.x  < 0.03125)
-	{
-		return float4(0,0,0,0);
-	}else
-	{
-		// float alpha = col == 0 ? 0 : 1.0;
-		return float4(DecodePixel(rVal[col & 3] * 255, tintBits), 1.0 );
-	}
-}
-
-
-float4 DrawSpritesOnly( PS_IN pixelShaderIn ) : SV_Target
-{
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	// tileIndex in r, spriteIndex in g, isSprite in b
-	
-	// int ppuByte = finalColor.g * 255.0;
-	int ppuByte1 = finalColor.b * 255.0;
-	int tintBits = (ppuByte1 >> 5) & 0x7;
-	
-	int col = (int)(finalColor.r * 255.0) >> 4;
-	col &= 15;
-	col +=16;
-	// current palette index in a
-	// tileIndex in r, spriteIndex in g, isSprite in b
-	// calculate the address of the nes palette value in the palCache
-	float r = col / 32.0;
-	// this lookup is 8 columns wide
-	float2 palAddy = float2( r, finalColor.a  );
-
-	// get the nes palette entry (will contain 4 values)
-	float4 rVal = nesPal.Sample(palSampler, palAddy);
-
-
-	return float4(DecodePixel(rVal[col & 3] * 255, tintBits), col );
-
-}
-
-
-
-
-technique10 RenderTiles
-{
-	pass P0
-	{
-		SetGeometryShader( 0 );
-		SetVertexShader( CompileShader( vs_4_0, VS() ) );
-		SetPixelShader( CompileShader( ps_4_0, DrawTilesOnly() ) );
-	}
-	
-}
-
-technique10 RenderSprites
-{
-	pass P0
-	{
-		SetGeometryShader( 0 );
-		SetVertexShader( CompileShader( vs_4_0, VS() ) );
-		SetPixelShader( CompileShader( ps_4_0, DrawSpritesOnly() ) );
-	}
-	
-}
-
-
 technique10 RenderSpriteMask
 {
 	pass P0
@@ -761,7 +752,7 @@ technique10 RenderSpriteMask
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
 		SetPixelShader( CompileShader( ps_4_0, CreateSpriteMask() ) );
 	}
-	
+
 }
 
 technique10 RenderTileMask
@@ -805,6 +796,17 @@ technique10 RenderSpriteSquares
 		SetGeometryShader( 0 );
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
 		SetPixelShader( CompileShader( ps_4_0, DrawSpriteSquaresFromRAM() ) );
+	}
+	
+}
+
+technique10 DrawNameTable
+{
+	pass P0
+	{
+		SetGeometryShader( 0 );
+		SetVertexShader( CompileShader( vs_4_0, VS() ) );
+		SetPixelShader( CompileShader( ps_4_0, DumpNameTable() ) );
 	}
 	
 }

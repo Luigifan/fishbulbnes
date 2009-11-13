@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NES.CPU.PPUClasses
 {
-    public partial class PixelWhizzler
+    public partial class PixelWhizzler : NES.CPU.PixelWhizzlerClasses.IPPU
     {
 
 //0..19:	Starting at the instant the VINT flag is pulled down (when a NMI is 

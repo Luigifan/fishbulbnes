@@ -52,7 +52,6 @@ namespace InstiBulb.Integration
             container.RegisterType<HardWhizzler>(new ContainerControlledLifetimeManager());
             container.RegisterType<IPPU, HardWhizzler>(new ContainerControlledLifetimeManager());
 
-
             // Setup a TileDoodler (used by the debugger)
             container.RegisterType<TileDoodler>(new ContainerControlledLifetimeManager());
             

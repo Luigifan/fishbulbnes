@@ -4,7 +4,9 @@
     <Resource Name="NesOutput" Source="nes:output" />
     <Resource Name="NesPalette" Source="nes:palette" />
     <Resource Name="ChrRAM" Source="nes:chrram" />
-    <Resource Name="spriteList" Source="nes:spriteList" />
+    <Resource Name="NesOutput2" Source="nes:nesout2" />
+    <Resource Name="BankSwitches" Source="nes:banks" />
+
     <Resource Name="Background" Source="file:mario.jpg" />
     <Resource Name="Noise" Source="sys:noise:128" />
   </Resources>
@@ -19,19 +21,23 @@
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
+        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
         <!--<Input Type="Scalar" EffectVariable="timer" Source="Timer"/>-->
       </Inputs>
     </Filter>
   <!-- Tile Mask -->
-    <Filter Name="tileMask" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderTileMask" >
+    <!--<Filter Name="tileMask" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderTileMask" >
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
+        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
       </Inputs>
-    </Filter>
+    </Filter>-->
     
   <!-- Sprite RAM pass one-->
     <Filter Name="spriteSetup" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderSpriteRAM" >
@@ -39,6 +45,8 @@
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
+
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
       </Inputs>
     </Filter>
@@ -60,6 +68,8 @@
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
+
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
 
       </Inputs>
@@ -74,21 +84,13 @@
       </Inputs>
     </Filter>
 
-    <Filter Name="wavyTileMask" Height="512" Width="512" Effect="blue" Technique="Wave" >
-      <Inputs>
-        <Input Type="FilterOutput" Filter="tileMask" EffectVariable="texture2d" />
-        <Input Type="Resource" ResourceName="Noise" EffectVariable="noiseTex" />
-        <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
-      </Inputs>
-    </Filter>
-
     <!--Put it all together now-->
     <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
         <Input Type="FilterOutput" Filter="wavyTiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
         <Input Type="FilterOutput" Filter="spriteMask" EffectVariable="spriteMask" />
-        <Input Type="FilterOutput" Filter="wavyTileMask" EffectVariable="tileMask" />
+        
       </Inputs>
     </Filter>
 

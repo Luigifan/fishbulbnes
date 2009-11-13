@@ -81,7 +81,7 @@ namespace NES.CPU.Machine.Carts
                     {
                         PpuBankStarts[dest + i] = (src + i) * 0x400;
                     }
-
+                    BankSwitchesChanged = true;
                     //Array.Copy(chrRom, src * 0x400, whizzler.cartCopyVidRAM, dest * 0x400, numberOf1kBanks * 0x400);
                 }
             }

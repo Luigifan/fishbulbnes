@@ -66,6 +66,8 @@ namespace NES.CPU
             for (int i = 0; i < (numberOf8kBanks * 8); ++i)
                 PpuBankStarts[oneKdest + i] = (src + i) * 0x400;
 
+
+            BankSwitchesChanged = true;
             // Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
         }
 

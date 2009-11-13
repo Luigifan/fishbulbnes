@@ -39,7 +39,7 @@ namespace NES.CPU.Machine.Carts
             }
 
  
-            public int MaskBankAddress(int bank)
+            public new int MaskBankAddress(int bank)
             {
                 if (bank >= PrgRomCount * 2)
                 {
@@ -152,6 +152,8 @@ namespace NES.CPU.Machine.Carts
                     CopyBanks(0, _registers[1], 1);
                     CopyBanks(1, _registers[1] + 1, 1);
                 }
+                BankSwitchesChanged = true;
+
 
             }
 
@@ -201,12 +203,12 @@ namespace NES.CPU.Machine.Carts
                 switch (_registers[0] & 3)
                 {
                     case 0:
-                        Mirror(0);
                         OneScreenOffset = 0;
+                        Mirror(0);
                         break;
                     case 1:
-                        Mirror(0);
                         OneScreenOffset = 0x400;
+                        Mirror(0);
                         break;
                     case 2:
                         Mirror(1); // vertical
@@ -215,8 +217,9 @@ namespace NES.CPU.Machine.Carts
                         Mirror(2); // horizontal
                         break;
                 }
+                BankSwitchesChanged = true;
             }
-
+            
             #endregion
 
 

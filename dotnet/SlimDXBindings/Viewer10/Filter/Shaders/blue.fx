@@ -58,9 +58,10 @@ float4 DrawWaves( PS_IN pixelShaderIn ) : SV_Target
 	
 	wave.y = pixelShaderIn.UV.y + (sin((pixelShaderIn.UV.x*15)+timer + noiseSamp.r) * pixelOffset  );
 	wave.x = pixelShaderIn.UV.x + (sin((pixelShaderIn.UV.y *5)+timer + noiseSamp.g) * pixelOffset  );
-
+	float4 originalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
 	float4 finalColor = texture2d.Sample( linearSampler, wave );
-	finalColor.a = 1.0;
+	finalColor = (finalColor * 0.4) + (originalColor * 0.6);
+	finalColor.a = originalColor.a;
 	return finalColor;
 }
 

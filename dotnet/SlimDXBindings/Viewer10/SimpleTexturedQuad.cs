@@ -30,9 +30,11 @@ namespace SlimDXBindings.Viewer10
 
          Texture2D nesPalTexture;
          Texture2D chrRomTex;
-         Texture2D spriteList;
+         Texture2D nesOut2;
          Texture2D texture;
          Texture2D targetTexture;
+         Texture2D bankSwitchCache;
+
          ApplicationContext context;
          Form RenderForm;
          Viewport ViewArea;
@@ -200,18 +202,34 @@ namespace SlimDXBindings.Viewer10
 
             chrRomTex = textureBuddy.SetupTexture2D("chrRAM", chrRomDesc);
 
-            spriteList = textureBuddy.SetupTexture2D("spriteList", new Texture2DDescription()
+            nesOut2 = textureBuddy.SetupTexture2D("nesOutput2", new Texture2DDescription()
                 {
                     Usage = ResourceUsage.Dynamic,
                     Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm,
                     ArraySize = 1,
                     MipLevels = 1,
-                    Width = 2,
+                    Width = 256,
                     Height = 256,
                     BindFlags = BindFlags.ShaderResource,
                     CpuAccessFlags = CpuAccessFlags.Write,
                     SampleDescription = sampleDescription,
                 });
+
+            bankSwitchCache = textureBuddy.SetupTexture2D("bankSwitches", new Texture2DDescription()
+            {
+                Usage = ResourceUsage.Dynamic,
+                Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm,
+                ArraySize = 1,
+                MipLevels = 1,
+                // 16 * 4 = 64 bytes wide (8 rgba texels)
+                // 256 * 256 high 
+                Width = 16 ,
+                Height = 256,
+                BindFlags = BindFlags.ShaderResource ,
+                CpuAccessFlags = CpuAccessFlags.Write,
+                SampleDescription = sampleDescription,
+            });
+
 
             EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
             textureView = new ShaderResourceView(Device, texture);
@@ -270,7 +288,8 @@ namespace SlimDXBindings.Viewer10
             texArrayForRender[0] = texture;
             texArrayForRender[1] = nesPalTexture;
             texArrayForRender[2] = chrRomTex;
-            texArrayForRender[3] = spriteList;
+            texArrayForRender[3] = nesOut2;
+            texArrayForRender[4] = bankSwitchCache;
             
             context.ThreadExit += new EventHandler(context_ThreadExit);
             Application.Idle += new EventHandler(Application_Idle);
@@ -351,28 +370,44 @@ namespace SlimDXBindings.Viewer10
             d.Data.WriteRange<int>(this.nes.PPU.OutBuffer);
             texture.Unmap(0);
 
+            DataRectangle d2 = nesOut2.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            d2.Data.WriteRange<int>(this.nes.PPU.VideoBuffer);
+            nesOut2.Unmap(0);
+            
+
             DataRectangle palD = nesPalTexture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             for (int i = 0; i < nes.PPU.CurrentPalette + 1; ++i)
                 palD.Data.WriteRange<byte>(this.nes.PPU.PalCache[i]);
             nesPalTexture.Unmap(0);
 
             DataRectangle ramRect = chrRomTex.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom, 0, this.nes.Cart.ChrRom.Length );
+            ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom, 0, this.nes.Cart.ChrRom.Length);
             //ramRect.Data.WriteRange<byte>(new byte[1048576 - nes.Cart.ChrRom.Length]);
-
             chrRomTex.Unmap(0);
 
- 
-            
+            DataRectangle bankRect = bankSwitchCache.Map(0, MapMode.WriteDiscard, MapFlags.None);
+            bankRect.Data.Position = 0;
+            for (int i = 0; i <= nes.Cart.CurrentBank; ++i )
+                bankRect.Data.WriteRange<int>(nes.Cart.BankStartCache[i]);
+            bankSwitchCache.Unmap(0);
+
+            if (nes.Cart.CurrentBank > biggestBSCount)
+            {
+                biggestBSCount = (int)nes.Cart.CurrentBank;
+                Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
+            }
+
         }
 
-        Texture2D[] texArrayForRender = new Texture2D[4];
+
+        int biggestBSCount = 0;
+        Texture2D[] texArrayForRender = new Texture2D[5];
 
         public  void DrawFrame()
         {
 
             tileFilters.SetVariable("timer", timer);
-            tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
+            //tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
            // tileFilters.SetVariable("spriteRam", spriteRam);
             //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
 

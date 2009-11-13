@@ -8,6 +8,9 @@ namespace NES.CPU.PPUClasses
 {
     public partial class HardWhizzler
     {
+        int sprite0scanline = -1;
+        int sprite0x = -1;
+
 
         private int lastcpuClock;
 
@@ -54,10 +57,10 @@ namespace NES.CPU.PPUClasses
                     //frameFinished();
                     break;
                 case 6820:
+                    chrRomHandler.ResetBankStartCache();
                     frameOn = true;
                     //
                     currentPalette = 0;
-                    palCache[currentPalette] = new byte[32];
                     Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
                     // setFrameOn();
                     if (spriteChanges)
@@ -67,25 +70,20 @@ namespace NES.CPU.PPUClasses
                     }
 
                     ClearVINT();
+                    UpdatePixelInfo();
                     break;
                 //304 pixels into pre-render scanline
                 case 7125:
                     break;
 
                 case 7161:
-                    //lockedVScroll = _vScroll;
                     vbufLocation = 0;
-                    //curBufPos = bufStart;
-
-                    xNTXor = 0x0;
-                    yNTXor = 0;
                     currentXPosition = 0;
                     currentYPosition = 0;
 
                     break;
 
                 case frameClockEnd:
-                    if (fillRGB) FillBuffer();
                     frameFinished();
                     SetupVINT();
                     frameOn = false;
@@ -101,16 +99,11 @@ namespace NES.CPU.PPUClasses
 
                 if (currentXPosition < 256 && vbufLocation < 256 * 240)
                 {
-
-                    xPosition = currentXPosition + lockedHScroll;
-                    if ((xPosition & 7) == 0)
+                    if (chrRomHandler.BankSwitchesChanged)
                     {
-                        xNTXor = ((xPosition & 0x100) == 0x100) ? 0x400 : 0x00;
-                        xPosition &= 0xFF;
-
-                        FetchNextTile();
+                        chrRomHandler.UpdateBankStartCache();
+                        UpdatePixelInfo();
                     }
-
                     DrawPixel();
 
                     vbufLocation++;
@@ -124,29 +117,9 @@ namespace NES.CPU.PPUClasses
                     currentYPosition++;
 
                     PreloadSprites(currentYPosition);
-                    if (spritesOnThisScanline >= 7)
-                    {
-                        _PPUStatus = _PPUStatus | 0x20;
-                    }
 
                     lockedHScroll = _hScroll;
-
-                    yPosition = currentYPosition + lockedVScroll;
-
-                    if (yPosition < 0)
-                    {
-                        yPosition += 240;
-                    }
-                    if (yPosition >= 240)
-                    {
-                        yPosition -= 240;
-                        yNTXor = 0x800;
-                    }
-                    else
-                    {
-                        yNTXor = 0x00;
-                    }
-
+                    UpdatePixelInfo();
                 }
 
             }
@@ -171,31 +144,6 @@ namespace NES.CPU.PPUClasses
             set { pixelEffectBuffer = value; }
         }
 
-
-        public void FillBuffer()
-        {
-
-            int i = 0;
-            while (i < 256 * 240 )
-            {
-                int tile = (outBuffer[i] & 0x0F);
-                int sprite = ((outBuffer[i] >> 4) & 0x0F) + 16;
-                int isSprite = (outBuffer[i] >> 8) & 64;
-                int curPal = (outBuffer[i] >> 24) & 0xFF;
-
-                uint pixel;
-                if (isSprite > 0)
-                {
-                    pixel = palCache[curPal][sprite];
-                }
-                else
-                {
-                    pixel = palCache[curPal][tile];
-                }
-                rgb32OutBuffer[i] = pal[pixel];
-                i++;
-            }
-        }
 
         public int[] VideoBuffer
         {
@@ -243,55 +191,55 @@ namespace NES.CPU.PPUClasses
             set { fillRGB = value; }
         }
 
+        int currentPixelInfo0 = 0;
+        int currentPixelInfo1 = 0;
+
         private void DrawPixel()
         {
-            byte tilePixel =0 , spritePixel = 0;
-            if (!hitSprite)
+            if (!hitSprite && sprite0scanline == currentYPosition)
             {
-
-                tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
-                isForegroundPixel = false;
-                spritePixel = _spritesAreVisible ? GetSpritePixel() : (byte)0;
-                if (spriteZeroHit && tilePixel != 0)
+                if (SpriteZeroTest() && TestNTPixel())
                 {
                     hitSprite = true;
                     _PPUStatus = _PPUStatus | 0x40;
                 }
             }
-
-            // the int is packed like this:
-            //  byte 0 : the current tile pixel in lower 4 bits, current sprite pixel in upper four bits
-            //  byte 1 : ppuControlByte0
-            //  byte 2 : ppuControlByte1
-            //  byte 4 : current palette  (future project)
+            outBuffer[vbufLocation] = currentPixelInfo0;
+            rgb32OutBuffer[vbufLocation] = currentPixelInfo1;
             
-            // shoving isForegroundPixel over top of the ppu output pin (unused)
-            int b0 = _PPUControlByte0 ;
-
-
-            outBuffer[vbufLocation] = (
-                currentPalette << 24 |
-                _PPUControlByte1  << 16 |
-                _PPUControlByte0 << 8 |
-                (lockedHScroll & 15) << 4 | 
-                lockedVScroll & 15);
-            
-            //lockedHScroll, lockedVScroll 
-
-            // drawInfo[vbufLocation] =
-            //    ((ulong)(nameTableMemoryStart ^ xNTXor ^ yNTXor) << 48
-            //        | (ulong)0 << 32 // current bankswitch mapping
-            //        | (ulong)(lockedHScroll & 0xFF << 24)
-            //        | (ulong)(lockedVScroll & 0xFF << 16)
-            //        | (ulong)_backgroundPatternTableIndex);
-
-            // pixelEffectBuffer[vbufLocation] = currentTileIndex;
-
-            //(spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-                //? _palette[spritePixel] : _palette[tilePixel];
         }
 
-        int[] drawInfo= new int[256*256];
+        int nameTableBits = 0;
+
+        void UpdatePixelInfo()
+        {
+
+            //int vScroll = (lockedVScroll < 0) ? lockedVScroll + 240 : lockedVScroll;
+            int ntbits = nameTableBits;
+
+            if (lockedVScroll <0 )
+            {
+                ntbits |= 4;
+            }
+
+            currentPixelInfo0 = (
+                currentPalette << 24 | // a
+                _PPUControlByte1 << 16 | // r
+                _PPUControlByte0 << 8  | // g
+                ntbits
+                // b
+                );
+
+
+            
+            currentPixelInfo1 =
+                (
+                    lockedVScroll << 24 | // a
+                    lockedHScroll << 16 |  // r
+                    (int)(chrRomHandler.CurrentBank & 0xFFFF)
+                );
+        }
+
 
         //private void DrawClipPixel()
         //{

@@ -73,7 +73,7 @@ namespace NES.CPU.PPUClasses
                 // lock hscroll at the beginning of each scanline 
                 // (TODO: actually, every 4 clocks on a scanline?)
                 //UpdateMirroring();
-                if (HBlank != null) HBlank(this, new EventArgs());
+                if (HBlank != null) HBlank(this, EventArgs.Empty);
 
             }
 

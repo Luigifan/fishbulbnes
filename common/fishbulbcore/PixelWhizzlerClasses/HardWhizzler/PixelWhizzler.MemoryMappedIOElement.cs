@@ -55,6 +55,7 @@ namespace NES.CPU.PPUClasses
                     _PPUControlByte0 = data;
 
                     nameTableMemoryStart = (0x400 * (_PPUControlByte0 & 0x3));
+                    nameTableBits = (byte)(_PPUControlByte0 & 0x3);
                     _backgroundPatternTableIndex = ((_PPUControlByte0 & 0x10) >> 4) * 0x1000;
 
                     // if we toggle /vbl we can throw multiple NMIs in a vblank period
@@ -128,6 +129,7 @@ namespace NES.CPU.PPUClasses
                         if (!frameOn || (frameOn && !isRendering))
                         {
                             lockedVScroll = _vScroll;
+                            UpdatePixelInfo();
                         }
                         
                         // fineVerticalScroll = data & 0x7;
@@ -167,6 +169,8 @@ namespace NES.CPU.PPUClasses
                         _hScroll = ((_PPUAddress & 0x1F) << 3); // +(currentXPosition & 7);
                         _vScroll = (((_PPUAddress >> 5) & 0x1F) << 3);
                         _vScroll |= ((_PPUAddress >> 12) & 0x3);
+
+                        nameTableBits = ((_PPUAddress >> 10) & 0x3);
                         nameTableMemoryStart = ((_PPUAddress >> 10) & 0x3) * 0x400;
                         if (frameOn)
                         {
@@ -226,6 +230,7 @@ namespace NES.CPU.PPUClasses
                     PPUAddress = (PPUAddress & 0x3FFF);
                     break;
             }
+            UpdatePixelInfo();
         }
 
         public int GetByte(int Clock, int address)
@@ -335,19 +340,16 @@ namespace NES.CPU.PPUClasses
         void WriteToNESPalette(int address, byte data)
         {
 
-            palCache[currentPalette] = new byte[32];
             Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
             currentPalette++;
 
             int palAddress = (address) & 0x1F;
             _palette[palAddress] = data;
-            // rgb32OutBuffer[255 * 256 + palAddress] = data;
             if ((_PPUAddress & 0xFFEF) == 0x3F00)
             {
                 _palette[(palAddress ^ 0x10) & 0x1F] = data;
-                // rgb32OutBuffer[255 * 256 + palAddress ^ 0x10] = data;
             }
-            
+            UpdatePixelInfo();
         }
 
 

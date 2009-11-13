@@ -45,16 +45,6 @@ namespace NES.CPU.PPUClasses
             writer.Enqueue(_backgroundPatternTableIndex);
 
 
-            writer.Enqueue( patternEntry );
-            writer.Enqueue( patternEntryByte2);
-            writer.Enqueue(currentAttributeByte);
-            writer.Enqueue( xNTXor );
-            writer.Enqueue( yNTXor );
-            writer.Enqueue( fetchTile ? 0 : 1);
-            writer.Enqueue (xPosition);
-            writer.Enqueue(yPosition);
-
-
             writer.Enqueue(lastcpuClock);
             writer.Enqueue(vbufLocation);
 
@@ -115,18 +105,6 @@ namespace NES.CPU.PPUClasses
             currentXPosition= state.Dequeue();
             nameTableIndex= state.Dequeue();
             _backgroundPatternTableIndex= state.Dequeue();
-            //_mirroring= state.Dequeue();
-            //oneScreenMirrorOffset= state.Dequeue();
-            //currentMirrorMask= state.Dequeue();
-
-            patternEntry = state.Dequeue();
-            patternEntryByte2 = state.Dequeue();
-            currentAttributeByte = state.Dequeue();
-            xNTXor = state.Dequeue();
-            yNTXor = state.Dequeue();
-            fetchTile = (state.Dequeue() == 1);
-            xPosition = state.Dequeue();
-            yPosition = state.Dequeue();
 
             lastcpuClock = state.Dequeue();
             vbufLocation = state.Dequeue();

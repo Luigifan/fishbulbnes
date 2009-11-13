@@ -23,6 +23,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
         Device device;
         Texture2D texture;
+        EffectBuddy effectBuddy;
         Effect Effect;
         EffectTechnique technique;
         EffectPass effectPass;
@@ -61,7 +62,7 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
-        public BasicPostProcessingFilter(Device device, string name, int Width, int Height, string shader, string technique)
+        public BasicPostProcessingFilter(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy)
         {
             this.device = device;
             this.width = Width;
@@ -69,24 +70,16 @@ namespace SlimDXBindings.Viewer10.Filter
             this.shaderName = shader;
             this.techniqueName = technique;
             this.filterName = name;
+            this.effectBuddy = effectBuddy;
                         
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
             SetupFilter();
         }
 
-        static System.IO.Stream GetShaderStreamFromResource(string name)
-        {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                string.Format("SlimDXBindings.Viewer10.Filter.Shaders.{0}.fx", name)
-                );
-        }
-
         void SetupFilter()
         {
 
-            Effect = Effect.FromStream(device,
-                GetShaderStreamFromResource(shaderName),
-                "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
+            Effect = effectBuddy.GetEffect(shaderName);
 
             texture = new Texture2D(device, GetTextureDescription());
 
@@ -130,6 +123,8 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public virtual void ProcessEffect()
         {
+            technique = Effect.GetTechniqueByName(techniqueName);
+            effectPass = technique.GetPassByIndex(0);
             device.Rasterizer.SetViewports(vp);
             device.OutputMerger.SetTargets(renderTarget);
 
