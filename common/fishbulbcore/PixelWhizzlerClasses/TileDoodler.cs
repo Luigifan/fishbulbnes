@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NES.CPU.PixelWhizzlerClasses;
 
 namespace NES.CPU.PPUClasses
 {
     public class TileDoodler
     {
-        private PixelWhizzler _ppu;
+        private IPPU _ppu;
 
         public int XOffset { get; set; }
         public int YOffset { get; set; }
 
         private NESSprite sprite0 = new NESSprite();
 
-        public TileDoodler(PixelWhizzler ppu)
+        public TileDoodler(IPPU ppu)
         {
             _ppu = ppu;
 

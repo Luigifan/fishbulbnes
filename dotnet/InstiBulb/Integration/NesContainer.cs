@@ -35,8 +35,8 @@ namespace InstiBulb.Integration
             // platform specific wavestreamer
             container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
             // make it default
-            container.RegisterType<IWavStreamer, InlineWavStreamer>();
-            //container.RegisterType<IWavStreamer, OpenALInlineWavStreamer>();
+            //container.RegisterType<IWavStreamer, InlineWavStreamer>();
+            container.RegisterType<IWavStreamer, OpenALInlineWavStreamer>();
             // the shared buffer between the IWavStreamer and the NES
             container.RegisterType<WavSharer>(new ContainerControlledLifetimeManager());
             container.Configure<InjectedMembers>().ConfigureInjectionFor<WavSharer>(new InjectionConstructor((float)44100.0));

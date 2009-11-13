@@ -177,7 +177,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget  == null))
             {
                 int[] table = DebugTarget.Tiler.DoodlePatternTable(0);
-                (DebugTarget .PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget .PPU .SetupBufferForDisplay(ref table);
                 patternTable0 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (128 * 32 + 7) / 8;
 
@@ -193,7 +193,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget  == null))
             {
                 int[] table = DebugTarget.Tiler.DoodlePatternTable(0x1000);
-                (DebugTarget .PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget .PPU .SetupBufferForDisplay(ref table);
                 patternTable1 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (128 * 32 + 7) / 8;
 
@@ -212,7 +212,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget == null))
             {
                 int[] table = DebugTarget.Tiler.DoodleNameTable(0);
-                (DebugTarget.PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget.PPU .SetupBufferForDisplay(ref table);
                 nameTable0 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -229,7 +229,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget  == null))
             {
                 int[] table = DebugTarget.Tiler.DoodleNameTable(0x400);
-                (DebugTarget .PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget .PPU .SetupBufferForDisplay(ref table);
                 nameTable1 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -247,7 +247,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget  == null))
             {
                 int[] table = DebugTarget.Tiler.DoodleNameTable(0x800);
-                (DebugTarget .PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget .PPU.SetupBufferForDisplay(ref table);
                 nameTable2 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -264,7 +264,7 @@ namespace InstiBulb.WinViewModels
             if (!(DebugTarget  == null))
             {
                 int[] table = DebugTarget.Tiler.DoodleNameTable(0xC00);
-                (DebugTarget .PPU as NES.CPU.PPUClasses.PixelWhizzler).SetupBufferForDisplay(ref table);
+                DebugTarget .PPU.SetupBufferForDisplay(ref table);
                 nameTable3 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
