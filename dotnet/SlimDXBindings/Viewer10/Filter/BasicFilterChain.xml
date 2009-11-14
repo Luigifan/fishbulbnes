@@ -32,10 +32,11 @@
       </Inputs>
     </Filter>
 
-    <Filter Name="toolStrip" Height="64" Width="512" Effect="RamDoodle" Technique="Doodle" >
+    <Filter Name="toolStrip" FilterType="ToolStrip" Height="64" Width="512" Effect="blue" Technique="Wave" >
       <Inputs>
-        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
-        <Input Type="Scalar" EffectVariable="chrramstart" Source="ChrRamStart"/>
+        <Input Type="FilterOutput" Filter="tiles" EffectVariable="texture2d" />
+        <Input Type="Resource" ResourceName="Noise" EffectVariable="noiseTex" />
+        <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
       </Inputs>
     </Filter>
   <!-- Tile Mask -->

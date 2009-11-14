@@ -141,7 +141,7 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
 
-        public BasicPostProcessingFilter SetScalar(string variableName, float constant) 
+        public IFilterChainLink SetScalar(string variableName, float constant) 
         {
             if (boundScalars.Contains(variableName))
             {
@@ -151,7 +151,7 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
-        public BasicPostProcessingFilter SetScalar(string variableName, int[] constant)
+        public IFilterChainLink SetScalar(string variableName, int[] constant)
         {
             if (boundScalars.Contains(variableName))
             {
@@ -161,7 +161,7 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
-        public BasicPostProcessingFilter SetScalar<T>(string variableName, T constant) 
+        public IFilterChainLink SetScalar<T>(string variableName, T constant) 
         {
             if (boundScalars.Contains(variableName))
             {

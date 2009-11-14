@@ -5,7 +5,7 @@ using System.Text;
 using NES.CPU.nitenedo.Interaction;
 using System.Threading;
 using NES.CPU.nitenedo;
-using SlimDXBindings.Viewer10.ControlPanel;
+//using SlimDXBindings.Viewer10.ControlPanel;
 
 namespace SlimDXBindings.Viewer10
 {
@@ -106,9 +106,9 @@ namespace SlimDXBindings.Viewer10
         {
 
             get {
-                var panel = new D3D10ControlPanel();
-                panel.DataContext = this;
-                return panel; }
+                //var panel = new D3D10ControlPanel();
+                //panel.DataContext = this;
+                return new System.Windows.Controls.TextBlock(); }
         }
 
         public float Hue

@@ -86,6 +86,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files (x86)\SlimDX SDK (March 2009)\Bin\x86\SlimDX.dll</HintPath>
     </Reference>
+    <Reference Include="SlimDX.Windows7, Version=2.0.7.41, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\SlimDX SDK (March 2009)\Bin\x86\SlimDX.Windows7.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -111,9 +115,6 @@
     <Compile Include="InlineWavStreamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimDXKeyboardControlPad.cs" />
-    <Compile Include="Viewer10\ControlPanel\D3D10ControlPanel.xaml.cs">
-      <DependentUpon>D3D10ControlPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Viewer10\DirectX10NesViewer.cs" />
     <Compile Include="Viewer10\Filter\BasicHDRFilter.cs" />
     <Compile Include="Viewer10\Filter\BasicPostProcessingFilter.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Viewer10\Filter\ToolStrip.cs" />
     <Compile Include="Viewer10\FullscreenQuad.cs" />
     <Compile Include="Viewer10\SimpleTexturedQuad.cs" />
+    <Compile Include="Viewer10\XamlModel3dLoader.cs" />
     <Compile Include="Viewer\Filters\QuadRenderer.cs" />
     <Compile Include="Viewer\IndexedTexturedQuadRenderer.cs" />
     <Compile Include="Viewer\ISlimDXRenderer.cs" />
@@ -147,10 +149,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Viewer10\ControlPanel\D3D10ControlPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Viewer\PropertyPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,7 +189,7 @@
     <EmbeddedResource Include="Viewer10\Filter\Shaders\RenderNesSprites.fx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Viewer10\Filter\Shaders\RamDoodle.fx" />
+    <Folder Include="Viewer10\ControlPanel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

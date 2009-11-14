@@ -89,9 +89,9 @@ namespace SlimDXBindings.Viewer10.Filter
                     }
                     else
                     {
-                        var p = (from BasicPostProcessingFilter filter in this
+                        var p = (from IFilterChainLink filter in this
                                  where filter.FilterName == s
-                                 select filter).FirstOrDefault<BasicPostProcessingFilter>();
+                                 select filter).FirstOrDefault<IFilterChainLink>();
                         if (p != null)
                         {
                             this[i].SetShaderResource(resName, p.results);
@@ -136,7 +136,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void SetVariable(string name, float constant)
         {
-            foreach (BasicPostProcessingFilter b in this)
+            foreach (IFilterChainLink b in this)
             {
                 b.SetScalar(name, constant);
             }
@@ -144,7 +144,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void SetVariable<T>(string name, T constant)
         {
-            foreach (BasicPostProcessingFilter b in this)
+            foreach (IFilterChainLink b in this)
             {
                 b.SetScalar(name, constant);
             }
@@ -153,7 +153,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void SetResource(string name, Resource res)
         {
-            foreach (BasicPostProcessingFilter b in this)
+            foreach (IFilterChainLink b in this)
             {
                 b.SetStaticResource(name, res);
             }

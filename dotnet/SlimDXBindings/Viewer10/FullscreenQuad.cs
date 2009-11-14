@@ -68,23 +68,6 @@ namespace SlimDXBindings.Viewer10
             stream.Write(backgroundColor);
             stream.Write(new Vector2(1.0f, 0.0f));
 
-            //stream.Write(new Vector4(-1.0f, -1.0f, 1.0f, 1.0f));
-            //stream.Write(backgroundColor);
-            //stream.Write(new Vector2(0.0f, 1.0f));
-
-            //stream.Write(new Vector4(-1.0f, 1.0f, 1.0f, 1.0f));
-            //stream.Write(backgroundColor);
-            //stream.Write(new Vector2(0.0f, 0.0f));
-
-            //stream.Write(new Vector4(1.0f, -1.0f, 1.0f, 1.0f));
-            //stream.Write(backgroundColor);
-            //stream.Write(new Vector2(1.0f, 1.0f));
-
-            //stream.Write(new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-            //stream.Write(backgroundColor);
-            //stream.Write(new Vector2(1.0f, 0.0f));
-
-
             stream.Position = 0;
 
             BufferDescription bufferDescription = new BufferDescription();

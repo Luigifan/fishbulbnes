@@ -17,5 +17,8 @@ namespace SlimDXBindings.Viewer10.Filter
         IFilterChainLink SetStaticResource(string name, Resource res);
         IFilterChainLink ClearNeededResources();
         IFilterChainLink DontFeedNextStage();
+        IFilterChainLink SetScalar(string variableName, float constant);
+        IFilterChainLink SetScalar(string variableName, int[] constant);
+        IFilterChainLink SetScalar<T>(string variableName, T constant);
     }
 }
