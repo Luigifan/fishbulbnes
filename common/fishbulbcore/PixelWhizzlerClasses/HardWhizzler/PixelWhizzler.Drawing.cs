@@ -113,6 +113,7 @@ namespace NES.CPU.PPUClasses
 
                 if (currentXPosition > 340)
                 {
+                    chrRomHandler.UpdateScanlineCounter();
                     currentXPosition = 0;
                     currentYPosition++;
 

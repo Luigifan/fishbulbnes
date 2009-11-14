@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using SlimDX.Direct3D10;
 using System.Drawing;
-using DXGI = SlimDX.DXGI;
 using SlimDX;
-
 
 namespace SlimDXBindings.Viewer10.Filter
 {
-    public class BasicPostProcessingFilter :  IDisposable, SlimDXBindings.Viewer10.Filter.IFilterChainLink
+    public class ToolStrip : IFilterChainLink
     {
 
         bool feedsNextStage = true;
@@ -29,7 +27,7 @@ namespace SlimDXBindings.Viewer10.Filter
         EffectPass effectPass;
         RenderTargetView renderTarget;
         FullscreenQuad quad;
-        Viewport vp ;
+        Viewport vp;
 
         SlimDX.DXGI.SampleDescription sampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
         string shaderName;
@@ -62,7 +60,7 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
-        public BasicPostProcessingFilter(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy)
+        public ToolStrip(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy)
         {
             this.device = device;
             this.width = Width;
@@ -71,7 +69,7 @@ namespace SlimDXBindings.Viewer10.Filter
             this.techniqueName = technique;
             this.filterName = name;
             this.effectBuddy = effectBuddy;
-                        
+
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
             SetupFilter();
         }
@@ -88,7 +86,8 @@ namespace SlimDXBindings.Viewer10.Filter
             technique = Effect.GetTechniqueByName(techniqueName);
             effectPass = technique.GetPassByIndex(0);
 
-            quad = new FullscreenQuad(device, effectPass.Description.Signature);
+            quad = new FullscreenQuad(device, effectPass.Description.Signature, -1.0f, 0.125f, 1.0f, -1.0f);
+            SlimDX.Direct3D10.Sprite spr = new Sprite(device, 0);
         }
 
         internal virtual Texture2DDescription GetTextureDescription()
@@ -141,7 +140,7 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
 
-        public BasicPostProcessingFilter SetScalar(string variableName, float constant) 
+        public IFilterChainLink SetScalar(string variableName, float constant)
         {
             if (boundScalars.Contains(variableName))
             {
@@ -151,7 +150,7 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
-        public BasicPostProcessingFilter SetScalar(string variableName, int[] constant)
+        public IFilterChainLink SetScalar(string variableName, int[] constant)
         {
             if (boundScalars.Contains(variableName))
             {
@@ -161,7 +160,7 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
-        public BasicPostProcessingFilter SetScalar<T>(string variableName, T constant) 
+        public IFilterChainLink SetScalar<T>(string variableName, T constant)
         {
             if (boundScalars.Contains(variableName))
             {
@@ -172,7 +171,7 @@ namespace SlimDXBindings.Viewer10.Filter
                     variable.Set((constant as float?).Value);
                 if (typeof(T) == typeof(int[]))
                     variable.Set((constant as int[]));
-                
+
             }
             return this;
         }
@@ -232,11 +231,8 @@ namespace SlimDXBindings.Viewer10.Filter
                     variable.SetResource(shaderRes);
                 }
             }
-           
+
             return this;
         }
-
-
-
     }
 }

@@ -93,7 +93,12 @@ namespace NES.CPU.Machine.Carts
             {
                 get
                 {
-                    return irqRaised;
+                    if (irqRaised)
+                    {
+                        irqRaised = false;
+                        return true;
+                    }
+                    return false;
                 }
                 set
                 {
@@ -318,6 +323,7 @@ namespace NES.CPU.Machine.Carts
                        updateIRQ();
                         scanlineCounter = -1;
                     }
+                    return;
                 }
 
                 if (_mmc3TmpVal != 0)
@@ -334,7 +340,8 @@ namespace NES.CPU.Machine.Carts
                 {
                     irqRaised = true;
                     updateIRQ();
-                    // scanlineCounter = _mmc3IrqVal + 1;
+
+                    scanlineCounter = _mmc3IrqVal + 1;
                 }
                 
             }

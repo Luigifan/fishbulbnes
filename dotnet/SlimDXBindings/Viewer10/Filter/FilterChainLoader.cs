@@ -71,6 +71,7 @@ namespace SlimDXBindings.Viewer10.Filter
                           select new
                           {
                               Name = c.Attribute("Name").Value,
+                              FilterType = (c.Attribute("FilterType") == null) ? "Basic" : c.Attribute("FilterType").Value,
                               Height = int.Parse(c.Attribute("Height").Value),
                               Width = int.Parse(c.Attribute("Width").Value),
                               EffectName = c.Attribute("Effect").Value,
@@ -80,7 +81,17 @@ namespace SlimDXBindings.Viewer10.Filter
 
             foreach (var c in filters)
             {
-                BasicPostProcessingFilter newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
+                IFilterChainLink newFilter = null;
+                switch (c.FilterType)
+                {
+                    case "ToolStrip":
+                        newFilter = new ToolStrip(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
+                        break;
+                    default:
+                        newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
+                        break;
+                }
+                
 
                 // set up this filters inputs
                 

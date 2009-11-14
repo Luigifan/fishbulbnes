@@ -3,6 +3,7 @@ Texture2D screenOne;
 Texture2D screenTwo;
 Texture2D backgroundPic;
 Texture2D spriteMask;
+Texture2D toolStrip;
 
 float BackgroundBlendFactor;
 
@@ -48,6 +49,16 @@ PS_IN VS( VS_IN vertexShaderIn )
 
 float4 PS( PS_IN pixelShaderIn ) : SV_Target
 {
+	if ((pixelShaderIn.UV.y * 15) > 14)
+	{
+		// clamp y 14/16-15/16 to newY (0-1)
+		// ((y * 15) - 14)/16
+		float y = pixelShaderIn.UV.y;
+		
+		float2 coords = float2(pixelShaderIn.UV.x, (y*15)-14);
+		return toolStrip.Sample( linearSampler, coords);
+	}
+
     float4 finalColor = screenOne.Sample( linearSampler, pixelShaderIn.UV );
     float4 finalSpriteColor = screenTwo.Sample( linearSampler, pixelShaderIn.UV );
     float4 spriteMaskColor = spriteMask.Sample( linearSampler, pixelShaderIn.UV );

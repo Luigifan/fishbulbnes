@@ -26,7 +26,16 @@
         <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
         <Input Type="Scalar" EffectVariable="hue" Source="hue"/>
+        <Input Type="Scalar" EffectVariable="brightness" Source="brightness"/>
+        <Input Type="Scalar" EffectVariable="contrast" Source="contrast"/>
         <!--<Input Type="Scalar" EffectVariable="timer" Source="Timer"/>-->
+      </Inputs>
+    </Filter>
+
+    <Filter Name="toolStrip" Height="64" Width="512" Effect="RamDoodle" Technique="Doodle" >
+      <Inputs>
+        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="Scalar" EffectVariable="chrramstart" Source="ChrRamStart"/>
       </Inputs>
     </Filter>
   <!-- Tile Mask -->
@@ -92,7 +101,8 @@
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
         <Input Type="FilterOutput" Filter="spriteMask" EffectVariable="spriteMask" />
-        
+        <Input Type="FilterOutput" Filter="toolStrip" EffectVariable="toolStrip" />
+
       </Inputs>
     </Filter>
 

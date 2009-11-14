@@ -262,7 +262,7 @@ namespace NES.CPU.Fastendo
 
         public void FindNextEvent()
         {
-            nextEvent = clock + _pixelWhizzler.NextEventAt;
+            nextEvent =  clock + _pixelWhizzler.NextEventAt;
         }
 
         private void HandleNextEvent()

@@ -351,6 +351,27 @@ namespace SlimDXBindings.Viewer10
         }
 
         float hue = 25.0f;
+
+        public float Hue
+        {
+            get { return hue; }
+            set { hue = value; }
+        }
+
+        public float Brightness
+        {
+            get;
+            set;
+        }
+
+        public float Contrast
+        {
+            get;
+            set;
+        }
+
+
+
         float timer = 0.0f;
         ShaderResourceView texView;
 
@@ -414,6 +435,9 @@ namespace SlimDXBindings.Viewer10
 
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("hue", hue);
+            tileFilters.SetVariable("contrast", Contrast);
+            tileFilters.SetVariable("brightness", Brightness);
+            tileFilters.SetVariable("chrramstart", nes.Cart.ChrRamStart);
             //tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
            // tileFilters.SetVariable("spriteRam", spriteRam);
             //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            

@@ -274,8 +274,6 @@ namespace InstiBulb.WinViewModels
             }
         }
 
-
-
         public ICommand DrawTiles
         {
             get;

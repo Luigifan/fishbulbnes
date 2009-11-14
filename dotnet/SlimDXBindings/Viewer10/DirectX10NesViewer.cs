@@ -5,6 +5,7 @@ using System.Text;
 using NES.CPU.nitenedo.Interaction;
 using System.Threading;
 using NES.CPU.nitenedo;
+using SlimDXBindings.Viewer10.ControlPanel;
 
 namespace SlimDXBindings.Viewer10
 {
@@ -103,7 +104,47 @@ namespace SlimDXBindings.Viewer10
 
         public object UIControl
         {
-            get { return new System.Windows.Controls.Canvas(); }
+
+            get {
+                var panel = new D3D10ControlPanel();
+                panel.DataContext = this;
+                return panel; }
+        }
+
+        public float Hue
+        {
+            get
+            {
+                return myQuad.Hue;
+            }
+            set
+            {
+                myQuad.Hue = value;
+            }
+        }
+
+        public float Brightness
+        {
+            get
+            {
+                return myQuad.Brightness;
+            }
+            set
+            {
+                myQuad.Brightness = value;
+            }
+        }
+
+        public float Contrast
+        {
+            get
+            {
+                return myQuad.Contrast;
+            }
+            set
+            {
+                myQuad.Contrast = value;
+            }
         }
 
         public object PropertiesPanel
