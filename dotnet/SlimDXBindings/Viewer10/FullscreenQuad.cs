@@ -86,6 +86,7 @@ namespace SlimDXBindings.Viewer10
             device.InputAssembler.SetInputLayout(Layout);
             device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleStrip);
             device.InputAssembler.SetVertexBuffers(0, new SlimDX.Direct3D10.VertexBufferBinding(Vertices, vertexSize, 0));
+            
         }
 
         public void Draw()

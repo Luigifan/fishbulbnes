@@ -272,7 +272,8 @@ namespace NES.CPU.Fastendo
             // int tickCount = 0;
             _currentInstruction.ExtraTiming = 0;
 
-            if (nextEvent < clock)
+            //_pixelWhizzler.DrawTo(clock);
+            if (nextEvent <= clock)
             {
                 HandleNextEvent();
             }
@@ -287,24 +288,9 @@ namespace NES.CPU.Fastendo
             {
                 clock += 7; 
                 InterruptRequest();
+                _handleIRQ = false;
             }
 
-            //    if (cart .IrqRaised)
-            //{
-            //    cpuClocks = 7;
-            //    if (!_cpu.GetFlag(CPUStatusBits.InterruptDisable))
-            //        _cpu.InterruptRequest();
-            //    else
-            //        cpuClocks = _cpu.Step();
-            //}
-            //else 
-            //        if (soundBopper.InterruptRaised)
-            //{
-            //    cpuClocks = 7;
-            //    _cpu.InterruptRequest();
-            //    soundBopper.InterruptRaised = false;
-            //}
-            //else 
             FetchNextInstruction();
             FetchInstructionParameters();
             Execute();
@@ -320,19 +306,8 @@ namespace NES.CPU.Fastendo
 
 
 
-        public void Run()
-        {
-            clock = 0;
-            while ( clock < 200000)
-            {
-                if (GetByte(_programCounter) == 0x00) break;
-                Step();
-            }
-        }
-
-
         /// <summary>
-        /// runs up to count clock cycles, then returns
+        /// runs up to x clock cycles, then returns
         /// </summary>
         /// <param name="count"></param>
         public void RunCycles( int count)

@@ -65,6 +65,15 @@ namespace SlimDXBindings.Viewer10.Filter
             return newChain;
         }
 
+        static string GetOptionalAttrValue(XAttribute attr, string defValue)
+        {
+            if (attr == null)
+            {
+                return defValue;
+            }
+            return attr.Value;
+        }
+
         private void ReadFilters(FilterChain newChain, XElement doc)
         {
             var filters = from c in doc.Element("Filters").Descendants("Filter")
@@ -74,9 +83,11 @@ namespace SlimDXBindings.Viewer10.Filter
                               FilterType = (c.Attribute("FilterType") == null) ? "Basic" : c.Attribute("FilterType").Value,
                               Height = int.Parse(c.Attribute("Height").Value),
                               Width = int.Parse(c.Attribute("Width").Value),
-                              EffectName = c.Attribute("Effect").Value,
-                              Technique = c.Attribute("Technique").Value,
-                              Inputs = c.Element("Inputs").Descendants("Input")
+                              EffectName = GetOptionalAttrValue(c.Attribute("Effect"), "None"),
+                              Technique = GetOptionalAttrValue(c.Attribute("Technique"), "None"),
+                              Inputs = c.Element("Inputs") == null ? null : c.Element("Inputs").Descendants("Input"),
+                              Element = c
+
                           };
 
             foreach (var c in filters)
@@ -85,7 +96,7 @@ namespace SlimDXBindings.Viewer10.Filter
                 switch (c.FilterType)
                 {
                     case "ToolStrip":
-                        newFilter = new ToolStrip(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
+                        newFilter = BuildToolStrip(c.Element, newChain);
                         break;
                     default:
                         newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
@@ -96,52 +107,89 @@ namespace SlimDXBindings.Viewer10.Filter
                 // set up this filters inputs
                 
                 // local texture resources
-                var staticInputs = from g in c.Inputs
-                             where g.Attribute("Type").Value == "Resource"
-                             select  new
-                             {
-                                 ResourceName = g.Attribute("ResourceName").Value,
-                                 VariableName = g.Attribute("EffectVariable").Value,
-                             };
-
-                foreach (var res in staticInputs)
+                if (c.Inputs != null)
                 {
-                    newFilter.SetShaderResource(res.VariableName, newChain.MyTextureBuddy.GetTexture<Texture2D>(res.ResourceName));
+                    var staticInputs = from g in c.Inputs
+                                       where g.Attribute("Type").Value == "Resource"
+                                       select new
+                                       {
+                                           ResourceName = g.Attribute("ResourceName").Value,
+                                           VariableName = g.Attribute("EffectVariable").Value,
+                                       };
+                        foreach (var res in staticInputs)
+                        {
+                            newFilter.SetShaderResource(res.VariableName, newChain.MyTextureBuddy.GetTexture<Texture2D>(res.ResourceName));
+                        }
+
+                        // texture resources bound to previous links in chain
+                        var chainInputs = from g in c.Inputs
+                                          where g.Attribute("Type").Value == "FilterOutput"
+                                           select new
+                                           {
+                                               Filter = g.Attribute("Filter").Value,
+                                               VariableName = g.Attribute("EffectVariable").Value,
+                                           };
+
+                        foreach (var res in chainInputs)
+                        {
+                            newFilter.AddNeededResource(res.Filter, res.VariableName);
+                        }
+
+                        // scalars 
+                        var scalarInputs = from g in c.Inputs
+                                          where g.Attribute("Type").Value == "Scalar"
+                                          select new
+                                          {
+                                              Source = g.Attribute("Source").Value,
+                                              VariableName = g.Attribute("EffectVariable").Value,
+                                          };
+
+                        foreach (var res in scalarInputs)
+                        {
+                            newFilter.BindScalar(res.VariableName);
+                            // TODO
+                            // newChain.SetupBoundVariable(newFilter.FilterName, res.Source);
+                        }
                 }
-
-                // texture resources bound to previous links in chain
-                var chainInputs = from g in c.Inputs
-                                  where g.Attribute("Type").Value == "FilterOutput"
-                                   select new
-                                   {
-                                       Filter = g.Attribute("Filter").Value,
-                                       VariableName = g.Attribute("EffectVariable").Value,
-                                   };
-
-                foreach (var res in chainInputs)
-                {
-                    newFilter.AddNeededResource(res.Filter, res.VariableName);
-                }
-
-                // scalars 
-                var scalarInputs = from g in c.Inputs
-                                  where g.Attribute("Type").Value == "Scalar"
-                                  select new
-                                  {
-                                      Source = g.Attribute("Source").Value,
-                                      VariableName = g.Attribute("EffectVariable").Value,
-                                  };
-
-                foreach (var res in scalarInputs)
-                {
-                    newFilter.BindScalar(res.VariableName);
-                    // TODO
-                    // newChain.SetupBoundVariable(newFilter.FilterName, res.Source);
-                }
-
 
                 newChain.Add(newFilter);
             }
+        }
+
+        IFilterChainLink BuildToolStrip(XElement tstripElement, FilterChain chain)
+        {
+
+            var tsInfo = new
+                          {
+                              Name = tstripElement.Attribute("Name").Value,
+                              Height = int.Parse(tstripElement.Attribute("Height").Value),
+                              Width = int.Parse(tstripElement.Attribute("Width").Value),
+                              Items = tstripElement.Element("Items").Descendants("Item")
+                          };
+
+            List<Texture2D> texture = new List<Texture2D>();
+
+            foreach (var k in tsInfo.Items)
+            {
+                switch (k.Attribute("Type").Value)
+                {
+                    case "ImageFile":
+                        texture.Add(chain.MyTextureBuddy.FromFile(k.Attribute("FileName").Value));
+                        break;
+                    case "FilterOutput":
+                        string resName = k.Attribute("Filter").Value;
+                        var res = from link in chain where link.FilterName == resName select link.results;
+                        texture.Add(res.FirstOrDefault());
+                        break;
+                }
+            }
+
+            ToolStrip ts = new ToolStrip(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, chain.MyTextureBuddy, tsInfo.Items.Count());
+
+            //texture[0] = chain.MyTextureBuddy.FromFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Resources\NT0.png");
+            //texture[1] = chain[0].results;// .MyTextureBuddy.FromFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Resources\NT1.png");
+            ts.AddTextures(texture.ToArray());
+            return ts;
         }
 
         private static void ReadResources(FilterChain newChain, XElement doc)

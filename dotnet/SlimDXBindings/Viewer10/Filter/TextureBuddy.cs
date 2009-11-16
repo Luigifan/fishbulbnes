@@ -187,7 +187,7 @@ namespace SlimDXBindings.Viewer10.Filter
             Texture2D tex;
             if (System.IO.File.Exists(fileName))
             {
-                tex = Texture2D.FromFile(device, fileName);
+                tex = Texture2D.FromFile(device, fileName );
                 disposables.Add(tex);
                 return tex;
             }

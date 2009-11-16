@@ -26,22 +26,23 @@ namespace NES.CPU.PPUClasses
         public void DrawTo(int cpuClockNum)
         {
             int frClock = (cpuClockNum - lastcpuClock )* 3;
-            
+
+            UpdatePixelInfo();
             //// if we are in vblank 
-            if (frameClock < 6820)
-            {
-                // if the frameclock +frClock is in vblank (< 6820) dont do nothing, just update it
-                if (frameClock + frClock < 6820)
-                {
-                    frameClock += frClock;
-                    frClock = 0;
-                }
-                else
-                {
-                    frClock += frameClock - 6820;
-                    frameClock = 6820;
-                }
-            }
+            //if (frameClock < 6820)
+            //{
+            //    // if the frameclock +frClock is in vblank (< 6820) dont do nothing, just update it
+            //    if (frameClock + frClock < 6820)
+            //    {
+            //        frameClock += frClock;
+            //        frClock = 0;
+            //    }
+            //    else
+            //    {
+            //        frClock += frameClock - 6820;
+            //        frameClock = 6820;
+            //    }
+            //}
             for (int i = 0; i < frClock; ++i)
             {
                 BumpScanline();
@@ -70,7 +71,6 @@ namespace NES.CPU.PPUClasses
                     }
 
                     ClearVINT();
-                    UpdatePixelInfo();
                     break;
                 //304 pixels into pre-render scanline
                 case 7125:
@@ -99,28 +99,26 @@ namespace NES.CPU.PPUClasses
 
                 if (currentXPosition < 256 && vbufLocation < 256 * 240)
                 {
-                    if (chrRomHandler.BankSwitchesChanged)
-                    {
-                        chrRomHandler.UpdateBankStartCache();
-                        UpdatePixelInfo();
-                    }
+
                     DrawPixel();
 
                     vbufLocation++;
                 }
 
+                if (currentXPosition == 256)
+                {
+                    chrRomHandler.UpdateScanlineCounter();
+                }
                 currentXPosition++;
 
                 if (currentXPosition > 340)
                 {
-                    chrRomHandler.UpdateScanlineCounter();
                     currentXPosition = 0;
                     currentYPosition++;
 
                     PreloadSprites(currentYPosition);
 
                     lockedHScroll = _hScroll;
-                    UpdatePixelInfo();
                 }
 
             }
@@ -214,7 +212,10 @@ namespace NES.CPU.PPUClasses
 
         void UpdatePixelInfo()
         {
-
+            if (chrRomHandler.BankSwitchesChanged)
+            {
+                chrRomHandler.UpdateBankStartCache();
+            }
             //int vScroll = (lockedVScroll < 0) ? lockedVScroll + 240 : lockedVScroll;
             int ntbits = nameTableBits;
 

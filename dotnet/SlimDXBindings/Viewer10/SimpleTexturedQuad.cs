@@ -52,8 +52,6 @@ namespace SlimDXBindings.Viewer10
 
          FullscreenQuad quad;
          FilterChain tileFilters;
-         FilterChain spriteFilters;
-
         const int vertexSize = 40;
         const int vertexCount = 4;
 
@@ -272,6 +270,8 @@ namespace SlimDXBindings.Viewer10
 
 
             tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.Viewer10.Filter.BasicFilterChain.xml");
+            tileFilters[tileFilters.Count - 1].RenderToTexture(resource) ;
+            tileFilters[tileFilters.Count - 1].RenderTarget = RenderTarget;
             
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -446,27 +446,28 @@ namespace SlimDXBindings.Viewer10
 
             //texArrayForRender[3] = bankSwitchTex;
 
-            tileFilters.Draw(texArrayForRender);
-
-
-            // render output of filter
             Device.Rasterizer.SetViewports(ViewArea);
             Device.OutputMerger.SetTargets(RenderTarget);
-
             Device.ClearRenderTargetView(RenderTarget, Color.Black);
 
-            EffectResourceVariable shaderTexture2 = Effect.GetVariableByName("texture2d").AsResource();
+            tileFilters[tileFilters.Count - 1].SetViewport(ViewArea);
 
-            if (texView == null) texView = new ShaderResourceView(Device, tileFilters.Result);
+            tileFilters.Draw(texArrayForRender);
+
+            // render output of filter
+
+            //EffectResourceVariable shaderTexture2 = Effect.GetVariableByName("texture2d").AsResource();
+
+            //if (texView == null) texView = new ShaderResourceView(Device, tileFilters.Result);
             
-                shaderTexture2.SetResource(texView);
+            //    shaderTexture2.SetResource(texView);
 
-                quad.SetupDraw();
-                for (int pass = 0; pass < Technique.Description.PassCount; ++pass)
-                {
-                    Pass.Apply();
-                    quad.Draw();
-                }
+            //    quad.SetupDraw();
+            //    for (int pass = 0; pass < Technique.Description.PassCount; ++pass)
+            //    {
+            //        Pass.Apply();
+            //        quad.Draw();
+            //    }
 
             SwapChain.Present(0, DXGI.PresentFlags.None);
         }

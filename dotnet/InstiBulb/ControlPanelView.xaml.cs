@@ -27,7 +27,6 @@ namespace InstiBulb
         {
             InitializeComponent();
             this.DataContextChanged += OnDataContextChanged;
-
         }
 
         public event EventHandler<EventArgs> UpdateKeyhandlingEvent;

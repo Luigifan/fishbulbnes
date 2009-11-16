@@ -4,6 +4,7 @@ Texture2D screenTwo;
 Texture2D backgroundPic;
 Texture2D spriteMask;
 Texture2D toolStrip;
+Texture2D overLay;
 
 float BackgroundBlendFactor;
 
@@ -47,8 +48,11 @@ PS_IN VS( VS_IN vertexShaderIn )
 	return vertexShaderOut;
 }
 
+float timer;
+
 float4 PS( PS_IN pixelShaderIn ) : SV_Target
 {
+	// ignore bottom 16 pixels (nes-space), put in toolstrip instead
 	if ((pixelShaderIn.UV.y * 15) > 14)
 	{
 		// clamp y 14/16-15/16 to newY (0-1)
@@ -73,17 +77,20 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 	} 
 	
 	// if this is a background pixel, and there is a sprite here, the sprites alpha is green component (background sprite) of the mask
-    if (finalColor.a < 1.0 )
-	{
-		//float4 bg = backgroundPic.Sample(linearSampler, pixelShaderIn.UV);
-		//finalColor = (bg * BackgroundBlendFactor) + (finalColor * (1 - BackgroundBlendFactor));
-		if (spriteMaskColor.g > 0)
-		{
-			finalSpriteColor.a = spriteMaskColor.g;
-		}
-	} 
+	if (spriteMaskColor.g > 0 && finalColor.a < 0.5)
+			finalSpriteColor.a = 1 - finalColor.a;
 	
+	if (finalSpriteColor.a < .6)
+	{
+		finalSpriteColor.rgb *= 2;
+		finalSpriteColor.a /= 3;
+	}
 	float4 result = (finalSpriteColor * finalSpriteColor.a) + (finalColor * (1 - finalSpriteColor.a));
+	
+	
+	float4 ol = overLay.Sample(linearSampler,  pixelShaderIn.UV );
+	ol.a=0.05;
+	result = (result * (1 - ol.a)) + (ol * ol.a);
 	result.a = 1.0;
 	return result;
 	

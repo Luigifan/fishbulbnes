@@ -93,12 +93,7 @@ namespace NES.CPU.Machine.Carts
             {
                 get
                 {
-                    if (irqRaised)
-                    {
-                        irqRaised = false;
-                        return true;
-                    }
-                    return false;
+                    return irqRaised;
                 }
                 set
                 {
@@ -309,7 +304,7 @@ namespace NES.CPU.Machine.Carts
 
             public override void UpdateScanlineCounter()
             {
-                if (scanlineCounter == -1) return;
+                //if (scanlineCounter == -1) return;
 
                 if (scanlineCounter == 0)
                 {
@@ -319,11 +314,14 @@ namespace NES.CPU.Machine.Carts
                     // counter will start counting from the new value, generating an IRQ once it reaches zero. 
                     if (_mmc3IrqVal == 0)
                     {
-                       irqRaised = true;
-                       updateIRQ();
+                        if (_mmc3IrcOn)
+                        {
+                            irqRaised = true;
+                            updateIRQ();
+                        }
                         scanlineCounter = -1;
+                        return;
                     }
-                    return;
                 }
 
                 if (_mmc3TmpVal != 0)
@@ -336,12 +334,15 @@ namespace NES.CPU.Machine.Carts
                     scanlineCounter = (scanlineCounter - 1) & 0xFF;
                 }
 
-                if (_mmc3IrcOn && scanlineCounter == 0)
+                if ( scanlineCounter == 0)
                 {
-                    irqRaised = true;
-                    updateIRQ();
-
-                    scanlineCounter = _mmc3IrqVal + 1;
+                    if (_mmc3IrcOn)
+                    {
+                        irqRaised = true;
+                        updateIRQ();
+                    }
+                    if (_mmc3IrqVal > 0)
+                        scanlineCounter = _mmc3IrqVal;
                 }
                 
             }

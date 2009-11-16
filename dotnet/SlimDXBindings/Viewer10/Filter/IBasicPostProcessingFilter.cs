@@ -1,5 +1,6 @@
 ﻿using System;
 using SlimDX.Direct3D10;
+using SlimDX;
 namespace SlimDXBindings.Viewer10.Filter
 {
     public interface IFilterChainLink : IDisposable
@@ -20,5 +21,9 @@ namespace SlimDXBindings.Viewer10.Filter
         IFilterChainLink SetScalar(string variableName, float constant);
         IFilterChainLink SetScalar(string variableName, int[] constant);
         IFilterChainLink SetScalar<T>(string variableName, T constant);
+        IFilterChainLink SetMatrix(string variableName, Matrix matrix);
+        IFilterChainLink SetViewport(Viewport viewport);
+        void RenderToTexture(Texture2D texture);
+        RenderTargetView RenderTarget { get; set; }
     }
 }

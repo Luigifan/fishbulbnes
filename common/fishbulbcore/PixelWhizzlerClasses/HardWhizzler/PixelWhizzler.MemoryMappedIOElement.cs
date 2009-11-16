@@ -391,7 +391,21 @@ namespace NES.CPU.PPUClasses
             {
                 //if (frameClock > 6823)
                 //{
-                    return (89345 - frameClock) / 3;
+                if (frameClock < 6820)
+                {
+                    return (6823 - frameClock ) / 3;
+
+                }
+                if (frameClock >= 6820 && frameClock < 89345)
+                {
+                    //if (currentXPosition < 256)
+                    //{
+                    //    return ((frameClock + 256 - currentXPosition) - frameClock) / 3;
+                    //}
+                    return ((frameClock + 340 - currentXPosition) - frameClock) / 3;
+                }
+                
+                return (89345 - frameClock) / 3;
                 //}
                 //else
                 //{

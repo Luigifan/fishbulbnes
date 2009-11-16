@@ -28,6 +28,12 @@ namespace SlimDXBindings.Viewer10.Filter
         EffectTechnique technique;
         EffectPass effectPass;
         RenderTargetView renderTarget;
+
+        public RenderTargetView RenderTarget
+        {
+            get { return renderTarget; }
+            set { renderTarget = value; }
+        }
         FullscreenQuad quad;
         Viewport vp ;
 
@@ -236,7 +242,32 @@ namespace SlimDXBindings.Viewer10.Filter
             return this;
         }
 
+        public IFilterChainLink SetMatrix(string variableName, Matrix matrix)
+        {
+            EffectMatrixVariable varible = Effect.GetVariableByName(variableName).AsMatrix();
+            varible.SetMatrix(matrix);
+            return this;
+        }
+
+        public IFilterChainLink SetViewport(Viewport viewport)
+        {
+            this.vp = viewport;
+            return this;
+        }
 
 
+        #region IFilterChainLink Members
+
+
+        public void RenderToTexture(Texture2D texture)
+        {
+            if (this.texture != null && !this.texture.Disposed)
+            {
+                this.texture.Dispose();
+            }
+            this.texture = texture;
+        }
+
+        #endregion
     }
 }
