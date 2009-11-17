@@ -202,9 +202,9 @@ namespace SlimDXBindings.Viewer10.Helpers
         }
 
         
-        public void ProcessMouseClick(double x, double y)
+        public void ProcessEvent(FakeEvent ev)
         {
-            wpfTextures[0].EmbeddedControl.HandleMouseMove(x, y);
+            wpfTextures[0].EmbeddedControl.HandleEvent(ev);
         }
 
         public WPFVisualTexture CreateVisualTexture(EmbeddableUserControl visual, int width, int height)

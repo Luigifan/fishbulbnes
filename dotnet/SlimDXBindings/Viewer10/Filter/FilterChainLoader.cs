@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using SlimDXBindings.Viewer10.Helpers;
 using SlimDXBindings.Viewer10.ControlPanel;
+using Microsoft.Practices.Unity;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -23,10 +24,12 @@ namespace SlimDXBindings.Viewer10.Filter
     {
 
         readonly Device device;
+        IUnityContainer container;
 
-        public FilterChainLoader(Device device)
+        public FilterChainLoader(Device device, IUnityContainer container)
         {
             this.device = device;
+            this.container = container;
         }
 
         public IFilterChain Load(Stream stream)
@@ -173,7 +176,9 @@ namespace SlimDXBindings.Viewer10.Filter
                 Technique = GetOptionalAttrValue(tstripElement.Attribute("Technique"), "None"),
                 Visual = tstripElement.Attribute("VisualName").Value
             };
-            var tex =  chain.MyTextureBuddy.CreateVisualTexture(new ButtonsAndBoxes(), tsInfo.Width, tsInfo.Height);
+
+            EmbeddableUserControl control = container.Resolve<EmbeddableUserControl>(tsInfo.Visual);
+            var tex = chain.MyTextureBuddy.CreateVisualTexture(control, tsInfo.Width, tsInfo.Height);
 
             var w = new BasicPostProcessingFilter(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy);
             w.SetStaticResource("texture2d", tex);

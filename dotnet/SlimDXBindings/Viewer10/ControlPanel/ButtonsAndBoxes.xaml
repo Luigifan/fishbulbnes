@@ -20,7 +20,7 @@
         <Label Content="Hue" Grid.Row="1"/>
         <CheckBox x:Name="Checkle"  Grid.Row ="1" Grid.Column="1" Click="CheckClick" MouseDown="CheckDown" MouseLeftButtonDown="CheckDown"/>
         <Label Content="Contrast" Grid.Row="2"/>
-        <Button Grid.Row="2" Grid.Column="1"  Click="ButtonClick" MouseDown="ButtonClick" MouseLeftButtonDown="ButtonClick"/>
+        <Button Grid.Row="2" Grid.Column="1"  Click="ButtonClick" MouseMove="Button_MouseMove" MouseDown="ButtonClick" MouseLeftButtonDown="ButtonClick"/>
         <Label Content="Brightness" Grid.Row="3"/>
         <Button Grid.Row="3" Grid.Column="1"  Click="ButtonClick" MouseDown="ButtonClick" MouseLeftButtonDown="ButtonClick"/>
         

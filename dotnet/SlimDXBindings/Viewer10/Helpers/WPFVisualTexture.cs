@@ -36,7 +36,7 @@ namespace SlimDXBindings.Viewer10.Helpers
             this.control = control;
             this.width = width;
             this.height = height;
-            this.control.RedrawRequested += new EventHandler(control_RedrawRequested);
+            this.control.RedrawRequested +=  new EventHandler<RedrawEventArgs>(control_RedrawRequested);
             pixelData = new int[width * height];
             isDirty = true;
             
@@ -49,7 +49,7 @@ namespace SlimDXBindings.Viewer10.Helpers
             get { return isDirty; }
         }
 
-        void control_RedrawRequested(object sender, EventArgs e)
+        void control_RedrawRequested(object sender, RedrawEventArgs e)
         {
             isDirty = true;
         }

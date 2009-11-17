@@ -176,7 +176,6 @@ namespace SlimDXBindings.Viewer10.Filter
             return noiseImage;
         }
 
-
         public Texture2D FromFile(string fileName)
         {
             if (createdTextures.ContainsKey(fileName))

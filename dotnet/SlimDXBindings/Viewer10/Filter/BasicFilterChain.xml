@@ -72,7 +72,7 @@
       </Inputs>
     </Filter>
 
-    <Filter Name="controls" FilterType="WPFVisual" VisualName="Controls" Height="512" Width="512" Effect="redden" Technique="Draw" >
+    <Filter Name="controls" FilterType="WPFVisual" VisualName="ControlPanel" Height="512" Width="512" Effect="redden" Technique="Draw" >
     </Filter>
 
     <Filter Name="toolStrip" FilterType="ToolStrip" Height="32" Width="512" >

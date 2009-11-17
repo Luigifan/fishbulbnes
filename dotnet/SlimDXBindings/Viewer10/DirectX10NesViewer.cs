@@ -6,6 +6,8 @@ using NES.CPU.nitenedo.Interaction;
 using System.Threading;
 using NES.CPU.nitenedo;
 using SlimDXBindings.Viewer10.ControlPanel;
+using Microsoft.Practices.Unity;
+using SlimDXBindings.Viewer10.Helpers;
 //using SlimDXBindings.Viewer10.ControlPanel;
 
 namespace SlimDXBindings.Viewer10
@@ -14,12 +16,21 @@ namespace SlimDXBindings.Viewer10
     {
         NESMachine nes;
         D3D10ControlPanel panel;
+        IUnityContainer container;
+
         public DirectX10NesViewer(NESMachine nes)
         {
             this.nes = nes;
             myQuad = new D3D10Host(nes);
             panel = new D3D10ControlPanel();
+            container = new UnityContainer();
+            
+            container.RegisterInstance<DirectX10NesViewer>(this);
+            container.RegisterType<EmbeddableUserControl, D3D10ControlPanel>("ControlPanel"
+                , new InjectionProperty("DataContext", new ResolvedParameter(typeof(DirectX10NesViewer)))
+                );
 
+            myQuad.Container = container;
             myQuad.Dispatcher = panel.Dispatcher;
         }
 

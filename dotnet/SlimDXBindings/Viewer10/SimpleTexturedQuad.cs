@@ -12,6 +12,7 @@ using NES.CPU.PPUClasses;
 using SlimDXBindings.Viewer10.Filter;
 using System.Collections.Generic;
 using SlimDXBindings.Viewer10.Helpers;
+using Microsoft.Practices.Unity;
 
 namespace SlimDXBindings.Viewer10 
 {
@@ -21,13 +22,19 @@ namespace SlimDXBindings.Viewer10
          int fullScreenHeight = 1024;
 
          NESMachine nes;
-
+         FakeEventMapper mapper;
          public D3D10Host(NESMachine nes)
          {
              this.nes = nes;
          }
 
          public System.Windows.Threading.Dispatcher Dispatcher
+         {
+             get;
+             set;
+         }
+
+         public IUnityContainer Container
          {
              get;
              set;
@@ -134,8 +141,7 @@ namespace SlimDXBindings.Viewer10
             RenderForm.Text = "InstiBulb - DirectX 10";
 
             RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
-            RenderForm.MouseDown += new MouseEventHandler(RenderForm_MouseClick);
-
+            //RenderForm.Mouse
             modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
             modeDescription.RefreshRate = new Rational(60, 1);
             modeDescription.Scaling = DXGI.DisplayModeScaling.Unspecified;
@@ -274,16 +280,18 @@ namespace SlimDXBindings.Viewer10
 
             FilterChainLoader loader = null;
             Dispatcher.Invoke(new NoArgDelegate(delegate { 
-                loader = new FilterChainLoader(Device);
+                loader = new FilterChainLoader(Device, Container);
             tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.Viewer10.Filter.BasicFilterChain.xml");
             } ));
 
             // TODO: make this array match the elements in the new filterchains Input collection
 
-
             
             tileFilters[tileFilters.Count - 1].RenderToTexture(resource) ;
             tileFilters[tileFilters.Count - 1].RenderTarget = RenderTarget;
+
+
+            mapper = new FakeEventMapper(RenderForm, tileFilters);
             
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -307,13 +315,6 @@ namespace SlimDXBindings.Viewer10
             Application.Idle += new EventHandler(Application_Idle);
             
             Application.Run( context);
-        }
-
-        void RenderForm_MouseClick(object sender, MouseEventArgs e)
-        {
-            double width = ((double)e.X) / ((double)RenderForm.Width);
-            double height = ((double)e.Y) / ((double)RenderForm.Height);
-            tileFilters.ProcessMouseClick(width, height);
         }
 
         int oldHeight;

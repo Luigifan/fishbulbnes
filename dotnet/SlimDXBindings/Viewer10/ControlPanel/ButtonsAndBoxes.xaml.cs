@@ -37,7 +37,6 @@ namespace SlimDXBindings.Viewer10.ControlPanel
                 (sender as Button).Content = "";
             else
                 (sender as Button).Content = "Clicked";
-            RequestRedraw();
         }
 
         private void Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -53,6 +52,11 @@ namespace SlimDXBindings.Viewer10.ControlPanel
         private void CheckClick(object sender, RoutedEventArgs e)
         {
             (sender as CheckBox).IsChecked = !(sender as CheckBox).IsChecked;
+
+        }
+
+        private void Button_MouseMove(object sender, MouseEventArgs e)
+        {
 
         }
     }

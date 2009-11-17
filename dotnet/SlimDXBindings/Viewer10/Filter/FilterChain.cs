@@ -42,9 +42,9 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool isSetup = false;
 
-        public void ProcessMouseClick(double x, double y)
+        public void ProcessEvent(FakeEvent ev)
         {
-            myTextureBuddy.ProcessMouseClick( x, y);
+            myTextureBuddy.ProcessEvent( ev);
         }
 
         public void Draw(Texture2D[] input)
