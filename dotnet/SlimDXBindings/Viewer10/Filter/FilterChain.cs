@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SlimDX.Direct3D10;
+using SlimDXBindings.Viewer10.Helpers;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -41,8 +42,15 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool isSetup = false;
 
+        public void ProcessMouseClick(double x, double y)
+        {
+            myTextureBuddy.ProcessMouseClick( x, y);
+        }
+
         public void Draw(Texture2D[] input)
         {
+
+            myTextureBuddy.RefreshVisualTextures();
             if (dumpFiles)
             {
                 for (int i = 0; i < input.Length; ++i)

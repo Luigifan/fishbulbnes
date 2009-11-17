@@ -54,13 +54,13 @@ float4 CreateLuminance( PS_IN pixelShaderIn ) : SV_Target
 }
 
 
-technique10 Redder
+technique10 Draw
 {
 	pass P0
 	{
 		SetGeometryShader( 0 );
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
-		SetPixelShader( CompileShader( ps_4_0, DrawRedderPixels() ) );
+		SetPixelShader( CompileShader( ps_4_0, PS() ) );
 	}
 	
 }

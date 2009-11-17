@@ -6,6 +6,8 @@ using System.Xml.Linq;
 using SlimDX.Direct3D10;
 using System.IO;
 using System.Reflection;
+using SlimDXBindings.Viewer10.Helpers;
+using SlimDXBindings.Viewer10.ControlPanel;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -98,6 +100,9 @@ namespace SlimDXBindings.Viewer10.Filter
                     case "ToolStrip":
                         newFilter = BuildToolStrip(c.Element, newChain);
                         break;
+                    case "WPFVisual":
+                        newFilter = BuildVisual(c.Element, newChain);
+                        break;
                     default:
                         newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
                         break;
@@ -154,6 +159,25 @@ namespace SlimDXBindings.Viewer10.Filter
 
                 newChain.Add(newFilter);
             }
+        }
+
+        IFilterChainLink BuildVisual(XElement tstripElement, FilterChain chain)
+        {
+
+            var tsInfo = new
+            {
+                Name = tstripElement.Attribute("Name").Value,
+                Height = int.Parse(tstripElement.Attribute("Height").Value),
+                Width = int.Parse(tstripElement.Attribute("Width").Value),
+                EffectName = GetOptionalAttrValue(tstripElement.Attribute("Effect"), "None"),
+                Technique = GetOptionalAttrValue(tstripElement.Attribute("Technique"), "None"),
+                Visual = tstripElement.Attribute("VisualName").Value
+            };
+            var tex =  chain.MyTextureBuddy.CreateVisualTexture(new ButtonsAndBoxes(), tsInfo.Width, tsInfo.Height);
+
+            var w = new BasicPostProcessingFilter(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy);
+            w.SetStaticResource("texture2d", tex);
+            return w;
         }
 
         IFilterChainLink BuildToolStrip(XElement tstripElement, FilterChain chain)

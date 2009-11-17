@@ -11,13 +11,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SlimDXBindings.Viewer10.Helpers;
 
 namespace SlimDXBindings.Viewer10.ControlPanel
 {
     /// <summary>
     /// Interaction logic for ControlPanel.xaml
     /// </summary>
-    public partial class D3D10ControlPanel : UserControl
+    public partial class D3D10ControlPanel : EmbeddableUserControl
     {
         public D3D10ControlPanel()
         {

@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SlimDX;
 using SlimDX.Direct3D10;
 using System.Drawing;
-using DXGI = SlimDX.DXGI;
-using SlimDX;
 using SlimDXBindings.Viewer10.Helpers;
-
 
 namespace SlimDXBindings.Viewer10.Filter
 {
-    public class BasicPostProcessingFilter :  IDisposable, SlimDXBindings.Viewer10.Filter.IFilterChainLink
+    public class WPFVisualChainLink : IFilterChainLink
     {
-
         bool feedsNextStage = true;
 
         public bool FeedsNextStage
@@ -23,7 +20,7 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
         Device device;
-        Texture2D texture;
+        WPFVisualTexture texture;
         EffectBuddy effectBuddy;
         Effect Effect;
         EffectTechnique technique;
@@ -69,7 +66,7 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
-        public BasicPostProcessingFilter(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy)
+        public WPFVisualChainLink(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy, WPFVisualTexture texture)
         {
             this.device = device;
             this.width = Width;
@@ -78,6 +75,7 @@ namespace SlimDXBindings.Viewer10.Filter
             this.techniqueName = technique;
             this.filterName = name;
             this.effectBuddy = effectBuddy;
+            this.texture = texture;
                         
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
             SetupFilter();
@@ -87,8 +85,6 @@ namespace SlimDXBindings.Viewer10.Filter
         {
 
             Effect = effectBuddy.GetEffect(shaderName);
-
-            texture = new Texture2D(device, GetTextureDescription());
 
             renderTarget = new RenderTargetView(device, texture);
 
@@ -134,8 +130,12 @@ namespace SlimDXBindings.Viewer10.Filter
             effectPass = technique.GetPassByIndex(0);
             device.Rasterizer.SetViewports(vp);
             device.OutputMerger.SetTargets(renderTarget);
-
             device.ClearRenderTargetView(renderTarget, Color.Black);
+
+            if (texture.IsDirty)
+            {
+                texture.UpdateVisual();
+            }
 
             quad.SetupDraw();
             for (int pass = 0; pass < technique.Description.PassCount; ++pass)
@@ -262,13 +262,10 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void RenderToTexture(Texture2D texture)
         {
-            if (this.texture != null && !this.texture.Disposed)
-            {
-                this.texture.Dispose();
-            }
-            this.texture = texture;
+            throw new NotImplementedException();
         }
 
         #endregion
+
     }
 }

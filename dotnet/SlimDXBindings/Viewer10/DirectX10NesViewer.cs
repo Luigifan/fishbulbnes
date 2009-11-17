@@ -13,10 +13,14 @@ namespace SlimDXBindings.Viewer10
     public class DirectX10NesViewer : IDisplayContext
     {
         NESMachine nes;
+        D3D10ControlPanel panel;
         public DirectX10NesViewer(NESMachine nes)
         {
             this.nes = nes;
             myQuad = new D3D10Host(nes);
+            panel = new D3D10ControlPanel();
+
+            myQuad.Dispatcher = panel.Dispatcher;
         }
 
         D3D10Host myQuad;
@@ -107,7 +111,8 @@ namespace SlimDXBindings.Viewer10
         {
 
             get {
-                var panel = new D3D10ControlPanel();
+
+
                 panel.DataContext = this;
                 return panel;
             }
