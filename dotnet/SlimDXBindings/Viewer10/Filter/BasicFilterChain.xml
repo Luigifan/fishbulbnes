@@ -72,12 +72,12 @@
       </Inputs>
     </Filter>
 
-    <Filter Name="controls" FilterType="WPFVisual" VisualName="ControlPanel" Height="512" Width="512" Effect="redden" Technique="Draw" >
+    <Filter Name="controls" FilterType="WPFVisual" VisualName="ControlPanel" Height="512" Width="512" 
+            Effect="redden" Technique="Draw" >
     </Filter>
 
     <Filter Name="toolStrip" FilterType="ToolStrip" Height="32" Width="512" >
       <Items>
-        <Item Type="FilterOutput" Filter="controls" />
         <Item Type="FilterOutput" Filter="tiles" />
         <Item Type="FilterOutput" Filter="spriteMask" />
         <Item Type="FilterOutput" Filter="spriteSetup" />
@@ -95,7 +95,7 @@
     </Filter>-->
 
     <!--Put it all together now-->
-    <!--<Filter Name="combined" Height="384" Width="512" Effect="CombineNesOutput" Technique="Render">
+    <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
@@ -105,9 +105,14 @@
         <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
 
       </Inputs>
-    </Filter>-->
-    <Filter Name="Output" Height="512" Width="512" Effect="redden" Technique="Draw">
-      <Input Type="FilterOutput" Filter="controls" EffectVariable="texture2d" />
+    </Filter>
+    
+    <Filter Name="Output" Height="1024" Width="1024" Effect="FinalOutput" Technique="Draw">
+      <Inputs>
+        <Input Type="FilterOutput" Filter="combined" EffectVariable="gameOut" />
+        <Input Type="FilterOutput" Filter="controls" EffectVariable="texture2d" />
+        <Input Type="Scalar" EffectVariable="controlVisibility" Source="controlVisibility"/>
+      </Inputs>
     </Filter>
 
   </Filters>

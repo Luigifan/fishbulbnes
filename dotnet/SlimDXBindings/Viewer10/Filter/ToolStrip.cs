@@ -106,13 +106,12 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void AddTextures(Texture2D[] texArray)
         {
-            spriteTex = texArray;
             float scaleFactor = 1.75f / (float)(texArray.Length);
             float offsetFactor = 2.0f / (float)(texArray.Length );
 
             for (int i = 0; i < texArray.Length; ++i)
             {
-                sprites[i] = new SpriteInstance(new ShaderResourceView(device, spriteTex[i]), new Vector2(0, 0), new Vector2(1.0f, 1.0f));
+                sprites[i] = new SpriteInstance(new ShaderResourceView(device, texArray[i]), new Vector2(0, 0), new Vector2(1.0f, 1.0f));
                 //sprites[i].Transform = Matrix.Transformation2D(new Vector2(0, 0), 0, new Vector2(1, 1.1f), // scaling
                 //        new Vector2(0, 0), 0, // rotation
                 //        new Vector2(-0.5f + (offsetFactor * (i)), 0.0f));

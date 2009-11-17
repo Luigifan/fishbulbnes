@@ -326,13 +326,10 @@ namespace SlimDXBindings.Viewer10
                 oldWidth = RenderForm.ClientRectangle.Width;
                 oldHeight = RenderForm.ClientRectangle.Height;
 
-                modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
-                modeDescription.RefreshRate = new Rational(75, 1);
-                modeDescription.Scaling = DXGI.DisplayModeScaling.Unspecified;
-                modeDescription.ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Progressive;
-                modeDescription.Width = 1280;
-                modeDescription.Height = 1024;
-                SwapChain.ResizeTarget(modeDescription);
+
+                //modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
+                //modeDescription.RefreshRate = new Rational(0, 0);
+                //SwapChain.ResizeTarget(modeDescription);
                 SwapChain.SetFullScreenState(true, null);
             }
             else if (e.KeyCode == Keys.F12)
@@ -354,10 +351,18 @@ namespace SlimDXBindings.Viewer10
             }
             else if (e.KeyCode == Keys.F4)
             {
-                hue += 15;
-                if (hue > 360) hue = 0;
+                if (controlVisibility == 0)
+                {
+                    controlVisibilityOffset = 0.05f;
+                }
+                else if (controlVisibility == 1)
+                {
+                    controlVisibilityOffset = -0.05f;
+                }
             }
         }
+        float controlVisibility = 0;
+        float controlVisibilityOffset = 0;
 
         internal  bool IsRunning
         {
@@ -444,6 +449,8 @@ namespace SlimDXBindings.Viewer10
                 Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
             }
 
+
+
         }
 
 
@@ -453,6 +460,17 @@ namespace SlimDXBindings.Viewer10
         public  void DrawFrame()
         {
 
+            controlVisibility += controlVisibilityOffset;
+            if (controlVisibility >= 1.0f)
+            {
+                controlVisibility = 1.0f;
+                controlVisibilityOffset = 0;
+            } else if (controlVisibility <= 0)
+            {
+                controlVisibility = 0.0f;
+                controlVisibilityOffset = 0.0f;
+            }
+            tileFilters.SetVariable("controlVisibility", controlVisibility);
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("hue", hue);
             tileFilters.SetVariable("contrast", Contrast);
