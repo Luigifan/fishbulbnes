@@ -39,17 +39,22 @@ namespace InstiBulb.Integration
             // the component that creates the sound thread
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
 
 
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
+
+
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMReaderDelegate>(delegates.ReadSRAM, new ContainerControlledLifetimeManager());
 
             container.RegisterType<NESMachine>(new ContainerControlledLifetimeManager());
-
+            container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
+                new InjectionProperty("PadOne", new ResolvedParameter<IControlPad>("keyboard")),
+                new InjectionProperty("PadTwo", new ResolvedParameter<SlimDXZapper>("zapper"))
+            );
             container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
                     new InjectionProperty("SRAMWriter", new ResolvedParameter<SRAMWriterDelegate>()),
                     new InjectionProperty("SRAMReader", new ResolvedParameter<SRAMReaderDelegate>())
@@ -101,8 +106,8 @@ namespace InstiBulb.Integration
             //    , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
 
             container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IControlPad, SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>("keyboard", new ContainerControlledLifetimeManager());
+            container.RegisterType<IControlPad, SlimDXZapper>("zapper", new ContainerControlledLifetimeManager());
 
 
             // register view models

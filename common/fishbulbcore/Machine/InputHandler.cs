@@ -7,13 +7,18 @@ using NES.CPU.Machine;
 
 namespace NES.CPU.nitenedo
 {
-    public class InputHandler : IMemoryMappedIOElement, IDisposable
+    public class InputHandler : IMemoryMappedIOElement
     {
         private int currentByte;
         private int nextByte;
         private int readNumber=0;
 
         private IControlPad controlPad;
+
+        public InputHandler()
+        {
+            controlPad = null;
+        }
 
         public InputHandler(IControlPad padOne)
         {
@@ -81,13 +86,5 @@ namespace NES.CPU.nitenedo
         }
 
 
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            controlPad.Dispose();
-        }
-
-        #endregion
     }
 }

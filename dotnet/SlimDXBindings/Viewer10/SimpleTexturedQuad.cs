@@ -26,6 +26,7 @@ namespace SlimDXBindings.Viewer10
          public D3D10Host(NESMachine nes)
          {
              this.nes = nes;
+             
          }
 
          public System.Windows.Threading.Dispatcher Dispatcher
@@ -349,7 +350,7 @@ namespace SlimDXBindings.Viewer10
                 if (tileFilters != null && nes != null && nes.IsRunning)
                     tileFilters.DumpFiles = true;
             }
-            else if (e.KeyCode == Keys.F4)
+            else if (e.KeyCode == Keys.F4 )
             {
                 if (controlVisibility == 0)
                 {
@@ -463,10 +464,12 @@ namespace SlimDXBindings.Viewer10
             controlVisibility += controlVisibilityOffset;
             if (controlVisibility >= 1.0f)
             {
+                this.mapper.AllowEvents = true;
                 controlVisibility = 1.0f;
                 controlVisibilityOffset = 0;
             } else if (controlVisibility <= 0)
             {
+                this.mapper.AllowEvents = false;
                 controlVisibility = 0.0f;
                 controlVisibilityOffset = 0.0f;
             }

@@ -16,10 +16,10 @@ namespace NES.CPU.Fastendo
         private int _accumulator = 0, _indexRegisterX = 0, _indexRegisterY = 0;
 
 
-        public CPU2A03(IPPU whizzler, NES.CPU.Machine.BeepsBoops.Bopper bopper, InputHandler padOne)
+        public CPU2A03(IPPU whizzler, NES.CPU.Machine.BeepsBoops.Bopper bopper)
         {
-            _padOne = padOne;
-            
+            _padOne = new InputHandler();
+            _padTwo = new InputHandler();
             _pixelWhizzler = whizzler;
 
             SoundBopper = bopper;

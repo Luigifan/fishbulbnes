@@ -26,6 +26,9 @@ namespace SlimDXBindings.Viewer10.Helpers
         {
             get; set;
         }
+        
+
+
 
         /// <summary>
         /// For mouse events, 1 = left mouse button, 2 = right mouse button, 4 = middle mouse button, 8 = extended 1, 16 = extended 2
@@ -55,15 +58,34 @@ namespace SlimDXBindings.Viewer10.Helpers
 
         Form form;
         FilterChain chain;
+        bool allowEvents = false;
+
+
         public FakeEventMapper(Form form, FilterChain chain)
         {
             this.form = form;
             this.chain = chain;
-            form.MouseClick += new MouseEventHandler(form_MouseClick);
-            form.MouseDoubleClick += new MouseEventHandler(form_MouseDoubleClick);
-            form.MouseMove += new MouseEventHandler(form_MouseMove);
-            form.MouseDown += new MouseEventHandler(form_MouseDown);
-            form.MouseUp += new MouseEventHandler(form_MouseUp);
+
+        }
+
+        public bool AllowEvents
+        {
+            get { return allowEvents; }
+            set { allowEvents = value;
+                form.MouseClick -= form_MouseClick;
+                form.MouseDoubleClick -= form_MouseDoubleClick;
+                form.MouseMove -= form_MouseMove;
+                form.MouseDown -= form_MouseDown;
+                form.MouseUp -= form_MouseUp; 
+                if (allowEvents)
+                {
+                    form.MouseClick += form_MouseClick;
+                    form.MouseDoubleClick += form_MouseDoubleClick;
+                    form.MouseMove += form_MouseMove;
+                    form.MouseDown += form_MouseDown;
+                    form.MouseUp += form_MouseUp;
+                }
+            }
         }
 
         void form_MouseUp(object sender, MouseEventArgs e)
@@ -79,6 +101,7 @@ namespace SlimDXBindings.Viewer10.Helpers
 
         void form_MouseDown(object sender, MouseEventArgs e)
         {
+
             var p = new FakeEvent()
             {
                 EventType = FakedEventTypes.MOUSEDOWN,
@@ -90,7 +113,6 @@ namespace SlimDXBindings.Viewer10.Helpers
 
         void form_MouseMove(object sender, MouseEventArgs e)
         {
-
             var p = new FakeEvent()
             {
                 EventType = FakedEventTypes.MOUSEMOVE,
@@ -135,6 +157,7 @@ namespace SlimDXBindings.Viewer10.Helpers
 
         void form_MouseClick(object sender, MouseEventArgs e)
         {
+
             var p = new FakeEvent()
             {
                 EventType = FakedEventTypes.MOUSECLICK,

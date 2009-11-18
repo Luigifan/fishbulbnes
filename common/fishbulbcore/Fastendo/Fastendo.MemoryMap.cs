@@ -18,6 +18,7 @@ namespace NES.CPU.Fastendo
         private IPPU _pixelWhizzler;
         private IClockedMemoryMappedIOElement _cart;
         private InputHandler _padOne ;
+        private InputHandler _padTwo;
 
         IClockedMemoryMappedIOElement soundBopper;
 
@@ -47,7 +48,15 @@ namespace NES.CPU.Fastendo
         public InputHandler PadOne
         {
             get { return _padOne; }
+            set { _padOne = value; }
         }
+
+        public InputHandler PadTwo
+        {
+            get { return _padTwo; }
+            set { _padTwo = value; }
+        }
+
 
         public IClockedMemoryMappedIOElement Cart
         {
