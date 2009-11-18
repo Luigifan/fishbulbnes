@@ -178,7 +178,10 @@ namespace NES.CPU.nitenedo
         public IControlPad PadTwo
         {
             get { return _cpu.PadTwo.ControlPad; }
-            set { _cpu.PadTwo.ControlPad = value; }
+            set { _cpu.PadTwo.ControlPad = value; 
+            }
         }
+        
+
     }
 }

@@ -14,7 +14,13 @@ namespace NES.CPU.nitenedo
         private int readNumber=0;
 
         private IControlPad controlPad;
+        private bool isZapper = false;
 
+        public bool IsZapper
+        {
+            get { return isZapper; }
+            set { isZapper = value; }
+        }
         public InputHandler()
         {
             controlPad = null;
@@ -29,7 +35,7 @@ namespace NES.CPU.nitenedo
         {
             get { return controlPad; }
             set { controlPad = value;
-                    controlPad.NextControlByteSet += new EventHandler<ControlByteEventArgs>(controlPad_NextControlByteSet);
+                  controlPad.NextControlByteSet += new EventHandler<ControlByteEventArgs>(controlPad_NextControlByteSet);
             }
         }
 
@@ -42,27 +48,14 @@ namespace NES.CPU.nitenedo
 
         public int GetByte(int address)
         {
-            int result = (currentByte >> readNumber) & 0x01;
-            readNumber = (readNumber + 1) & 7;
-            return (result | 0x40) & 0xFF;
+            return controlPad.GetByte();
+
 
         }
 
         public void SetByte(int address, int data)
         {
-            if ((data & 1) == 1)
-            {
-                currentByte = nextByte;
-                // if im pushing up, i cant be pushing down
-                if ((currentByte & 16) == 16) currentByte = currentByte & ~32;
-                // if im pushign left, i cant be pushing right.. seriously, the nes will glitch
-                if ((currentByte & 64) == 64) currentByte = currentByte & ~128;
-
-                readNumber = 0;
-            }
-            if (data == 0) // strobed this port, get the next byte
-            {
-            }
+            controlPad.SetByte(data);
         }
 
         private void SetNextControlByte(int data)

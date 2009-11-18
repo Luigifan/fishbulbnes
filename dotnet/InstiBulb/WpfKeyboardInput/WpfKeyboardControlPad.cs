@@ -140,5 +140,35 @@ namespace InstiBulb.WpfKeyboardInput
         }
 
         #endregion
+
+        #region IControlPad Members
+
+        int readNumber, currentByte;
+
+        public int GetByte()
+        {
+            int result = (currentByte >> readNumber) & 0x01;
+            readNumber = (readNumber + 1) & 7;
+            return (result | 0x40) & 0xFF;
+        }
+
+        public void SetByte(int data)
+        {
+            if ((data & 1) == 1)
+            {
+                currentByte = PadOneState;
+                // if im pushing up, i cant be pushing down
+                if ((currentByte & 16) == 16) currentByte = currentByte & ~32;
+                // if im pushign left, i cant be pushing right.. seriously, the nes will glitch
+                if ((currentByte & 64) == 64) currentByte = currentByte & ~128;
+
+                readNumber = 0;
+            }
+            if (data == 0) // strobed this port, get the next byte
+            {
+            }
+        }
+
+        #endregion
     }
 }

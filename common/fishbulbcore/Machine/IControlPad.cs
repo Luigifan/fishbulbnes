@@ -22,6 +22,9 @@ namespace NES.CPU.Machine
         int CurrentByte { get; set; }
         void Refresh();
 
+        int GetByte();
+        void SetByte(int data);
+
         event EventHandler<ControlByteEventArgs> NextControlByteSet;
     }
 }

@@ -57,7 +57,7 @@ namespace NES.CPU
         // note, this function originally worked with 8k banks
         private void CopyBanks(int clock, int dest, int src, int numberOf8kBanks)
         {
-            whizzler.DrawTo(clock);
+
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
 
             int oneKdest = dest * 8;
@@ -106,6 +106,8 @@ namespace NES.CPU
 
             if (mapperId == 3)
             {
+                whizzler.DrawTo(clock);
+
                 CopyBanks(clock, 0, val, 1);
             }
 
