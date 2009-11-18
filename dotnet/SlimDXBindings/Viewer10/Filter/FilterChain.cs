@@ -150,6 +150,14 @@ namespace SlimDXBindings.Viewer10.Filter
             }
         }
 
+        public void SetVariable(string name, float[] constant)
+        {
+            foreach (IFilterChainLink b in this)
+            {
+                b.SetScalar(name, constant);
+            }
+        }
+
         public void SetVariable<T>(string name, T constant)
         {
             foreach (IFilterChainLink b in this)

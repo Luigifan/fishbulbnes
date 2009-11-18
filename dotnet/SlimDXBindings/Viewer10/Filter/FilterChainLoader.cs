@@ -106,6 +106,9 @@ namespace SlimDXBindings.Viewer10.Filter
                     case "WPFVisual":
                         newFilter = BuildVisual(c.Element, newChain);
                         break;
+                    case "MouseTest":
+                        newFilter = BuildMouseTest(c.Element, newChain);
+                        break;
                     default:
                         newFilter = new BasicPostProcessingFilter(device, c.Name, c.Width, c.Height, c.EffectName, c.Technique, newChain.MyEffectBuddy);
                         break;
@@ -182,6 +185,24 @@ namespace SlimDXBindings.Viewer10.Filter
 
             var w = new BasicPostProcessingFilter(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy);
             w.SetStaticResource("texture2d", tex);
+            return w;
+        }
+
+
+        IFilterChainLink BuildMouseTest(XElement tstripElement, FilterChain chain)
+        {
+
+            var tsInfo = new
+            {
+                Name = tstripElement.Attribute("Name").Value,
+                Height = int.Parse(tstripElement.Attribute("Height").Value),
+                Width = int.Parse(tstripElement.Attribute("Width").Value),
+                EffectName = GetOptionalAttrValue(tstripElement.Attribute("Effect"), "None"),
+                Technique = GetOptionalAttrValue(tstripElement.Attribute("Technique"), "None"),
+            };
+
+            var w = new MouseTestingFilter(device, tsInfo.Name, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy);
+            w.BindScalar("mousePosition");
             return w;
         }
 

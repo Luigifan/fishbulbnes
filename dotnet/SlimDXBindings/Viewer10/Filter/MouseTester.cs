@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SlimDX;
 using SlimDX.Direct3D10;
+using SlimDX;
 using System.Drawing;
 using SlimDXBindings.Viewer10.Helpers;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
-    public class WPFVisualChainLink : IFilterChainLink
+    public class MouseTestingFilter : IFilterChainLink
     {
         bool feedsNextStage = true;
 
@@ -19,8 +19,17 @@ namespace SlimDXBindings.Viewer10.Filter
             set { feedsNextStage = value; }
         }
 
+        SlimDXZapper zapper;
+
+        public SlimDXZapper Zapper
+        {
+            get { return zapper; }
+            set { zapper = value; }
+        }
+
         Device device;
-        WPFVisualTexture texture;
+        Texture2D texture;
+        Texture2D stage;
         EffectBuddy effectBuddy;
         Effect Effect;
         EffectTechnique technique;
@@ -66,16 +75,15 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
-        public WPFVisualChainLink(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy, WPFVisualTexture texture)
+        public MouseTestingFilter(Device device, string name, string shader, string technique, EffectBuddy effectBuddy)
         {
             this.device = device;
-            this.width = Width;
-            this.height = Height;
+            this.width = 8;
+            this.height = 8;
             this.shaderName = shader;
             this.techniqueName = technique;
             this.filterName = name;
             this.effectBuddy = effectBuddy;
-            this.texture = texture;
                         
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
             SetupFilter();
@@ -85,6 +93,9 @@ namespace SlimDXBindings.Viewer10.Filter
         {
 
             Effect = effectBuddy.GetEffect(shaderName);
+
+            texture = new Texture2D(device, GetTextureDescription());
+            stage = new Texture2D(device, GetStagingTextureDescription());
 
             renderTarget = new RenderTargetView(device, texture);
 
@@ -97,13 +108,28 @@ namespace SlimDXBindings.Viewer10.Filter
         internal virtual Texture2DDescription GetTextureDescription()
         {
             Texture2DDescription desc = new Texture2DDescription();
-            desc.Usage = ResourceUsage.Default;
+            desc.Usage = ResourceUsage.Default ;
             desc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
             desc.ArraySize = 1;
             desc.MipLevels = 1;
             desc.Width = width;
             desc.Height = height;
-            desc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget;
+            desc.BindFlags =  BindFlags.RenderTarget | BindFlags.ShaderResource ;
+            desc.SampleDescription = sampleDescription;
+            return desc;
+        }
+
+        internal virtual Texture2DDescription GetStagingTextureDescription()
+        {
+            Texture2DDescription desc = new Texture2DDescription();
+            desc.Usage = ResourceUsage.Staging;
+            desc.CpuAccessFlags = CpuAccessFlags.Read;
+            desc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+            desc.ArraySize = 1;
+            desc.MipLevels = 1;
+            desc.Width = width;
+            desc.Height = height;
+            desc.BindFlags = BindFlags.None;
             desc.SampleDescription = sampleDescription;
             return desc;
         }
@@ -126,16 +152,13 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public virtual void ProcessEffect()
         {
+            if (zapper == null) return;
             technique = Effect.GetTechniqueByName(techniqueName);
             effectPass = technique.GetPassByIndex(0);
             device.Rasterizer.SetViewports(vp);
             device.OutputMerger.SetTargets(renderTarget);
-            device.ClearRenderTargetView(renderTarget, Color.Black);
 
-            if (texture.IsDirty)
-            {
-                texture.UpdateVisual();
-            }
+            device.ClearRenderTargetView(renderTarget, Color.Black);
 
             quad.SetupDraw();
             for (int pass = 0; pass < technique.Description.PassCount; ++pass)
@@ -144,11 +167,32 @@ namespace SlimDXBindings.Viewer10.Filter
                 //effectPass.Apply();
                 quad.Draw();
             }
+            device.Flush();
+            device.CopyResource(texture, stage);
 
+            var k = stage.Map(0, MapMode.Read, MapFlags.None);
+
+            byte[] result = k.Data.ReadRange<byte>(64 * 4);
+            stage.Unmap(0);
+
+            // Console.WriteLine(string.Format("avg: {0}", result[result.Length/2]));
+            Array.Sort<byte>(result);
+            byte b = result[result.Length / 2];
+            zapper.SetLuma(b);
         }
 
 
         public IFilterChainLink SetScalar(string variableName, float constant) 
+        {
+            if (boundScalars.Contains(variableName))
+            {
+                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
+                variable.Set(constant);
+            }
+            return this;
+        }
+
+        public IFilterChainLink SetScalar(string variableName, float[] constant)
         {
             if (boundScalars.Contains(variableName))
             {
@@ -179,7 +223,7 @@ namespace SlimDXBindings.Viewer10.Filter
                     variable.Set((constant as float?).Value);
                 if (typeof(T) == typeof(int[]))
                     variable.Set((constant as int[]));
-                
+                    
             }
             return this;
         }
@@ -193,7 +237,7 @@ namespace SlimDXBindings.Viewer10.Filter
             Effect.Dispose();
             renderTarget.Dispose();
             quad.Dispose();
-
+            stage.Dispose();
             foreach (var shaderRes in shaderResources.Values)
             {
                 shaderRes.Dispose();
@@ -262,25 +306,14 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void RenderToTexture(Texture2D texture)
         {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-
-        #region IFilterChainLink Members
-
-
-        public IFilterChainLink SetScalar(string variableName, float[] constant)
-        {
-            if (boundScalars.Contains(variableName))
+            if (this.texture != null && !this.texture.Disposed)
             {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
+                this.texture.Dispose();
             }
-            return this;
+            this.texture = texture;
         }
 
         #endregion
+
     }
 }

@@ -28,18 +28,22 @@ namespace SlimDXBindings
         /// called when the mouse is clicked
         /// </summary>
         /// <param name="luma"></param>
-        public void TriggerDown(float luma)
+        public void TriggerDown()
         {
-            currByte |= 32;
-            if (luma > 0.5)
-                currByte |= 16;
-            else
-                currByte &= ~16;
+            CurrentByte |= 16;
         }
 
         public void TriggerUp()
         {
-            currByte &= ~32;
+            CurrentByte &= ~16;
+        }
+
+        public void SetLuma(byte b)
+        {
+            if (b > 175)
+                currByte |= 8;
+            else
+                currByte &= ~8;
         }
 
         public void Refresh()
@@ -54,6 +58,26 @@ namespace SlimDXBindings
         #region IDisposable Members
 
         public void Dispose()
+        {
+            
+        }
+
+        #endregion
+
+        #region IControlPad Members
+
+
+        public int GetByte()
+        {
+            //if ((currByte & 16) == 16)
+            //    Console.WriteLine("Hit");
+            //else
+            //    Console.WriteLine("Miss");
+
+            return currByte;
+        }
+
+        public void SetByte(int data)
         {
             
         }

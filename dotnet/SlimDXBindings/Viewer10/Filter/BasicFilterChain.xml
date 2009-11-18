@@ -107,6 +107,12 @@
       </Inputs>
     </Filter>
     
+    <Filter Name="MouseTest" FilterType="MouseTest" Height="8" Width="8" Effect="MouseTest" Technique="Draw">
+      <Inputs>
+        <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="gameOut" />
+      </Inputs>
+    </Filter>    
+    
     <Filter Name="Output" Height="1024" Width="1024" Effect="FinalOutput" Technique="Draw">
       <Inputs>
         <Input Type="FilterOutput" Filter="combined" EffectVariable="gameOut" />

@@ -263,5 +263,15 @@ namespace SlimDXBindings.Viewer10.Filter
             this.texture = texture;
         }
         #endregion
+
+        #region IFilterChainLink Members
+
+
+        public IFilterChainLink SetScalar(string variableName, float[] constant)
+        {
+            return this;
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -23,9 +24,11 @@ namespace SlimDXBindings.Viewer10
 
          NESMachine nes;
          FakeEventMapper mapper;
+         private SlimDXZapper zapper;
          public D3D10Host(NESMachine nes)
          {
              this.nes = nes;
+             zapper = this.nes.PadTwo as SlimDXZapper;
              
          }
 
@@ -142,6 +145,10 @@ namespace SlimDXBindings.Viewer10
             RenderForm.Text = "InstiBulb - DirectX 10";
 
             RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
+            RenderForm.MouseDown += new MouseEventHandler(RenderForm_MouseDown);
+            RenderForm.MouseUp += new MouseEventHandler(RenderForm_MouseUp);
+
+
             //RenderForm.Mouse
             modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
             modeDescription.RefreshRate = new Rational(60, 1);
@@ -292,6 +299,13 @@ namespace SlimDXBindings.Viewer10
             tileFilters[tileFilters.Count - 1].RenderTarget = RenderTarget;
 
 
+            if (zapper != null)
+            {
+                var filter = (from f in tileFilters where f.GetType() == typeof(MouseTestingFilter) select f).FirstOrDefault();
+                if (filter != null)
+                    (filter as MouseTestingFilter).Zapper = zapper;
+            }
+
             mapper = new FakeEventMapper(RenderForm, tileFilters);
             
             disposables.Add(resource);
@@ -316,6 +330,18 @@ namespace SlimDXBindings.Viewer10
             Application.Idle += new EventHandler(Application_Idle);
             
             Application.Run( context);
+        }
+
+        void RenderForm_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (zapper != null)
+                zapper.TriggerUp();
+        }
+
+        void RenderForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (zapper != null)
+                zapper.TriggerDown();
         }
 
         int oldHeight;
@@ -454,10 +480,12 @@ namespace SlimDXBindings.Viewer10
 
         }
 
+        
+
 
         int biggestBSCount = 0;
         Texture2D[] texArrayForRender = new Texture2D[5];
-
+        Vector2 mousePos = new Vector2(0,0);
         public  void DrawFrame()
         {
 
@@ -473,12 +501,14 @@ namespace SlimDXBindings.Viewer10
                 controlVisibility = 0.0f;
                 controlVisibilityOffset = 0.0f;
             }
+            tileFilters.SetVariable("mousePosition", mapper.MousePosition);
             tileFilters.SetVariable("controlVisibility", controlVisibility);
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("hue", hue);
             tileFilters.SetVariable("contrast", Contrast);
             tileFilters.SetVariable("brightness", Brightness);
             tileFilters.SetVariable("chrramstart", nes.Cart.ChrRamStart);
+
             //tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
            // tileFilters.SetVariable("spriteRam", spriteRam);
             //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            

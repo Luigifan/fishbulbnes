@@ -157,6 +157,7 @@
     <Compile Include="Viewer10\Filter\FilterChainLoader.cs" />
     <Compile Include="Viewer10\Filter\IBasicPostProcessingFilter.cs" />
     <Compile Include="Viewer10\Filter\IFilterChainLink.cs" />
+    <Compile Include="Viewer10\Filter\MouseTester.cs" />
     <Compile Include="Viewer10\Filter\WPFVisualChainLink.cs" />
     <Compile Include="Viewer10\Helpers\MouseEventMapper.cs" />
     <Compile Include="Viewer10\Helpers\RedrawEventArgs.cs" />
@@ -239,6 +240,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Viewer10\Filter\Shaders\FinalOutput.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Viewer10\Filter\Shaders\MouseTest.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

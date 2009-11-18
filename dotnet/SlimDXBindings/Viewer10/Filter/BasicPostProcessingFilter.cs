@@ -101,13 +101,13 @@ namespace SlimDXBindings.Viewer10.Filter
         internal virtual Texture2DDescription GetTextureDescription()
         {
             Texture2DDescription desc = new Texture2DDescription();
-            desc.Usage = ResourceUsage.Default;
+            desc.Usage = ResourceUsage.Default ;
             desc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
             desc.ArraySize = 1;
             desc.MipLevels = 1;
             desc.Width = width;
             desc.Height = height;
-            desc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget;
+            desc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget ;
             desc.SampleDescription = sampleDescription;
             return desc;
         }
@@ -267,6 +267,21 @@ namespace SlimDXBindings.Viewer10.Filter
                 this.texture.Dispose();
             }
             this.texture = texture;
+        }
+
+        #endregion
+
+        #region IFilterChainLink Members
+
+
+        public IFilterChainLink SetScalar(string variableName, float[] constant)
+        {
+            if (boundScalars.Contains(variableName))
+            {
+                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
+                variable.Set(constant);
+            }
+            return this;
         }
 
         #endregion

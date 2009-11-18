@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using SlimDXBindings.Viewer10.Filter;
+using SlimDX;
 
 namespace SlimDXBindings.Viewer10.Helpers
 {
@@ -56,6 +57,7 @@ namespace SlimDXBindings.Viewer10.Helpers
     public class FakeEventMapper
     {
 
+        float[] mousePosition = new float[2];
         Form form;
         FilterChain chain;
         bool allowEvents = false;
@@ -65,8 +67,16 @@ namespace SlimDXBindings.Viewer10.Helpers
         {
             this.form = form;
             this.chain = chain;
+            form.MouseMove += form_MouseMove;
+
 
         }
+
+        public float[] MousePosition
+        {
+            get { return mousePosition; }
+        }
+
 
         public bool AllowEvents
         {
@@ -74,14 +84,12 @@ namespace SlimDXBindings.Viewer10.Helpers
             set { allowEvents = value;
                 form.MouseClick -= form_MouseClick;
                 form.MouseDoubleClick -= form_MouseDoubleClick;
-                form.MouseMove -= form_MouseMove;
                 form.MouseDown -= form_MouseDown;
                 form.MouseUp -= form_MouseUp; 
                 if (allowEvents)
                 {
                     form.MouseClick += form_MouseClick;
                     form.MouseDoubleClick += form_MouseDoubleClick;
-                    form.MouseMove += form_MouseMove;
                     form.MouseDown += form_MouseDown;
                     form.MouseUp += form_MouseUp;
                 }
@@ -113,13 +121,20 @@ namespace SlimDXBindings.Viewer10.Helpers
 
         void form_MouseMove(object sender, MouseEventArgs e)
         {
-            var p = new FakeEvent()
+            mousePosition[0] = ((float)e.X) / ((float)form.Width);
+            mousePosition[1] = ((float)e.Y) / ((float)form.Height);
+            if (allowEvents)
             {
-                EventType = FakedEventTypes.MOUSEMOVE,
-                X = ((double)e.X) / ((double)form.Width),
-                Y = ((double)e.Y) / ((double)form.Height),
-            };
-            chain.ProcessEvent(p);
+                var p = new FakeEvent()
+                {
+                    EventType = FakedEventTypes.MOUSEMOVE,
+                    X = ((double)e.X) / ((double)form.Width),
+                    Y = ((double)e.Y) / ((double)form.Height),
+                };
+                chain.ProcessEvent(p);
+            }
+
+
         }
 
         //void form_MouseLeave(object sender, EventArgs e)
