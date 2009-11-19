@@ -1,0 +1,29 @@
+﻿<emb:EmbeddableUserControl x:Class="SlimDXBindings.Viewer10.ControlPanel.D3D10ControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:emb="clr-namespace:InstibulbWpfUI"
+                           
+    >
+    <Grid Background="Wheat">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Content="NES Rendering Controls" Grid.ColumnSpan="2"/>
+        
+        <Label Content="Hue" Grid.Row="1"/>
+        <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360" TickFrequency="5" TickPlacement="BottomRight" Orientation="Horizontal" Value="{Binding Hue}" />
+        <Label Content="Contrast" Grid.Row="2"/>
+        <Slider Grid.Row="2" Grid.Column="1" Minimum="-1" Maximum="1" TickFrequency="0.05" TickPlacement="BottomRight" Orientation="Horizontal" Value="{Binding Contrast}" />
+        <Label Content="Brightness" Grid.Row="3"/>
+        <Slider Grid.Row="3" Grid.Column="1" Minimum="-1" Maximum="1" TickFrequency="0.05" TickPlacement="BottomRight" Orientation="Horizontal" Value="{Binding Brightness}" />
+        
+    </Grid>
+</emb:EmbeddableUserControl>

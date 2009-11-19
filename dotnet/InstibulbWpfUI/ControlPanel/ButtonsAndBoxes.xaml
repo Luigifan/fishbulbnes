@@ -1,0 +1,29 @@
+﻿<emb:EmbeddableUserControl 
+    x:Class="SlimDXBindings.Viewer10.ControlPanel.ButtonsAndBoxes"
+    xmlns:emb="clr-namespace:InstibulbWpfUI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Content="NES Rendering Controls" Grid.ColumnSpan="2"/>
+        
+        <Label Content="Hue" Grid.Row="1"/>
+        <CheckBox x:Name="Checkle"  Grid.Row ="1" Grid.Column="1" Click="CheckClick" MouseDown="CheckDown" MouseLeftButtonDown="CheckDown"/>
+        <Label Content="Contrast" Grid.Row="2"/>
+        <Button Grid.Row="2" Grid.Column="1"  Click="ButtonClick" MouseMove="Button_MouseMove" MouseDown="ButtonClick" MouseLeftButtonDown="ButtonClick"/>
+        <Label Content="Brightness" Grid.Row="3"/>
+        <Button Grid.Row="3" Grid.Column="1"  Click="ButtonClick" MouseDown="ButtonClick" MouseLeftButtonDown="ButtonClick"/>
+        
+    </Grid>
+</emb:EmbeddableUserControl>
