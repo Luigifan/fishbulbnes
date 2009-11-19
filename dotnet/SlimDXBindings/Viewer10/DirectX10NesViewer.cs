@@ -8,6 +8,7 @@ using NES.CPU.nitenedo;
 using SlimDXBindings.Viewer10.ControlPanel;
 using Microsoft.Practices.Unity;
 using SlimDXBindings.Viewer10.Helpers;
+using InstibulbWpfUI;
 //using SlimDXBindings.Viewer10.ControlPanel;
 
 namespace SlimDXBindings.Viewer10

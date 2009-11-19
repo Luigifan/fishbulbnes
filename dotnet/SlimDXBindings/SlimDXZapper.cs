@@ -75,7 +75,11 @@ namespace SlimDXBindings
             //    Console.WriteLine("Hit");
             //else
             //    Console.WriteLine("Miss");
-            if (NeedPixelNow != null) NeedPixelNow(this, new ClockedRequestEventArgs() { Clock = clock } );
+            if (pixelICareAbout < 0)
+            {
+                return currByte | 8;
+            }
+            if (NeedPixelNow != null ) NeedPixelNow(this, new ClockedRequestEventArgs() { Clock = clock } );
             return currByte;
         }
 
@@ -103,7 +107,7 @@ namespace SlimDXBindings
                 
                 pixel = value ;
                 // luma peaks at 82
-                if (pixel > 60)
+                if (pixel > 64)
                 {
                     currByte &= ~8;
                 }

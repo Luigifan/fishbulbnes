@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SlimDX.Direct3D10;
 using SlimDXBindings.Viewer10.Helpers;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -42,7 +43,7 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool isSetup = false;
 
-        public void ProcessEvent(FakeEvent ev)
+        public void ProcessEvent(FakeEventArgs ev)
         {
             myTextureBuddy.ProcessEvent( ev);
         }

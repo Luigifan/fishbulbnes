@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimDXBindings", "SlimDXBin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaoBindings", "OpenALWavStreamer\TaoBindings.csproj", "{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstibulbWpfUI", "InstibulbWpfUI\InstibulbWpfUI.csproj", "{208FAB3E-468F-4AE0-9848-7D2124625C30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,14 @@ Global
 		{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}.Release|x64.ActiveCfg = Release|Any CPU
 		{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}.Release|x86.ActiveCfg = Release|x86
 		{01F6C08A-3AE5-4A6A-820A-8E581FC9503B}.Release|x86.Build.0 = Release|x86
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Release|x64.ActiveCfg = Release|Any CPU
+		{208FAB3E-468F-4AE0-9848-7D2124625C30}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

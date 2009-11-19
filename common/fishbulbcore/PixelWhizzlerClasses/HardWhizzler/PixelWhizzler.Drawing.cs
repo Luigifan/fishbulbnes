@@ -272,39 +272,6 @@ namespace NES.CPU.PPUClasses
                 );
         }
 
-
-        //private void DrawClipPixel()
-        //{
-        //    int tilePixel = 0;
-
-
-        //    // if we're clipping the left 8 pixels, or bg is not visible, set color to background byte
-        //    if (_tilesAreVisible && !_clipTiles)
-        //    {
-        //        tilePixel = GetNameTablePixel();
-        //    }
-        //    isForegroundPixel = false;
-        //    int spritePixel = _spritesAreVisible && !_clipSprites ? GetSpritePixel() : 0;
-
-
-        //    //&& (newbyte & 3) != 0
-        //    if (!hitSprite && spriteZeroHit)
-        //    {
-        //        hitSprite = true;
-        //        _PPUStatus = _PPUStatus | 0x40;
-        //    }
-
-        //    outBuffer[vbufLocation] = (uint)(
-        //        currentPalette << 24 |
-        //        ((spritePixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? 255 : 0) << 16 |
-        //        spritePixel << 8 |
-        //        tilePixel);
-
-        //    //outBuffer[vbufLocation] =
-        //    //    (spritePixel != 0 && (tilePixel == 0 || isForegroundPixel))
-        //    //    ? _palette[spritePixel] : _palette[tilePixel];
-        //}
-
         IPixelAwareDevice pixelDevices = null;
 
         public IPixelAwareDevice PixelAwareDevice
@@ -319,9 +286,28 @@ namespace NES.CPU.PPUClasses
         {
             DrawTo(e.Clock);
             IPixelAwareDevice dev = (IPixelAwareDevice)sender;
-            int x = dev.PixelICareAbout % 256;
-            int y = dev.PixelICareAbout / 256;
-            dev.PixelValue = GetPixelLuma(x , y);
+            int pos = 0;
+            if (frameClock < 6820 && frameClock < 384)
+            {
+                pos = 256 * 240;
+            }
+            else
+            {
+                pos = vbufLocation;
+
+            }
+            
+            int p = dev.PixelICareAbout;
+            if (pos >= p && p >= pos - 384)
+            {
+                int x = dev.PixelICareAbout & 255;
+                int y = dev.PixelICareAbout / 256;
+                dev.PixelValue = GetPixelLuma(x, y);
+            }
+            else
+            {
+                dev.PixelValue = 0;
+            }
         }
 
         private bool _clipTiles;

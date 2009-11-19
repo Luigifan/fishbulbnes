@@ -14,6 +14,7 @@ using SlimDXBindings.Viewer10.Filter;
 using System.Collections.Generic;
 using SlimDXBindings.Viewer10.Helpers;
 using Microsoft.Practices.Unity;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10 
 {
@@ -307,7 +308,8 @@ namespace SlimDXBindings.Viewer10
                     (filter as MouseTestingFilter).Zapper = zapper;
             }
 
-            mapper = new FakeEventMapper(RenderForm, tileFilters);
+            mapper = new FakeEventMapper(RenderForm);
+            mapper.FakeThisEvent += new EventHandler<FakeEventArgs>(mapper_FakeThisEvent);
             
             disposables.Add(resource);
             disposables.Add(Effect);
@@ -333,12 +335,25 @@ namespace SlimDXBindings.Viewer10
             Application.Run( context);
         }
 
+        void mapper_FakeThisEvent(object sender, FakeEventArgs e)
+        {
+            tileFilters.ProcessEvent(e);
+        }
+
         void RenderForm_MouseMove(object sender, MouseEventArgs e)
         {
             var X = (((double)e.X) / (double)(RenderForm.ClientSize.Width)) * 255;
             var Y = (((double)e.Y) / ((double)RenderForm.ClientSize.Height)) * 255;
-            //Console.WriteLine(string.Format("X {0} Y {1}", X, Y));
-            zapper.SetPixel((int)( X + (256 * Y)));
+
+            if (Y > 239)
+            {
+                zapper.SetPixel(-1);
+            }
+            else
+            {
+                //Console.WriteLine(string.Format("X {0} Y {1}", X, Y));
+                zapper.SetPixel((int)(X + (256 * Y)));
+            }
         }
 
         void RenderForm_MouseUp(object sender, MouseEventArgs e)

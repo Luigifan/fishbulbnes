@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using DXGI=SlimDX.DXGI;
 using System.Windows.Media.Imaging;
 using SlimDX;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Helpers
 {

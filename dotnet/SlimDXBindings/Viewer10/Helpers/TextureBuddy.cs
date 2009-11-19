@@ -5,6 +5,7 @@ using System.Text;
 using SlimDX;
 using SlimDX.Direct3D10;
 using System.Windows.Media;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Helpers
 {
@@ -202,7 +203,7 @@ namespace SlimDXBindings.Viewer10.Helpers
         }
 
         
-        public void ProcessEvent(FakeEvent ev)
+        public void ProcessEvent(FakeEventArgs ev)
         {
             wpfTextures[0].EmbeddedControl.HandleEvent(ev);
         }

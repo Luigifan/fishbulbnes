@@ -7,8 +7,8 @@ using SlimDX.Direct3D10;
 using System.IO;
 using System.Reflection;
 using SlimDXBindings.Viewer10.Helpers;
-using SlimDXBindings.Viewer10.ControlPanel;
 using Microsoft.Practices.Unity;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
