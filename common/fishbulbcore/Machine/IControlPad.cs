@@ -17,13 +17,36 @@ namespace NES.CPU.Machine
         }
     }
 
+    public class ClockedRequestEventArgs : EventArgs
+    {
+        public int Clock { get; set; }
+    }
+
+    public interface IPixelAwareDevice
+    {
+        int PixelICareAbout
+        {
+            get;
+        }
+
+        int PixelValue
+        {
+            set;
+        }
+
+        event EventHandler<ClockedRequestEventArgs> NeedPixelNow;
+    }
+
+
     public interface IControlPad : IDisposable
     {
         int CurrentByte { get; set; }
         void Refresh();
 
-        int GetByte();
-        void SetByte(int data);
+        int GetByte(int clock);
+        void SetByte(int clock, int data);
+
+
 
         event EventHandler<ControlByteEventArgs> NextControlByteSet;
     }

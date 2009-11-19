@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NES.CPU.nitenedo.Interaction;
+using NES.CPU.Machine;
 
 namespace NES.CPU.PPUClasses
 {
@@ -327,6 +328,13 @@ namespace NES.CPU.PPUClasses
         //    //    ? _palette[spritePixel] : _palette[tilePixel];
         //}
 
+        IPixelAwareDevice pixelDevices = null;
+
+        public IPixelAwareDevice PixelAwareDevice
+        {
+            get { return pixelDevices; }
+            set { pixelDevices = value; }
+        }
 
         private bool _clipTiles;
         private bool _clipSprites;

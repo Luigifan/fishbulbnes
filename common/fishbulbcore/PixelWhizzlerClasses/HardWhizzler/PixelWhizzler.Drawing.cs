@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NES.CPU.nitenedo.Interaction;
+using NES.CPU.Machine;
 
 namespace NES.CPU.PPUClasses
 {
@@ -193,8 +194,37 @@ namespace NES.CPU.PPUClasses
         int currentPixelInfo0 = 0;
         int currentPixelInfo1 = 0;
 
+        int GetPixelLuma(int x, int y)
+        {
+            if (x < 0 || x > 255 || y < 0 || y > 255) return 0;
+            isForegroundPixel = false;
+            int sprPixel = _spritesAreVisible ? GetSpritePixel(x,y) : 0;
+            int tilePixel = _tilesAreVisible ? GetNameTablePixelOld(x,y) : 0;
+            int pixel = (sprPixel != 0 && (tilePixel == 0 || isForegroundPixel)) ? lumas[_palette[sprPixel]] : lumas[_palette[tilePixel]];
+            return pixel;
+
+        }
+
         private void DrawPixel()
         {
+            //if (pixelDevices != null && pixelDevices.PixelICareAbout == vbufLocation)
+            //{
+            //    int x = currentXPosition, y = currentYPosition;
+            //    //int luma = GetPixelLuma(x - 8, y);
+            //    //luma += GetPixelLuma(x - 4, y);
+            //    //luma += GetPixelLuma(x, y);
+            //    //luma += GetPixelLuma(x + 4, y);
+            //    //luma += GetPixelLuma(x + 8, y);
+
+            //    //luma += GetPixelLuma(x, y - 8);
+            //    //luma += GetPixelLuma(x, y - 4);
+            //    //luma += GetPixelLuma(x, y + 4);
+            //    //luma += GetPixelLuma(x, y + 8);
+            //    //luma /= 9;
+
+            //    pixelDevices.PixelValue = GetPixelLuma(x, y); ;
+            //}
+
             if (!hitSprite && sprite0scanline == currentYPosition)
             {
                 if (SpriteZeroTest() && TestNTPixel())
@@ -275,6 +305,24 @@ namespace NES.CPU.PPUClasses
         //    //    ? _palette[spritePixel] : _palette[tilePixel];
         //}
 
+        IPixelAwareDevice pixelDevices = null;
+
+        public IPixelAwareDevice PixelAwareDevice
+        {
+            get { return pixelDevices; }
+            set { pixelDevices = value;
+            pixelDevices.NeedPixelNow += new EventHandler<ClockedRequestEventArgs>(pixelDevices_NeedPixelNow);
+            }
+        }
+
+        void pixelDevices_NeedPixelNow(object sender, ClockedRequestEventArgs e)
+        {
+            DrawTo(e.Clock);
+            IPixelAwareDevice dev = (IPixelAwareDevice)sender;
+            int x = dev.PixelICareAbout % 256;
+            int y = dev.PixelICareAbout / 256;
+            dev.PixelValue = GetPixelLuma(x , y);
+        }
 
         private bool _clipTiles;
         private bool _clipSprites;

@@ -102,7 +102,7 @@ namespace NES.CPU.Machine.BeepsBoops
         public void SetByte(int Clock, int address, int data)
         {
             if (address == 0x4000) _interruptRaised = false;
-
+            //DoSetByte( Clock,  address,  data);
             registers.Enqueue(new PortWriteEntry(Clock, (ushort)address, (byte)data));
 
 

@@ -184,14 +184,14 @@ namespace SlimDXBindings
         
         int readNumber;
 
-        public int GetByte()
+        public int GetByte(int clock)
         {
             int result = (currentByte >> readNumber) & 0x01;
             readNumber = (readNumber + 1) & 7;
             return (result | 0x40) & 0xFF;
         }
 
-        public void SetByte(int data)
+        public void SetByte(int clock, int data)
         {
             if ((data & 1) == 1)
             {

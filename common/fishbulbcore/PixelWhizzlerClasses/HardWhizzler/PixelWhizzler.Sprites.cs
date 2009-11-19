@@ -76,6 +76,90 @@ namespace NES.CPU.PPUClasses
         }
 
 
+        public byte GetSpritePixel(int XPosition, int YPosition)
+        {
+            spriteZeroHit = false;
+            isForegroundPixel = false;
+            byte result = 0;
+            int yLine = 0;
+            int xPos = 0;
+            int tileIndex = 0;
+
+            for (int i = 0; i < unpackedSprites.Length; ++i)
+            {
+                NESSprite currSprite = unpackedSprites[i];
+                if (
+                    currSprite.XPosition > 0
+                    && XPosition >= currSprite.XPosition
+                    && XPosition < currSprite.XPosition + 8)
+                {
+
+                    int spritePatternTable = 0;
+                    if ((_PPUControlByte0 & 0x08) == 0x08)
+                    {
+                        spritePatternTable = 0x1000;
+                    }
+                    xPos = XPosition - currSprite.XPosition;
+                    yLine = YPosition - currSprite.YPosition - 1;
+
+                    yLine = yLine & (spriteSize - 1);
+
+                    tileIndex = currSprite.TileIndex;
+
+                    if ((_PPUControlByte0 & 0x20) == 0x20)
+                    {
+                        if ((tileIndex & 1) == 1)
+                        {
+                            spritePatternTable = 0x1000;
+                            tileIndex = tileIndex ^ 1;
+                        }
+                        else
+                        {
+                            spritePatternTable = 0;
+                        }
+                    }
+
+                    result = WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
+                    if (result != 0)
+                    {
+                        if (currSprite.SpriteNumber == 0)
+                        {
+                            spriteZeroHit = true;
+                        }
+                        isForegroundPixel = currSprite.Foreground;
+                        return (byte)(result | currSprite.AttributeByte);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private byte WhissaSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
+        {
+            // 8x8 tile
+            int patternEntry;
+            int patternEntryBit2;
+
+            if (sprite.FlipY)
+            {
+                y = spriteSize - y - 1;
+            }
+
+            if (y >= 8)
+            {
+                y += 8;
+            }
+
+            patternEntry = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y);
+            patternEntryBit2 = chrRomHandler.GetPPUByte(0, patternTableIndex + tileIndex * 16 + y + 8);
+
+            return (byte)
+                (sprite.FlipX ?
+                ((patternEntry >> x) & 0x1) | (((patternEntryBit2 >> x) << 1) & 0x2)
+                : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2));
+        }
+
+
         public bool SpriteZeroTest()
         {
             if (!_spritesAreVisible) return false;
@@ -117,12 +201,12 @@ namespace NES.CPU.PPUClasses
                     }
                 }
 
-                return WhissaSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
+                return TestSpritePixel(spritePatternTable, xPos, yLine, currSprite, tileIndex);
             }
             return false ;
         }
 
-        private bool WhissaSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
+        private bool TestSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
         {
             // 8x8 tile
             int patternEntry;

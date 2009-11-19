@@ -147,6 +147,7 @@ namespace SlimDXBindings.Viewer10
             RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
             RenderForm.MouseDown += new MouseEventHandler(RenderForm_MouseDown);
             RenderForm.MouseUp += new MouseEventHandler(RenderForm_MouseUp);
+            RenderForm.MouseMove += new MouseEventHandler(RenderForm_MouseMove);
 
 
             //RenderForm.Mouse
@@ -332,6 +333,14 @@ namespace SlimDXBindings.Viewer10
             Application.Run( context);
         }
 
+        void RenderForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            var X = (((double)e.X) / (double)(RenderForm.ClientSize.Width)) * 255;
+            var Y = (((double)e.Y) / ((double)RenderForm.ClientSize.Height)) * 255;
+            //Console.WriteLine(string.Format("X {0} Y {1}", X, Y));
+            zapper.SetPixel((int)( X + (256 * Y)));
+        }
+
         void RenderForm_MouseUp(object sender, MouseEventArgs e)
         {
             if (zapper != null)
@@ -341,7 +350,9 @@ namespace SlimDXBindings.Viewer10
         void RenderForm_MouseDown(object sender, MouseEventArgs e)
         {
             if (zapper != null)
+            {
                 zapper.TriggerDown();
+            }
         }
 
         int oldHeight;

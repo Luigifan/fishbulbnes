@@ -143,10 +143,10 @@ namespace NES.CPU.Fastendo
                     switch (address)
                     {
                         case 0x4016:
-                            result = _padOne.GetByte(address);
+                            result = _padOne.GetByte(clock, address);
                             break;
                         case 0x4017:
-                            result = _padTwo.GetByte(address);
+                            result = _padTwo.GetByte(clock, address);
                             break;
                         case 0x4015:
                             result = soundBopper.GetByte(clock, address);
@@ -263,8 +263,8 @@ namespace NES.CPU.Fastendo
                             CurrentInstruction.ExtraTiming = CurrentInstruction.ExtraTiming + 512;
                             break;
                         case 0x4016:
-                            _padOne.SetByte(address, data & 1);
-                            _padTwo.SetByte(address, data & 1);
+                            _padOne.SetByte(clock, address, data & 1);
+                            _padTwo.SetByte(clock, address, data & 1);
                             break;
                     }
                     break;

@@ -1,4 +1,5 @@
 ﻿using System;
+using NES.CPU.Machine;
 namespace NES.CPU.PixelWhizzlerClasses
 {
     public interface IPPU
@@ -67,5 +68,6 @@ namespace NES.CPU.PixelWhizzlerClasses
         int VidRAM_GetNTByte(int address);
         int VScroll { get; }
         void WriteState(System.Collections.Generic.Queue<int> writer);
+        IPixelAwareDevice PixelAwareDevice { get; set; }
     }
 }

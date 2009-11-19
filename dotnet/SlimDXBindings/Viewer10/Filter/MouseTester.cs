@@ -178,7 +178,7 @@ namespace SlimDXBindings.Viewer10.Filter
             // Console.WriteLine(string.Format("avg: {0}", result[result.Length/2]));
             Array.Sort<byte>(result);
             byte b = result[result.Length / 2];
-            zapper.SetLuma(b);
+            //zapper.SetLuma(b);
         }
 
 

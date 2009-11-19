@@ -224,6 +224,15 @@ namespace NES.CPU.PPUClasses
                     Console.WriteLine(
                         string.Format("float4({0}, {1}, {2}, 1.0), ", 
                             ((float)r / 256.0f),  ((float)g / 256.0f), ((float)b / 256.0f) ));
+                    //(0.3, 0.59, 0.11);
+                    double luma = r * 0.3;
+                    luma += g * 0.59;
+                    luma += b * 0.11;
+                    luma /= 3;
+                    lumas[n] = (int)luma;
+                    lumas[n + 64] = (int)luma;
+                    lumas[n + 128] = (int)luma;
+                    lumas[n + 192] = (int)luma;
                 }
             }
 
@@ -246,6 +255,15 @@ namespace NES.CPU.PPUClasses
                     tPal[n + 64] = pal[n];
                     tPal[n + 128] = pal[n];
                     tPal[n + 192] = pal[n];
+
+                    double luma = r * 0.3;
+                    luma += g * 0.59;
+                    luma += b * 0.11;
+                    luma /= 3;
+                    lumas[n] = (int)luma;
+                    lumas[n + 64] = (int)luma;
+                    lumas[n + 128] = (int)luma;
+                    lumas[n + 192] = (int)luma;
                 }
             }
             return tPal;
@@ -297,6 +315,7 @@ namespace NES.CPU.PPUClasses
 
         int[] p32 = new int[256];
         public static readonly int[] pal = new int[256];
+        public static readonly int[] lumas = new int[256];
 
         /// <summary>
         /// Fills an external buffer with rgb color values, relative to current state of PPU's pallete ram

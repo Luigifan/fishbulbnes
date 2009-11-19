@@ -7,7 +7,7 @@ using NES.CPU.Machine;
 
 namespace NES.CPU.nitenedo
 {
-    public class InputHandler : IMemoryMappedIOElement
+    public class InputHandler : IClockedMemoryMappedIOElement
     {
         private int currentByte;
         private int nextByte;
@@ -46,16 +46,16 @@ namespace NES.CPU.nitenedo
 
         private object inputLock = new object();
 
-        public int GetByte(int address)
+        public int GetByte(int clock, int address)
         {
-            return controlPad.GetByte();
+            return controlPad.GetByte(clock);
 
 
         }
 
-        public void SetByte(int address, int data)
+        public void SetByte(int clock, int address, int data)
         {
-            controlPad.SetByte(data);
+            controlPad.SetByte(clock, data);
         }
 
         private void SetNextControlByte(int data)
@@ -79,5 +79,49 @@ namespace NES.CPU.nitenedo
         }
 
 
+
+        #region IClockedMemoryMappedIOElement Members
+
+
+        public MachineEvent NMIHandler
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool IRQAsserted
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int NextEventAt
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void HandleEvent(int Clock)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ResetClock(int Clock)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
