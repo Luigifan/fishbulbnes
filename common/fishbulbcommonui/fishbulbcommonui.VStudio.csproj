@@ -131,6 +131,7 @@
     <Compile Include="SaveStates\SaveStateVM.cs" />
     <Compile Include="Sound\SoundViewModel.cs" />
     <Compile Include="UIInstigator.cs" />
+    <Compile Include="Unity\CommonUIRegisterer.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

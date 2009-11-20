@@ -7,11 +7,19 @@ using Fishbulb.Common.UI;
 
 namespace InstibulbWpfUI
 {
-    static class TypeRegisterer
+    public static class TypeRegisterer
     {
-        public static IUnityContainer RegisterTypes(IUnityContainer container)
+        public static IUnityContainer RegisterWpfUITypes(this IUnityContainer container)
         {
             container.RegisterType<EmbeddableUserControl, ControlPanelView>("ControlPanel", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
+            
+            // wpf specific inherited view model
+            //container.RegisterType<WinCheatPanelVM>();
+            //container.RegisterType<WinDebuggerVM>();
+            //container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
+            //container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager());
+            //container.RegisterType<IViewModel, SaveStateVM>("SaveStateVM", new ContainerControlledLifetimeManager());
+            //container.RegisterType<WpfKeyConfigVM>("KeyConfigVM", new ContainerControlledLifetimeManager());
 
             return container;
         }

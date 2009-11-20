@@ -126,12 +126,36 @@ namespace InstibulbWpfUI
                 if (result == null)
                     return;
                 var item = result.VisualHit as FrameworkElement;
+                // lets try and find the button, if there is one
+                FrameworkElement element = item as FrameworkElement;
+                while (element != null && !(element is Button))
+                {
+                    element = element.TemplatedParent as FrameworkElement;
+                }
+                if (element != null)
+                {
+                    Button b = (Button)element ;
+                    if (b.Command != null && b.Command.CanExecute(b.CommandParameter))
+                    {
+                        b.Command.Execute(b.CommandParameter);
+                        RequestRedraw(0,0,0,0);
+                        return;
+                    }                
+                }
+                
                 if (item != null)
                 {
-                    item .RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent,this));
                     var k = item as FrameworkElement;
                     var tr = k.TransformToVisual(this);
                     var res = tr.Transform(new Point(0, 0));
+                    //if (item.Command != null && item.Command.CanExecute(item.CommandParameter))
+                    //{
+                    //    item.Command.Execute(item.CommandParameter);
+                    //}
+                    //else
+                    //{
+                        item.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent, this));
+                    //}
                     RequestRedraw((int)res.X, (int)res.Y, (int)k.ActualWidth, (int)k.ActualHeight);
 
                 }

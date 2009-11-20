@@ -83,6 +83,30 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.StaticFactory, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.StaticFactory.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="PresentationCore">
@@ -181,6 +205,7 @@
     <Compile Include="Machine\Carts\VSUnisystem.cs" />
     <Compile Include="Machine\FastendoDebugging\BreakEvent.cs" />
     <Compile Include="Machine\NESMachine.SRAM.cs" />
+    <Compile Include="Machine\NullControlPad.cs" />
     <Compile Include="Machine\PortQueueing\QueuedPort.cs" />
     <Compile Include="Machine\ROMLoader\CartLoadException.cs" />
     <Compile Include="Machine\ROMLoader\Hashers.cs" />
@@ -195,20 +220,21 @@
     <Compile Include="PixelWhizzlerClasses\HardWhizzler\PixelWhizzler.WriteLog.cs" />
     <Compile Include="PixelWhizzlerClasses\IPPU.cs" />
     <Compile Include="PixelWhizzlerClasses\NESSprite.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Constants.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Control.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Drawing.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.MemoryMappedIOElement.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.ScanlineEvents.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Scrolling.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Sprites.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.Tiles.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.VidRAMHandler.cs" />
-    <Compile Include="PixelWhizzlerClasses\PixelWhizzler.WriteLog.cs" />
-    <Compile Include="PixelWhizzlerClasses\TileDoodler.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Constants.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Control.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Drawing.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.MemoryMappedIOElement.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.ScanlineEvents.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Scrolling.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Sprites.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.Tiles.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.VidRAMHandler.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\PixelWhizzler.WriteLog.cs" />
+    <Compile Include="PixelWhizzlerClasses\SoftWhizzler\TileDoodler.cs" />
     <Compile Include="Sound\IWavStreamer.cs" />
     <Compile Include="Sound\SoundThread.cs" />
+    <Compile Include="Unity\NESTypeRegisterer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

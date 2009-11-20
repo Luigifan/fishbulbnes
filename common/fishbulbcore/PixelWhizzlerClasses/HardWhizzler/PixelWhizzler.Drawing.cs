@@ -277,9 +277,11 @@ namespace NES.CPU.PPUClasses
         public IPixelAwareDevice PixelAwareDevice
         {
             get { return pixelDevices; }
-            set { pixelDevices = value;
-            pixelDevices.NeedPixelNow += new EventHandler<ClockedRequestEventArgs>(pixelDevices_NeedPixelNow);
-            }
+            set { 
+                pixelDevices = value;
+                if (pixelDevices != null)
+                    pixelDevices.NeedPixelNow += new EventHandler<ClockedRequestEventArgs>(pixelDevices_NeedPixelNow);
+                }
         }
 
         void pixelDevices_NeedPixelNow(object sender, ClockedRequestEventArgs e)
