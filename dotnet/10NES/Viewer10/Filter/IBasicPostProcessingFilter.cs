@@ -3,6 +3,36 @@ using SlimDX.Direct3D10;
 using SlimDX;
 namespace SlimDXBindings.Viewer10.Filter
 {
+
+    public class MessageForRenderer
+    {
+        public MessageForRenderer(string MessageFor, string Message)
+        {
+            this.MessageFor = MessageFor;
+            this.Message = Message;
+        }
+        public string MessageFor { get; private set;  }
+        public string Message { get; private set; }
+    }
+
+    public delegate void MessagePosterDelegate(MessageForRenderer message);
+
+    public interface IGetsMessages
+    {
+        void RecieveMessage(MessageForRenderer message);
+    }
+
+    public interface ISendsMessages
+    {
+        MessagePosterDelegate MessagePoster { get; set; }
+    }
+
+    public interface IAmResizable
+    {
+        void Resize(int width, int height);
+     
+    }
+
     public interface IFilterChainLink : IDisposable
     {
         bool FeedsNextStage { get; set; }

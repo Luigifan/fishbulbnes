@@ -128,7 +128,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 	
 	vertexShaderOut.position = vertexShaderIn.position;
 	//note: uncomment this for easy play in various shader designer uis which dont provide a screen aligned quad
-	//vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
+	vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
 
 	vertexShaderOut.color = vertexShaderIn.color;
 	vertexShaderOut.UV = vertexShaderIn.UV;

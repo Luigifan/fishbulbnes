@@ -9,6 +9,13 @@ SamplerState linearSampler
     AddressV = Wrap;
 };
 
+SamplerState pointSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
 struct VS_IN
 {
 	float4 position : POSITION;
@@ -37,15 +44,8 @@ PS_IN VS( VS_IN vertexShaderIn )
 float4 PS( PS_IN pixelShaderIn ) : SV_Target
 {
     float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	
-	return float4(finalColor.b, finalColor.g, finalColor.r, finalColor.a);
-}
-
-float4 DrawRedderPixels( PS_IN pixelShaderIn ) : SV_Target
-{
-	float4 finalColor = texture2d.Sample( linearSampler, pixelShaderIn.UV );
-	finalColor.r *= 2;
-	return finalColor;
+    
+	return float4(finalColor.b, finalColor.g, finalColor.r, finalColor.a * controlVisibility);
 }
 
 

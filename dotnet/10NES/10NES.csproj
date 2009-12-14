@@ -104,6 +104,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeInputDevice.cs" />
     <Compile Include="InlineWavStreamer.cs" />
     <Compile Include="PlatformDelegates.cs" />
     <Compile Include="Program.cs" />
@@ -123,7 +124,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Viewer10\RenderNesOutput.fx" />
+    <EmbeddedResource Include="Viewer10\Filter\Shaders\EndRender.fx" />
     <EmbeddedResource Include="Viewer10\Filter\Shaders\simpleBlur.fx" />
     <EmbeddedResource Include="Viewer10\Filter\Shaders\RenderNesTiles.fx" />
     <EmbeddedResource Include="Viewer10\Filter\Shaders\RenderNesSprites.fx" />
@@ -151,6 +152,7 @@
     <Compile Include="Viewer10\Filter\WPFVisualChainLink.cs" />
     <Compile Include="Viewer10\FullscreenQuad.cs" />
     <Compile Include="Viewer10\Helpers\DepthBuffer.cs" />
+    <Compile Include="Viewer10\Helpers\DirtyRegion.cs" />
     <Compile Include="Viewer10\Helpers\TextureBuddy.cs" />
     <Compile Include="Viewer10\Helpers\WPFVisualTexture.cs" />
     <Compile Include="Viewer10\D3D10Host.cs" />

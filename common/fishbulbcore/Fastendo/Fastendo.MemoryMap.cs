@@ -62,7 +62,7 @@ namespace NES.CPU.Fastendo
         {
             get { return _cart; }
             set { _cart = value;
-            _cart.NMIHandler = irqUpdater;
+                //_cart.NMIHandler = irqUpdater;
             }
         }
 

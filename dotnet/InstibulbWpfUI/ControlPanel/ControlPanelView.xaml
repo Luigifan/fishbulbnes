@@ -1,11 +1,11 @@
-﻿<emb:EmbeddableUserControl 
+﻿<UserControl 
     x:Class="InstibulbWpfUI.ControlPanelView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:emb="clr-namespace:InstibulbWpfUI"
 
     >
-    <emb:EmbeddableUserControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ConvertersAndStuff.xaml"/>
@@ -25,20 +25,23 @@
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
-
-    </emb:EmbeddableUserControl.Resources>
+    </UserControl.Resources>
+    <UserControl.Background>
+        <SolidColorBrush Color="#3A3FAC08"/>
+    </UserControl.Background>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top"> 
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Grid.ColumnSpan="2">Console Controls</Label>
+        <Label Grid.ColumnSpan="2" Style="{StaticResource HeaderStyle}" >Console Controls</Label>
         <Button Grid.Row="1" MinHeight="20" MinWidth="75" 
                 Content="{Binding CurrentCartName, Converter={StaticResource ShortFileNameConverter}}" 
                 Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=BrowseRom}" 
@@ -51,5 +54,8 @@
                 Source={StaticResource CommandDictionaryConverter}, 
                 Converter={StaticResource ErrorTextConverter}, 
                 ConverterParameter=BrowseRom}" />
+        
+        
+        <emb:CartInfoPanel Grid.Row="4" Grid.ColumnSpan="2"/>
     </Grid>
-</emb:EmbeddableUserControl>
+</UserControl>

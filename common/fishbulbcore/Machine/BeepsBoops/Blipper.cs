@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
+// ported from shay green's (blargg) bandlimited wav synth
+
 namespace NES.CPU.Machine.BeepsBoops
 {
     public class Blip

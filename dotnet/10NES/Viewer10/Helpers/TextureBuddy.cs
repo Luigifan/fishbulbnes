@@ -202,12 +202,6 @@ namespace SlimDXBindings.Viewer10.Helpers
             return tex;
         }
 
-        
-        public void ProcessEvent(FakeEventArgs ev)
-        {
-            wpfTextures[0].EmbeddedControl.HandleEvent(ev);
-        }
-
         public WPFVisualTexture CreateVisualTexture(EmbeddableUserControl visual, int width, int height)
         {
             var tex = new WPFVisualTexture(device, width, height, visual);

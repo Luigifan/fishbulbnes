@@ -127,7 +127,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 	
 	vertexShaderOut.position = vertexShaderIn.position;
 	//note: uncomment this for easy play in various shader designer uis which dont provide a screen aligned quad
-	//vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
+	vertexShaderOut.position = mul(vertexShaderIn.position, matWorldViewProj);
 
 	vertexShaderOut.color = vertexShaderIn.color;
 	vertexShaderOut.UV = vertexShaderIn.UV;
@@ -136,7 +136,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 }
 
 float hue = 0;
-//float colorAngles[16] = {0,240,210,180,150,120,90,60,30,0,330,300,270,0,0,0};
+
 float colorAngles[16] = 
 {0, // sin =  -1.0f, cos = 0
 240, // sin = -0.866, cos = -0.5

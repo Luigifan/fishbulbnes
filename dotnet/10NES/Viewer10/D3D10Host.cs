@@ -23,6 +23,7 @@ namespace SlimDXBindings.Viewer10
     {
 
          NESMachine nes;
+         
          FakeEventMapper mapper;
          Timer tickTimer; 
 
@@ -39,16 +40,23 @@ namespace SlimDXBindings.Viewer10
          void nes_RunStatusChangedEvent(object sender, EventArgs e)
          {
              idling = nes.RunState != NES.Machine.ControlPanel.RunningStatuses.Running;
+             //idling &= nes.IsRunning;
+             //idling |= nes.IsDebugging;
              if (idling)
-                 tickTimer.Start();
+             {
+                tickTimer.Start();
+             }
              else
                  tickTimer.Stop();
          }
 
          void nes_Drawscreen(object sender, EventArgs e)
          {
-             this.UpdateTextures();
-             this.DrawFrame();
+             if (!idling)
+             {
+                 this.UpdateTextures();
+                 this.DrawFrame();
+             }
          }
 
          public IUnityContainer Container
@@ -71,17 +79,9 @@ namespace SlimDXBindings.Viewer10
          Viewport ViewArea;
          DXGI.SwapChain SwapChain;
          D3D10.Device Device;
-         D3D10.Effect Effect;
-         D3D10.EffectTechnique Technique;
-         D3D10.EffectPass Pass;
-         D3D10.InputLayout Layout;
-         D3D10.Buffer Vertices;
          D3D10.RenderTargetView RenderTarget;
-         
          ShaderResourceView textureView;
 
-
-         FullscreenQuad quad;
          FilterChain tileFilters;
          const int vertexSize = 40;
          const int vertexCount = 4;
@@ -118,6 +118,8 @@ namespace SlimDXBindings.Viewer10
             RenderForm.MouseUp += new MouseEventHandler(RenderForm_MouseUp);
             RenderForm.MouseMove += new MouseEventHandler(RenderForm_MouseMove);
             RenderForm.FormClosed += new FormClosedEventHandler(RenderForm_FormClosed);
+
+            RenderForm.ResizeEnd += new EventHandler(RenderForm_ResizeEnd);
 
             //RenderForm.Mouse
             modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
@@ -157,12 +159,7 @@ namespace SlimDXBindings.Viewer10
             Device.Rasterizer.SetViewports(ViewArea);
             Device.OutputMerger.SetTargets(RenderTarget);
 
-            Effect = D3D10.Effect.FromStream(Device, 
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("_10NES.Viewer10.RenderNesOutput.fx"), 
-                "fx_4_0", D3D10.ShaderFlags.None, D3D10.EffectFlags.None, null, null);
-
-            Technique = Effect.GetTechniqueByName("Render");
-            Pass = Technique.GetPassByIndex(0);
+            
 
             Texture2DDescription desc = new Texture2DDescription();
             desc.Usage = ResourceUsage.Dynamic;
@@ -221,10 +218,6 @@ namespace SlimDXBindings.Viewer10
             });
 
 
-            EffectResourceVariable shaderTexture = Effect.GetVariableByName("texture2d").AsResource();
-            textureView = new ShaderResourceView(Device, texture);
-            shaderTexture.SetResource(textureView);
-
             Texture2DDescription palDesc = new Texture2DDescription();
             palDesc.Usage = ResourceUsage.Dynamic;
             palDesc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
@@ -253,22 +246,22 @@ namespace SlimDXBindings.Viewer10
             targetTexture = new Texture2D(Device, targetDesc);
             disposables.Add(targetTexture);
 
-            quad = new FullscreenQuad(Device, Pass.Description.Signature);
             Texture2D noise = textureBuddy.CreateNoiseMap2D(128);
 
             FilterChainLoader loader = null;
+
+            mapper = new FakeEventMapper(RenderForm);
+
+            mapper.AllowEvents = true;
             
+            // the rendering chain is built on the UI thread, since it's hosting Visuals, and possibly other things that require a STA thread
             RenderForm.Invoke(new NoArgDelegate(delegate { 
                 loader = new FilterChainLoader(Device, Container);
-            tileFilters = (FilterChain)loader.ReadResource(@"_10NES.Viewer10.Filter.BasicFilterChain.xml");
+            tileFilters = (FilterChain)loader.ReadResource(@"_10NES.Viewer10.Filter.BasicFilterChain.xml", mapper);
             } ));
-
-            // TODO: make this array match the elements in the new filterchains Input collection
-
             
             tileFilters[tileFilters.Count - 1].RenderToTexture(resource) ;
             tileFilters[tileFilters.Count - 1].RenderTarget = RenderTarget;
-
 
             if (zapper != null)
             {
@@ -277,14 +270,8 @@ namespace SlimDXBindings.Viewer10
                     (filter as MouseTestingFilter).Zapper = zapper;
             }
 
-            mapper = new FakeEventMapper(RenderForm);
-            mapper.FakeThisEvent += new EventHandler<FakeEventArgs>(mapper_FakeThisEvent);
-
 
             disposables.Add(resource);
-            disposables.Add(Effect);
-            disposables.Add(quad);
-            disposables.Add(Layout);
             disposables.Add(textureView);
             disposables.Add(texture);
             disposables.Add(tileFilters);
@@ -293,6 +280,7 @@ namespace SlimDXBindings.Viewer10
             
             context = new ApplicationContext(RenderForm);
 
+            // TODO: make this array match the elements in the new filterchains Input collection
             texArrayForRender[0] = texture;
             texArrayForRender[1] = nesPalTexture;
             texArrayForRender[2] = chrRomTex;
@@ -308,9 +296,15 @@ namespace SlimDXBindings.Viewer10
             Application.Run( context);
         }
 
+        void RenderForm_ResizeEnd(object sender, EventArgs e)
+        {
+            if (tileFilters != null)
+                tileFilters.NotifyScreenSize(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height);
+        }
+
         void tickTimer_Tick(object sender, EventArgs e)
         {
-            if (nes.RunState == NES.Machine.ControlPanel.RunningStatuses.Running)
+            if (!idling)
             {
                 tickTimer.Stop();
                 return;
@@ -329,10 +323,6 @@ namespace SlimDXBindings.Viewer10
         }
 
 
-        void mapper_FakeThisEvent(object sender, FakeEventArgs e)
-        {
-            tileFilters.ProcessEvent(e);
-        }
 
 
         //TODO: move all the mouse stuff into the zapper (or other appropriate handler, like the event faker)
@@ -504,11 +494,7 @@ namespace SlimDXBindings.Viewer10
                 Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
             }
 
-
-
         }
-
-        
 
 
         int biggestBSCount = 0;
@@ -517,20 +503,8 @@ namespace SlimDXBindings.Viewer10
 
         public  void DrawFrame()
         {
-            controlVisibility += controlVisibilityOffset;
-            if (controlVisibility >= 1.0f)
-            {
-                this.mapper.AllowEvents = true;
-                controlVisibility = 1.0f;
-                controlVisibilityOffset = 0;
-            } else if (controlVisibility <= 0)
-            {
-                this.mapper.AllowEvents = false;
-                controlVisibility = 0.0f;
-                controlVisibilityOffset = 0.0f;
-            }
+
             tileFilters.SetVariable("mousePosition", mapper.MousePosition);
-            tileFilters.SetVariable("controlVisibility", controlVisibility);
             tileFilters.SetVariable("timer", timer);
             tileFilters.SetVariable("hue", hue);
             tileFilters.SetVariable("contrast", Contrast);
@@ -554,21 +528,6 @@ namespace SlimDXBindings.Viewer10
 
             tileFilters.Draw(texArrayForRender);
 
-            // render output of filter
-
-            //EffectResourceVariable shaderTexture2 = Effect.GetVariableByName("texture2d").AsResource();
-
-            //if (texView == null) texView = new ShaderResourceView(Device, tileFilters.Result);
-            
-            //    shaderTexture2.SetResource(texView);
-
-            //    quad.SetupDraw();
-            //    for (int pass = 0; pass < Technique.Description.PassCount; ++pass)
-            //    {
-            //        Pass.Apply();
-            //        quad.Draw();
-            //    }
-
             SwapChain.Present(0, DXGI.PresentFlags.None);
         }
 
@@ -585,8 +544,6 @@ namespace SlimDXBindings.Viewer10
 
             Device.ClearState();
             RenderTarget.Dispose();
-            if (Layout != null) Layout.Dispose();
-
             if (Device != null)  Device.Dispose();
             if (SwapChain != null) SwapChain.Dispose();
 

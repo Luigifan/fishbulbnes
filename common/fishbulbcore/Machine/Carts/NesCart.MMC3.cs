@@ -254,6 +254,7 @@ namespace NES.CPU.Machine.Carts
                         _mmc3IrcOn = false;
                         _mmc3IrqVal = _mmc3TmpVal;
                         irqRaised = false;
+                        
                         updateIRQ();
                         
                         break; 

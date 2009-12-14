@@ -9,6 +9,7 @@ using System.Reflection;
 using SlimDXBindings.Viewer10.Helpers;
 using Microsoft.Practices.Unity;
 using InstibulbWpfUI;
+using System.Windows;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -32,10 +33,10 @@ namespace SlimDXBindings.Viewer10.Filter
             this.container = container;
         }
 
-        public IFilterChain Load(Stream stream)
+        public IFilterChain Load(Stream stream, FakeEventMapper mapper)
         {
             FilterChain newChain = new FilterChain();
-
+            newChain.EventMapper = mapper;
             newChain.MyTextureBuddy = new TextureBuddy(device);
             newChain.MyEffectBuddy = new EffectBuddy(device);
 
@@ -50,22 +51,22 @@ namespace SlimDXBindings.Viewer10.Filter
             return newChain;
         }
 
-        public IFilterChain ReadFile(string fileName)
+        public IFilterChain ReadFile(string fileName, FakeEventMapper mapper)
         {
             IFilterChain newChain = null;
             using (FileStream fs = new FileStream(fileName, FileMode.Open))
             {
-                newChain = Load(fs);
+                newChain = Load(fs, mapper);
             }
             return newChain;
         }
 
-        public IFilterChain ReadResource(string resName)
+        public IFilterChain ReadResource(string resName, FakeEventMapper mapper)
         {
             IFilterChain newChain = null;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resName))
             {
-                newChain = Load(s);
+                newChain = Load(s, mapper);
             }
             return newChain;
         }
@@ -165,6 +166,14 @@ namespace SlimDXBindings.Viewer10.Filter
 
                 newChain.Add(newFilter);
             }
+            var list = from item in newChain where item is ISendsMessages select item;
+            if (list != null && list.Count() > 0)
+            {
+                foreach (ISendsMessages s in list)
+                {
+                    s.MessagePoster = newChain.PostMessage;
+                }
+            }
         }
 
         IFilterChainLink BuildVisual(XElement tstripElement, FilterChain chain)
@@ -181,10 +190,34 @@ namespace SlimDXBindings.Viewer10.Filter
             };
 
             EmbeddableUserControl control = container.Resolve<EmbeddableUserControl>(tsInfo.Visual);
-            var tex = chain.MyTextureBuddy.CreateVisualTexture(control, tsInfo.Width, tsInfo.Height);
+            WPFVisualTexture tex = chain.MyTextureBuddy.CreateVisualTexture(control, tsInfo.Width, tsInfo.Height);
 
-            var w = new BasicPostProcessingFilter(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy);
-            w.SetStaticResource("texture2d", tex);
+            var controlList = tstripElement.Element("Elements").Descendants("Element");
+            foreach (var cont in controlList)
+            {
+                string name = cont.Attribute("Name").Value;
+                FrameworkElement elem = container.Resolve<FrameworkElement>(name);
+                tex.SwappableControls.Add(elem);
+            }
+
+            FakeEventThrower thrower = new FakeEventThrower()
+            {
+                DrawArea = new double[4] { 0, 0, 1.0, 240.0/256.0},
+                AllowingEvents = true,
+            };
+
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSECLICK);
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSEDOUBLECLICK);
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSEDOWN);
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSEUP);
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSEENTER);
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSELEAVE);
+            thrower.ThrownTypes.Add(FakedEventTypes.KEYPRESS);
+            
+            //thrower.ThrownTypes.Add(FakedEventTypes.MOUSEMOVE);
+            chain.EventMapper.AddEventThrower(thrower);
+
+            var w = new WpfEmbeddedControl(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, tsInfo.EffectName, tsInfo.Technique, chain.MyEffectBuddy, thrower, tex, "texture2d");
             return w;
         }
 
@@ -218,7 +251,7 @@ namespace SlimDXBindings.Viewer10.Filter
                           };
 
             List<Texture2D> texture = new List<Texture2D>();
-
+            List<string> commands = new List<string>();
             foreach (var k in tsInfo.Items)
             {
                 switch (k.Attribute("Type").Value)
@@ -232,13 +265,24 @@ namespace SlimDXBindings.Viewer10.Filter
                         texture.Add(res.FirstOrDefault());
                         break;
                 }
+                commands.Add(k.Attribute("Command").Value);
             }
+            FakeEventThrower thrower = new FakeEventThrower();
 
-            ToolStrip ts = new ToolStrip(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, chain.MyTextureBuddy, tsInfo.Items.Count());
+            thrower.AllowingEvents = true;
+            thrower.ThrownTypes.Add(FakedEventTypes.MOUSECLICK);
+            thrower.DrawArea[0] = 0.0;
+            thrower.DrawArea[1] = 240.0 / 256.0; // top
+            thrower.DrawArea[2] = 1; // width
+            thrower.DrawArea[3] = 16 / 256.0; // height
 
+            chain.EventMapper.AddEventThrower(thrower);
+            
+            ToolStrip ts = new ToolStrip(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, chain.MyTextureBuddy, tsInfo.Items.Count(), thrower);
             //texture[0] = chain.MyTextureBuddy.FromFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Resources\NT0.png");
             //texture[1] = chain[0].results;// .MyTextureBuddy.FromFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Resources\NT1.png");
             ts.AddTextures(texture.ToArray());
+            ts.Commands = commands;
             return ts;
         }
 

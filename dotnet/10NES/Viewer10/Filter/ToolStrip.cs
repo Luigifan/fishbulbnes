@@ -6,10 +6,11 @@ using SlimDX.Direct3D10;
 using System.Drawing;
 using SlimDX;
 using SlimDXBindings.Viewer10.Helpers;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
-    public class ToolStrip : IFilterChainLink
+    public class ToolStrip : IFilterChainLink, ISendsMessages
     {
 
         XamlModel3DMeshFactory myMesh;
@@ -30,8 +31,17 @@ namespace SlimDXBindings.Viewer10.Filter
         int spriteCount;
         
         Sprite spr;
-        SpriteInstance[] sprites = new SpriteInstance[1];
-        Texture2D[] spriteTex = new Texture2D[1];
+        SpriteInstance[] sprites ;
+        Texture2D[] spriteTex ;
+        List<string> commands = new List<string>();
+
+        public List<string> Commands
+        {
+            get { return commands; }
+            set { commands = value; }
+        }
+        FakeEventThrower thrower ;
+
 
         DepthBuffer dBuffer;
 
@@ -74,14 +84,35 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
+        public event EventHandler<EventArgs> MenuItemClicked;
 
-        public ToolStrip(Device device, string name, int Width, int Height, TextureBuddy textureBuddy, int itemCount)
+        /// <summary>
+        /// returns the sprite hit, -1 if none hit
+        /// </summary>
+        /// <param name="x">x coordinate, range 0..1</param>
+        /// <param name="y">y coordinate, range 0..1</param>
+        /// <returns></returns>
+        public int HitTest(double posX, double posY)
+        {
+            int x = (int)(posX * width);
+            int y = (int)(posY * width);
+            Point mousePoint = new Point(x,y);
+
+            int spriteWidth = width / (sprites.Length );
+            int i =x / spriteWidth;
+            Console.WriteLine("Hittest " + i.ToString());
+
+            return i;
+        }
+
+        public ToolStrip(Device device, string name, int Width, int Height, TextureBuddy textureBuddy, int itemCount, FakeEventThrower thrower)
         {
             this.device = device;
             this.width = Width;
             this.height = Height;
             this.filterName = name;
             this.textureBuddy = textureBuddy;
+            this.thrower = thrower;
             spriteCount = itemCount;
 
             vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
@@ -91,6 +122,7 @@ namespace SlimDXBindings.Viewer10.Filter
         void SetupFilter()
         {
 
+            this.thrower.FakeThisEvent += new EventHandler<FakeEventArgs>(thrower_FakeThisEvent);
             texture = new Texture2D(device, GetTextureDescription());
 
             renderTarget = new RenderTargetView(device, texture);
@@ -269,6 +301,31 @@ namespace SlimDXBindings.Viewer10.Filter
         public IFilterChainLink SetScalar(string variableName, float[] constant)
         {
             return this;
+        }
+
+        #endregion
+
+        int lastItem = -1;
+
+        void thrower_FakeThisEvent(object sender, FakeEventArgs e)
+        {
+            switch (e.EventType)
+            {
+                case FakedEventTypes.MOUSECLICK:
+                    int item = HitTest(e.X, e.Y);
+                    MessagePoster(new MessageForRenderer("controls", string.Format("{0}:{1}", commands[item] ,item)));
+                    break;
+            }
+        }
+
+
+
+        #region ISendsMessages Members
+
+        public MessagePosterDelegate MessagePoster
+        {
+            get;
+            set;
         }
 
         #endregion

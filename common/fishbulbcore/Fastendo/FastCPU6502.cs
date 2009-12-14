@@ -25,6 +25,7 @@ namespace NES.CPU.Fastendo
             SoundBopper = bopper;
             nmiHandler = NMIHandler;
             irqUpdater = IRQUpdater;
+            bopper.NMIHandler = IRQUpdater;
 
             _pixelWhizzler.NMIHandler = nmiHandler;
         }

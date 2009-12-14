@@ -26,6 +26,16 @@ namespace SlimDXBindings.Viewer10.Filter
             set { myEffectBuddy = value; }
         }
 
+        List<MessageForRenderer> PendingMessages = new List<MessageForRenderer>();
+
+        public void PostMessage(MessageForRenderer message)
+        {
+            var target = (from item in this where item.FilterName == message.MessageFor && item is IGetsMessages select item).FirstOrDefault();
+            if (target != null)
+            {
+                ((IGetsMessages)target).RecieveMessage(message);
+            }
+        }
 
         List<string> inputs = new List<string>();
 
@@ -43,10 +53,14 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool isSetup = false;
 
-        public void ProcessEvent(FakeEventArgs ev)
+        FakeEventMapper eventMapper;
+
+        public FakeEventMapper EventMapper
         {
-            myTextureBuddy.ProcessEvent( ev);
+            get { return eventMapper; }
+            set { eventMapper = value; }
         }
+
 
         public void Draw(Texture2D[] input)
         {
@@ -175,5 +189,22 @@ namespace SlimDXBindings.Viewer10.Filter
                 b.SetStaticResource(name, res);
             }
         }
+
+        #region IFilterChain Members
+
+
+        public void NotifyScreenSize(int width, int height)
+        {
+            var target = this.OfType<IAmResizable>();
+            if (target != null && target.Count() > 0)
+            {
+                foreach (var item in target)
+                {
+                    item.Resize(width, height);
+                }
+            }
+        }
+
+        #endregion
     }
 }

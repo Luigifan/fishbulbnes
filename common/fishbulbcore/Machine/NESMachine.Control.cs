@@ -31,6 +31,8 @@ namespace NES.CPU.nitenedo
                 _cart.InitializeCart();
                 _cpu.ResetCPU();
                 ClearGenieCodes();
+                _cpu.PowerOn();
+                RunState = RunningStatuses.Running;
             }
         }
 
@@ -41,7 +43,10 @@ namespace NES.CPU.nitenedo
 
                 _ppu.Initialize();
                 _cart.InitializeCart();
+                _cpu.ResetCPU();
+                ClearGenieCodes();
                 _cpu.PowerOn();
+                RunState = RunningStatuses.Running;
             }
         }
 
@@ -54,21 +59,18 @@ namespace NES.CPU.nitenedo
             }
         }
 
+        private RunningStatuses runState = RunningStatuses.Unloaded;
+
         public RunningStatuses RunState
         {
             get 
-            { 
-                if (_cart == null)
-                {
-                    return RunningStatuses.Unloaded;
-                }
-                // if ispaused return runningstatuses.paused
-                if (keepRunning)
-                {
-                    return RunningStatuses.Running;
-                }
-
-                return RunningStatuses.Off;
+            {
+                return runState;
+            }
+            set
+            {
+                runState = value;
+                if (RunStatusChangedEvent != null) RunStatusChangedEvent(this, EventArgs.Empty);
             }
         }
 
@@ -80,6 +82,7 @@ namespace NES.CPU.nitenedo
             _cart = null;
             _cart = new NESCart();
             _currCartName = null;
+            RunState = RunningStatuses.Unloaded;
             //_ppu.CurrentScanLine = 0;
         }
 

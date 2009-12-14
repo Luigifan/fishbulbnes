@@ -73,6 +73,11 @@ namespace NES.CPU.nitenedo
                 if (keepRunning)
                 {
                     MachineRunningResetEvent.Set();
+                    runState = NES.Machine.ControlPanel.RunningStatuses.Running;
+                }
+                else
+                {
+                    runState = NES.Machine.ControlPanel.RunningStatuses.Off;
                 }
             }
         }
@@ -85,10 +90,16 @@ namespace NES.CPU.nitenedo
                 if (paused != value)
                 {
                     paused = value;
+                    
                 }
                 if (!paused)
                 {
+                    runState = NES.Machine.ControlPanel.RunningStatuses.Running;
                     UnPauseResetEvent.Set();
+                }
+                else
+                {
+                    runState = NES.Machine.ControlPanel.RunningStatuses.Paused;
                 }
 
             }

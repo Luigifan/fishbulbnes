@@ -8,6 +8,9 @@
     <converters:HexValueConverter x:Key="HexValueConverter"/>
     <converters:InputKeyToStringConverter x:Key="InputKeyToStringConverter" />
     <converters:ErrorTextConverter x:Key="ErrorTextConverter"/>
+    <Style TargetType="{x:Type ButtonBase}">
+        <Setter Property="ClickMode" Value="Press" />
+    </Style>
     <Style x:Key="HeaderStyle" TargetType="{x:Type Label}">
         <Setter Property="Background" >
             <Setter.Value>

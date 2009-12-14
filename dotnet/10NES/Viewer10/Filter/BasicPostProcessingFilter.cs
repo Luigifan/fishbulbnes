@@ -16,6 +16,18 @@ namespace SlimDXBindings.Viewer10.Filter
 
         bool feedsNextStage = true;
 
+        internal bool isUpdated = true;
+
+        public virtual void Update()
+        {
+        }
+
+        public virtual void AfterDraw()
+        {
+        }
+
+        internal bool isShown = true;
+
         public bool FeedsNextStage
         {
             get { return feedsNextStage; }
@@ -41,7 +53,7 @@ namespace SlimDXBindings.Viewer10.Filter
         SlimDX.DXGI.SampleDescription sampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
         string shaderName;
         string techniqueName;
-        readonly internal int width, height;
+        internal int width, height;
 
         private List<string> boundScalars = new List<string>();
 
@@ -96,6 +108,17 @@ namespace SlimDXBindings.Viewer10.Filter
             effectPass = technique.GetPassByIndex(0);
 
             quad = new FullscreenQuad(device, effectPass.Description.Signature);
+
+            var p = Effect.GetVariableBySemantic("WORLDVIEWPROJECTION");
+            if (p != null && p.AsMatrix() != null)
+                p.AsMatrix().SetMatrix(Matrix.Identity);
+        }
+
+        public void BuildQuad(Vector4 edgePositions, Vector4 texCoords)
+        {
+            quad.Dispose();
+            quad = new FullscreenQuad(device, effectPass.Description.Signature, edgePositions, texCoords);
+            isUpdated = true;
         }
 
         internal virtual Texture2DDescription GetTextureDescription()
@@ -128,22 +151,35 @@ namespace SlimDXBindings.Viewer10.Filter
             }
         }
 
+        public void UpdateSize(int width, int height)
+        {
+            texture.Dispose();
+            this.width = width;
+            this.height = height;
+            texture = new Texture2D(device, GetTextureDescription());
+        }
+
         public virtual void ProcessEffect()
         {
-            technique = Effect.GetTechniqueByName(techniqueName);
-            effectPass = technique.GetPassByIndex(0);
-            device.Rasterizer.SetViewports(vp);
-            device.OutputMerger.SetTargets(renderTarget);
-
-            device.ClearRenderTargetView(renderTarget, Color.Black);
-
-            quad.SetupDraw();
-            for (int pass = 0; pass < technique.Description.PassCount; ++pass)
+            Update();
+            if (isUpdated)
             {
-                technique.GetPassByIndex(pass).Apply();
-                //effectPass.Apply();
-                quad.Draw();
+                technique = Effect.GetTechniqueByName(techniqueName);
+                effectPass = technique.GetPassByIndex(0);
+                device.Rasterizer.SetViewports(vp);
+                device.OutputMerger.SetTargets(renderTarget);
+
+                device.ClearRenderTargetView(renderTarget, Color.Black);
+
+                quad.SetupDraw();
+                for (int pass = 0; pass < technique.Description.PassCount; ++pass)
+                {
+                    technique.GetPassByIndex(pass).Apply();
+                    //effectPass.Apply();
+                    quad.Draw();
+                }
             }
+            AfterDraw();
 
         }
 

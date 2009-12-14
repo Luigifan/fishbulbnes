@@ -103,16 +103,16 @@ namespace NES.CPU.Machine.BeepsBoops
             set { _enabled = value; }
         }
 
-        private int _amplitude;
+        private int amplitude;
 
         private int _phase = 1;
 
-        private int _gain;
+        private int gain;
 
         public int Gain
         {
-            get { return _gain; }
-            set { _gain = value; }
+            get { return gain; }
+            set { gain = value; }
         }
 
 
@@ -188,10 +188,10 @@ namespace NES.CPU.Machine.BeepsBoops
             }
         }
 
-        private void UpdateAmplitude(int new_amp)
+        private void UpdateAmplitude(int amp)
         {
-            int delta = new_amp * _gain - _amplitude;
-            _amplitude += delta;
+            int delta = amp * gain - amplitude;
+            amplitude += delta;
             _bleeper.blip_add_delta(_time, delta);
         }
 

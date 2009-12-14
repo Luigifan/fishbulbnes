@@ -80,24 +80,5 @@ namespace NES.CPU.PPUClasses
 
         }
 
-        private void UpdateSprites()
-        { 
-            // sprite enable
-            // left col object clipping
-            // active object pattern table
-            // color bits
-            // b/w color
-        }
-
-        private void UpdateTiles()
-        {
-            // color bits
-            // b/w color
-            // background enable
-            // left col bg clipping
-            // scroll regs
-            // x/y nametable 
-            // pattern table
-        }
 	}
 }

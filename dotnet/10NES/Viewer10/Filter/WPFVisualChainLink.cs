@@ -6,279 +6,117 @@ using SlimDX;
 using SlimDX.Direct3D10;
 using System.Drawing;
 using SlimDXBindings.Viewer10.Helpers;
+using InstibulbWpfUI;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
-    public class WPFVisualChainLink : IFilterChainLink
+    public class WpfEmbeddedControl : BasicPostProcessingFilter, IGetsMessages, IAmResizable
     {
-        bool feedsNextStage = true;
+        readonly FakeEventThrower thrower;
+        readonly WPFVisualTexture visTexture;
+        bool isVisible = false;
 
-        public bool FeedsNextStage
+        public WpfEmbeddedControl(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy, FakeEventThrower thrower, WPFVisualTexture visTexture, string resourceName)
+            :base(device, name, Width, Height, shader, technique, effectBuddy)
         {
-            get { return feedsNextStage; }
-            set { feedsNextStage = value; }
+            this.thrower = thrower;
+            this.visTexture = visTexture;
+            this.thrower.FakeThisEvent +=  new EventHandler<FakeEventArgs>(runFakeEvent)  ;
+            this.BindScalar("controlVisibility");
+            this.SetStaticResource(resourceName, visTexture);
         }
 
-        Device device;
-        WPFVisualTexture texture;
-        EffectBuddy effectBuddy;
-        Effect Effect;
-        EffectTechnique technique;
-        EffectPass effectPass;
-        RenderTargetView renderTarget;
-
-        public RenderTargetView RenderTarget
+        void runFakeEvent(object o, FakeEventArgs args)
         {
-            get { return renderTarget; }
-            set { renderTarget = value; }
-        }
-        FullscreenQuad quad;
-        Viewport vp ;
-
-        SlimDX.DXGI.SampleDescription sampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
-        string shaderName;
-        string techniqueName;
-        readonly internal int width, height;
-
-        private List<string> boundScalars = new List<string>();
-
-        public List<string> BoundScalars
-        {
-            get { return boundScalars; }
-            set { boundScalars = value; }
+            if (this.visTexture.EmbeddedControl != null)
+                this.visTexture.EmbeddedControl.HandleEvent(o, args);
         }
 
-        string filterName = "none";
+        #region IGetsMessages Members
 
-        public string FilterName
+        float currentVisibility = 0;
+
+        public void RecieveMessage(MessageForRenderer message)
         {
-            get { return filterName; }
-            set { filterName = value; }
-        }
-
-        Dictionary<string, string> neededResources = new Dictionary<string, string>();
-
-        // key = resourceName (name of  previous filter)
-        // value = map to
-        public Dictionary<string, string> NeededResources
-        {
-            get { return neededResources; }
-            set { neededResources = value; }
-        }
-
-        public WPFVisualChainLink(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy, WPFVisualTexture texture)
-        {
-            this.device = device;
-            this.width = Width;
-            this.height = Height;
-            this.shaderName = shader;
-            this.techniqueName = technique;
-            this.filterName = name;
-            this.effectBuddy = effectBuddy;
-            this.texture = texture;
-                        
-            vp = new Viewport(0, 0, width, height, 0.0f, 1.0f);
-            SetupFilter();
-        }
-
-        void SetupFilter()
-        {
-
-            Effect = effectBuddy.GetEffect(shaderName);
-
-            renderTarget = new RenderTargetView(device, texture);
-
-            technique = Effect.GetTechniqueByName(techniqueName);
-            effectPass = technique.GetPassByIndex(0);
-
-            quad = new FullscreenQuad(device, effectPass.Description.Signature);
-        }
-
-        internal virtual Texture2DDescription GetTextureDescription()
-        {
-            Texture2DDescription desc = new Texture2DDescription();
-            desc.Usage = ResourceUsage.Default;
-            desc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
-            desc.ArraySize = 1;
-            desc.MipLevels = 1;
-            desc.Width = width;
-            desc.Height = height;
-            desc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget;
-            desc.SampleDescription = sampleDescription;
-            return desc;
-        }
-
-        public Texture2D results
-        {
-            get { return texture; }
-        }
-        Dictionary<string, ShaderResourceView> shaderResources = new Dictionary<string, ShaderResourceView>();
-        public void SetShaderResource(string variableName, Resource resource)
-        {
-            if (!shaderResources.ContainsKey(variableName) && resource != null)
+            string[] msgParts = message.Message.Split(new char[] {':'} );
+            switch (msgParts[0])
             {
-                EffectResourceVariable variable = Effect.GetVariableByName(variableName).AsResource();
-                var shaderRes = new ShaderResourceView(device, resource);
-                shaderResources.Add(variableName, shaderRes);
-                variable.SetResource(shaderRes);
+                case "Show":
+                    if (msgParts.Length > 1)
+                    {
+                        int control = int.Parse(msgParts[1]);
+                        visTexture.SwapControl(control);
+                    }
+                    this.thrower.AllowingEvents = isShown = true;
+                    break;
+                case "Hide":
+                    this.thrower.AllowingEvents = isShown = false;
+                    break;
+
             }
+            isUpdated = true;
         }
-
-        public virtual void ProcessEffect()
+        
+        public override void Update()
         {
-            technique = Effect.GetTechniqueByName(techniqueName);
-            effectPass = technique.GetPassByIndex(0);
-            device.Rasterizer.SetViewports(vp);
-            device.OutputMerger.SetTargets(renderTarget);
-            device.ClearRenderTargetView(renderTarget, Color.Black);
 
-            if (texture.IsDirty)
+            if (visTexture.IsDirty && currentVisibility > 0)
             {
-                texture.UpdateVisual();
+                visTexture.UpdateVisual();
+                isUpdated = true;
             }
 
-            quad.SetupDraw();
-            for (int pass = 0; pass < technique.Description.PassCount; ++pass)
+            if (isShown && currentVisibility < 1)
             {
-                technique.GetPassByIndex(pass).Apply();
-                //effectPass.Apply();
-                quad.Draw();
+                currentVisibility += 0.05f;
+                isUpdated = true;
+                this.SetScalar("controlVisibility", currentVisibility);
             }
-
+            if (!isShown && currentVisibility > 0)
+            {
+                currentVisibility -= 0.05f;
+                isUpdated = true;
+                this.SetScalar("controlVisibility", currentVisibility);
+            }
+            //Console.WriteLine(string.Format("WpfVisualChainLink is updated: {0}", isUpdated));
         }
 
-
-        public IFilterChainLink SetScalar(string variableName, float constant) 
+        public override void AfterDraw()
         {
-            if (boundScalars.Contains(variableName))
+            if ((isShown && currentVisibility >= 1) || (!isShown && currentVisibility < 0))
             {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
-        }
-
-        public IFilterChainLink SetScalar(string variableName, int[] constant)
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
-        }
-
-        public IFilterChainLink SetScalar<T>(string variableName, T constant) 
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                if (typeof(T) == typeof(bool))
-                    variable.Set((constant as bool?).GetValueOrDefault(false));
-                if (typeof(T) == typeof(float))
-                    variable.Set((constant as float?).Value);
-                if (typeof(T) == typeof(int[]))
-                    variable.Set((constant as int[]));
-                
-            }
-            return this;
-        }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-
-            texture.Dispose();
-            Effect.Dispose();
-            renderTarget.Dispose();
-            quad.Dispose();
-
-            foreach (var shaderRes in shaderResources.Values)
-            {
-                shaderRes.Dispose();
+                isUpdated = false;
             }
         }
 
         #endregion
 
-        public IFilterChainLink DontFeedNextStage()
+        #region IAmResizable Members
+
+        public int Width
         {
-            this.feedsNextStage = false;
-            return this;
+            get;
+            set;
         }
 
-        public IFilterChainLink ClearNeededResources()
+        public int Height
         {
-            this.neededResources.Clear();
-            return this;
+            get;
+            set;
         }
 
-        public IFilterChainLink AddNeededResource(string name, string bindsTo)
+        public void Resize(int width, int height)
         {
-            this.neededResources.Add(name, bindsTo);
-            return this;
-        }
-
-        public IFilterChainLink BindScalar(string name)
-        {
-            boundScalars.Add(name);
-            return this;
-        }
-
-        public IFilterChainLink SetStaticResource(string name, Resource res)
-        {
-
-            if (!shaderResources.ContainsKey(name))
-            {
-                EffectResourceVariable variable = Effect.GetVariableByName(name).AsResource();
-                if (variable != null)
-                {
-                    var shaderRes = new ShaderResourceView(device, res);
-                    shaderResources.Add(name, shaderRes);
-                    variable.SetResource(shaderRes);
-                }
-            }
-           
-            return this;
-        }
-
-        public IFilterChainLink SetMatrix(string variableName, Matrix matrix)
-        {
-            EffectMatrixVariable varible = Effect.GetVariableByName(variableName).AsMatrix();
-            varible.SetMatrix(matrix);
-            return this;
-        }
-
-        public IFilterChainLink SetViewport(Viewport viewport)
-        {
-            this.vp = viewport;
-            return this;
-        }
+            visTexture.Width = width;
+            visTexture.Height = height;
+            visTexture.MakeDirty();
 
 
-        #region IFilterChainLink Members
-
-
-        public void RenderToTexture(Texture2D texture)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-
-        #region IFilterChainLink Members
-
-
-        public IFilterChainLink SetScalar(string variableName, float[] constant)
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
+            base.UpdateSize(width, height);
+            // make a new quad, with new texture coords
+            base.BuildQuad(new Vector4(-1,1,1,-1), new Vector4(0,0,(float)width/2048.0f,(float)height/2048f));
+            //base.BuildQuad(edgePositions, Vector4 texCoords);
+            
         }
 
         #endregion

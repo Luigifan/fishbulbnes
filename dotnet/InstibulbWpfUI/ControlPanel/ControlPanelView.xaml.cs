@@ -18,7 +18,7 @@ namespace InstibulbWpfUI
     /// <summary>
     /// Interaction logic for ControlPanelView.xaml
     /// </summary>
-    public partial class ControlPanelView : EmbeddableUserControl
+    public partial class ControlPanelView 
     {
 
 

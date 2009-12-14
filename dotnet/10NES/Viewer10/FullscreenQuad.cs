@@ -24,20 +24,20 @@ namespace SlimDXBindings.Viewer10
         public FullscreenQuad(Device device, ShaderSignature sig)
         {
             this.device = device;
-            CreateQuad(sig, new Vector4(-1,1,1,-1) );
+            CreateQuad(sig, new Vector4(-1,1,1,-1),  new Vector4(0, 0, 1, 1) );
         }
 
 
-        public FullscreenQuad(Device device, ShaderSignature sig, float left, float top, float right, float bottom)
+        public FullscreenQuad(Device device, ShaderSignature sig, Vector4 vertexesEdges, Vector4 texCoords)
         {
             this.device = device;
-            CreateQuad(sig, new Vector4(left, top, right, bottom));
+            CreateQuad(sig, vertexesEdges, texCoords);
         }
 
 
         // coords contains x=left, y=top, z=right, w=bottom
 
-        void CreateQuad(ShaderSignature sig, Vector4 coords)
+        void CreateQuad(ShaderSignature sig, Vector4 coords, Vector4 texCoords)
         {
 
             InputElement[] inputElements = new SlimDX.Direct3D10.InputElement[]
@@ -54,19 +54,20 @@ namespace SlimDXBindings.Viewer10
 
             stream.Write(new Vector4(coords.X, coords.W, 1.0f, 1.0f));
             stream.Write(backgroundColor);
-            stream.Write(new Vector2(0.0f, 1.0f));
+            // tex coords are left, top
+            stream.Write(new Vector2(texCoords.X, texCoords.W));
 
             stream.Write(new Vector4(coords.X, coords.Y, 1.0f, 1.0f));
             stream.Write(backgroundColor);
-            stream.Write(new Vector2(0.0f, 0.0f));
+            stream.Write(new Vector2(texCoords.X, texCoords.Y));
 
             stream.Write(new Vector4(coords.Z, coords.W, 1.0f, 1.0f));
             stream.Write(backgroundColor);
-            stream.Write(new Vector2(1.0f, 1.0f));
+            stream.Write(new Vector2(texCoords.Z, texCoords.W));
 
             stream.Write(new Vector4(coords.Z, coords.Y, 1.0f, 1.0f));
             stream.Write(backgroundColor);
-            stream.Write(new Vector2(1.0f, 0.0f));
+            stream.Write(new Vector2(texCoords.Z, texCoords.Y));
 
             stream.Position = 0;
 

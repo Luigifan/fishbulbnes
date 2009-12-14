@@ -81,6 +81,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -90,6 +91,9 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationClient">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="UIAutomationProvider">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -104,14 +108,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlPanel\ButtonsAndBoxes.xaml.cs">
-      <DependentUpon>ButtonsAndBoxes.xaml</DependentUpon>
+    <Compile Include="ControlPanel\CartInfoPanel.xaml.cs">
+      <DependentUpon>CartInfoPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanel\CheatControl.xaml.cs">
+      <DependentUpon>CheatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanel\ControlPanelHolder.xaml.cs">
+      <DependentUpon>ControlPanelHolder.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlPanel\ControlPanelView.xaml.cs">
       <DependentUpon>ControlPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlPanel\D3D10ControlPanel.xaml.cs">
       <DependentUpon>D3D10ControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanel\MachineStatus.xaml.cs">
+      <DependentUpon>MachineStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ControlPanel\SoundPanelView.xaml.cs">
+      <DependentUpon>SoundPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\CommandDictionaryConverter.cs" />
     <Compile Include="Converters\ContainerResolverConverter.cs" />
@@ -137,6 +153,10 @@
     </Compile>
     <Compile Include="RedrawEventArgs.cs" />
     <Compile Include="TypeRegisterer.cs" />
+    <Compile Include="WinViewModels\DisplayNameTablesCommand.cs" />
+    <Compile Include="WinViewModels\DisplayTilesCommand.cs" />
+    <Compile Include="WinViewModels\WinCheatPanelVM.cs" />
+    <Compile Include="WinViewModels\WinDebuggerVM.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -148,7 +168,15 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ControlPanel\ButtonsAndBoxes.xaml">
+    <Page Include="ControlPanel\CartInfoPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanel\CheatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanel\ControlPanelHolder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -164,11 +192,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControlPanel\MachineStatus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanel\SoundPanelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\fishbulbcommonui\fishbulbcommonui.VStudio.csproj">
       <Project>{8A57420A-FBF0-4CCA-ADEC-384F65AAEF7C}</Project>
       <Name>fishbulbcommonui.VStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\common\fishbulbcore\CPU6502.VStudio.csproj">
+      <Project>{797342A9-BA71-426D-B02C-55608AFACEA9}</Project>
+      <Name>CPU6502.VStudio</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
