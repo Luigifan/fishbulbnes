@@ -293,13 +293,17 @@ namespace SlimDXBindings.Viewer10
             tickTimer.Tick += new EventHandler(tickTimer_Tick);
             tickTimer.Start();
 
-            Application.Run( context);
+            Application.Run(context);
         }
 
         void RenderForm_ResizeEnd(object sender, EventArgs e)
         {
+
             if (tileFilters != null)
-                tileFilters.NotifyScreenSize(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height);
+            {
+                int height = (int)(RenderForm.ClientSize.Height * (240.0 / 256.0));
+                tileFilters.NotifyScreenSize(RenderForm.ClientSize.Width / 2, height /2);
+            }
         }
 
         void tickTimer_Tick(object sender, EventArgs e)
