@@ -1,0 +1,9 @@
+﻿<emb:EmbeddableUserControl 
+    x:Class="InstibulbWpfUI.ControlPanelHolder"
+    xmlns:emb="clr-namespace:InstibulbWpfUI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    
+    >
+    <emb:ControlPanelView></emb:ControlPanelView>
+</emb:EmbeddableUserControl>
