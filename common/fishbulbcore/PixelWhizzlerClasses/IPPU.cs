@@ -25,7 +25,6 @@ namespace NES.CPU.PixelWhizzlerClasses
         event EventHandler HBlank;
         int HScroll { get; }
         void Initialize();
-        void InitSprites();
         bool IRQAsserted { get; set; }
         bool IsDebugging { get; set; }
         bool IsRendering { get; }
