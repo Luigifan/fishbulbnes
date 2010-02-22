@@ -11,20 +11,13 @@ using NES.CPU.CPUDebugging;
 using NES.CPU.FastendoDebugging;
 using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.PPUClasses;
+using fishbulbcommonui;
 
 namespace Fishbulb.Common.UI
 {
 
-    public class DebuggerVM : IViewModel
+    public class DebuggerVM : BaseNESViewModel
     {
-        private NESMachine _nes = null;
-
-
-        public NESMachine DebugTarget
-        {
-            get { return _nes; }
-
-        }
 
         void _nes_BreakpointHit(object sender, BreakEventArgs e)
         {
@@ -46,10 +39,10 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                if (_nes == null || _nes.DebugInfo == null)
+                if (TargetMachine == null || TargetMachine.DebugInfo == null)
                     return null;
                 //return new DebugInformation { CPU = new DebuggerCPUState(), PPU = new DebuggerPPUState() };
-                return _nes.DebugInfo;
+                return TargetMachine.DebugInfo;
             }
         }
 
@@ -59,13 +52,12 @@ namespace Fishbulb.Common.UI
         }
 
 
-        public DebuggerVM(NESMachine nes)
+        public DebuggerVM()
         {
-            _nes = nes;
-            commands.Add ("Step", new InstigatorCommand( 
+            Commands.Add ("Step", new InstigatorCommand( 
                 (o) => Step(), 
                 (o) => true ));
-            commands.Add("StepFrame", new InstigatorCommand(
+            Commands.Add("StepFrame", new InstigatorCommand(
                 (o) => StepFrame(),
                 (o) => true));
         }
@@ -74,8 +66,8 @@ namespace Fishbulb.Common.UI
         public void UpdateDebugInfo()
         {
 
-            if (_nes == null) return;
-            if (_nes.DebugInfo == null) return;
+            if (TargetMachine == null) return;
+            if (TargetMachine.DebugInfo == null) return;
 
             NotifyPropertyChanged("DebuggerInformation");
             NotifyPropertyChanged("FrameWriteEvents");
@@ -83,33 +75,22 @@ namespace Fishbulb.Common.UI
 
         public void Step()
         {
-            if (_nes == null) return;
-			_nes.IsDebugging=true;
-            _nes.ThreadStep();
+            if (TargetMachine == null) return;
+            TargetMachine.IsDebugging = true;
+            TargetMachine.ThreadStep();
 
             UpdateDebugInfo();
         }
 
         public void StepFrame()
         {
-            if (_nes == null) return;
-			_nes.IsDebugging=true;
-            _nes.ThreadFrame();
+            if (TargetMachine == null) return;
+            TargetMachine.IsDebugging = true;
+            TargetMachine.ThreadFrame();
 
             UpdateDebugInfo();
         }
 
-        #region INotifyPropertyChanged Members
-
-        public void NotifyPropertyChanged(string PropertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
 
         private List<string> _breakpoints = null;
 
@@ -123,18 +104,18 @@ namespace Fishbulb.Common.UI
 
         public void AddBreakpoint(int address)
         {
-            if (_nes != null)
+            if (TargetMachine != null)
             {
                 CPUBreakpoint newCPUBreakpoint = new CPUBreakpoint() { Address = address };
 
-                _nes.BreakPoints.Add(newCPUBreakpoint);
+                TargetMachine.BreakPoints.Add(newCPUBreakpoint);
                 _breakpoints.Add(string.Format("{0:x4}", newCPUBreakpoint.Address));
                 NotifyPropertyChanged("Breakpoints");
             }
         }
 
 
-        public string CurrentView
+        public override string CurrentView
         {
             get
             {
@@ -142,25 +123,8 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        Dictionary<string, ICommandWrapper> commands = new Dictionary<string,ICommandWrapper>();
 
-        public Dictionary<string, ICommandWrapper> Commands
-        {
-            get
-            {
-                return commands;
-            }
-        }
-
-        public IEnumerable<IViewModel> ChildViewModels
-        {
-            get
-            {
-                return new List<IViewModel>();
-            }
-        }
-
-        public string CurrentRegion
+        public override string CurrentRegion
         {
             get
             {
@@ -168,7 +132,7 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        public string Header
+        public override string Header
         {
             get
             {
@@ -177,22 +141,15 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        public object DataModel
-        {
-            get
-            {
-                return null;
-            }
-        }
 
 
         public List<PPUWriteEvent> FrameWriteEvents
         {
             get
             {
-                if (_nes == null || _nes.DebugInfo == null || _nes.DebugInfo.PPU == null) return new List<PPUWriteEvent>();
+                if (TargetMachine == null || TargetMachine.DebugInfo == null || TargetMachine.DebugInfo.PPU == null) return new List<PPUWriteEvent>();
 
-                return _nes.DebugInfo.PPU.FrameWriteEvents;
+                return TargetMachine.DebugInfo.PPU.FrameWriteEvents;
             }
         }
     }

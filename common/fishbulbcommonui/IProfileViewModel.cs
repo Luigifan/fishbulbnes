@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using NES.CPU.nitenedo;
 
 namespace Fishbulb.Common.UI
 {
-	public interface ICommandWrapper
+	public interface ICommandWrapper 
 	{
 		void Execute(object param);
 		bool CanExecute(object param);
@@ -43,9 +44,10 @@ namespace Fishbulb.Common.UI
             get;
         }
 
-        object DataModel
+        NESMachine TargetMachine
         {
-            get; 
+            get;
+            set;
         }
     }
 }

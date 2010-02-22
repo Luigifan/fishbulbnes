@@ -1,12 +1,10 @@
 ﻿<UserControl x:Class="InstiBulb.ThreeDee.ThreeDeeControls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:threeDeeHelpers="clr-namespace:InstiBulb.ThreeDee"
-                     xmlns:views="clr-namespace:InstiBulb"
-        xmlns:integration="clr-namespace:InstiBulb.Integration"
-        xmlns:wpfView ="clr-namespace:WpfNESViewer"
-        DataContext="{DynamicResource Container}"
-
+    xmlns:threeDeeHelpers="clr-namespace:InstiBulb.ThreeDee"
+    xmlns:views="clr-namespace:InstiBulb"
+    xmlns:integration="clr-namespace:InstiBulb.Integration"
+    DataContext="{DynamicResource Container}"
     >
     <UserControl.Resources>
         <ResourceDictionary>

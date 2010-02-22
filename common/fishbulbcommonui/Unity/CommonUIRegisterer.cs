@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Practices.Unity;
 using Fishbulb.Common.UI;
-using GtkNes;
+using fishbulbcommonui.SaveStates;
+using NES.CPU.nitenedo;
 
 namespace fishbulbcommonui.Unity
 {
@@ -12,11 +13,16 @@ namespace fishbulbcommonui.Unity
     {
         public static IUnityContainer RegisterCommonUITypes(this IUnityContainer container)
         {
-            container.RegisterType<ControlPanelVM>();
-            container.RegisterType<SoundViewModel>();
-            container.RegisterType<IViewModel, SoundViewModel>("SoundVM", new ContainerControlledLifetimeManager());
-            container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager());
+            //container.RegisterType<IViewModel, SoundViewModel>("SoundVM", new ContainerControlledLifetimeManager(),
+            //    new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+            container.RegisterType<IViewModel, SoundViewModel>("SoundPanel", new ContainerControlledLifetimeManager(),
+                new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
 
+            container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+            //container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+            //container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+            container.RegisterType<IViewModel, SaveStateVM>("SaveStateVM", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+            
             return container;
         }
     }

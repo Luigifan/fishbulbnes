@@ -5,21 +5,19 @@ using System.Collections.Generic;
 using NES.CPU.Machine.FastendoDebugging;
 using Fishbulb.Common.UI;
 using NES.CPU.FastendoDebugging;
-namespace GtkNes
+
+namespace fishbulbcommonui
 {
 	
 	/// <summary>
 	/// Encapsulates the future instruction rollout
 	/// </summary>
-	public class FutureInstructions : IViewModel
+    public class FutureInstructions : BaseNESViewModel
 	{
 
-		NESMachine machine;
-		public FutureInstructions(NESMachine machine)
-		{
-			this.machine = machine;
-			this.machine.DebugInfoChanged += HandleDebugInfoChanged;
-			
+        protected override void OnAttachTarget()
+        {
+			TargetMachine.DebugInfoChanged += HandleDebugInfoChanged;
 		}
 
 		void HandleDebugInfoChanged(object sender, BreakEventArgs e)
@@ -27,51 +25,36 @@ namespace GtkNes
 			Console.WriteLine("FutureInstructions.HandleDebugInfoChanged " );
 			NotifyPropertyChanged("DataModel");	
 		}
-		
-		#region IProfileViewModel implementation
-		public string CurrentView {
+
+        public override string CurrentView
+        {
 			get {
 			 	return "AsmViewer";
 			}
 		}
-		
-		Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>();
-		
-		public Dictionary<string, ICommandWrapper> Commands {
-			get {
-				return commands;
-			}
-		}
-		
-		
-		public System.Collections.Generic.IEnumerable<IViewModel> ChildViewModels {
-			get {
-				return new List<IViewModel>();
-			}
-		}
-		
-		public string CurrentRegion {
+
+        public override string CurrentRegion
+        {
 			get {
 			 return "debugger.0";
 			}
 		}
 		
-		public string Header {
+		public override string Header {
 			get {
 				return "Future Instructions";
 			}
 		}
 		
-		public object DataModel {
+		public List<string> DataModel {
 			get {
-				if (machine != null && machine.DebugInfo != null)
-					return (from op in machine.DebugInfo.FutureOps select op.ToString()).ToList<string>();
+                if (TargetMachine != null && TargetMachine.DebugInfo != null)
+                    return (from op in TargetMachine.DebugInfo.FutureOps select op.ToString()).ToList<string>();
 				else
 					return new List<string>();
 			}
 		}
 
-		#endregion
 
 		#region INotifyPropertyChanged implementation
 		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;

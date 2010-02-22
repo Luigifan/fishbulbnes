@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Windows.Input;
+using System.ComponentModel;
 
 namespace InstiBulb.ThreeDee
 {
@@ -34,7 +36,7 @@ namespace InstiBulb.ThreeDee
         }
     }
 
-    public class Icon3D : UIElement3D 
+    public class Icon3D : UIElement3D, IMenuIconItem, ICommandSource
     {
 
         public static DependencyProperty IsActivatableProperty =
@@ -267,19 +269,12 @@ namespace InstiBulb.ThreeDee
             // Rebuild();
         }
 
-        public event EventHandler<IconPressedEventArgs> IconPressedEvent;
-        Type type;
-        public Icon3D(Type t)
-            : base()
-        {
-            type = t;
-
-        }
-
         protected override void OnMouseDown(System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (IconPressedEvent != null && IsActivatable)
-                IconPressedEvent(this, new IconPressedEventArgs(type, null));
+            if (Command != null && Command.CanExecute(CommandParameter))
+            {
+                Command.Execute(CommandParameter);
+            }
             
             base.OnMouseDown(e);
         }
@@ -364,7 +359,33 @@ namespace InstiBulb.ThreeDee
 
             base.Visual3DModel = _models; 
         }
-        
 
+
+
+        [Localizability(LocalizationCategory.NeverLocalize)]
+        [Bindable(true)]
+        [Category("Action")]
+        public ICommand Command { get; set; }
+        //
+        // Summary:
+        //     Gets or sets the parameter to pass to the System.Windows.Controls.Primitives.ButtonBase.Command
+        //     property.
+        //
+        // Returns:
+        //     Parameter to pass to the System.Windows.Controls.Primitives.ButtonBase.Command
+        //     property.
+        [Bindable(true)]
+        [Localizability(LocalizationCategory.NeverLocalize)]
+        [Category("Action")]
+        public object CommandParameter { get; set; }
+        //
+        // Summary:
+        //     Gets or sets the element on which to raise the specified command.
+        //
+        // Returns:
+        //     Element on which to raise a command.
+        [Bindable(true)]
+        [Category("Action")]
+        public IInputElement CommandTarget { get; set; }
     }
 }

@@ -23,8 +23,8 @@
             <RowDefinition Height="10*" />
             
         </Grid.RowDefinitions>
+        
         <threeD:ThreeDeeControls Grid.RowSpan="2" x:Name="ControlBoxer" Visibility="Visible" Background="Transparent"/>
-
 
     </Grid>
     

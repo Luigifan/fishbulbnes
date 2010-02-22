@@ -3,57 +3,47 @@ using Fishbulb.Common.UI;
 using NES.Machine;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.BeepsBoops;
-using GtkNes;
 using NES.Sound;
 using System.Collections.Generic;
 
-namespace GtkNes
+namespace fishbulbcommonui
 {
 
 
-    public class SoundViewModel : IViewModel
+    public class SoundViewModel : BaseNESViewModel
     {
-        NESMachine nes;
-        IWavStreamer streamer;
-        public SoundViewModel(NESMachine nes, IWavStreamer streamer)
-        {
-            this.nes = nes;
-            this.streamer = streamer;
 
+        IWavStreamer streamer;
+        Bopper SoundBopper;
+
+        protected override void OnAttachTarget()
+        {
+            SoundBopper = TargetMachine.SoundBopper;
+        }
+
+        public IWavStreamer Streamer
+        {
+            get { return streamer; }
+            set { streamer = value; }
         }
 
 
-
         string currentView = "SoundView";
-        public string CurrentView
+        public override string CurrentView
         {
             get { return currentView; }
         }
 
-        public Dictionary<string, ICommandWrapper> Commands
-        {
-            get { return new System.Collections.Generic.Dictionary<string, ICommandWrapper>(); }
-        }
-
-        public IEnumerable<IViewModel> ChildViewModels
-        {
-            get { return new List<IViewModel>(); }
-        }
-
-        public string CurrentRegion
+        public override string CurrentRegion
         {
             get { return "controlPanel.0"; }
         }
 
-        public string Header
+        public override string Header
         {
             get { return "Sound Controls"; }
         }
 
-        public object DataModel
-        {
-            get { return null; }
-        }
 
         private int volume;
         /// <summary>
@@ -65,6 +55,7 @@ namespace GtkNes
             set
             {
                 streamer.Volume = value ;
+                NotifyPropertyChanged("Volume");
             }
         }
 
@@ -86,41 +77,30 @@ namespace GtkNes
 
         public bool EnableSquareChannel0
         {
-            get { return nes.SoundBopper.EnableSquare0; }
+            get { return SoundBopper.EnableSquare0; }
             set
             {
-                nes.SoundBopper.EnableSquare0 = value;
+                SoundBopper.EnableSquare0 = value;
             }
         }
 
         public bool EnableSquareChannel1
         {
-            get { return nes.SoundBopper.EnableSquare1; }
-            set { nes.SoundBopper.EnableSquare1 = value; }
+            get { return SoundBopper.EnableSquare1; }
+            set { SoundBopper.EnableSquare1 = value; }
         }
 
         public bool EnableTriangleChannel
         {
-            get { return nes.SoundBopper.EnableTriangle; }
-            set { nes.SoundBopper.EnableTriangle = value; }
+            get { return SoundBopper.EnableTriangle; }
+            set { SoundBopper.EnableTriangle = value; }
         }
 
         public bool EnableNoiseChannel
         {
-            get { return nes.SoundBopper.EnableNoise; }
-            set { nes.SoundBopper.EnableNoise = value; }
+            get { return SoundBopper.EnableNoise; }
+            set { SoundBopper.EnableNoise = value; }
         }
 
-        #region INotifyPropertyChanged Members
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string PropertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(PropertyName));
-        }
-
-        #endregion
     }
 }

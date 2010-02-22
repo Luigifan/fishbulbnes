@@ -21,6 +21,7 @@ using System.IO;
 using InstiBulb;
 using InstiBulb.Integration;
 using System.Windows.Controls.Primitives;
+using InstibulbWpfUI;
 
 namespace InstiBulb.ThreeDee
 {
@@ -117,8 +118,7 @@ namespace InstiBulb.ThreeDee
         
         public Icon3D MakeIcon<T>(Model3DGroup model, EventHandler<IconPressedEventArgs> handler, string billboardText, double radius) where T : Visual
         {
-            Icon3D icon = new Icon3D(typeof(T));
-            icon.IconPressedEvent += handler;
+            Icon3D icon = new Icon3D();
             
             TextBlock l = new TextBlock();
             l.Text = billboardText;
@@ -144,10 +144,10 @@ namespace InstiBulb.ThreeDee
 
 
 
-        UIElement popup;
+        FrameworkElement popup;
         void icon_IconPressedEvent(object sender, IconPressedEventArgs e)
         {
-            popup = (UIElement)container.Resolve(e.DisplayTypeRequested);
+            popup = (FrameworkElement)container.Resolve(e.DisplayTypeRequested);
             popup.SetValue(Grid.RowSpanProperty, 2);
             PopupPropertiesGrid.Child = popup;
             PopupPropertiesGrid.Visibility = Visibility.Visible;

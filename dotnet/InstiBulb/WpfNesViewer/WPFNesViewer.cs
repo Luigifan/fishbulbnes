@@ -23,7 +23,18 @@ namespace WpfNESViewer
     [NESDisplayPluginAttribute]
     public class WPFNesViewer : Canvas, IDisplayContext
     {
-        readonly NESMachine nes;
+        public WPFNesViewer()
+        {
+        }
+
+        void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            UpdateNESScreen();
+        }
+
+        
+
+        private NESMachine nes;
         public WPFNesViewer(NESMachine nes)
         {
             this.nes = nes;
@@ -55,19 +66,9 @@ namespace WpfNESViewer
             bitmap = new WriteableBitmap(256, 256, 96, 96, PixelFormats.Pbgra32,null);
 
             nesPalette = new WriteableBitmap(32, 1, 96, 96, PixelFormats.Pbgra32, null);
-            // this.Background = new ImageBrush(bitmap);
-            //this.Width = 256;
-            //this.Height = 256;
-
-            //this.SetValue(Canvas.EffectProperty, rasterize);
             bmpBrush = new ImageBrush(bitmap);
             this.Background = bmpBrush;
-            
-            //rasterize.SetValue(RasterizeEffect.InputProperty, this.Background);
-            //rasterize.SetValue(RasterizeEffect.PaletteProperty, new ImageBrush(palette));
-            //rasterize.SetValue(RasterizeEffect.NESPaletteProperty, new ImageBrush( nesPalette));
 
-            //this.SnapsToDevicePixels = true;
         }
 
         public void TearDownDisplay()
@@ -79,9 +80,8 @@ namespace WpfNESViewer
         byte[] pixArray = new byte[256 * 240];
         public void UpdateNESScreen(int[] pixels)
         {
-            
             bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), pixels, stride, 0, 0);
-           //  nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
+            ////  nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
             if (isDefault)
             {
                 this.Background = new ImageBrush(bitmap);
@@ -150,9 +150,27 @@ namespace WpfNESViewer
 
         public void UpdateNESScreen()
         {
-            
+            bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), nes.PPU.VideoBuffer, stride, 0, 0);
+            //  nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
+            if (isDefault)
+            {
+                this.Background = new ImageBrush(bitmap);
+                isDefault = false;
+            }
         }
 
         #endregion
+
+        public NESMachine AttachedMachine
+        {
+            get
+            {
+                return nes;
+            }
+            set
+            {
+                nes = value;
+            }
+        }
     }
 }

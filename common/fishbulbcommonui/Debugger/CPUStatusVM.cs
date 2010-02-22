@@ -5,19 +5,19 @@ using System.Collections.Generic;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.FastendoDebugging;
+using fishbulbcommonui;
 
 namespace Fishbulb.Common.UI
 {
-	
-	
-	public class CPUStatusVM : IViewModel
+
+
+    public class CPUStatusVM : BaseNESViewModel
 	{
 
-		NESMachine machine;
-		public CPUStatusVM(NESMachine machine)
+		protected override void  OnAttachTarget()
 		{
-			this.machine = machine;
-			machine.DebugInfoChanged += HandleDebugInfoChanged;
+
+			TargetMachine.DebugInfoChanged += HandleDebugInfoChanged;
 		}
 
 		void HandleDebugInfoChanged(object sender, BreakEventArgs e)
@@ -30,56 +30,45 @@ namespace Fishbulb.Common.UI
 		
 		private void UpdateDebugInfo()
 		{
-			if (machine.DebugInfo != null && machine.DebugInfo.CPU != null)
+            if (TargetMachine.DebugInfo != null && TargetMachine.DebugInfo.CPU != null)
 			{
-				debugInfo[0]=  string.Format( "Accumulator: {0}" , machine.DebugInfo.CPU.Accumulator);
-				debugInfo[1]=  string.Format( "IndX: {0}" , machine.DebugInfo.CPU.IndexRegisterX);
-				debugInfo[2]=  string.Format( "IndY: {0}" , machine.DebugInfo.CPU.IndexRegisterY);
-				debugInfo[3]=  string.Format( "PC: {0}" , machine.DebugInfo.CPU.ProgramCounter);
-				debugInfo[4]=  string.Format( "SR: {0}" , machine.DebugInfo.CPU.StatusRegister);
-				debugInfo[5]=  string.Format( "SP: {0}" , machine.DebugInfo.CPU.StackPointer);
-				debugInfo[6]=  string.Format( "Current Op: {0}" , machine.DebugInfo.CPU.CurrentInstruction.Disassemble());
-				debugInfo[7]=  string.Format( "Last Address: {0}" , machine.DebugInfo.CPU.CurrentInstruction.Address);
-				debugInfo[8]=  string.Format( "Last Op: {0}" , machine.DebugInfo.CPU.LastInstruction);
+                debugInfo[0] = string.Format("Accumulator: {0}", TargetMachine.DebugInfo.CPU.Accumulator);
+                debugInfo[1] = string.Format("IndX: {0}", TargetMachine.DebugInfo.CPU.IndexRegisterX);
+                debugInfo[2] = string.Format("IndY: {0}", TargetMachine.DebugInfo.CPU.IndexRegisterY);
+                debugInfo[3] = string.Format("PC: {0}", TargetMachine.DebugInfo.CPU.ProgramCounter);
+                debugInfo[4] = string.Format("SR: {0}", TargetMachine.DebugInfo.CPU.StatusRegister);
+                debugInfo[5] = string.Format("SP: {0}", TargetMachine.DebugInfo.CPU.StackPointer);
+                debugInfo[6] = string.Format("Current Op: {0}", TargetMachine.DebugInfo.CPU.CurrentInstruction.Disassemble());
+                debugInfo[7] = string.Format("Last Address: {0}", TargetMachine.DebugInfo.CPU.CurrentInstruction.Address);
+                debugInfo[8] = string.Format("Last Op: {0}", TargetMachine.DebugInfo.CPU.LastInstruction);
 				
 				
 			}
 		}
 		
 		#region IViewModel implementation
-		public string CurrentView {
+		public override string CurrentView {
 			get {
 				return "CPUStatus";
 			}
 		}
-		
-		Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>();
-		
-		public System.Collections.Generic.Dictionary<string, ICommandWrapper> Commands {
-			get {
-				return commands;
-			}
-		}
-		
-		public System.Collections.Generic.IEnumerable<IViewModel> ChildViewModels {
-			get {
-				return new List<IViewModel>();
-			}
-		}
-		
-		public string CurrentRegion {
+
+
+        public override string CurrentRegion
+        {
 			get {
 				return "debugger.0";
 			}
 		}
-		
-		public string Header {
+
+        public override string Header
+        {
 			get {
 				return "CPU Status";
 			}
 		}
 		
-		public object DataModel {
+		private string[] DataModel {
 			get {
 				return debugInfo;
 			}

@@ -8,13 +8,11 @@ using System.ComponentModel;
 
 namespace fishbulbcommonui.SaveStates
 {
-    public class SaveStateVM : IViewModel
+    public class SaveStateVM : BaseNESViewModel
     {
         #region IViewModel Members
 
-        readonly NESMachine nes;
-
-        public SaveStateVM(NESMachine nes)
+        protected override void OnAttachTarget()
         {
             for (int i = 0; i < 10; ++i)
             {
@@ -23,12 +21,10 @@ namespace fishbulbcommonui.SaveStates
 
             selectedItem = stateInUse.ToList()[0];
 
-            this.nes = nes;
-
-            _commands.Add("GetSnapshot",
+            Commands.Add("GetSnapshot",
                 new InstigatorCommand(new CommandExecuteHandler(o => GetSnapshot(o)),
                 new CommandCanExecuteHandler(CanGetSnapshot)));
-            _commands.Add("SetSnapshot",
+            Commands.Add("SetSnapshot",
                 new InstigatorCommand(new CommandExecuteHandler(o => SetSnapshot(o)),
                 new CommandCanExecuteHandler(CanSetSnapshot)));
         }
@@ -37,13 +33,10 @@ namespace fishbulbcommonui.SaveStates
         {
             var p = (KeyValuePair<int, bool>)s;
             int i = (int)p.Key;
-            nes.GetState(i);
+            TargetMachine.GetState(i);
             stateInUse[i] = true;
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("StatesList"));
-                PropertyChanged(this, new PropertyChangedEventArgs("Commands"));
-            }
+            NotifyPropertyChanged("StatesList");
+            NotifyPropertyChanged("Commands");
         }
 
         bool CanGetSnapshot(object o)
@@ -58,11 +51,9 @@ namespace fishbulbcommonui.SaveStates
         public KeyValuePair<int, bool> SelectedItem
         {
             get { return selectedItem; }
-            set { selectedItem = value;
-                    if (PropertyChanged != null)
-                    {
-                        PropertyChanged(this, new PropertyChangedEventArgs("Commands"));
-                    }
+            set { 
+                selectedItem = value;
+                NotifyPropertyChanged("Commands");
                 }
         }
 
@@ -86,12 +77,9 @@ namespace fishbulbcommonui.SaveStates
         {
             var p = (KeyValuePair<int, bool>)s;
             int i = (int)p.Key;
-            nes.SetState(i);
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("StatesList"));
-                PropertyChanged(this, new PropertyChangedEventArgs("Commands"));
-            }
+            TargetMachine.SetState(i);
+            NotifyPropertyChanged("StatesList");
+            NotifyPropertyChanged("Commands");
         }
 
         bool CanSetSnapshot(object o)
@@ -100,44 +88,23 @@ namespace fishbulbcommonui.SaveStates
             return p.Value;
         }
 
-        public string CurrentView
+        public override string CurrentView
         {
             get { return "SaveStateView"; }
         }
 
-        Dictionary<string, ICommandWrapper> _commands = new Dictionary<string, ICommandWrapper>();
-        
-        public Dictionary<string, ICommandWrapper> Commands
-        {
-            get { return _commands; }
-        }
-
-        public IEnumerable<IViewModel> ChildViewModels
-        {
-            get { return null; }
-        }
-
-        public string CurrentRegion
+        public override string CurrentRegion
         {
             get { return "SaveState"; }
         }
 
-        public string Header
+        public override string Header
         {
             get { return "Save States"; }
         }
 
-        public object DataModel
-        {
-            get { return null; }
-        }
-
         #endregion
 
-        #region INotifyPropertyChanged Members
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

@@ -13,9 +13,7 @@ using NES.CPU.Machine.BeepsBoops;
 using WpfNESViewer;
 using NES.CPU.nitenedo.Interaction;
 using NES.CPU.Machine;
-using SlimDXBindings;
 using NES.Sound;
-using GtkNes;
 using InstiBulb.Integration;
 
 
@@ -30,15 +28,21 @@ namespace InstiBulb
         IUnityContainer container = new UnityContainer();
 
 
+
         protected override void OnStartup(StartupEventArgs e)
         {
             container.RegisterType<MainWindow>(new ContainerControlledLifetimeManager());
             //container.RegisterType<DependencyObject, MainWindow>("MainWindow", new ContainerControlledLifetimeManager());
+            var newContainer = new NesContainerFactory().RegisterNesTypes(container);
 
-            this.Resources.Add("Container", new NesContainerFactory().RegisterNesTypes(container));
+
+            this.Resources.Add("Container", container);
             base.OnStartup(e);
 
-            container.Resolve<MainWindow>().Initialize().Show();
+            MainWindow win = container.Resolve<MainWindow>();
+            win.Initialize();
+
+            win.Show();
         }
 
 

@@ -6,6 +6,7 @@ using Fishbulb.Common.UI;
 using NES.Machine;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.ROMLoader;
+using fishbulbcommonui;
 
 namespace Fishbulb.Common.UI
 {
@@ -70,13 +71,12 @@ namespace Fishbulb.Common.UI
         #endregion
     }
 
-    public class ControlPanelVM : IViewModel
+    public class ControlPanelVM : BaseNESViewModel
     {
 
         public event EventHandler<RunStatusChangedEventArgs> RunStatusChangedEvent;
 
-        #region IProfileViewModel implementation
-        public string CurrentView
+        public override string CurrentView
         {
             get
             {
@@ -84,25 +84,7 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>();
-
-        public Dictionary<string, ICommandWrapper> Commands
-        {
-            get
-            {
-                return commands;
-            }
-        }
-
-        public IEnumerable<IViewModel> ChildViewModels
-        {
-            get
-            {
-                return new IViewModel[0];
-            }
-        }
-
-        public string CurrentRegion
+        public override string CurrentRegion
         {
             get
             {
@@ -110,7 +92,7 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        public string Header
+        public override  string Header
         {
             get
             {
@@ -118,39 +100,19 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        public object DataModel
+
+        public ControlPanelVM(GetFileDelegate fileGetter)
         {
-            get;
-            set;
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(string propName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-        }
-        #endregion
-
-        NESMachine _target;
-
-        public ControlPanelVM(NESMachine machine, GetFileDelegate fileGetter)
-        {
-            _target = machine;
             this.fileGetter = fileGetter;
-            commands.Add("LoadRom",
+            Commands.Add("LoadRom",
                 new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)),
                     new CommandCanExecuteHandler(CanInsertCart)));
-            commands.Add("PowerToggle",
+            Commands.Add("PowerToggle",
                 new InstigatorCommand(new CommandExecuteHandler(o => 
                     PowerToggle()
                     ),
                     new CommandCanExecuteHandler(o => true)));
-            commands.Add("BrowseRom",
+            Commands.Add("BrowseRom",
                 new InstigatorCommand(new CommandExecuteHandler(BrowseFile), new CommandCanExecuteHandler(CanInsertCart)));
             runstate = RunningStatuses.Unloaded;
         }
@@ -174,13 +136,13 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                if (_target != null)
+                if (TargetMachine != null)
                 {
-                    if (string.IsNullOrEmpty(_target.CurrentCartName))
+                    if (string.IsNullOrEmpty(TargetMachine.CurrentCartName))
                     {
                         return "Load Game";
                     }
-                    return _target.CurrentCartName;
+                    return TargetMachine.CurrentCartName;
                 }
                 return "Load Game";
             }
@@ -226,17 +188,17 @@ namespace Fishbulb.Common.UI
 
         void InsertCart(string fileName)
         {
-            if (_target.IsRunning) PowerOff();
+            if (TargetMachine.IsRunning) PowerOff();
 
-            _target.GoTendo(fileName);
+            TargetMachine.GoTendo(fileName);
 
 
             this.CartInfo = new CartInfo()
             {
-                CartName = _target.CurrentCartName,
-                MapperID = _target.Cart.MapperID,
-                Mirroring = _target.Cart.Mirroring,
-                RomInfoString = string.Format("Prg Rom Count: {0}, Chr Rom Count: {1}", _target.Cart.NumberOfPrgRoms, _target.Cart.NumberOfChrRoms)
+                CartName = TargetMachine.CurrentCartName,
+                MapperID = TargetMachine.Cart.MapperID,
+                Mirroring = TargetMachine.Cart.Mirroring,
+                RomInfoString = string.Format("Prg Rom Count: {0}, Chr Rom Count: {1}", TargetMachine.Cart.NumberOfPrgRoms, TargetMachine.Cart.NumberOfChrRoms)
             };
 
             runstate = RunningStatuses.Off;
@@ -254,13 +216,13 @@ namespace Fishbulb.Common.UI
 
         void PowerOn()
         {
-            _target.IsDebugging = false;
+            TargetMachine.IsDebugging = false;
             RunningStatuses oldState = runstate;
             switch (runstate)
             {
                 case RunningStatuses.Off:
-                    _target.Reset();
-                    _target.ThreadRuntendo();
+                    TargetMachine.Reset();
+                    TargetMachine.ThreadRuntendo();
                     break;
                 case RunningStatuses.Paused:
                     Paused=false;
@@ -290,12 +252,12 @@ namespace Fishbulb.Common.UI
 
         void PowerOff()
         {
-            _target.IsDebugging = false;
+            TargetMachine.IsDebugging = false;
 
             RunningStatuses oldState = runstate;
 
-            if (_target.IsRunning)
-                _target.KeepRunning = false;
+            if (TargetMachine.IsRunning)
+                TargetMachine.ThreadStoptendo();
 
             runstate = RunningStatuses.Off;
             NotifyPropertyChanged("PowerStatusText");
@@ -307,12 +269,12 @@ namespace Fishbulb.Common.UI
 
         public bool Paused
         {
-            get { return _target.Paused; }
+            get { return TargetMachine.Paused; }
             set {
-                _target.IsDebugging = false;
+                TargetMachine.IsDebugging = false;
 
                 RunningStatuses oldState = runstate;
-                _target.Paused = value;
+                TargetMachine.Paused = value;
                 if (runstate == RunningStatuses.Paused)
                     runstate = prePauseState;
                 else

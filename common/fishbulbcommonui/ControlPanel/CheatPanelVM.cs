@@ -8,13 +8,26 @@ using Fishbulb.Common.UI;
 using NES.CPU.nitenedo;
 using System.ComponentModel;
 using NES.CPU.Fastendo.Hacking;
+using fishbulbcommonui;
 
 namespace Fishbulb.Common.UI
 {
 
 
-    public class CheatPanelVM : IViewModel
+    public class CheatPanelVM : BaseNESViewModel
     {
+        public CheatPanelVM()
+        {
+            Commands.Add("AddCheat", new InstigatorCommand(
+                new CommandExecuteHandler(o => AddGenieCode()),
+                new CommandCanExecuteHandler(o => CanAddGenieCode)
+                ));
+            Commands.Add("ClearCheats", new InstigatorCommand(
+                new CommandExecuteHandler(o => ClearGenieCodes()),
+                new CommandCanExecuteHandler(o => CanClearGenieCodes)
+                ));
+        }
+
         public class CheatVM : INotifyPropertyChanged
         {
             public string Name { get; set; }
@@ -31,21 +44,10 @@ namespace Fishbulb.Common.UI
             }
 
         }
-
         
-        private NESMachine nes = null;
-
-        public CheatPanelVM(NESMachine nes)
+        protected override void  OnAttachTarget()
         {
-            this.nes = nes;
-            commands.Add("AddCheat",new InstigatorCommand(
-                new CommandExecuteHandler(o => AddGenieCode() ),
-                new CommandCanExecuteHandler(o => CanAddGenieCode)
-                ));
-            commands.Add("ClearCheats", new InstigatorCommand(
-                new CommandExecuteHandler(o => ClearGenieCodes()),
-                new CommandCanExecuteHandler(o => CanClearGenieCodes)
-                ));
+
 
             gameGenieCodes = new List<string>();
         }
@@ -68,13 +70,13 @@ namespace Fishbulb.Common.UI
 
         public bool CanClearGenieCodes
         {
-            get { return nes != null; }
+            get { return TargetMachine != null; }
         }
 
         public void ClearGenieCodes()
         {
             cheats.RemoveAll(p => gameGenieCodes.Contains(p.Name));
-            nes.ClearGenieCodes();
+            TargetMachine.ClearGenieCodes();
             NotifyPropertyChanged("GameGenieCodes");
             NotifyPropertyChanged("Cheats");
         }
@@ -99,19 +101,19 @@ namespace Fishbulb.Common.UI
 
         public bool CanAddGenieCode
         {
-            get { return nes != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
+            get { return TargetMachine != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
         }
 
         public bool Cheating
         {
             get
             {
-                return (nes == null) ? false : nes.Cpu.Cheating;
+                return (TargetMachine == null) ? false : TargetMachine.Cpu.Cheating;
             }
             set
             {
-                if (nes == null) return;
-                nes.Cpu.Cheating = value;
+                if (TargetMachine == null) return;
+                TargetMachine.Cpu.Cheating = value;
             }
         }
 
@@ -119,7 +121,7 @@ namespace Fishbulb.Common.UI
         public void AddGenieCode()
         {
             IMemoryPatch patch = null;
-            if (nes.AddGameGenieCode(_currentCode, out patch))
+            if (TargetMachine.AddGameGenieCode(_currentCode, out patch))
             {
                 gameGenieCodes.Add(_currentCode);
                 cheats.Add(new CheatVM() { Name = _currentCode, Patch = patch });
@@ -128,53 +130,24 @@ namespace Fishbulb.Common.UI
             }
         }
 
-        #region INotifyPropertyChanged Members
 
-        void NotifyPropertyChanged(string parameter)
-        {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(parameter));
-            OnPropertyChanged(parameter);
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual void OnPropertyChanged(string PropName) { }
-
-        #endregion
-
-        #region IProfileViewModel Members
-
-        public string CurrentView
+        public override string CurrentView
         {
             get { return "CheatPanel"; }
         }
-        
-        Dictionary<string, ICommandWrapper> commands = new Dictionary<string, ICommandWrapper>() ;
 
-        public Dictionary<string, ICommandWrapper> Commands
-        {
-            get { return commands; }
-        }
 
-        public IEnumerable<IViewModel> ChildViewModels
-        {
-            get { return new List<IViewModel>(); }
-        }
-
-        public string CurrentRegion
+        public override string CurrentRegion
         {
             get { return "controlPanel.3"; }
         }
 
-        public string Header
+        public override string Header
         {
             get { return "Cheat Panel"; }
         }
 
-        public object DataModel
-        {
-            get { return null; }
-        }
 
-        #endregion
     }
 }
