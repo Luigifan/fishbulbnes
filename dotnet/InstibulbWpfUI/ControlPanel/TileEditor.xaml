@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="InstiBulb.Views.TileEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:InstiBulb.Views"
+   >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="1"  DataContextChanged="Image_DataContextChanged" 
+                DataContext="{Binding ElementName=PatternDoodler, Path=CurrentTile}" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Tile Effect Editor</TextBlock>
+                <Separator Width="10"/>
+                <TextBlock Text="{Binding TileIndex}" />
+                <Separator Width="10"/>
+                <Border Height="32" Width="32" Background="White">
+                    <Image Stretch="UniformToFill"
+                        Source="{Binding Path=Bitmap, Mode=OneWay}" 
+                        SourceUpdated="Image_SourceUpdated"  />
+                </Border>
+            </StackPanel>
+        </Label>
+        <Grid Grid.Column="1" MinHeight="150" MinWidth="150" Grid.Row="1" Background="LightGray" x:Name="TileLayout"
+              DataContext="{Binding ElementName=PatternDoodler, Path=CurrentTile }"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+        </Grid>
+        <Border Grid.Column="1" Grid.Row="2" Background="LemonChiffon">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Save" />
+
+            </StackPanel>
+        </Border>
+        <vm:PatternViewerControl x:Name="PatternDoodler"  Grid.Column="0" Grid.RowSpan="3" />
+        
+    </Grid>
+</UserControl>
