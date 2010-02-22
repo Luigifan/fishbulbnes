@@ -1,0 +1,8 @@
+﻿<Window x:Class="_10NES2.DialogShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DialogShell" Height="480" Width="720">
+    <Grid Name="MainGrid">
+        
+    </Grid>
+</Window>

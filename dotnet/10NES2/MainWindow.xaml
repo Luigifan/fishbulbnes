@@ -1,0 +1,45 @@
+﻿<Window x:Class="_10NES2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:nesView="clr-namespace:InstiBulb.Integration"
+        xmlns:my="clr-namespace:InstiBulb.ThreeDee"
+        Title="10NES Omega 2" Height="350" Width="525" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Models\ThreeDIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="BubbleColor" Color="#504050FF">
+                
+            </SolidColorBrush>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="Black" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="0.12*"/>
+            <RowDefinition />
+            <RowDefinition  Height="0.12*"/>
+        </Grid.RowDefinitions>
+        <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="3">
+            <my:ToolSpinner3D.Camera >
+                <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
+            </my:ToolSpinner3D.Camera>
+            <my:ToolSpinner3D.Icons>
+                <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="ControlPanel" Model="{StaticResource ResourceKey=nes}" Billboard="{StaticResource BubbleColor}" >
+                </my:Icon3D>
+                <my:Icon3D Command="{Binding ShowDialogCommand}" CommandParameter="SoundPanel" Model="{StaticResource ResourceKey=Headphones}" Billboard="{StaticResource BubbleColor}" >
+                </my:Icon3D>
+                <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
+                </my:Icon3D>
+
+            </my:ToolSpinner3D.Icons>
+        </my:ToolSpinner3D>
+        <Button Grid.Row="0" Content="Up" Command="{Binding ElementName=toolSpinner3D1, Path=NextCommand}"/>
+        <Button Grid.Row="2" Content="Down" Command="{Binding ElementName=toolSpinner3D1, Path=PreviousCommand}"/>
+        <nesView:NESDisplay x:Name="nesDisplay" Grid.Column="1" Grid.RowSpan="3" ></nesView:NESDisplay>
+    </Grid>
+</Window>
