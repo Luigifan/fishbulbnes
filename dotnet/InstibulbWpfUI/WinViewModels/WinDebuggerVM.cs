@@ -78,8 +78,8 @@ namespace InstiBulb.WinViewModels
     public class WinDebuggerVM : DebuggerVM
     {
 
-        public WinDebuggerVM(NESMachine nes)
-            : base(nes)
+        public WinDebuggerVM()
+            : base()
         {
 
             base.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(WinDebuggerVM_PropertyChanged);
@@ -174,10 +174,10 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawPatternTableZero()
         {
-            if (!(DebugTarget  == null))
+            if (!(TargetMachine  == null))
             {
-                int[] table = DebugTarget.Tiler.DoodlePatternTable(0);
-                DebugTarget .PPU .SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodlePatternTable(0);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 patternTable0 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (128 * 32 + 7) / 8;
 
@@ -190,10 +190,10 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawPatternTableOne()
         {
-            if (!(DebugTarget  == null))
+            if (!(TargetMachine == null))
             {
-                int[] table = DebugTarget.Tiler.DoodlePatternTable(0x1000);
-                DebugTarget .PPU .SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodlePatternTable(0x1000);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 patternTable1 = new WriteableBitmap(128, 128, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (128 * 32 + 7) / 8;
 
@@ -209,10 +209,10 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawNameTableZero()
         {
-            if (!(DebugTarget == null))
+            if (!(TargetMachine == null))
             {
-                int[] table = DebugTarget.Tiler.DoodleNameTable(0);
-                DebugTarget.PPU .SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodleNameTable(0);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 nameTable0 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -226,10 +226,10 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawNameTableOne()
         {
-            if (!(DebugTarget  == null))
+            if (!(TargetMachine == null))
             {
-                int[] table = DebugTarget.Tiler.DoodleNameTable(0x400);
-                DebugTarget .PPU .SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodleNameTable(0x400);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 nameTable1 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -244,10 +244,10 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawNameTableTwo()
         {
-            if (!(DebugTarget  == null))
+            if (!(TargetMachine == null))
             {
-                int[] table = DebugTarget.Tiler.DoodleNameTable(0x800);
-                DebugTarget .PPU.SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodleNameTable(0x800);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 nameTable2 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -261,10 +261,10 @@ namespace InstiBulb.WinViewModels
 
         public void DrawNameTableThree()
         {
-            if (!(DebugTarget  == null))
+            if (!(TargetMachine == null))
             {
-                int[] table = DebugTarget.Tiler.DoodleNameTable(0xC00);
-                DebugTarget .PPU.SetupBufferForDisplay(ref table);
+                int[] table = TargetMachine.Tiler.DoodleNameTable(0xC00);
+                TargetMachine.PPU.SetupBufferForDisplay(ref table);
                 nameTable3 = new WriteableBitmap(256, 240, 96, 96, PixelFormats.Pbgra32, null);
                 int stride = (256 * 32 + 7) / 8;
 
@@ -288,19 +288,19 @@ namespace InstiBulb.WinViewModels
 
         public string WhichTileAddress(int table, int x, int y)
         {
-            if (DebugTarget == null) return "Unknown";
+            if (TargetMachine == null) return "Unknown";
 
-            return string.Format("Address: {0}", DebugTarget.Tiler.GetPatternEntryLocation(table, x, y));
+            return string.Format("Address: {0}", TargetMachine.Tiler.GetPatternEntryLocation(table, x, y));
         }
 
         public TileInformation GetTileInfo(int table, int tileIndex)
         {
-            if (DebugTarget == null) return null;
+            if (TargetMachine == null) return null;
             int[][] result = new int[2][];
             result[0] = new int[64];
             result[1] = new int[8];
 
-            result[0] = DebugTarget.Tiler.GetPatternTableEntry(table, tileIndex, 0, out result[1]);
+            result[0] = TargetMachine.Tiler.GetPatternTableEntry(table, tileIndex, 0, out result[1]);
 
             return new TileInformation(tileIndex, result[0], result[1]);
 

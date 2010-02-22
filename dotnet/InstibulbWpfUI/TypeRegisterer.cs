@@ -7,6 +7,7 @@ using Fishbulb.Common.UI;
 using System.Windows;
 using InstiBulb;
 using InstiBulb.WinViewModels;
+using NES.CPU.nitenedo;
 
 namespace InstibulbWpfUI
 {
@@ -15,16 +16,24 @@ namespace InstibulbWpfUI
         public static IUnityContainer RegisterWpfUITypes(this IUnityContainer container)
         {
             // wpf specific view models
-            container.RegisterType<IViewModel, WinCheatPanelVM>("CheatVM", new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, WinCheatPanelVM>("CheatPanel", new ContainerControlledLifetimeManager(),
+                new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>())
+                );
+            container.RegisterType<IViewModel, WinDebuggerVM>("DebugPanel", new ContainerControlledLifetimeManager());
+
 
             container.RegisterType<EmbeddableUserControl, ControlPanelHolder>("ControlPanelHolder", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
 
             // the visualses
-            container.RegisterType<FrameworkElement, ControlPanelView>("ControlPanel", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
-            container.RegisterType<FrameworkElement, SoundPanelView>("SoundPanel", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "SoundVM")));
-            container.RegisterType<FrameworkElement, CheatControl>("CheatPanel", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "CheatVM")));
-            container.RegisterType<FrameworkElement, CartInfoPanel>("CartInfo", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
-            container.RegisterType<FrameworkElement, MachineStatus>("MachineStats", new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
+            container.RegisterType< ControlPanelView>(
+                new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel"))
+                );
+            container.RegisterType<SoundPanelView>( new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "SoundVM")));
+            container.RegisterType<CheatControl>( new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "CheatVM")));
+            container.RegisterType<CartInfoPanel>( new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "ControlPanel")));
+            
+
+            container.RegisterType<MachineStatus>( new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
             
             //container.RegisterType<ControllerConfig>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(WpfKeyConfigVM), "KeyConfigVM")));
             //container.RegisterType<InstructionRolloutControl>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
@@ -35,7 +44,6 @@ namespace InstibulbWpfUI
             //container.RegisterType<TileEditor>(new InjectionProperty("DataContext", new ResolvedParameter(typeof(IViewModel), "DebuggerVM")));
 
 
-            //container.RegisterType<IViewModel, WinDebuggerVM>("DebuggerVM", new ContainerControlledLifetimeManager());
             //container.RegisterType<IViewModel, SaveStateVM>("SaveStateVM", new ContainerControlledLifetimeManager());
             //container.RegisterType<WpfKeyConfigVM>("KeyConfigVM", new ContainerControlledLifetimeManager());
 

@@ -11,8 +11,6 @@ namespace InstiBulb.WinViewModels
     public class WinCheatPanelVM : CheatPanelVM
     {
 
-        public WinCheatPanelVM(NESMachine nes) : base(nes) { }
-
         ObservableCollection<CheatVM> activeCheats = new ObservableCollection<CheatVM>();
 
         public ObservableCollection<CheatVM> ActiveCheats
@@ -20,7 +18,7 @@ namespace InstiBulb.WinViewModels
             get { return activeCheats; }
         }
 
-        public override void OnPropertyChanged(string propName)
+        protected override void OnPropertyChanged(string propName)
         {
             if (propName == "GameGenieCodes")
             {
