@@ -38,6 +38,8 @@ namespace NES.CPU.nitenedo.Interaction
     public interface IDisplayContext
     {
 
+        NESMachine AttachedMachine { get; set; }
+
         CallbackType DesiredCallback { get;  }
 
         int PixelWidth { get; }

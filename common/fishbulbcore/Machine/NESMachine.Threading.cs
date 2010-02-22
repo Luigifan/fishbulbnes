@@ -33,13 +33,12 @@ namespace NES.CPU.nitenedo
             }
         }
 
-        private enum MachineTasks
+        public enum MachineTasks
         {
             RunOneStep = 0,
             RunOneFrame = 1,
             RunOneScanline = 2,
-            RUNFORRESTRUN = 3,
-            DummyRun = 4,
+            RunContinuously = 3,
             Stoppit = 99
         }
 
@@ -50,7 +49,23 @@ namespace NES.CPU.nitenedo
             OopsICrappedMyPants = 99,
         }
 
-        private volatile MachineTaskResults taskResult;
+        public volatile MachineTaskResults taskResult;
+
+        public class MachineWorkItem
+        {
+            public MachineTasks Task
+            {
+                get;
+                set;
+            }
+            public MachineTaskResults Result
+            {
+                get;
+                set;
+            }
+        }
+
+        private Queue<MachineWorkItem> machineWorkQueue = new Queue<MachineWorkItem>();
 
         public MachineTaskResults TaskResult
         {
@@ -59,28 +74,7 @@ namespace NES.CPU.nitenedo
         }
 
         private volatile MachineTasks task;
-        private volatile bool keepRunning = false, paused = false;
-
-        public bool KeepRunning
-        {
-            get { return keepRunning; }
-            set
-            {
-                if (keepRunning != value)
-                {
-                    keepRunning = value;
-                }
-                if (keepRunning)
-                {
-                    MachineRunningResetEvent.Set();
-                    runState = NES.Machine.ControlPanel.RunningStatuses.Running;
-                }
-                else
-                {
-                    runState = NES.Machine.ControlPanel.RunningStatuses.Off;
-                }
-            }
-        }
+        private volatile bool paused = false;
 
         public bool Paused
         {
@@ -127,15 +121,7 @@ namespace NES.CPU.nitenedo
         {
             while (true)
             {
-                if (!keepRunning)
-                {
-                    if (RunStatusChangedEvent != null)
-                        RunStatusChangedEvent(this, new EventArgs());
-                    isStopped = true;
-                    MachineRunningResetEvent.WaitOne();
-                    MachineRunningResetEvent.Reset();
-                    isStopped = false;
-                }
+                
                 if (paused)
                 {
                     if (RunStatusChangedEvent != null)
@@ -146,32 +132,29 @@ namespace NES.CPU.nitenedo
                         RunStatusChangedEvent(this, new EventArgs());
                 }
 
-                if (isDebugging)
-                    WorkDebug();
-                else
-                    Work();
+                Work();
             }
         }
 
 
         private void ForceStop()
         {
-            while (!isStopped)
-            {
-                // make sure it isnt stuck on a pause
-                UnPauseResetEvent.Set();
-                KeepRunning = false;
-                System.Threading.Thread.Sleep(0);
-            }
+            machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
+            //while (machineWorkQueue.Count > 0)
+            //{
+            //    // make sure it isnt stuck on a pause
+            //    UnPauseResetEvent.Set();
+            //    System.Threading.Thread.Sleep(0);
+            //}
         }
 
         private void ReStart()
         {
+            Paused = false;
             while (isStopped)
             {
                 // make sure it isnt stuck on a pause
                 UnPauseResetEvent.Set();
-                KeepRunning = true;
                 MachineRunningResetEvent.Set();
                 System.Threading.Thread.Sleep(0);
             }
@@ -180,22 +163,24 @@ namespace NES.CPU.nitenedo
         public void ThreadStep()
         {
             ForceStop();
-            task = MachineTasks.RunOneStep;
+            
+            machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneStep, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
         }
 
         public void ThreadFrame()
         {
             ForceStop();
-            task = MachineTasks.RunOneFrame;
+            
+            machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneFrame, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
             
         }
 
         public void ThreadRuntendo()
         {
-            KeepRunning = true;
-            task = MachineTasks.RUNFORRESTRUN;
+            Paused = false;
+            machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunContinuously, Result = MachineTaskResults.RunCompletedOK });
             ReStart();
         }
 
@@ -204,9 +189,25 @@ namespace NES.CPU.nitenedo
             ForceStop();
         }
 
+        MachineWorkItem currentWorkItem;
         private void Work()
         {
-            taskResult = MachineTaskResults.RunCompletedOK;
+
+            if (machineWorkQueue.Count > 0)
+            {
+                currentWorkItem = machineWorkQueue.Dequeue();
+            }
+            else
+            {
+                // if the current work item is run, and there are no queued work items, leave it alone, or else stop 
+                if (currentWorkItem == null || currentWorkItem.Task != MachineTasks.RunContinuously)
+                    currentWorkItem = new MachineWorkItem() { Task = MachineTasks.Stoppit };
+                
+            }
+
+            currentWorkItem.Result = MachineTaskResults.RunCompletedOK;
+            
+            task = currentWorkItem.Task;
             if (task == MachineTasks.Stoppit) return;             
 
             switch (task)
@@ -217,33 +218,9 @@ namespace NES.CPU.nitenedo
                 case MachineTasks.RunOneFrame:
                     this.RunFrame();
                     break;
-                case MachineTasks.RUNFORRESTRUN:
+                case MachineTasks.RunContinuously:
                     this.Runtendo();
                     break;
-                case MachineTasks.DummyRun:
-                default:
-                    break;
-            }
-
-        }
-
-        private void WorkDebug()
-        {
-            taskResult = MachineTaskResults.RunCompletedOK;
-            if (task == MachineTasks.Stoppit) return;
-
-            switch (task)
-            {
-                case MachineTasks.RunOneStep:
-                    this.Step();
-                    break;
-                case MachineTasks.RunOneFrame:
-                    this.RunFrame();
-                    break;
-                case MachineTasks.RUNFORRESTRUN:
-                    this.Runtendo();
-                    break;
-                case MachineTasks.DummyRun:
                 default:
                     break;
             }
@@ -253,13 +230,15 @@ namespace NES.CPU.nitenedo
             }
             if (breakpointHit)
             {
-                keepRunning = false;
+                ForceStop();
                 breakpointHit = true;
                 BreakpointHit(this, new BreakEventArgs());
                 // myTimer.Stop();
 
             }
+
         }
+
 
         public void Runtendo()
         {
@@ -281,7 +260,6 @@ namespace NES.CPU.nitenedo
                 SRAMWriter(_cart.CheckSum, _cart.SRAM);
             }
 
-            keepRunning = false;
 
 
             Thread.Sleep(100);
