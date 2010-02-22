@@ -17,30 +17,30 @@ namespace SlimDXBindings
         #region IControlPad Members
 
         DirectInput dInput = new DirectInput();
-        Device<KeyboardState> keyboard;
+        Keyboard keyboard;
 
         bool exclusive = false, foreground = true, disable = false;
 
-        SlimDXBindings.Viewer10.DirectX10NesViewer viewer;
+        //SlimDXBindings.Viewer10.DirectX10NesViewer viewer;
 
-        public SlimDXBindings.Viewer10.DirectX10NesViewer Viewer
-        {
-            get { return viewer; }
-            set { 
-                viewer = value;
-                if (viewer is DirectX10NesViewer)
-                {
-                    CreateDevice(null);
-                }
-            }
-        }
+        //public SlimDXBindings.Viewer10.DirectX10NesViewer Viewer
+        //{
+        //    get { return viewer; }
+        //    set { 
+        //        viewer = value;
+        //        if (viewer is DirectX10NesViewer)
+        //        {
+        //            CreateDevice(null);
+        //        }
+        //    }
+        //}
 
         public SlimDXKeyboardControlPad()
         {
             // make sure that DirectInput has been initialized
 
             
-            keyboard = new Device<KeyboardState>(dInput, SystemGuid.Keyboard);
+            keyboard = new Keyboard(dInput);
             
         }
 
@@ -67,16 +67,9 @@ namespace SlimDXBindings
             try
             {
                 IntPtr windowHandle = IntPtr.Zero;
-                if (viewer != null && viewer.WindowHandle() != IntPtr.Zero)
-                {
-                    windowHandle = viewer.WindowHandle();
-                }
-                else
-                {
-                    WindowInteropHelper helper = new WindowInteropHelper(host);
+                WindowInteropHelper helper = new WindowInteropHelper(host);
 
-                    windowHandle = helper.Handle;
-                }
+                windowHandle = helper.Handle;
                 keyboard.SetCooperativeLevel(windowHandle, cooperativeLevel);
             }
             catch (DirectInputException e)
@@ -93,6 +86,9 @@ namespace SlimDXBindings
         
         public void Refresh()
         {
+            if (keyboard == null)
+                return;
+
             if (keyboard.Acquire().IsFailure)
                 return ;
 

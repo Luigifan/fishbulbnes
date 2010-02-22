@@ -35,10 +35,19 @@ namespace SlimDXNESViewer
 
         ISlimDXRenderer currentRenderer;
 
+        public SlimDXNesViewer()
+        {
+        }
+
         public SlimDXNesViewer(NESMachine nes)
         {
             this.nes = nes;
-            
+
+            SetupViewer(nes);
+        }
+
+        private void SetupViewer(NESMachine nes)
+        {
             panel = new SlimDXControl();
 
             this.Child = panel;
@@ -145,7 +154,7 @@ namespace SlimDXNESViewer
 
         public void UpdateNESScreen()
         {
-            currentRenderer.UpdateTime();
+            currentRenderer.Render();
             panel.InvalidateVisual();
             panel.AllowRendering = true;
         }
@@ -163,5 +172,18 @@ namespace SlimDXNESViewer
         #endregion
 
 
+
+        public NESMachine AttachedMachine
+        {
+            get
+            {
+                return nes;
+            }
+            set
+            {
+                nes = value;
+                SetupViewer(nes);
+            }
+        }
     }
 }

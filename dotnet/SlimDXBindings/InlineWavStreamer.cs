@@ -52,7 +52,7 @@ namespace SlimDXBindings
 
             // read in the wav file
             format = new WaveFormat();
-            format.FormatTag = SlimDX.WaveFormatTag.Pcm;
+            format.FormatTag = WaveFormatTag.Pcm;
             format.BitsPerSample = 16;
             format.Channels = 1;
             format.SamplesPerSecond = (int)_wavSource.Frequency;
@@ -142,10 +142,12 @@ namespace SlimDXBindings
 
         private void SendBuffer()
         {
+            if (currentBuffer < 0) return;
             buffer.AudioBytes = _wavSource.SharedBufferLength;
             buffer.PlayLength = _wavSource.SharedBufferLength / 2;
             memStream[currentBuffer].Position = 0;
             memStream[currentBuffer].Write(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
+            memStream[currentBuffer].Position = 0;
             buffer.AudioData = memStream[currentBuffer]; //  new MemoryStream(_wavSource.SharedBuffer, 0, _wavSource.SharedBufferLength);
 
             sourceVoice.SubmitSourceBuffer(buffer);
@@ -178,7 +180,8 @@ namespace SlimDXBindings
 
         public void Dispose()
         {
-
+            //sourceVoice.Stop();
+            currentBuffer = -1;
             BufferEmptyResetEvent.Close();
             SamplesAvailableResetEvent.Close();
             buffer.Dispose();
