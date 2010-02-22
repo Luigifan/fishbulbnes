@@ -22,7 +22,7 @@ namespace SlimDXBindings.Viewer10.Helpers
         static System.IO.Stream GetShaderStreamFromResource(string name)
         {
             return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                string.Format("SlimDXBindings.Viewer10.Filter.Shaders.{0}.fx", name)
+                string.Format("SlimDXBindings.ViewerX.Filter.Shaders.{0}.fx", name)
                 );
         }
 

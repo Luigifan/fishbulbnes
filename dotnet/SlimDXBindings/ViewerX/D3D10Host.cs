@@ -264,7 +264,7 @@ namespace SlimDXBindings.Viewer10
             // the rendering chain is built on the UI thread, since it's hosting Visuals, and possibly other things that require a STA thread
             
             loader = new FilterChainLoader(Device, Container);
-            tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.Viewer10.Filter.BasicFilterChain.xml", mapper);
+            tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.ViewerX.Filter.BasicFilterChain.xml", mapper);
             
             
             tileFilters[tileFilters.Count - 1].RenderToTexture(resource) ;
