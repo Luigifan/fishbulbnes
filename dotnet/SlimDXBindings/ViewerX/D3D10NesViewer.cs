@@ -9,19 +9,20 @@ using System.Windows.Controls;
 
 namespace SlimDXBindings.Viewer10
 {
-    public class D3D10NesViewer : Border, IDisplayContext
+    public class D3D10NesViewer : Border, IDisplayContext, IDisposable
     {
         DirectHost dhost;
         D3D10Host host;
         public D3D10NesViewer()
         {
             dhost = new DirectHost();
-            dhost.Render = new RenderHandler(Render);
+            // dhost.Render = new RenderHandler(Render);
             this.Child = dhost;
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(D3D10NesViewer_SizeChanged);
         }
 
         bool initialized = false;
+
         void D3D10NesViewer_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
         {
 
@@ -46,6 +47,8 @@ namespace SlimDXBindings.Viewer10
             if (host != null)
             {
                 host.DrawFrame();
+                this.InvalidateVisual();
+                //dhost.InvalidateVisual();
             }
         }
 
@@ -66,7 +69,7 @@ namespace SlimDXBindings.Viewer10
 
         public CallbackType DesiredCallback
         {
-            get { return CallbackType.Array; }
+            get { return CallbackType.NoArgs; }
         }
 
         public int PixelWidth
@@ -97,14 +100,17 @@ namespace SlimDXBindings.Viewer10
 
         public void UpdateNESScreen()
         {
+            host.DrawScreen();
         }
 
         public void UpdateNESScreen(int[] pixels)
         {
+            host.DrawScreen();
         }
 
         public void UpdateNESScreen(IntPtr pixelData)
         {
+            host.DrawScreen();
         }
 
         public void DrawDefaultDisplay()
@@ -130,5 +136,12 @@ namespace SlimDXBindings.Viewer10
             get { return "Direct3D 10 Viewer"; }
         }
 
+
+        public void Dispose()
+        {
+            if (host != null)
+                host.Dispose();
+
+        }
     }
 }

@@ -365,7 +365,7 @@ int DrawSprite(int spriteNum, int currentXPosition, int currentYPosition, int pp
 		spritePatternTable = 0x1000;
 	}
 	int xPos = currentXPosition - x;
-	int yLine = currentYPosition - y -1;
+	int yLine = currentYPosition - y ;
 
 	yLine = yLine & (spriteSize - 1);
 
@@ -427,7 +427,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
 	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
-	
+	xy.y-=1;
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
 
@@ -503,6 +503,8 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
 	}
 	float2 xy = (pixelShaderIn.UV) * 255.0;
+	xy.y-=1;
+
 	int ppuByte0 = finalColor.g * 255.0;
 	int ppuByte1 = finalColor.b * 255.0;
 

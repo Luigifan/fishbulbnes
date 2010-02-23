@@ -78,21 +78,21 @@
     </Filter>-->
     
     <!-- SFX -->
-    <Filter Name="wavyTiles" Height="512" Width="512" Effect="blue" Technique="Wave" >
+    <!--<Filter Name="wavyTiles" Height="512" Width="512" Effect="blue" Technique="Wave" >
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="texture2d" />
         <Input Type="Resource" ResourceName="Noise" EffectVariable="noiseTex" />
         <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
       </Inputs>
-    </Filter>
+    </Filter>-->
 
     <!--Put it all together now-->
-    <Filter Name="combined" Height="2048" Width="2048" Effect="CombineNesOutput" Technique="Render">
+    <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
-        <Input Type="FilterOutput" Filter="wavyTiles" EffectVariable="screenOne" />
+        <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
         <Input Type="FilterOutput" Filter="spriteMask" EffectVariable="spriteMask" />
-        <Input Type="Resource" ResourceName="Noise" EffectVariable="overLay" />
+        <!--<Input Type="Resource" ResourceName="Noise" EffectVariable="overLay" />-->
         <!--<Input Type="FilterOutput" Filter="toolStrip" EffectVariable="toolStrip" />-->
         <Input Type="Scalar" EffectVariable="timer" Source="Timer"/>
 

@@ -611,7 +611,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 					return float4(0,0,0,0);
 				int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
 				
-				float alpha = (ntPixel & 128) ? 1.0 : 0.5;
+				//float alpha = (ntPixel & 128) ? 1.0 : 0.5;
 				
 				ntPixel &=31;
 				if ((ntPixel & 3) > 0)
@@ -619,8 +619,8 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 					// get the nes palette entry (will contain 4 values)
 					float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
 					int pixel = rVal[ntPixel & 3] * 255;
-					return colorPal[pixel & 63];
-					//return float4(DecodePixel(pixel, 0), alpha);
+					//return colorPal[pixel & 63];
+					return float4(DecodePixel(pixel, 0), 1.0);
 				}
 			}
 		}
@@ -644,8 +644,8 @@ float4 DrawTilesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	float4 rVal = nesPal.Load(int3(ntPixel/4, finalColor[3] * 255,0));
 
 	int pixel = rVal[ntPixel & 3] * 255;
-	return colorPal[pixel & 63];
-	//return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), alpha );
+	// return colorPal[pixel & 63];
+	return float4(DecodePixel(rVal[ntPixel & 3] * 255, 0), alpha );
 }
 
 float4 DrawTogetherFromRAM(PS_IN pixelShaderIn) : SV_Target

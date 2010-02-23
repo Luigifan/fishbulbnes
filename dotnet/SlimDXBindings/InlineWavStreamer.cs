@@ -59,15 +59,8 @@ namespace SlimDXBindings
             format.BlockAlignment = 2;
             format.AverageBytesPerSecond = 2 * (int)_wavSource.Frequency;
 
-            try
-            {
-                sourceVoice = new SourceVoice(device, format);
+            sourceVoice = new SourceVoice(device, format);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
         }
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
@@ -181,6 +174,8 @@ namespace SlimDXBindings
         public void Dispose()
         {
             //sourceVoice.Stop();
+            _wavSource.BytesWritten -= _wavSource_BytesWritten;
+            
             currentBuffer = -1;
             BufferEmptyResetEvent.Close();
             SamplesAvailableResetEvent.Close();

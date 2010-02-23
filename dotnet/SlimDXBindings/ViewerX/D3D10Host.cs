@@ -20,10 +20,9 @@ using Microsoft.WindowsAPICodePack.DirectX.Controls;
 
 namespace SlimDXBindings.Viewer10 
 {
-    public class D3D10Host 
+    public class D3D10Host : IDisposable
     {
-
-         NESMachine nes;
+NESMachine nes;
          
          FakeEventMapper mapper;
          Timer tickTimer; 
@@ -33,30 +32,17 @@ namespace SlimDXBindings.Viewer10
          {
              this.nes = nes;
              tickTimer = new Timer();
-             this.nes.Drawscreen += nes_Drawscreen;
-             this.nes.RunStatusChangedEvent += nes_RunStatusChangedEvent;
+
              zapper = this.nes.PadTwo as SlimDXZapper;
          }
 
-         void nes_RunStatusChangedEvent(object sender, EventArgs e)
-         {  
-             idling = nes.RunState != NES.Machine.ControlPanel.RunningStatuses.Running;
-             //idling &= nes.IsRunning;
-             //idling |= nes.IsDebugging;
-             if (idling)
-             {
-                tickTimer.Start();
-             }
-             else
-                 tickTimer.Stop();
-         }
 
-         void nes_Drawscreen(object sender, EventArgs e)
+         public void DrawScreen()
          {
              if (!idling)
              {
                  this.UpdateTextures();
-                 //this.DrawFrame();
+                 this.DrawFrame();
              }
          }
 
@@ -113,14 +99,14 @@ namespace SlimDXBindings.Viewer10
         DXGI.ModeDescription modeDescription = new DXGI.ModeDescription();
         DXGI.SampleDescription sampleDescription = new DXGI.SampleDescription();
 
-        public  void QuadUp(DirectHost renderHost)
+        public void QuadUp(DirectHost renderHost)
         {
             _renderHost= renderHost;
 
             //RenderForm = new Form();
             //RenderForm.ClientSize = new Size(720, 480);
             //RenderForm.Text = "10NES";
-
+            
             //RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
             //RenderForm.MouseDown += new MouseEventHandler(RenderForm_MouseDown);
             //RenderForm.MouseUp += new MouseEventHandler(RenderForm_MouseUp);
@@ -148,7 +134,7 @@ namespace SlimDXBindings.Viewer10
             swapChainDescription.SwapEffect = DXGI.SwapEffect.Discard;
             swapChainDescription.Usage = DXGI.Usage.RenderTargetOutput;
 
-            D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.None, swapChainDescription, out Device, out SwapChain);
+            D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
 
             textureBuddy = new TextureBuddy(Device);
             
@@ -285,7 +271,9 @@ namespace SlimDXBindings.Viewer10
             disposables.Add(texture);
             disposables.Add(tileFilters);
             disposables.Add(nesPalTexture);
+            disposables.Add(targetTexture);
             disposables.Add(textureBuddy);
+            disposables.Add(RenderTarget);
             
 
             // TODO: make this array match the elements in the new filterchains Input collection
@@ -357,7 +345,6 @@ namespace SlimDXBindings.Viewer10
                 }
                 else
                 {
-                    //Console.WriteLine(string.Format("X {0} Y {1}", X, Y));
                     zapper.SetPixel((int)(X + (256 * Y)));
                 }
             }
@@ -462,23 +449,23 @@ namespace SlimDXBindings.Viewer10
         float timer = 0.0f;
         ShaderResourceView texView;
 
+
         public void UpdateTextures()
         {
             // System.Buffer.BlockCopy(nes.PPU.OutBuffer, 255 * 256 * 4, spriteRam, 0, 256);
+            //if (tileFilters.DumpFiles)
+            //{
+            //    //for (int i = 0; i < 64; ++i)
+            //    //{
+            //    //    Console.WriteLine("{0}, ", spriteRam[i]);
+            //    //}
 
-            if (tileFilters.DumpFiles)
-            {
-                //for (int i = 0; i < 64; ++i)
-                //{
-                //    Console.WriteLine("{0}, ", spriteRam[i]);
-                //}
-
-                Console.WriteLine("SpriteLines");
-                for (int i = 0; i < 512; ++i)
-                {
-                    Console.WriteLine("{0}, ", nes.PPU.SpritesOnLine[i]);
-                }
-            }
+            //    Console.WriteLine("SpriteLines");
+            //    for (int i = 0; i < 512; ++i)
+            //    {
+            //        Console.WriteLine("{0}, ", nes.PPU.SpritesOnLine[i]);
+            //    }
+            //}
 
             DataRectangle d = texture.Map(0, MapMode.WriteDiscard, MapFlags.None);
             d.Data.WriteRange<int>(this.nes.PPU.OutBuffer);
@@ -508,8 +495,11 @@ namespace SlimDXBindings.Viewer10
             if (nes.Cart.CurrentBank > biggestBSCount)
             {
                 biggestBSCount = (int)nes.Cart.CurrentBank;
-                Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
+                // Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
             }
+
+            updated = true;
+            
 
         }
 
@@ -519,6 +509,9 @@ namespace SlimDXBindings.Viewer10
         Vector2 mousePos = new Vector2(0,0);
 
         bool needResizing = false;
+        bool updated = false;
+        bool fullScreen = false;
+        bool changeFullScreenState = false;
         int newWidth, newHeight;
         public  void DrawFrame()
         {
@@ -534,45 +527,45 @@ namespace SlimDXBindings.Viewer10
                 modeDescription.Width = newWidth;
                 modeDescription.Height = newHeight;
                 
-                SlimDX.DXGI.SwapChainDescription desc = SwapChain.Description;
-                
-                SwapChain.ResizeBuffers(desc.BufferCount, newWidth, newHeight, desc.ModeDescription.Format, desc.Flags);
-                // SwapChain.SetFullScreenState(false, null);
+                if (changeFullScreenState)
+                {
+                    SwapChain.SetFullScreenState(fullScreen, null);
+                }
+
                 SwapChain.ResizeTarget(modeDescription);
             }
 
-            //tileFilters.SetVariable("mousePosition", mapper.MousePosition);
-            tileFilters.SetVariable("timer", timer);
-            tileFilters.SetVariable("hue", hue);
-            tileFilters.SetVariable("contrast", Contrast);
-            tileFilters.SetVariable("brightness", Brightness);
-            if (nes.Cart != null)
+            if (updated)
+            {
+
+                //tileFilters.SetVariable("mousePosition", mapper.MousePosition);
+                tileFilters.SetVariable("timer", timer);
+                tileFilters.SetVariable("hue", hue);
+                tileFilters.SetVariable("contrast", Contrast);
+                tileFilters.SetVariable("brightness", Brightness);
+                
                 tileFilters.SetVariable("chrramstart", nes.Cart.ChrRamStart);
 
-            //tileFilters.SetVariable("ppuBankStarts", nes.Cart.PPUBankStarts);
-           // tileFilters.SetVariable("spriteRam", spriteRam);
-            //tileFilters.SetVariable("spritesOnLine", nes.PPU.SpritesOnLine);            
+                timer += 0.1f;
 
-            timer += 0.1f;
+                Device.Rasterizer.SetViewports(ViewArea);
+                Device.OutputMerger.SetTargets(RenderTarget);
+                Device.ClearRenderTargetView(RenderTarget, Color.Black);
 
-            //texArrayForRender[3] = bankSwitchTex;
+                tileFilters[tileFilters.Count - 1].SetViewport(ViewArea);
 
-            Device.Rasterizer.SetViewports(ViewArea);
-            Device.OutputMerger.SetTargets(RenderTarget);
-            Device.ClearRenderTargetView(RenderTarget, Color.Black);
+                tileFilters.Draw(texArrayForRender);
 
-            tileFilters[tileFilters.Count - 1].SetViewport(ViewArea);
-
-            tileFilters.Draw(texArrayForRender);
-
-            SwapChain.Present(0, DXGI.PresentFlags.None);
+                SwapChain.Present(0, DXGI.PresentFlags.None);
+                updated = false;
+            }
         }
 
         private delegate void NoArgDelegate();
 
         public  void Die()
         {
-            foreach (var p in disposables)
+            foreach (IDisposable p in disposables)
             {
                 if (p != null) p.Dispose();
             }
@@ -584,14 +577,21 @@ namespace SlimDXBindings.Viewer10
             if (Device != null)  Device.Dispose();
             if (SwapChain != null) SwapChain.Dispose();
 
-            
+            tileFilters.Dispose();
             
         }
 
-        bool idling = true;
+        bool idling = false;
 
         void Application_Idle(object sender, EventArgs e)
         {
+        }
+
+        public void Dispose()
+        {
+
+            Die();
+            
         }
     }
 }
