@@ -24,20 +24,26 @@ namespace InstiBulb.WpfNESViewer
     {
         public WPFNesViewer()
         {
-        }
-
-        void CompositionTarget_Rendering(object sender, EventArgs e)
-        {
-            UpdateNESScreen();
+            
         }
 
         
 
-        private NESMachine nes;
-        public WPFNesViewer(NESMachine nes)
+        private NESMachine machine;
+        public NES.CPU.nitenedo.NESMachine AttachedMachine
         {
-            this.nes = nes;
+            get
+            {
+                return machine;
+            }
+            set
+            {
+                machine = value;
+
+
+            }
         }
+
 
         WriteableBitmap bitmap;
         WriteableBitmap palette;
@@ -61,7 +67,7 @@ namespace InstiBulb.WpfNESViewer
         public void CreateDisplay()
         {
             palette = new WriteableBitmap(256, 1, 96, 96, PixelFormats.Pbgra32, null);
-            palette.WritePixels(new Int32Rect(0,0,256,1), nes.PPU.LoadPalABGR(), stride, 0);
+            palette.WritePixels(new Int32Rect(0,0,256,1), machine.PPU.LoadPalABGR(), stride, 0);
             bitmap = new WriteableBitmap(256, 256, 96, 96, PixelFormats.Pbgra32,null);
 
             nesPalette = new WriteableBitmap(32, 1, 96, 96, PixelFormats.Pbgra32, null);
@@ -77,6 +83,7 @@ namespace InstiBulb.WpfNESViewer
         int stride = (256 * 32 + 7) / 8;
 
         byte[] pixArray = new byte[256 * 240];
+
         public void UpdateNESScreen(int[] pixels)
         {
             bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), pixels, stride, 0, 0);
@@ -149,7 +156,7 @@ namespace InstiBulb.WpfNESViewer
 
         public void UpdateNESScreen()
         {
-            bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), nes.PPU.VideoBuffer, stride, 0, 0);
+            bitmap.WritePixels(new Int32Rect(0, 0, 256, 256), machine.PPU.VideoBuffer, stride, 0, 0);
             //  nesPalette.WritePixels(new Int32Rect(0, 0, 32, 1), nes.PPU.Palette, (32 * 32 + 7) / 8, 0); 
             if (isDefault)
             {
@@ -160,16 +167,6 @@ namespace InstiBulb.WpfNESViewer
 
         #endregion
 
-        public NESMachine AttachedMachine
-        {
-            get
-            {
-                return nes;
-            }
-            set
-            {
-                nes = value;
-            }
-        }
+
     }
 }

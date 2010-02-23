@@ -183,6 +183,9 @@
     <Compile Include="ControlPanel\D3D10ControlPanel.xaml.cs">
       <DependentUpon>D3D10ControlPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ControlPanel\DebuggerView.xaml.cs">
+      <DependentUpon>DebuggerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ControlPanel\InstructionHistoryControl.xaml.cs">
       <DependentUpon>InstructionHistoryControl.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -304,6 +307,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanel\DebuggerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlPanel\MachineStatus.xaml">
       <Generator>MSBuild:Compile</Generator>

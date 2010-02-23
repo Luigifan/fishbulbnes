@@ -17,7 +17,7 @@
 			</StackPanel>
 		</DataTemplate>
 
-		<SolidColorBrush x:Key="NeonButtonBrushForeColor" Color="#FF2BF316"/>
+
 	</UserControl.Resources>
 
 	<Grid x:Name="LayoutRoot">
@@ -29,34 +29,16 @@
 			</Grid.RowDefinitions>
 			<ScrollViewer Margin="0,1.983,0,0" Grid.RowSpan="1" Grid.Row="1">
 				<ListBox IsSynchronizedWithCurrentItem="True" 
-                         FontFamily="Global Monospace" FontSize="16" Foreground="#FF62E61C" 
-                         x:Name="Disassembly" Padding="0,2,0,0" FontWeight="Bold" 
+                         x:Name="Disassembly" 
                          ItemTemplate="{DynamicResource FutureOpsTemplate1}" BorderThickness="0,0,0,0" 
                          ItemsSource="{Binding DebuggerInformation.FutureOps}"
-                         
                          />
 			</ScrollViewer>
 			<StackPanel Grid.Row="2" Orientation="Horizontal">
-				<Button Content="Update" Click="UpdateRollout" FontFamily="Global Monospace" FontSize="14" FontWeight="ExtraBold" Foreground="{DynamicResource NeonButtonBrushForeColor}" BorderBrush="#FF206FB8"/>
-				<CheckBox Content="Update on Step()" FontFamily="Global Monospace" Foreground="#FF2DD31B" IsChecked="{Binding Path=DebuggerInformation.AutoRollout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<Button Content="Update" Click="UpdateRollout" />
+				<CheckBox Content="Update on Step()"  IsChecked="{Binding Path=DebuggerInformation.AutoRollout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			</StackPanel>
-			<Border BorderBrush="#FF526D3B" BorderThickness="2,2,2,0" d:LayoutOverrides="Height" Margin="0,0,0,6.017">
-				<Border.Background>
-					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-						<GradientStop Color="#FF16EC43" Offset="0"/>
-						<GradientStop Color="#FF3E5C3E" Offset="1"/>
-					</LinearGradientBrush>
-				</Border.Background>
-				<Border.OpacityMask>
-					<LinearGradientBrush MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" EndPoint="0.5,1" StartPoint="0.5,0">
-						<GradientStop Color="#FF000000" Offset="0.21"/>
-						<GradientStop Color="#00FFFFFF" Offset="0.777"/>
-						<GradientStop Color="#00000000" Offset="0.138"/>
-						<GradientStop Color="#FF5A5A5A" Offset="0.371"/>
-					</LinearGradientBrush>
-				</Border.OpacityMask>
-				<Label Style="{StaticResource HeaderStyle}" Content="Instruction Rollout" />
-			</Border>
+			<Label Style="{StaticResource HeaderStyle}" Content="Instruction Rollout" />
 		</Grid>
 	</Grid>
 </UserControl>
