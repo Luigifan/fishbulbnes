@@ -10,9 +10,9 @@ namespace NES.CPU.PPUClasses
 
 
         // hscroll, vscroll represent the latches written to by 2005, 2006
-        private int _hScroll = 0;
-        private int _vScroll = 0;
-        private int lockedHScroll = 0, lockedVScroll = 0;
+        protected int _hScroll = 0;
+        protected int _vScroll = 0;
+        protected int lockedHScroll = 0, lockedVScroll = 0;
 
         public int HScroll
         {

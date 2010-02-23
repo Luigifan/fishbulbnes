@@ -221,9 +221,9 @@ namespace NES.CPU.PPUClasses
                     pal[n + 64] = pal[n];
                     pal[n + 128] = pal[n];
                     pal[n + 192] = pal[n];
-                    Console.WriteLine(
-                        string.Format("float4({0}, {1}, {2}, 1.0), ", 
-                            ((float)r / 256.0f),  ((float)g / 256.0f), ((float)b / 256.0f) ));
+                    //Console.WriteLine(
+                    //    string.Format("float4({0}, {1}, {2}, 1.0), ", 
+                    //        ((float)r / 256.0f),  ((float)g / 256.0f), ((float)b / 256.0f) ));
                 }
             }
 
@@ -318,7 +318,7 @@ namespace NES.CPU.PPUClasses
             }
         }
 
-        int _backgroundPatternTableIndex;
+        protected int _backgroundPatternTableIndex;
         public int PatternTableIndex 
         {
             get

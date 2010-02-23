@@ -9,6 +9,7 @@ namespace NES.CPU.PPUClasses
     public partial class PixelWhizzler : IClockedMemoryMappedIOElement
     {
 
+        protected int nameTableBits = 0; 
         private bool vidRamIsRam = true;
 
         protected byte[] _palette = new byte[0x20];
@@ -55,6 +56,7 @@ namespace NES.CPU.PPUClasses
                     _PPUControlByte0 = data;
 
                     nameTableMemoryStart = (0x400 * (_PPUControlByte0 & 0x3));
+                    nameTableBits = (byte)(_PPUControlByte0 & 0x3);
                     _backgroundPatternTableIndex = ((_PPUControlByte0 & 0x10) >> 4) * 0x1000;
 
                     // if we toggle /vbl we can throw multiple NMIs in a vblank period
@@ -128,6 +130,7 @@ namespace NES.CPU.PPUClasses
                         if (!frameOn || (frameOn && !isRendering))
                         {
                             lockedVScroll = _vScroll;
+                            UpdatePixelInfo();
                         }
                         
                         // fineVerticalScroll = data & 0x7;
@@ -167,6 +170,8 @@ namespace NES.CPU.PPUClasses
                         _hScroll = ((_PPUAddress & 0x1F) << 3); // +(currentXPosition & 7);
                         _vScroll = (((_PPUAddress >> 5) & 0x1F) << 3);
                         _vScroll |= ((_PPUAddress >> 12) & 0x3);
+
+                        nameTableBits = ((_PPUAddress >> 10) & 0x3);
                         nameTableMemoryStart = ((_PPUAddress >> 10) & 0x3) * 0x400;
                         if (frameOn)
                         {
@@ -226,6 +231,7 @@ namespace NES.CPU.PPUClasses
                     PPUAddress = (PPUAddress & 0x3FFF);
                     break;
             }
+            UpdatePixelInfo();
         }
 
         public int GetByte(int Clock, int address)

@@ -21,7 +21,7 @@ namespace NES.CPU.PPUClasses
         /// draws from the lastcpuClock to the current one
         /// </summary>
         /// <param name="cpuClockNum"></param>
-        public void DrawTo(int cpuClockNum)
+        public virtual void DrawTo(int cpuClockNum)
         {
             int frClock = (cpuClockNum - lastcpuClock )* 3;
             
@@ -47,7 +47,7 @@ namespace NES.CPU.PPUClasses
             lastcpuClock = cpuClockNum;
         }
 
-        private void BumpScanline()
+        protected virtual void BumpScanline()
         {
             switch (frameClock++)
             {
@@ -277,6 +277,11 @@ namespace NES.CPU.PPUClasses
                 (b0 ) << 8 |
                 (spritePixel & 15) << 4 | tilePixel & 15);
             
+
+        }
+
+        protected virtual void UpdatePixelInfo()
+        {
 
         }
 

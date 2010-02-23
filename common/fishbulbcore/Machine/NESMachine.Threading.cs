@@ -208,7 +208,8 @@ namespace NES.CPU.nitenedo
             currentWorkItem.Result = MachineTaskResults.RunCompletedOK;
             
             task = currentWorkItem.Task;
-            if (task == MachineTasks.Stoppit) return;             
+
+            // if (task == MachineTasks.Stoppit) return;
 
             switch (task)
             {
@@ -220,6 +221,11 @@ namespace NES.CPU.nitenedo
                     break;
                 case MachineTasks.RunContinuously:
                     this.Runtendo();
+                    break;
+                case MachineTasks.Stoppit:
+                    isStopped = true;
+                    MachineRunningResetEvent.WaitOne();
+                    isStopped = false;
                     break;
                 default:
                     break;

@@ -8,7 +8,7 @@ namespace NES.CPU.PPUClasses
 {
     public partial class PixelWhizzler
     {
-        INESCart chrRomHandler;
+        protected INESCart chrRomHandler;
 
         public INESCart ChrRomHandler
         {

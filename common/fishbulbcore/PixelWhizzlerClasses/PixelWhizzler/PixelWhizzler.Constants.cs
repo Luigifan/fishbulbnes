@@ -57,7 +57,7 @@ namespace NES.CPU.PPUClasses
         const int ScanlineEventPPUXReset = 257;
         const int ScanlineEventPPUYIncremented = 251;
 
-        int currentXPosition = 0, currentYPosition = 0;
+        protected int currentXPosition = 0, currentYPosition = 0;
         const int vBufferWidth = 0x100;
 
         public int CurrentYPosition

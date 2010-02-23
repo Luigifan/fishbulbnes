@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="NES.CPU.nitenedo.NESMachine">
-    <Position X="1" Y="0.5" Width="1.5" />
+    <Position X="6.5" Y="3" Width="1.5" />
     <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
     </Compartments>
     <NestedTypes>
       <Enum Name="NES.CPU.nitenedo.NESMachine.MachineTasks" Collapsed="true">
@@ -19,183 +19,221 @@
           <NewMemberFileName>Machine\NESMachine.Threading.cs</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
+      <Class Name="NES.CPU.nitenedo.NESMachine.MachineWorkItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Machine\NESMachine.Threading.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
     </NestedTypes>
-    <AssociationLine Name="_cart" Type="NES.CPU.Machine.Carts.INESCart" ManuallyRouted="true">
-      <Path>
-        <Point X="2.141" Y="2.187" />
-        <Point X="2.141" Y="3.574" />
-        <Point X="3.271" Y="3.574" Type="JumpStart" />
-        <Point X="3.438" Y="3.574" Type="JumpEnd" />
-        <Point X="6.25" Y="3.574" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="Beeper" Type="NES.CPU.Machine.BeepsBoops.MIDIpAPU" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="1.719" Y="2.187" />
-        <Point X="1.719" Y="2.583" />
-        <Point X="0.625" Y="2.583" />
-        <Point X="0.625" Y="5.375" />
-        <Point X="1" Y="5.375" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="PPU" Type="NES.CPU.PPUClasses.PixelWhizzler" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="2.5" Y="2.109" />
-        <Point X="0.219" Y="2.109" />
-        <Point X="0.219" Y="7.125" />
-        <Point X="0.625" Y="7.125" />
-        <Point X="0.625" Y="8.375" />
-        <Point X="1" Y="8.375" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="PadOne" Type="NES.CPU.Machine.IControlPad" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="2.5" Y="1.416" />
-        <Point X="3.354" Y="1.416" />
-        <Point X="3.354" Y="4.875" />
-        <Point X="7.375" Y="4.875" />
-        <Point X="7.375" Y="5.438" />
-        <Point X="7" Y="5.438" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>IB1ghEBCYGCADwtNAAEAQgEpWlwCAAIYYoABmiRcQQw=</HashCode>
+      <HashCode>EBxghEQCYWjQDw5FAkGETgEpHlwKKmIQYpACmAXcYQ4=</HashCode>
       <FileName>Machine\NESMachine.Control.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="_cpu" />
-      <Field Name="_cart" />
-      <Property Name="Beeper" />
       <Property Name="PPU" />
       <Property Name="PadOne" />
+      <Property Name="Cart" />
+      <Property Name="SoundBopper" />
+      <Property Name="Tiler" />
+      <Property Name="PadTwo" />
+      <Property Name="Cpu" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="NES.CPU.Fastendo.FastendoCPU">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+  <Class Name="NES.CPU.PPUClasses.PixelWhizzler" Collapsed="true">
+    <Position X="10.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>yCWUJMS7ZC+s34Ubha20OGYIjgnv5B93wnMrpnwWdOk=</HashCode>
+      <FileName>PixelWhizzlerClasses\PixelWhizzler\PixelWhizzler.Constants.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NES.CPU.PixelWhizzlerClasses.SoftWhizzler.SoftWhizzler" Collapsed="true">
+    <Position X="11.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAEAAAAgAEAAAAAAAA=</HashCode>
+      <FileName>PixelWhizzlerClasses\SoftWhizzler\SoftWhizzler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.nitenedo.InputHandler">
+    <Position X="8" Y="6.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAQAAAIEAAAEAAAQQAAAEAAAABQAQAEEABAAREA=</HashCode>
+      <FileName>Machine\InputHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NES.CPU.Machine.Carts.BaseCart" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AA4UAgEEciJECiuBhQBSAkSo1CJgagYAiAWKBhBARsQ=</HashCode>
+      <FileName>Machine\Carts\BaseCart.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NES.CPU.NESCart" Collapsed="true">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAABIAAAAAAAAgAABAA=</HashCode>
+      <FileName>Machine\Carts\NESCart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.Carts.NesCartMMC1" Collapsed="true">
+    <Position X="4.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAQAUAAAAAAIAAAAAAAAABAQBEAAAAQAAAgIABAA=</HashCode>
+      <FileName>Machine\Carts\NesCart.MMC1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.Carts.NesCartMMC3" Collapsed="true">
+    <Position X="4.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAHgIAAEIAAgAAAAIAAQEBoAAAAEECAAoFHAA=</HashCode>
+      <FileName>Machine\Carts\NesCart.MMC3.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.BeepsBoops.Bopper">
+    <Position X="1" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>FgCACAjBAgIBAIACIBAQAQAgQkQAGAYGEQIADDAAREA=</HashCode>
+      <FileName>Machine\BeepsBoops\Bopper.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="square0" />
+      <Field Name="square1" />
+      <Field Name="triangle" />
+      <Field Name="noise" />
+      <Field Name="dmc" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NES.CPU.Machine.BeepsBoops.SquareChannel" Collapsed="true">
+    <Position X="3.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wACCAAABQgAwAoDAAEAQAQREEggBFAAShAJgAAiADQI=</HashCode>
+      <FileName>Machine\BeepsBoops\SquareChannel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.BeepsBoops.TriangleChannel" Collapsed="true">
+    <Position X="3.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wACKAAAAAgEgAYCgAEQQAABEAAABAAASBAAAAAgADQI=</HashCode>
+      <FileName>Machine\BeepsBoops\TriangleChannel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.BeepsBoops.NoiseChannel" Collapsed="true">
+    <Position X="3.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wACAAAAAQgEgAIAAAEACAABEEAABEAASBQIAAAiADQI=</HashCode>
+      <FileName>Machine\BeepsBoops\NoiseChannel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Machine.BeepsBoops.DMCChannel" Collapsed="true">
+    <Position X="3.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wACCBEAhQgAwAoDAAEAQAQREEggBFAAShAJgAAiADQI=</HashCode>
+      <FileName>Machine\BeepsBoops\DMCChannel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.PPUClasses.TileDoodler" Collapsed="true">
+    <Position X="8.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAAAAAgAEEGQEAABAIAAAAAAQAQAFTAAAAEBAAAAAQU=</HashCode>
+      <FileName>PixelWhizzlerClasses\PixelWhizzler\TileDoodler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NES.CPU.Fastendo.CPU2A03">
+    <Position X="10.75" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <NestedTypes>
-      <Struct Name="NES.CPU.Fastendo.FastendoCPU.Instruction" Collapsed="true">
+      <Struct Name="NES.CPU.Fastendo.CPU2A03.smallInstruction" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Fastendo\Fastendo.CPUStructures.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Class Name="NES.CPU.Fastendo.FastendoCPU.CPUStatus" Collapsed="true">
+      <Class Name="NES.CPU.Fastendo.CPU2A03.Instruction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Fastendo\Fastendo.CPUStructures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="NES.CPU.Fastendo.CPU2A03.CPUStatus" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Fastendo\Fastendo.CPUStructures.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>GgwATkChjHDiHtU5YdDAFhjgd1hKCggTaAFRYIAAtes=</HashCode>
+      <HashCode>GowATkKhjHDiXtU5YdDEFhjg91xKSgwTaAnSYIEItuk=</HashCode>
       <FileName>Fastendo\FastCPU6502.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_pixelWhizzler" />
-      <Property Name="Cart" />
-      <Property Name="PadOne" />
-      <Property Name="Beeper" />
-    </ShowAsAssociation>
   </Class>
-  <Class Name="NES.CPU.PPUClasses.PixelWhizzler">
-    <Position X="1" Y="7.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Events" Collapsed="true" />
-    </Compartments>
+  <Interface Name="NES.CPU.PixelWhizzlerClasses.IPPU" Collapsed="true">
+    <Position X="9" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>yCiQJMKrdDWOXRQBhKGkCOaIigmvhAk1BiMKQngaFOk=</HashCode>
-      <FileName>PixelWhizzlerClasses\PixelWhizzler.Constants.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="NES.CPU.Machine.BeepsBoops.MIDIpAPU">
-    <Position X="1" Y="4.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <NestedTypes>
-      <Delegate Name="NES.CPU.Machine.BeepsBoops.MIDIpAPU.MidiOutProc" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Machine\BeepsBoops\MIDIpAPU.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-    </NestedTypes>
-    <TypeIdentifier>
-      <HashCode>gAAACkBhCgBgAgAMIgEAQAACgAAAoBAEBAgAAYQiBUA=</HashCode>
-      <FileName>Machine\BeepsBoops\MIDIpAPU.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="NES.CPU.nitenedo.InputHandler" Collapsed="true">
-    <Position X="5.5" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAEAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAEEAAAABEA=</HashCode>
-      <FileName>Machine\InputHandler.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Interface Name="NES.CPU.Machine.Carts.INESCart" HideInheritanceLine="true">
-    <Position X="6.25" Y="3" Width="2.25" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-    </Compartments>
-    <InheritanceLine Type="NES.CPU.Fastendo.IMemoryMappedIOElement" IsHidden="true" />
-    <AssociationLine Name="Whizzler" Type="NES.CPU.PPUClasses.PixelWhizzler" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="6.25" Y="3.808" />
-        <Point X="3.438" Y="3.808" Type="JumpStart" />
-        <Point X="3.271" Y="3.808" Type="JumpEnd" />
-        <Point X="2.875" Y="3.808" />
-        <Point X="2.875" Y="8.188" />
-        <Point X="2.5" Y="8.188" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="CPU" Type="NES.CPU.Fastendo.FastendoCPU" ManuallyRouted="true">
-      <Path>
-        <Point X="6.25" Y="3.256" />
-        <Point X="4.25" Y="3.256" />
-        <Point X="4.25" Y="1.969" />
-      </Path>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAgAAAEAQAAACAIAAAAAAgCAEABAIAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Machine\Carts\INESCart.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Whizzler" />
-      <Property Name="CPU" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="NES.CPU.Fastendo.IMemoryMappedIOElement" Collapsed="true">
-    <Position X="6.25" Y="1.25" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEA=</HashCode>
-      <FileName>Fastendo\Interfaces.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="NES.CPU.Fastendo.IPPU" Collapsed="true">
-    <Position X="6.25" Y="0.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAACAAA=</HashCode>
-      <FileName>Fastendo\Interfaces.cs</FileName>
+      <HashCode>gCCAJAAQQCIAXYAJhQUQAGAIAgjJ4AUQACALIFQGdMk=</HashCode>
+      <FileName>PixelWhizzlerClasses\IPPU.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NES.CPU.Machine.IControlPad" Collapsed="true">
-    <Position X="5.5" Y="5.25" Width="1.5" />
+    <Position X="8" Y="5.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAEAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEAAAAAABAAAAAAAAAAAAAAAQAAAAAAAAAAAAABEA=</HashCode>
       <FileName>Machine\IControlPad.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="NES.CPU.Machine.Carts.INESCart" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAgEAcgAECCIAAAAAAgSoFCBAIAIAAAWABABAAAA=</HashCode>
+      <FileName>Machine\Carts\INESCart.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NES.CPU.Machine.BeepsBoops.IAPU" Collapsed="true">
+    <Position X="1" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACAAACBAAABAAAAAAAAAAAAAgAAGAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Machine\BeepsBoops\Bopper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="NES.CPU.Machine.Carts.ROMHashFunctionDelegate" Collapsed="true">
+    <Position X="2.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Machine\Carts\BaseCart.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NES.CPU.Machine.Carts.ReadMySRAM" Collapsed="true">
+    <Position X="2.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Machine\Carts\BaseCart.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NES.CPU.Machine.Carts.WriteMySRAM" Collapsed="true">
+    <Position X="2.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Machine\Carts\BaseCart.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

@@ -7,8 +7,12 @@ namespace NES.CPU.PPUClasses
 {
     public partial class PixelWhizzler
     {
-        bool spriteChanges;
+        protected bool spriteChanges;
         private bool _spriteCopyHasHappened;
+
+        protected int sprite0scanline = -1;
+        protected int sprite0x = -1;
+
 
         public bool SpriteCopyHasHappened
         {
@@ -18,7 +22,7 @@ namespace NES.CPU.PPUClasses
 
         protected bool spriteZeroHit;
         protected bool isForegroundPixel;
-        private NESSprite[] currentSprites;
+        protected NESSprite[] currentSprites;
         private NESSprite[] unpackedSprites;
 
         protected int _maxSpritesPerScanline = 64;
@@ -163,7 +167,7 @@ namespace NES.CPU.PPUClasses
 
         int spritesOnThisScanline;
 
-        int spriteSize;
+        protected int spriteSize;
 
         int[] spritesOnLine = new int[256 * 2];
 
@@ -193,6 +197,12 @@ namespace NES.CPU.PPUClasses
 
                 if (scanline >= y && scanline < y + spriteSize)
                 {
+                    if (spriteID == 0)
+                    {
+                        sprite0scanline = scanline;
+                        sprite0x = unpackedSprites[spriteID].XPosition;
+                    }
+
                     int spId = spriteNum / 4;
                     if (spId < 32)
                         outBuffer[(253 * 256) + yLine] |= 1 << spId;
