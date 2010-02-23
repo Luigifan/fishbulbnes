@@ -23,6 +23,8 @@ using SlimDXNESViewer;
 using fishbulbcommonui;
 using InstiBulb.WpfNESViewer;
 using SlimDXBindings.Viewer10;
+using System.Windows;
+
 
 namespace InstiBulb.Integration
 {
@@ -53,8 +55,8 @@ namespace InstiBulb.Integration
 
             container.RegisterType<NESMachine>(new ContainerControlledLifetimeManager());
             container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
-                new InjectionProperty("PadOne", new ResolvedParameter<IControlPad>("keyboard")),
-                new InjectionProperty("PadTwo", new ResolvedParameter<SlimDXZapper>("zapper"))
+                new InjectionProperty("PadOne", new ResolvedParameter<IControlPad>("padone")),
+                new InjectionProperty("PadTwo", new ResolvedParameter<IControlPad>("padtwo"))
             );
             container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
                     new InjectionProperty("SRAMWriter", new ResolvedParameter<SRAMWriterDelegate>()),
@@ -71,10 +73,9 @@ namespace InstiBulb.Integration
 
         public IUnityContainer RegisterHardwareNES(IUnityContainer container)
         {
-            container.RegisterType<HardWhizzler>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IPPU, HardWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IPPU, NES.CPU.PixelWhizzlerClasses.HardWhizzler>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, D3D10NesViewer>(new ContainerControlledLifetimeManager()
-            , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
+                , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
                 );
             
 
@@ -83,20 +84,22 @@ namespace InstiBulb.Integration
 
         public IUnityContainer RegisterSoftwareNES(IUnityContainer container)
         {
-            container.RegisterType<SoftWhizzler>(new ContainerControlledLifetimeManager());
             container.RegisterType<IPPU, SoftWhizzler>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager());
-
+            container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager()
+                , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
+                );
             return container;
         }
 
-
-        public IUnityContainer RegisterNesTypes(IUnityContainer container)
+        public IUnityContainer RegisterNesTypes(IUnityContainer container, string nesType)
         {
 
             RegisterNESCommon(container);
-            RegisterHardwareNES(container);
-            //RegisterSoftwareNES(container);
+            
+            if (nesType.ToLower() == "hard")
+                RegisterHardwareNES(container);
+            else
+                RegisterSoftwareNES(container);
             
             // register types needed to build a NES
             // platform specific wavestreamer
@@ -105,12 +108,13 @@ namespace InstiBulb.Integration
             // Select and setup the default PPU engine
 
 
-            //container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager()
-            //    , new InjectionProperty("Handler", new ResolvedParameter<MainWindow>() ));
 
-            container.RegisterType<SlimDXKeyboardControlPad>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>("keyboard", new ContainerControlledLifetimeManager());
-            container.RegisterType<IControlPad, SlimDXZapper>("zapper", new ContainerControlledLifetimeManager());
+            container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IControlPad, WpfKeyboardControlPad>("padone", new ContainerControlledLifetimeManager(),
+                new InjectionProperty("Handler", new ResolvedParameter<Window>("MainWindow"))
+                );
+
+            container.RegisterType<IControlPad, SlimDXZapper>("padtwo", new ContainerControlledLifetimeManager());
 
 
             //// register view models

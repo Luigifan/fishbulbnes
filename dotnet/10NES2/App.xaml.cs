@@ -17,9 +17,10 @@ namespace _10NES2
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            
-            MainWindowViewModel vm = new MainWindowViewModel();
+
             _10NES2.MainWindow win = new MainWindow();
+            MainWindowViewModel vm = new MainWindowViewModel(win);
+            
             win.nesDisplay.Target = vm.Container.Resolve<NESMachine>();
             win.nesDisplay.Context = vm.Container.Resolve<NES.CPU.nitenedo.Interaction.IDisplayContext>();
 

@@ -3,7 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nesView="clr-namespace:InstiBulb.Integration"
         xmlns:my="clr-namespace:InstiBulb.ThreeDee"
-        Title="10NES Omega 2" Height="350" Width="525" >
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:sysWin="clr-namespace:System.Windows;assembly=PresentationCore"
+        Title="10NES Omega 2" Height="480" Width="720" 
+        Closed="Window_Closed"
+        Closing="Window_Closing"
+        >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,34 +17,98 @@
             <SolidColorBrush x:Key="BubbleColor" Color="#504050FF">
                 
             </SolidColorBrush>
+
         </ResourceDictionary>
     </Window.Resources>
     <Grid Background="Black" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.25*" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="0.50*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition  Height="0.12*"/>
-            <RowDefinition />
-            <RowDefinition  Height="0.12*"/>
-        </Grid.RowDefinitions>
-        <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="3">
-            <my:ToolSpinner3D.Camera >
-                <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
-            </my:ToolSpinner3D.Camera>
-            <my:ToolSpinner3D.Icons>
-                <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="ControlPanel" Model="{StaticResource ResourceKey=nes}" Billboard="{StaticResource BubbleColor}" >
-                </my:Icon3D>
-                <my:Icon3D Command="{Binding ShowDialogCommand}" CommandParameter="SoundPanel" Model="{StaticResource ResourceKey=Headphones}" Billboard="{StaticResource BubbleColor}" >
-                </my:Icon3D>
-                <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
-                </my:Icon3D>
 
-            </my:ToolSpinner3D.Icons>
-        </my:ToolSpinner3D>
-        <Button Grid.Row="0" Content="Up" Command="{Binding ElementName=toolSpinner3D1, Path=NextCommand}"/>
-        <Button Grid.Row="2" Content="Down" Command="{Binding ElementName=toolSpinner3D1, Path=PreviousCommand}"/>
-        <nesView:NESDisplay x:Name="nesDisplay" Grid.Column="1" Grid.RowSpan="3" ></nesView:NESDisplay>
+        <Grid Name="SpinnerGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="5" Grid.ColumnSpan="2" Margin="0 0 50 0">
+                <my:ToolSpinner3D.Camera >
+                    <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
+                </my:ToolSpinner3D.Camera>
+                <my:ToolSpinner3D.Icons>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="ControlPanel" Model="{StaticResource ResourceKey=nes}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="SoundPanel" Model="{StaticResource ResourceKey=Headphones}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="SaveStatePanel" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+
+                </my:ToolSpinner3D.Icons>
+            </my:ToolSpinner3D>
+
+            <Button Opacity="0.2" Grid.Row="0" Grid.ColumnSpan="2" Content="Up" Command="{Binding ElementName=toolSpinner3D1, Path=NextCommand}"/>
+            <Button Opacity="0.2" Grid.Row="4" Grid.ColumnSpan="2" Content="Down" Command="{Binding ElementName=toolSpinner3D1, Path=PreviousCommand}"/>
+        </Grid>
+        <Grid Grid.Column="0"  Grid.Row="0"   Name="BumpOutGrid"
+                  Visibility="{Binding BumpOutVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+                  
+                  >
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding BumpOutVisibility}"  Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" From="0" To="1"  />
+                                        <!--<ObjectAnimationUsingKeyFrames Duration="0:0:1" Storyboard.TargetProperty="Visibility" >
+                                                <ObjectKeyFrameCollection>
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ResourceKey=Visible}" />
+                                                </ObjectKeyFrameCollection>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+
+                        </DataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+            <Label HorizontalAlignment="Stretch" Name="BumpOut" VerticalAlignment="Stretch" Margin="0,0,0,12" HorizontalContentAlignment="Stretch"
+                              Content="{Binding BumpOut}" 
+                              
+                              Grid.RowSpan="2"
+                              
+                 />
+
+            <Grid HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Label Foreground="White" Content="{Binding Path=BumpOut.DataContext.DisplayName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+                </Label>
+                <Button Width="Auto" Command="{Binding HideBumpOutCommand}" HorizontalAlignment="Right" Grid.Column="1" >X</Button>
+            </Grid>
+        </Grid>
+        <nesView:NESDisplay x:Name="nesDisplay" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" 
+                         
+                            ></nesView:NESDisplay>
     </Grid>
 </Window>

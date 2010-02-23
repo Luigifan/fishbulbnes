@@ -24,5 +24,20 @@ namespace _10NES2
             InitializeComponent();
         }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            
+
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            nesDisplay.DestroyContext();
+            
+            var p = DataContext as IDisposable;
+            if (p != null)
+                p.Dispose();
+        }
+
     }
 }

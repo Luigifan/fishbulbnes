@@ -62,6 +62,8 @@ namespace InstiBulb.Integration
         static void DisplayContextChanged(DependencyObject o, DependencyPropertyChangedEventArgs arg)
         {
             (o as NESDisplay).SetupRenderer(arg.NewValue as IDisplayContext);
+            (o as NESDisplay).UpdateTarget();
+
         }
 
         static void TargetChanged(DependencyObject o, DependencyPropertyChangedEventArgs arg)
@@ -69,21 +71,23 @@ namespace InstiBulb.Integration
             var p = o as NESDisplay;
             if (p == null) return;
             p.UnhookTarget(arg.OldValue as NESMachine);
-            p.UpdateTarget(arg.NewValue as NESMachine);
             if (p.Context != null)
             {
                 p.SetupRenderer(p.Context);
             }
-            
+
+            p.UpdateTarget();
         }
 
         public void DestroyContext()
         {
             if (displayContext != null)
             {
+                
+                Target.Drawscreen -= target_Drawscreen;
+                Dispatcher.ExitAllFrames();
                 displayContext.TearDownDisplay();
                 displayContext = null;
-                Target.Drawscreen -= target_Drawscreen;
             }
         }
 
@@ -108,10 +112,10 @@ namespace InstiBulb.Integration
             }
         }
 
-        internal void UpdateTarget(NESMachine target)
+        internal void UpdateTarget()
         {
-            if (target != null)
-            target.Drawscreen += target_Drawscreen;
+            if (Target != null)
+            Target.Drawscreen += target_Drawscreen;
         }
 
         internal void UnhookTarget(NESMachine target)
@@ -156,24 +160,7 @@ namespace InstiBulb.Integration
                 UpdateContext();
                 if (Target != null)
                 {
-                    Target.PPU.PixelWidth = displayContext.PixelWidth;
-                    Target.PPU.PixelWidth = displayContext.PixelWidth;
-
-                    Target.PPU.LoadPalABGR();
-                    if (displayContext.PixelFormat == NES.CPU.nitenedo.Interaction.NESPixelFormats.RGB)
-                    {
-                        Target.PPU.LoadPalRGBA();
-
-                    }
-
-                    if (displayContext.PixelFormat == NESPixelFormats.Indexed)
-                    {
-                        Target.PPU.FillRGB = false;
-                    }
-                    else
-                    {
-                        Target.PPU.FillRGB = true;
-                    }
+                    SetupDisplayChannel(displayContext);
                 }
 
                 switch (displayContext.DesiredCallback)
@@ -190,6 +177,28 @@ namespace InstiBulb.Integration
                         doTheDraw = new NoArgDelegate(DrawScreenPtr);
                         break;
                 }
+            }
+        }
+
+        private void SetupDisplayChannel(IDisplayContext displayContext)
+        {
+            Target.PPU.PixelWidth = displayContext.PixelWidth;
+            Target.PPU.PixelWidth = displayContext.PixelWidth;
+
+            Target.PPU.LoadPalABGR();
+            if (displayContext.PixelFormat == NES.CPU.nitenedo.Interaction.NESPixelFormats.RGB)
+            {
+                Target.PPU.LoadPalRGBA();
+
+            }
+
+            if (displayContext.PixelFormat == NESPixelFormats.Indexed)
+            {
+                Target.PPU.FillRGB = false;
+            }
+            else
+            {
+                Target.PPU.FillRGB = true;
             }
         }
 
