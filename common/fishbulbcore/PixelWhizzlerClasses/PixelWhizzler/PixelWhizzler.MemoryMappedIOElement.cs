@@ -178,6 +178,7 @@ namespace NES.CPU.PPUClasses
                             lockedHScroll = _hScroll;
                             lockedVScroll = _vScroll;
                             lockedVScroll -= currentYPosition;
+                            UpdatePixelInfo();
                         }
 
                         // relock vscroll during render when this happens

@@ -29,12 +29,12 @@ namespace _10NES2
             set { container = value; }
         }
 
-        public MainWindowViewModel(Window window)
+        public MainWindowViewModel(Window window, string nesType)
         {
             container = new UnityContainer();
             container.RegisterInstance<Window>("MainWindow", window);
 
-            new InstiBulb.Integration.NesContainerFactory().RegisterNesTypes(container, "soft");
+            new InstiBulb.Integration.NesContainerFactory().RegisterNesTypes(container, nesType);
             container.RegisterType<FrameworkElement, CartInfoPanel>("CartInfo");
             container.RegisterType<FrameworkElement, ControlPanelView>("ControlPanel");
             container.RegisterType<FrameworkElement, SoundPanelView>("SoundPanel");

@@ -98,6 +98,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.D3DImageEx">
+      <HintPath>..\..\Libs\Interop.D3DImageEx.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
@@ -184,6 +187,7 @@
     <Compile Include="Viewer9\SlimDXRenderer.cs" />
     <Compile Include="Viewer9\TexturedQuadRenderer.cs" />
     <Compile Include="Viewer9\VertexBasedRenderer.cs" />
+    <Compile Include="ViewerX\D3D10EmbeddableNesViewer.cs" />
     <Compile Include="ViewerX\D3D10Host.cs" />
     <Compile Include="ViewerX\D3D10NesViewer.cs" />
     <Compile Include="ViewerX\Filter\BasicHDRFilter.cs" />

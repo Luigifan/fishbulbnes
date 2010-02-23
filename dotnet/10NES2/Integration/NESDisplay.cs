@@ -115,7 +115,20 @@ namespace InstiBulb.Integration
         internal void UpdateTarget()
         {
             if (Target != null)
-            Target.Drawscreen += target_Drawscreen;
+            {
+                Target.Drawscreen += target_Drawscreen;
+                Target.RunStatusChangedEvent += new EventHandler<EventArgs>(Target_RunStatusChangedEvent);
+            }
+        }
+
+        void Target_RunStatusChangedEvent(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new NoArgDelegate(Status), null);
+        }
+
+        void Status()
+        {
+            Context.SetPausedState(Target.RunState != NES.Machine.ControlPanel.RunningStatuses.Running);
         }
 
         internal void UnhookTarget(NESMachine target)

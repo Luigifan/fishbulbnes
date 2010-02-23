@@ -77,7 +77,10 @@ namespace InstiBulb.Integration
             container.RegisterType<IDisplayContext, D3D10NesViewer>(new ContainerControlledLifetimeManager()
                 , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
                 );
-            
+
+            //container.RegisterType<IDisplayContext, D3D10EmbeddableNesViewer>(new ContainerControlledLifetimeManager()
+            //    , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
+            //    );
 
             return container;
         }

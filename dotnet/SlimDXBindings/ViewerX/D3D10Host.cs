@@ -22,7 +22,7 @@ namespace SlimDXBindings.Viewer10
 {
     public class D3D10Host : IDisposable
     {
-NESMachine nes;
+        NESMachine nes;
          
          FakeEventMapper mapper;
          Timer tickTimer; 
@@ -72,7 +72,7 @@ NESMachine nes;
 
          Viewport ViewArea;
          DXGI.SwapChain SwapChain;
-         D3D10.Device Device;
+         D3D10.Device _device;
          D3D10.RenderTargetView RenderTarget;
          ShaderResourceView textureView;
 
@@ -120,6 +120,7 @@ NESMachine nes;
             modeDescription.Scaling = DXGI.DisplayModeScaling.Unspecified;
             modeDescription.ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Unspecified;
             modeDescription.Width = (int)_renderHost.ActualWidth;
+
             modeDescription.Height = (int)_renderHost.ActualHeight;
 
             sampleDescription.Count = 1;
@@ -127,19 +128,37 @@ NESMachine nes;
 
             swapChainDescription.ModeDescription = modeDescription;
             swapChainDescription.SampleDescription = sampleDescription;
-            swapChainDescription.BufferCount = 1;
-            swapChainDescription.Flags = DXGI.SwapChainFlags.None;
+            swapChainDescription.BufferCount = 3;
+            swapChainDescription.Flags = DXGI.SwapChainFlags.None ;
             swapChainDescription.IsWindowed = true;
             swapChainDescription.OutputHandle = _renderHost.Handle;
             swapChainDescription.SwapEffect = DXGI.SwapEffect.Discard;
-            swapChainDescription.Usage = DXGI.Usage.RenderTargetOutput;
-
-            D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
-
-            textureBuddy = new TextureBuddy(Device);
+            swapChainDescription.Usage = DXGI.Usage.RenderTargetOutput | DXGI.Usage.Shared;
             
-            resource = Texture2D.FromSwapChain<D3D10.Texture2D>(SwapChain,0);
-            RenderTarget = new D3D10.RenderTargetView(Device, resource);
+            //D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
+            D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out _device, out SwapChain);
+            
+            textureBuddy = new TextureBuddy(_device);
+
+            //Texture2DDescription resDesc = new Texture2DDescription();
+            //resDesc.Usage = ResourceUsage.Default;
+            //resDesc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+
+            //resDesc.ArraySize = 1;
+            //resDesc.MipLevels = 1;
+            //resDesc.Width = 512;
+            //resDesc.Height = 512;
+
+            //resDesc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget;
+            //resDesc.SampleDescription = sampleDescription;
+            //resDesc.OptionFlags = ResourceOptionFlags.Shared;
+
+            //resource = new Texture2D(_device, resDesc);
+
+
+            resource = Texture2D.FromSwapChain<D3D10.Texture2D>(SwapChain, 0);
+            RenderTarget = new D3D10.RenderTargetView(_device, resource
+                );
 
             ViewArea = new Viewport();
             ViewArea.X = 0;
@@ -149,9 +168,8 @@ NESMachine nes;
             ViewArea.MinZ = 0.0f;
             ViewArea.MaxZ = 1.0f;
 
-            Device.Rasterizer.SetViewports(ViewArea);
-            Device.OutputMerger.SetTargets(RenderTarget);
-
+            _device.Rasterizer.SetViewports(ViewArea);
+            _device.OutputMerger.SetTargets(RenderTarget);
             
 
             Texture2DDescription desc = new Texture2DDescription();
@@ -161,7 +179,7 @@ NESMachine nes;
             desc.MipLevels = 1;
             desc.Width = 256;
             desc.Height = 256;
-            desc.BindFlags = BindFlags.ShaderResource;
+            desc.BindFlags = BindFlags.ShaderResource ;
             desc.CpuAccessFlags = CpuAccessFlags.Write;
             desc.SampleDescription = sampleDescription;
 
@@ -223,22 +241,24 @@ NESMachine nes;
             palDesc.SampleDescription = sampleDescription;
 
 
-            nesPalTexture = new Texture2D(Device, palDesc);
+            nesPalTexture = new Texture2D(_device, palDesc);
 
 
             Texture2DDescription targetDesc = new Texture2DDescription();
-            targetDesc.Usage = ResourceUsage.Default;
+            targetDesc.Usage = ResourceUsage.Default ;
             targetDesc.Format = SlimDX.DXGI.Format.R8G8B8A8_UNorm;
+            
             targetDesc.ArraySize = 1;
             targetDesc.MipLevels = 1;
             targetDesc.Width = 256;
             targetDesc.Height = 256;
-            targetDesc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget;
+            
+            targetDesc.BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget ;
             targetDesc.SampleDescription = sampleDescription;
+            targetDesc.OptionFlags = ResourceOptionFlags.Shared;
 
-            targetTexture = new Texture2D(Device, targetDesc);
-            disposables.Add(targetTexture);
-
+            targetTexture = new Texture2D(_device, targetDesc);
+            
             Texture2D noise = textureBuddy.CreateNoiseMap2D(128);
 
             FilterChainLoader loader = null;
@@ -249,7 +269,7 @@ NESMachine nes;
             
             // the rendering chain is built on the UI thread, since it's hosting Visuals, and possibly other things that require a STA thread
             
-            loader = new FilterChainLoader(Device, Container);
+            loader = new FilterChainLoader(_device, Container);
             tileFilters = (FilterChain)loader.ReadResource(@"SlimDXBindings.ViewerX.Filter.BasicFilterChain.xml", mapper);
             
             
@@ -284,15 +304,22 @@ NESMachine nes;
             texArrayForRender[4] = bankSwitchCache;
             
             // context.ThreadExit += new EventHandler(context_ThreadExit);
+
+
             tickTimer = new Timer();
             tickTimer.Interval = 16;
             tickTimer.Tick += new EventHandler(tickTimer_Tick);
             tickTimer.Start();
-
-
             //Application.Run(context);
         }
 
+
+        public IntPtr RenderTargetHandle
+        {
+           get {
+               return resource.ComPointer;
+            }
+        }
 
         public void RequestResize(int height, int width)
         {
@@ -318,7 +345,7 @@ NESMachine nes;
                 tickTimer.Stop();
                 return;
             }
-
+            updated = true;
             DrawFrame();
         }
 
@@ -326,8 +353,6 @@ NESMachine nes;
         {
             tickTimer.Stop();
         }
-
-
 
 
         //TODO: move all the mouse stuff into the zapper (or other appropriate handler, like the event faker)
@@ -497,7 +522,7 @@ NESMachine nes;
                 biggestBSCount = (int)nes.Cart.CurrentBank;
                 // Console.WriteLine(string.Format("Biggest bs {0}", biggestBSCount));
             }
-
+            chrRamStart = nes.Cart.ChrRamStart;
             updated = true;
             
 
@@ -513,6 +538,7 @@ NESMachine nes;
         bool fullScreen = false;
         bool changeFullScreenState = false;
         int newWidth, newHeight;
+        int chrRamStart;
         public  void DrawFrame()
         {
 
@@ -543,14 +569,15 @@ NESMachine nes;
                 tileFilters.SetVariable("hue", hue);
                 tileFilters.SetVariable("contrast", Contrast);
                 tileFilters.SetVariable("brightness", Brightness);
+
                 
-                tileFilters.SetVariable("chrramstart", nes.Cart.ChrRamStart);
+                tileFilters.SetVariable("chrramstart", chrRamStart);
 
                 timer += 0.1f;
 
-                Device.Rasterizer.SetViewports(ViewArea);
-                Device.OutputMerger.SetTargets(RenderTarget);
-                Device.ClearRenderTargetView(RenderTarget, Color.Black);
+                _device.Rasterizer.SetViewports(ViewArea);
+                _device.OutputMerger.SetTargets(RenderTarget);
+                _device.ClearRenderTargetView(RenderTarget, Color.Black);
 
                 tileFilters[tileFilters.Count - 1].SetViewport(ViewArea);
 
@@ -572,16 +599,31 @@ NESMachine nes;
 
             if (texView != null) texView.Dispose();
 
-            Device.ClearState();
+            _device.ClearState();
             RenderTarget.Dispose();
-            if (Device != null)  Device.Dispose();
+            if (_device != null)  _device.Dispose();
             if (SwapChain != null) SwapChain.Dispose();
 
             tileFilters.Dispose();
             
         }
 
-        bool idling = false;
+        bool idling = true;
+
+        public bool Idling
+        {
+            get { return idling; }
+            set { idling = value;
+                if (idling)
+                {
+                    tickTimer.Start();
+                }
+                else
+                {
+                    tickTimer.Stop();
+                }
+            }
+        }
 
         void Application_Idle(object sender, EventArgs e)
         {

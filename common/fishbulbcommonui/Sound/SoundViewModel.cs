@@ -19,12 +19,15 @@ namespace fishbulbcommonui
         protected override void OnAttachTarget()
         {
             SoundBopper = TargetMachine.SoundBopper;
+            NotifyPropertyChanged("Volume");
         }
 
         public IWavStreamer Streamer
         {
             get { return streamer; }
-            set { streamer = value; }
+            set { streamer = value;
+                
+            }
         }
 
 

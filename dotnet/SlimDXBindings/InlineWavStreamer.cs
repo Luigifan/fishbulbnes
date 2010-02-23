@@ -92,7 +92,7 @@ namespace SlimDXBindings
         }
 
         private bool muted;
-        private float volume;
+        private float volume = 1.0f;
 
         public float Volume
         {

@@ -6,26 +6,25 @@ using Microsoft.WindowsAPICodePack.DirectX.Controls;
 using NES.CPU.nitenedo.Interaction;
 using NES.CPU.nitenedo;
 using System.Windows.Controls;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace SlimDXBindings.Viewer10
 {
-    public class ShmuckHost : DirectHost
-    {
-        protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            return IntPtr.Zero;
-        }
-    }
 
-    public class D3D10NesViewer : Border, IDisplayContext, IDisposable
+    public class D3D10EmbeddableNesViewer : Border, IDisplayContext, IDisposable
     {
-        DirectHost dhost;
+        ShmuckHost dhost = new ShmuckHost();
         D3D10Host host;
-        public D3D10NesViewer()
+        D3DImageEx image;
+        public D3D10EmbeddableNesViewer()
         {
-            dhost = new ShmuckHost();
-            // dhost.Render = new RenderHandler(Render);
+            image = new D3DImageEx();
             this.Child = dhost;
+            this.Background  =
+                new ImageBrush(
+                image);
+            
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(D3D10NesViewer_SizeChanged);
         }
 
@@ -42,6 +41,9 @@ namespace SlimDXBindings.Viewer10
 
             host = new D3D10Host(machine);
             host.QuadUp(dhost);
+            //this.Child = null;
+            image.SetBackBufferEx(D3DResourceTypeEx.ID3D10Texture2D, host.RenderTargetHandle);
+
             initialized = true;
         }
 

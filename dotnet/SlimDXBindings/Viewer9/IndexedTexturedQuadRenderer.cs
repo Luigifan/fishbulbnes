@@ -60,10 +60,12 @@ namespace SlimDXBindings.Viewer
         {
             timer += 0.01f;
         }
+        
         EffectHandle timerHandle = new EffectHandle("timer");
         EffectHandle surfaceToDrawHandle = new EffectHandle("nesTexture");
         EffectHandle tilesToDrawHandle = new EffectHandle("tilesTexture");
         EffectHandle lastSurfaceDrawnHandle = new EffectHandle("lastTexture");
+
         public void RenderScene()
         {
             postEffect.SetTexture(surfaceToDrawHandle, nesSurfaceDrawer[currentFrame].SurfaceTexture);

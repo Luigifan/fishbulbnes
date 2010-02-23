@@ -19,7 +19,7 @@ namespace _10NES2
         {
 
             _10NES2.MainWindow win = new MainWindow();
-            MainWindowViewModel vm = new MainWindowViewModel(win);
+            MainWindowViewModel vm = new MainWindowViewModel(win, "hard");
             
             win.nesDisplay.Target = vm.Container.Resolve<NESMachine>();
             win.nesDisplay.Context = vm.Container.Resolve<NES.CPU.nitenedo.Interaction.IDisplayContext>();
