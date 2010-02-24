@@ -139,6 +139,11 @@ namespace NES.CPU.nitenedo
 
         private void ForceStop()
         {
+            if (_cart != null && _cart.CheckSum != null && SRAMWriter != null)
+            {
+                SRAMWriter(_cart.CheckSum, _cart.SRAM);
+            }
+
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
             //while (machineWorkQueue.Count > 0)
             //{
@@ -186,6 +191,7 @@ namespace NES.CPU.nitenedo
 
         public void ThreadStoptendo()
         {
+
             ForceStop();
         }
 
