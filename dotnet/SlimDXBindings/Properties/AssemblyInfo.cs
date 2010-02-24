@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SlimDXBindings")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SlimDX Bindings for FishBulb")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SlimDXBindings")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2009")]
+[assembly: AssemblyCopyright("Copyright © Joe Hartrick")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
