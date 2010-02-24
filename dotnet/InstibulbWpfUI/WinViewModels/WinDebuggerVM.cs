@@ -67,7 +67,7 @@ namespace InstiBulb.WinViewModels
                 }
             }
             TileData = data;
-            
+
             bitmap.WritePixels(new Int32Rect(0, 0, 8, 8), colors, stride, 0);
             this.tileIndex = tileIndex;
             lineAddresses = addresses;
@@ -81,10 +81,9 @@ namespace InstiBulb.WinViewModels
         public WinDebuggerVM()
             : base()
         {
-
             base.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(WinDebuggerVM_PropertyChanged);
             this.DrawNameTables = new DisplayNameTablesCommand(this);
-            this.DrawTiles = new DisplayTilesCommand(this) ;
+            this.DrawTiles = new DisplayTilesCommand(this);
         }
 
         void WinDebuggerVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -118,7 +117,7 @@ namespace InstiBulb.WinViewModels
         }
 
         ObservableCollection<InstructionRolloutItem> futureOps = new ObservableCollection<InstructionRolloutItem>();
-        
+
         public ObservableCollection<InstructionRolloutItem> FutureOps
         {
             get
@@ -174,7 +173,8 @@ namespace InstiBulb.WinViewModels
 
         public BitmapSource DrawPatternTableZero()
         {
-            if (!(TargetMachine  == null))
+            if (!(TargetMachine == null))
+
             {
                 int[] table = TargetMachine.Tiler.DoodlePatternTable(0);
                 TargetMachine.PPU.SetupBufferForDisplay(ref table);
@@ -182,7 +182,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (128 * 32 + 7) / 8;
 
                 patternTable0.WritePixels(new Int32Rect(0, 0, patternTable0.PixelWidth, patternTable0.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("PatternTable0");   
+                NotifyPropertyChanged("PatternTable0");
             }
             return patternTable0;
 
@@ -198,7 +198,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (128 * 32 + 7) / 8;
 
                 patternTable1.WritePixels(new Int32Rect(0, 0, patternTable1.PixelWidth, patternTable1.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("PatternTable1");   
+                NotifyPropertyChanged("PatternTable1");
 
             }
             return patternTable1;
@@ -210,6 +210,7 @@ namespace InstiBulb.WinViewModels
         public BitmapSource DrawNameTableZero()
         {
             if (!(TargetMachine == null))
+
             {
                 int[] table = TargetMachine.Tiler.DoodleNameTable(0);
                 TargetMachine.PPU.SetupBufferForDisplay(ref table);
@@ -217,7 +218,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (256 * 32 + 7) / 8;
 
                 nameTable0.WritePixels(new Int32Rect(0, 0, nameTable0.PixelWidth, nameTable0.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("NameTable0");   
+                NotifyPropertyChanged("NameTable0");
 
             }
             return nameTable0;
@@ -234,7 +235,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (256 * 32 + 7) / 8;
 
                 nameTable1.WritePixels(new Int32Rect(0, 0, nameTable1.PixelWidth, nameTable1.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("NameTable1");   
+                NotifyPropertyChanged("NameTable1");
 
             }
             return nameTable1;
@@ -252,7 +253,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (256 * 32 + 7) / 8;
 
                 nameTable2.WritePixels(new Int32Rect(0, 0, nameTable2.PixelWidth, nameTable2.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("NameTable2");   
+                NotifyPropertyChanged("NameTable2");
 
             }
             return nameTable2;
@@ -269,7 +270,7 @@ namespace InstiBulb.WinViewModels
                 int stride = (256 * 32 + 7) / 8;
 
                 nameTable3.WritePixels(new Int32Rect(0, 0, nameTable3.PixelWidth, nameTable3.PixelHeight), table, stride, 0);
-                NotifyPropertyChanged("NameTable3");   
+                NotifyPropertyChanged("NameTable3");
 
             }
         }

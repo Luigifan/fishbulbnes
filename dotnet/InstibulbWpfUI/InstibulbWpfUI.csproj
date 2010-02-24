@@ -216,9 +216,6 @@
       <DependentUpon>TileEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ControlPanel\WpfKeyConfigVM.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Converters\CommandDictionaryConverter.cs" />
     <Compile Include="Converters\ContainerResolverConverter.cs" />
     <Compile Include="Converters\DisplayTextAttribute.cs" />
@@ -254,7 +251,10 @@
     <Compile Include="WinViewModels\DisplayNameTablesCommand.cs" />
     <Compile Include="WinViewModels\DisplayTilesCommand.cs" />
     <Compile Include="WinViewModels\WinCheatPanelVM.cs" />
-    <Compile Include="WinViewModels\WinDebuggerVM.cs" />
+    <Compile Include="WinViewModels\WinDebuggerVM.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WinViewModels\WpfKeyConfigVM.cs" />
     <Compile Include="WpfKeyboardInput\WpfKeyboardControlPad.cs" />
     <Compile Include="WpfNesViewer\WPFNesViewer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
