@@ -10,9 +10,13 @@ namespace NES.CPU.PixelWhizzlerClasses.SoftWhizzler
     {
         protected override void DrawPixel()
         {
+
+
             byte tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             bool foregroundPixel =false;
             byte spritePixel = _spritesAreVisible ? GetSpritePixel(out foregroundPixel) : (byte)0;
+
+
 
             if (!hitSprite && spriteZeroHit && tilePixel != 0)
             {

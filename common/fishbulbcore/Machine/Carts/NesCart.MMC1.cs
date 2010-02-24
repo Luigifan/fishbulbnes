@@ -63,6 +63,7 @@ namespace NES.CPU.Machine.Carts
             private void CopyBanks(int dest, int src, int numberOf4kBanks)
             {
                 whizzler.DrawTo(lastClock);
+                
                 if (ChrRomCount > 0)
                 {
                     int oneKdest = dest * 4;

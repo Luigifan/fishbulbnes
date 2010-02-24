@@ -53,28 +53,26 @@ namespace NES.CPU.PPUClasses
 
         }
 
-        private void RunNewScanlineEvents()
+        protected virtual void RunNewScanlineEvents()
         {
 
-            if (scanlineNum == ScanlineRenderingStartsOn)
+
+
+
+            yPosition = currentYPosition + lockedVScroll;
+
+            if (yPosition < 0)
             {
-                vbufLocation = 0;
+                yPosition += 240;
             }
-
-            if (scanlineNum >= ScanlineRenderingStartsOn && scanlineNum <= ScanlineRenderingEndsOn)
+            if (yPosition >= 240)
             {
-                lockedHScroll = _hScroll;
-                // nameTableMemoryStart = (0x400 * (_PPUControlByte0 & 0x3)); 
-                PreloadSprites(scanlineNum - ScanlineRenderingStartsOn);
-                if (spritesOnThisScanline >= 7)
-                {
-                    _PPUStatus = _PPUStatus | 0x20;
-                }
-                // lock hscroll at the beginning of each scanline 
-                // (TODO: actually, every 4 clocks on a scanline?)
-                //UpdateMirroring();
-                if (HBlank != null) HBlank(this, new EventArgs());
-
+                yPosition -= 240;
+                yNTXor = 0x800;
+            }
+            else
+            {
+                yNTXor = 0x00;
             }
 
 

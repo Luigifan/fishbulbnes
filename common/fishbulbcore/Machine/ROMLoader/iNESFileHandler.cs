@@ -47,26 +47,36 @@ namespace NES.CPU.Machine.ROMLoader
             FileStream stream = File.Open(fileName, FileMode.Open);
             
             ZipInputStream zipStream = new ZipInputStream(stream);
-
+            
             ZipEntry entry = zipStream.GetNextEntry();
-            if (entry.Name.IndexOf(".nes") > 0)
+            try
             {
- 				Console.WriteLine ("Loading " + entry.Name + " " + entry.Size.ToString() + " bytes");
-				byte[] data;//= new byte[entry.Size];
-				
-				BinaryReader reader = new BinaryReader(zipStream);
-				data = reader.ReadBytes((int)entry.Size);
-				
-				//int len = zipStream.Read(data, 0, (int)entry.Size);
-				Console.WriteLine("BodyRead " + data.Length.ToString() + " bytes");
-				//reader.Close();
-				MemoryStream mstream = new MemoryStream(data);
-                _cart = LoadROM(ppu, mstream);
-            }
+                
+                if (entry.Name.IndexOf(".nes") > 0)
+                {
+                    Console.WriteLine("Loading " + entry.Name + " " + entry.Size.ToString() + " bytes");
+                    byte[] data;//= new byte[entry.Size];
 
-            zipStream.CloseEntry();
-            zipStream.Close();
-            stream.Close();
+                    BinaryReader reader = new BinaryReader(zipStream);
+                    data = reader.ReadBytes((int)entry.Size);
+
+                    //int len = zipStream.Read(data, 0, (int)entry.Size);
+                    Console.WriteLine("BodyRead " + data.Length.ToString() + " bytes");
+                    //reader.Close();
+                    MemoryStream mstream = new MemoryStream(data);
+                    _cart = LoadROM(ppu, mstream);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failure reading zip file.", e);
+            }
+            finally
+            {
+                zipStream.CloseEntry();
+                zipStream.Close();
+                stream.Close();
+            }
 
             return _cart;
         }
@@ -114,6 +124,7 @@ namespace NES.CPU.Machine.ROMLoader
             if (_cart != null)
             {
                 _cart.Whizzler = ppu;
+                ppu.ChrRomHandler = _cart;
                 _cart.ROMHashFunction = Hashers.HashFunction;
                 _cart.LoadiNESCart(iNesHeader, prgRomCount, chrRomCount, theRom, chrRom, chrOffset);
             }

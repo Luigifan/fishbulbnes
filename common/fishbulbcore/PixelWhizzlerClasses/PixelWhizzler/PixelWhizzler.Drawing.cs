@@ -10,7 +10,7 @@ namespace NES.CPU.PPUClasses
     public partial class PixelWhizzler
     {
 
-        private int lastcpuClock;
+        protected int lastcpuClock;
 
         public int LastcpuClock
         {
@@ -85,7 +85,7 @@ namespace NES.CPU.PPUClasses
 
                 case frameClockEnd:
                     if (fillRGB) FillBuffer();
-                    frameFinished();
+                    FrameFinishHandler();
                     SetupVINT();
                     frameOn = false;
                     frameClock = 0;
@@ -101,14 +101,7 @@ namespace NES.CPU.PPUClasses
                 if (currentXPosition < 256 && vbufLocation < 256 * 240)
                 {
 
-                    xPosition = currentXPosition + lockedHScroll;
-                    if ((xPosition & 7) == 0)
-                    {
-                        xNTXor = ((xPosition & 0x100) == 0x100) ? 0x400 : 0x00;
-                        xPosition &= 0xFF;
-
-                        FetchNextTile();
-                    }
+                    UpdateXPosition();
 
                     DrawPixel();
 
@@ -119,6 +112,7 @@ namespace NES.CPU.PPUClasses
 
                 if (currentXPosition > 340)
                 {
+
                     currentXPosition = 0;
                     currentYPosition++;
 
@@ -130,27 +124,25 @@ namespace NES.CPU.PPUClasses
 
                     lockedHScroll = _hScroll;
 
-                    yPosition = currentYPosition + lockedVScroll;
-
-                    if (yPosition < 0)
-                    {
-                        yPosition += 240;
-                    }
-                    if (yPosition >= 240)
-                    {
-                        yPosition -= 240;
-                        yNTXor = 0x800;
-                    }
-                    else
-                    {
-                        yNTXor = 0x00;
-                    }
+                    RunNewScanlineEvents();
 
                 }
 
             }
 
 
+        }
+
+        protected virtual void UpdateXPosition()
+        {
+            xPosition = currentXPosition + lockedHScroll;
+            if ((xPosition & 7) == 0)
+            {
+                xNTXor = ((xPosition & 0x100) == 0x100) ? 0x400 : 0x00;
+                xPosition &= 0xFF;
+
+                FetchNextTile();
+            }
         }
 
         protected int[] rgb32OutBuffer = new int[256*256];

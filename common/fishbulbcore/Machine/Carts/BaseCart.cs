@@ -176,7 +176,7 @@ namespace NES.CPU.Machine.Carts
 
         public abstract void InitializeCart();
 
-        internal IPPU whizzler;
+        protected IPPU whizzler;
 
         public IPPU Whizzler
         {

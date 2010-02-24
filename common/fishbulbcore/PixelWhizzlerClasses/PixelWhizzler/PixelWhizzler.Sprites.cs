@@ -184,6 +184,8 @@ namespace NES.CPU.PPUClasses
         public void PreloadSprites(int scanline)
         {
             spritesOnThisScanline = 0;
+            sprite0scanline = -1;
+
             int yLine = currentYPosition - 1;
             outBuffer[(253 * 256) + yLine] = 0;
             outBuffer[(254 * 256) + yLine] = 0;

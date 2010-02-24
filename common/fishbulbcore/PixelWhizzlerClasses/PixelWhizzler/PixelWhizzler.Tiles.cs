@@ -16,11 +16,11 @@ namespace NES.CPU.PPUClasses
 
         int currentTileIndex = 0;
 
-        int xNTXor = 0;
-        int yNTXor = 0;
+        protected int xNTXor = 0;
+        protected int yNTXor = 0;
 
         bool fetchTile = true;
-        int xPosition, yPosition;
+        protected int xPosition, yPosition;
 
         /// <summary>
         /// Returns a pixel 
