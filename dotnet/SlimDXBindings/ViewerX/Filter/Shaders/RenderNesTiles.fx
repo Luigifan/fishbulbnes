@@ -414,7 +414,7 @@ int GetTilePixel(float2 texposition)
     int vScroll = nesOutdata2[3] * 255.0;
 	if (vScroll > 240)
 	{
-		vScroll = vScroll - 256;
+		vScroll = vScroll - 240;
 	}
 	if (ntBits & 4) // vscroll is negative
 	{

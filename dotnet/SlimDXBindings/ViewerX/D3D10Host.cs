@@ -128,7 +128,7 @@ namespace SlimDXBindings.Viewer10
 
             swapChainDescription.ModeDescription = modeDescription;
             swapChainDescription.SampleDescription = sampleDescription;
-            swapChainDescription.BufferCount = 3;
+            swapChainDescription.BufferCount = 2;
             swapChainDescription.Flags = DXGI.SwapChainFlags.None ;
             swapChainDescription.IsWindowed = true;
             swapChainDescription.OutputHandle = _renderHost.Handle;

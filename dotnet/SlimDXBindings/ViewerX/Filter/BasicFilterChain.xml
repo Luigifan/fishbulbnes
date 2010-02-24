@@ -17,7 +17,7 @@
 
   <Filters>
     <!--Tile RAM-->
-    <Filter Name="tiles" Height="256" Width="256" Effect="RenderNesTiles" Technique="RenderTileRAM" >
+    <Filter Name="tiles" Height="255" Width="255" Effect="RenderNesTiles" Technique="RenderTileRAM" >
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
@@ -34,20 +34,20 @@
 
 
     
-    <Filter Name="spriteSetup" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderSpriteRAM" >
+    <Filter Name="spriteSetup" Height="255" Width="255" Effect="RenderNesSprites" Technique="RenderSpriteRAM" >
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
         <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
-        <Input Type="FilterOutput" Filter="tiles" EffectVariable="tileStage" />
+        <!--<Input Type="FilterOutput" Filter="tiles" EffectVariable="tileStage" />-->
 
         <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
       </Inputs>
     </Filter>
 
       <!--Sprite Mask-->
-    <Filter Name="spriteMask" Height="256" Width="256" Effect="RenderNesSprites" Technique="RenderSpriteMask" >
+    <Filter Name="spriteMask" Height="255" Width="255" Effect="RenderNesSprites" Technique="RenderSpriteMask" >
       <Inputs>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
@@ -78,7 +78,7 @@
     </Filter>-->
     
     <!-- SFX -->
-    <!--<Filter Name="wavyTiles" Height="512" Width="512" Effect="blue" Technique="Wave" >
+    <!--<Filter Name="wavyTiles" Height="256" Width="256" Effect="blue" Technique="Wave" >
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="texture2d" />
         <Input Type="Resource" ResourceName="Noise" EffectVariable="noiseTex" />
@@ -87,7 +87,7 @@
     </Filter>-->
 
     <!--Put it all together now-->
-    <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="Render">
+    <Filter Name="combined" Height="256" Width="256" Effect="CombineNesOutput" Technique="Render">
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />
