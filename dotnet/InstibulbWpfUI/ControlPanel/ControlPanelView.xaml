@@ -15,6 +15,9 @@
             <SolidColorBrush x:Key="OffBrush" Color="Red"/>
             <Style x:Key="PowerButtonStyle">
                 <Style.Triggers>
+                    <!--<DataTrigger Binding="{Binding PowerStatusText}" Value="">
+                        <Setter Property="Button.IsEnabled" Value="false"/>
+                    </DataTrigger>-->
                     <DataTrigger Binding="{Binding PowerStatusText}" Value="off">
                         <Setter Property="Button.Background" Value="{StaticResource OnBrush}"/>
                     </DataTrigger>

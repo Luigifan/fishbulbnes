@@ -7,23 +7,49 @@
              d:DesignHeight="480" d:DesignWidth="720" xmlns:my="clr-namespace:InstiBulb" xmlns:my1="clr-namespace:InstiBulb.Views">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="151*" />
-            <RowDefinition Height="149*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25*" />
-            <ColumnDefinition Width="25*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <my:InstructionHistoryControl Grid.Column="1" HorizontalAlignment="Stretch" x:Name="instructionHistoryControl1" VerticalAlignment="Stretch" />
-        <my1:InstructionRolloutControl Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="instructionRolloutControl1" VerticalAlignment="Stretch" />
-        <my:MachineStatus HorizontalAlignment="Stretch" x:Name="machineStatus1" VerticalAlignment="Stretch" />
-        <Grid Grid.Row="1"  HorizontalAlignment="Stretch"  Name="grid1" VerticalAlignment="Stretch" >
+        <my:InstructionHistoryControl Grid.Column="2" HorizontalAlignment="Stretch" x:Name="instructionHistoryControl1" VerticalAlignment="Stretch" />
+        <my1:InstructionRolloutControl Grid.Column="1" HorizontalAlignment="Stretch" x:Name="instructionRolloutControl1" VerticalAlignment="Stretch" />
+        <my:MachineStatus HorizontalAlignment="Stretch" x:Name="machineStatus1" VerticalAlignment="Stretch" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" />
+        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch"  Name="grid1" VerticalAlignment="Stretch" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <my:NameTableViewerControl HorizontalAlignment="Stretch" x:Name="nameTableViewerControl1" VerticalAlignment="Stretch" />
-            <my1:PatternViewerControl Grid.Column="1" HorizontalAlignment="Stretch" x:Name="patternViewerControl1" VerticalAlignment="Stretch"  />
+        </Grid>
+        <Grid x:Name="PPUGrid" Grid.RowSpan="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer  x:Name="PPUEvents" Grid.Column="0" Grid.Row="1">
+                <my1:PPUDebugger HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" />
+            </ScrollViewer>
+            <ListBox Grid.Column="1" Grid.Row="1"
+			HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+			ItemsSource="{Binding Path=DebuggerInformation.PPU.FrameWriteEvents, Mode=OneWay}"
+                     >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text, Mode=OneWay}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border Grid.ColumnSpan="2" >
+                <Label Content="PPU Viewer" Style="{StaticResource HeaderStyle}" />
+            </Border>
+
         </Grid>
     </Grid>
 </UserControl>

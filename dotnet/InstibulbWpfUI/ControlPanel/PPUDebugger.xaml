@@ -1,0 +1,15 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="InstiBulb.Views.PPUDebugger"
+	d:DesignWidth="679.955" d:DesignHeight="943.68" xmlns:WPFamicom="clr-namespace:InstiBulb" xmlns:my="clr-namespace:InstiBulb.Views">
+	<Border>
+		<StackPanel MinHeight="20" MinWidth="20" x:Name="Pane1">
+            <my:PatternViewerControl x:Name="patternViewerControl1" />
+            <WPFamicom:NameTableViewerControl x:Name="nameTableViewerControl1" />
+        </StackPanel>
+	</Border>
+</UserControl>

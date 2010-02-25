@@ -7,6 +7,7 @@ using InstiBulb.WpfKeyboardInput;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using fishbulbcommonui;
 
 namespace InstiBulb.WinViewModels
 {
@@ -36,7 +37,7 @@ namespace InstiBulb.WinViewModels
         #endregion
     }
 
-    public class WpfKeyConfigVM  : INotifyPropertyChanged
+    public class WpfKeyConfigVM : BaseNESViewModel
     {
         private BindKeyCommand keyCommand;
 
@@ -45,6 +46,11 @@ namespace InstiBulb.WinViewModels
             get { return keyCommand; }
         }
 
+
+        protected override void OnAttachTarget()
+        {
+            
+        }
 
         private WpfKeyboardInput.WpfKeyboardControlPad dataModel;
 
@@ -93,5 +99,20 @@ namespace InstiBulb.WinViewModels
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         #endregion
+
+        public override string CurrentView
+        {
+            get { return "Key Config"; }
+        }
+
+        public override string CurrentRegion
+        {
+            get { return ""; }
+        }
+
+        public override string Header
+        {
+            get { return "Key Configuration"; }
+        }
     }
 }

@@ -20,9 +20,10 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-        <Label Style="{StaticResource HeaderStyle}" Content="Machine Status" Grid.ColumnSpan="2"/>
+        <Label Style="{StaticResource HeaderStyle}" Content="Machine Status" />
+        <Label Style="{StaticResource HeaderStyle}" Content="PPU Status" Grid.Column="1"/>
 
-        <ScrollViewer Grid.RowSpan="1" Grid.Row="1" Grid.ColumnSpan="2">
+        <ScrollViewer Grid.RowSpan="1" Grid.Row="1" Grid.ColumnSpan="1">
 			<StackPanel x:Name="TendoStatuses" ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<StackPanel ScrollViewer.HorizontalScrollBarVisibility="Auto" DataContext="{Binding Path=DebuggerInformation.CPU, Mode=OneWay}" x:Name="CPUStatuses" VerticalAlignment="Top">
 					<StackPanel Orientation="Horizontal">
@@ -58,45 +59,62 @@
 						<TextBlock Text="{Binding Path=StackPointer, Converter={StaticResource HexValueConverter}, ConverterParameter=2, Mode=Default}" TextWrapping="Wrap" x:Name="txtStackPointer"    HorizontalAlignment="Left" />
 					</StackPanel>
 				</StackPanel>
-				<StackPanel DataContext="{Binding Path=DebuggerInformation.PPU, Mode=Default}" x:Name="PPUStatuses" VerticalAlignment="Top">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline_Copy" Text="PPU Scanline Number: " >
-						</TextBlock>
-						<TextBlock   Text="{Binding Path=ScanLine, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline" HorizontalAlignment="Left" VerticalAlignment="Top">
-						</TextBlock>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline_Copy1" Text="PPU Scanline Position: " >
-						</TextBlock>
-						<TextBlock   Text="{Binding Path=ScanlinePos, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanlinePos" HorizontalAlignment="Left">
-						</TextBlock>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUStatuslabel" Text="PPU Status: " >
-						</TextBlock>
-						<TextBlock   Text="{Binding Path=PPUStatus, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUStatus">
-						</TextBlock>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUControl0" Text="PPU Control: " >
-
-						</TextBlock>
-						<TextBlock   Text="{Binding Path=PPUControl, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUControl0V">
-						</TextBlock>
-					</StackPanel>
-				</StackPanel>
+                
 			</StackPanel>
 		</ScrollViewer>
-        <Button Content="Step" x:Name="Step" Grid.Row="2" Grid.ColumnSpan="1"
+        
+        <StackPanel DataContext="{Binding Path=DebuggerInformation.PPU, Mode=Default}" x:Name="PPUStatuses" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline_Copy" Text="PPU Scanline Number: " >
+                </TextBlock>
+                <TextBlock   Text="{Binding Path=ScanLine, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline" HorizontalAlignment="Left" VerticalAlignment="Top">
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanline_Copy1" Text="PPU Scanline Position: " >
+                </TextBlock>
+                <TextBlock   Text="{Binding Path=ScanlinePos, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUScanlinePos" HorizontalAlignment="Left">
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUStatuslabel" Text="PPU Status: " >
+                </TextBlock>
+                <TextBlock   Text="{Binding Path=PPUStatus, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUStatus">
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock   TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUControl0" Text="PPU Control: " >
+
+                </TextBlock>
+                <TextBlock   Text="{Binding Path=PPUControl, Converter={StaticResource HexValueConverter}, Mode=OneWay}" TextWrapping="Wrap" d:IsStaticText="True"  x:Name="txtPPUControl0V">
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Step" x:Name="Step" Grid.ColumnSpan="1"
                 Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=Step}" 
                 >
 
-		</Button>
-			<Button Content="Step Frame" x:Name="StepFront" 
-                    Grid.Column="1" Grid.Row="2" 
+            </Button>
+            <Button Content="Step Frame" x:Name="StepFront" 
+                    Grid.Column="1" 
                     Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=StepFrame}" 
                     
                     >
-			</Button>
+            </Button>
+            <Button Content="Continue" 
+                    Grid.Column="2" 
+                    Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=Continue}" 
+                    
+                    >
+            </Button>
+
+        </Grid>
 	</Grid>
 </UserControl>

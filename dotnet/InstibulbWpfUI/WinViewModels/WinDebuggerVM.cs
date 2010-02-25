@@ -88,15 +88,7 @@ namespace InstiBulb.WinViewModels
 
         void WinDebuggerVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "FrameWriteEvents")
-            {
-                _PPUWriteEvents.Clear();
-                foreach (var p in FrameWriteEvents)
-                {
-                    _PPUWriteEvents.Add(p);
-                }
 
-            }
             if (e.PropertyName == "DebuggerInformation")
             {
                 futureOps.Clear();
@@ -104,17 +96,17 @@ namespace InstiBulb.WinViewModels
                 {
                     futureOps.Add(p);
                 }
+
+
+
+
                 instructionHistory.Clear();
                 if (DebuggerInformation.InstructionHistory != null)
                     instructionHistory.Concat(DebuggerInformation.InstructionHistory);
             }
         }
 
-        ObservableCollection<PPUWriteEvent> _PPUWriteEvents = new ObservableCollection<PPUWriteEvent>();
-        public ObservableCollection<PPUWriteEvent> PPUWriteEvents
-        {
-            get { return _PPUWriteEvents; }
-        }
+
 
         ObservableCollection<InstructionRolloutItem> futureOps = new ObservableCollection<InstructionRolloutItem>();
 

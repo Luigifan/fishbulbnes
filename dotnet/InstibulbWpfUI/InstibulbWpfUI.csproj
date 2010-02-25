@@ -205,6 +205,10 @@
       <DependentUpon>PatternViewerControl.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ControlPanel\PPUDebugger.xaml.cs">
+      <DependentUpon>PPUDebugger.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ControlPanel\SaveStateView.xaml.cs">
       <DependentUpon>SaveStateView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -216,6 +220,7 @@
       <DependentUpon>TileEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\BooleanToInvisibilityConverter.cs" />
     <Compile Include="Converters\CommandDictionaryConverter.cs" />
     <Compile Include="Converters\ContainerResolverConverter.cs" />
     <Compile Include="Converters\DisplayTextAttribute.cs" />
@@ -223,10 +228,12 @@
     <Compile Include="Converters\HexValueConverter.cs" />
     <Compile Include="Converters\InputKeyToStringConverter.cs" />
     <Compile Include="Converters\ShortFileNameConverter.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="EmbeddableUserControl.cs" />
     <Compile Include="MouseEventMapper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PlatformDelegates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -317,6 +324,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlPanel\PPUDebugger.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlPanel\SoundPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
