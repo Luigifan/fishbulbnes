@@ -69,8 +69,11 @@ namespace NES.CPU.nitenedo
             }
             set
             {
-                runState = value;
-                if (RunStatusChangedEvent != null) RunStatusChangedEvent(this, EventArgs.Empty);
+                if (runState != value)
+                {
+                    runState = value;
+                    if (RunStatusChangedEvent != null) RunStatusChangedEvent(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -100,6 +103,7 @@ namespace NES.CPU.nitenedo
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
                 _ppu.ChrRomHandler = _cart;
                 PowerOn();
+                ThreadRuntendo();
             }
             else
             {

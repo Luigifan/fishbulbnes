@@ -10,6 +10,7 @@ namespace NES.Machine.ControlPanel
         Unloaded,
         Off,
         Running,
+        Frozen,
         Paused 
     }
 

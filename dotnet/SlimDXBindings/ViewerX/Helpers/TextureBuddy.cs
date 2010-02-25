@@ -227,9 +227,9 @@ namespace SlimDXBindings.Viewer10.Helpers
                 i.Dispose();
             }
 
-            foreach (var p in createdTextures.Values)
+            foreach (var p in createdTextures)
             {
-                p.Dispose();
+                p.Value.Dispose();
             }
         }
 

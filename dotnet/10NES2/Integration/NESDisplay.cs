@@ -81,13 +81,18 @@ namespace InstiBulb.Integration
 
         public void DestroyContext()
         {
+            doTheDraw = null;
+            Dispatcher.ExitAllFrames();
             if (displayContext != null)
             {
-                
-                Target.Drawscreen -= target_Drawscreen;
-                Dispatcher.ExitAllFrames();
                 displayContext.TearDownDisplay();
                 displayContext = null;
+            }
+            if (Target != null)
+            {
+                Target.RunStatusChangedEvent -= Target_RunStatusChangedEvent;
+                Target.Drawscreen -= target_Drawscreen;
+
             }
         }
 
@@ -123,18 +128,20 @@ namespace InstiBulb.Integration
 
         void Target_RunStatusChangedEvent(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(new NoArgDelegate(Status), null);
+            if (displayContext != null)
+                Dispatcher.Invoke(new NoArgDelegate(Status), null);
         }
 
         void Status()
         {
-            Context.SetPausedState(Target.RunState != NES.Machine.ControlPanel.RunningStatuses.Running);
+            bool runstate = Target.RunState != NES.Machine.ControlPanel.RunningStatuses.Running;
+            Context.SetPausedState(runstate);
         }
 
         internal void UnhookTarget(NESMachine target)
         {
             //if (target != null)
-            //target.Drawscreen -= target_Drawscreen;
+              //target.Drawscreen -= target_Drawscreen;
         }
 
         Delegate doTheDraw;
@@ -225,9 +232,13 @@ namespace InstiBulb.Integration
         }
 
 
-
+        bool disposing = false;
         public void Dispose()
         {
+
+            Dispatcher.ExitAllFrames();
+            
+            
             if (displayContext != null)
                 displayContext.TearDownDisplay();
         }

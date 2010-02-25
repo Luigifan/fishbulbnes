@@ -276,7 +276,7 @@ namespace SlimDXBindings.Viewer10.Filter
             thrower.DrawArea[2] = 1; // width
             thrower.DrawArea[3] = 16 / 256.0; // height
 
-            chain.EventMapper.AddEventThrower(thrower);
+            // chain.EventMapper.AddEventThrower(thrower);
             
             ToolStrip ts = new ToolStrip(device, tsInfo.Name, tsInfo.Width, tsInfo.Height, chain.MyTextureBuddy, tsInfo.Items.Count(), thrower);
             //texture[0] = chain.MyTextureBuddy.FromFile(@"D:\Projects\FishBulb2010\dotnet\SlimDXBindings\Viewer10\Filter\Resources\NT0.png");

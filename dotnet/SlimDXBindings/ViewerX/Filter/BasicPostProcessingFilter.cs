@@ -45,7 +45,10 @@ namespace SlimDXBindings.Viewer10.Filter
         public RenderTargetView RenderTarget
         {
             get { return renderTarget; }
-            set { renderTarget = value; }
+            set {
+                if (renderTarget != null) renderTarget.Dispose();
+                renderTarget = value; 
+            }
         }
         FullscreenQuad quad;
         Viewport vp ;
@@ -224,10 +227,13 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public void Dispose()
         {
-
-            texture.Dispose();
+            if (!notMyTexture)
+                texture.Dispose();
             Effect.Dispose();
+            
+            
             renderTarget.Dispose();
+
             quad.Dispose();
 
             foreach (var shaderRes in shaderResources.Values)
@@ -295,13 +301,14 @@ namespace SlimDXBindings.Viewer10.Filter
 
         #region IFilterChainLink Members
 
-
+        bool notMyTexture = false;
         public void RenderToTexture(Texture2D texture)
         {
             if (this.texture != null && !this.texture.Disposed)
             {
                 this.texture.Dispose();
             }
+            notMyTexture = true;
             this.texture = texture;
         }
 

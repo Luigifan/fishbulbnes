@@ -5,6 +5,7 @@ using System.Text;
 using SlimDX.Direct3D10;
 using SlimDXBindings.Viewer10.Helpers;
 using InstibulbWpfUI;
+using System.IO;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
@@ -72,7 +73,7 @@ namespace SlimDXBindings.Viewer10.Filter
                 {
                     Texture2D tex = input[i];
                     string s = (i < inputs.Count  ) ? inputs[i] : "unknown" + i.ToString();
-                    Texture2D.ToFile(tex, ImageFileFormat.Dds, string.Format("00-{0}-filterChainInput.dds", s) );
+                    Texture2D.ToFile(tex, ImageFileFormat.Dds, Path.Combine(dumpFolder, string.Format("00-{0}-filterChainInput.dds", s) ));
                 }
             }
 
@@ -82,7 +83,7 @@ namespace SlimDXBindings.Viewer10.Filter
                 {
                     this[i].ProcessEffect();
                     if (dumpFiles)
-                        Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, i.ToString() + this[i].FilterName + ".dds");
+                        Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, Path.Combine(dumpFolder, i.ToString() + this[i].FilterName + ".dds"));
 
                 }
             }
@@ -93,7 +94,7 @@ namespace SlimDXBindings.Viewer10.Filter
             }
             if (dumpFiles)
             {
-                Texture2D.ToFile(result, ImageFileFormat.Dds, "99filterChainResult.dds");
+                Texture2D.ToFile(result, ImageFileFormat.Dds,  Path.Combine(dumpFolder, "99filterChainResult.dds"));
                 dumpFiles = false;
             }
         }
@@ -124,7 +125,7 @@ namespace SlimDXBindings.Viewer10.Filter
                 }
                 this[i].ProcessEffect();
                 if (dumpFiles)
-                    Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, "c:\\" + i.ToString() + this[i].FilterName + ".dds");
+                    Texture2D.ToFile(this[i].results, ImageFileFormat.Dds, Path.Combine( i.ToString() + this[i].FilterName + ".dds"));
                 
             }
             result = this[this.Count - 1].results;
@@ -132,11 +133,11 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
         bool dumpFiles = false;
-
-        public bool DumpFiles
+        string dumpFolder = null;
+        public void DumpFiles(string folderPath)
         {
-            get { return dumpFiles; }
-            set { dumpFiles = value; }
+            dumpFiles = true;
+            dumpFolder = folderPath;
         }
 
         #region IDisposable Members
@@ -152,6 +153,7 @@ namespace SlimDXBindings.Viewer10.Filter
             }
 
             myEffectBuddy.Dispose();
+            myTextureBuddy.Dispose();
             
         }
 

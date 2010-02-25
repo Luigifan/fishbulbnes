@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace NES.CPU.PPUClasses
 {
-    public class PPUWriteEvent
+    public class PPUWriteEvent : INotifyPropertyChanged
     {
         // note: there's some redundancy here for the purpose of sanity checks
         private int scanlineNum;
@@ -45,10 +46,21 @@ namespace NES.CPU.PPUClasses
             get { return dataWritten; }
             set { dataWritten = value; }
         }
+
+        public string Text
+        {
+            get
+            {
+                return this.ToString();
+            }
+        }
+
         public override string ToString()
         {
             return string.Format(" {0:x2} written to {1:x4} at {2}, {3}", registerAffected, dataWritten, scanlineNum, scanlinePos);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public partial class PixelWhizzler

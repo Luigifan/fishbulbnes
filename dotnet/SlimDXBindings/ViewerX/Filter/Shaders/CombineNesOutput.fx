@@ -63,6 +63,21 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 		return toolStrip.Sample( linearSampler, coords);
 	}
 
+    float4 result = screenOne.Sample( linearSampler, pixelShaderIn.UV );
+	
+	float4 ol = overLay.Sample(linearSampler,  pixelShaderIn.UV );
+	ol.a=0.05;
+	result = (result * (1 - ol.a)) + (ol * ol.a);
+	result.a = 1.0;
+
+	return result;
+	
+}
+
+float4 Combine( PS_IN pixelShaderIn ) : SV_Target
+{
+
+
     float4 finalColor = screenOne.Sample( linearSampler, pixelShaderIn.UV );
     float4 finalSpriteColor = screenTwo.Sample( linearSampler, pixelShaderIn.UV );
     float4 spriteMaskColor = spriteMask.Sample( linearSampler, pixelShaderIn.UV );
@@ -77,27 +92,19 @@ float4 PS( PS_IN pixelShaderIn ) : SV_Target
 	} 
 	
 	// if this is a background pixel, and there is a sprite here, the sprites alpha is green component (background sprite) of the mask
-	if (spriteMaskColor.g > 0 && finalColor.a < 0.5)
-			finalSpriteColor.a = 1 - finalColor.a;
-	
-	if (finalSpriteColor.a < .6)
+	if (spriteMaskColor.g > 0 )
 	{
-		finalSpriteColor.rgb *= 2;
-		finalSpriteColor.a /= 3;
+		if (finalColor.a > 0)
+			finalSpriteColor.a = 1 - finalColor.a;
+		else
+			finalSpriteColor.a = spriteMaskColor.g;
 	}
+
 	float4 result = (finalSpriteColor * finalSpriteColor.a) + (finalColor * (1 - finalSpriteColor.a));
 	
-	
-	float4 ol = overLay.Sample(linearSampler,  pixelShaderIn.UV );
-	ol.a=0.05;
-	result = (result * (1 - ol.a)) + (ol * ol.a);
-	result.a = 1.0;
 	return result;
-	
-	
-    
-}
 
+}
 
 technique10 Render
 {
@@ -106,6 +113,17 @@ technique10 Render
 		SetGeometryShader( 0 );
 		SetVertexShader( CompileShader( vs_4_0, VS() ) );
 		SetPixelShader( CompileShader( ps_4_0, PS() ) );
+	}
+	
+}
+
+technique10 CombineNesOut
+{
+	pass P0
+	{
+		SetGeometryShader( 0 );
+		SetVertexShader( CompileShader( vs_4_0, VS() ) );
+		SetPixelShader( CompileShader( ps_4_0, Combine() ) );
 	}
 	
 }

@@ -31,22 +31,27 @@ namespace NES.CPU.FastendoDebugging
         {
             get
             {
-                if (_cpu != null)
+                
+                return _instructionUsage;
+            }
+        }
+
+        private void UpdateInstructionUsage()
+        {
+            if (_cpu != null)
+            {
+                _instructionUsage.Clear();
+                for (int i = 0; i < 256; ++i)
                 {
-                    _instructionUsage.Clear();
-                    for (int i = 0; i < 256; ++i)
+                    if (_cpu.InstructionUsage[i] > 0)
                     {
-                        if (_cpu.InstructionUsage[i] > 0)
-                        {
-                            _instructionUsage.Add(string.Format("{0:x2} {1} {2} {3}",
-                                i,
-                                DisassemblyExtensions.GetMnemnonic(i),
-                                _cpu.InstructionUsage[i],
-                                _cpu.addressmode[i]));
-                        }
+                        _instructionUsage.Add(string.Format("{0:x2} {1} {2} {3}",
+                            i,
+                            DisassemblyExtensions.GetMnemnonic(i),
+                            _cpu.InstructionUsage[i],
+                            _cpu.addressmode[i]));
                     }
                 }
-                return _instructionUsage;
             }
         }
 
@@ -56,24 +61,35 @@ namespace NES.CPU.FastendoDebugging
         {
             get
             {
-                if (_cpu == null) return null;
-                _instructionHistory.Clear();
+                return _instructionHistory;
+            }
+        }
 
-                for (int i = _cpu.InstructionHistoryPointer & 0xFF; i >= 0; --i)
-                {
-                    string nesCPUInstructionHistoryDisassemble =  _cpu.InstructionHistory[i].Disassemble();
-                    if (nesCPUInstructionHistoryDisassemble.Trim() != string.Empty)
-                        _instructionHistory.Add(nesCPUInstructionHistoryDisassemble);
-                }
-                for (int i = 0xFF; i > (_cpu.InstructionHistoryPointer & 0xFF); --i)
+        private List<string> UpdateInstructionHistory()
+        {
+            if (_cpu == null) return null;
+            _instructionHistory.Clear();
+
+            for (int i = _cpu.InstructionHistoryPointer & 0xFF; i >= 0; --i)
+            {
+                if (_cpu.InstructionHistory[i] != null)
                 {
                     string nesCPUInstructionHistoryDisassemble = _cpu.InstructionHistory[i].Disassemble();
                     if (nesCPUInstructionHistoryDisassemble.Trim() != string.Empty)
                         _instructionHistory.Add(nesCPUInstructionHistoryDisassemble);
                 }
-
-                return _instructionHistory;
             }
+            for (int i = 0xFF; i > (_cpu.InstructionHistoryPointer & 0xFF); --i)
+            {
+                if (_cpu.InstructionHistory[i] != null)
+                {
+                    string nesCPUInstructionHistoryDisassemble = _cpu.InstructionHistory[i].Disassemble();
+                    if (nesCPUInstructionHistoryDisassemble.Trim() != string.Empty)
+                        _instructionHistory.Add(nesCPUInstructionHistoryDisassemble);
+                }
+            }
+
+            return _instructionHistory;
         }
 
         private bool autoRollout = false;
@@ -94,6 +110,8 @@ namespace NES.CPU.FastendoDebugging
         public void UpdateFutureRollout(CPU2A03 cpu)
         {
             _futureOps.CreateRollout(cpu, new List<CPUBreakpoint>(), 32);
+            UpdateInstructionHistory();
+            UpdateInstructionUsage();
         }
 
     }

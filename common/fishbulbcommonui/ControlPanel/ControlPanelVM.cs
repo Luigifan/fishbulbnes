@@ -15,35 +15,6 @@ namespace Fishbulb.Common.UI
     public delegate bool CommandCanExecuteHandler(object parm);
     public delegate string GetFileDelegate(string defaultExt, string Filter);
 
-    public enum RunningStatuses
-    {
-        Unloaded,
-        Off,
-        Running,
-        Paused
-    }
-
-    public class RunStatusChangedEventArgs : EventArgs
-    {
-        public RunStatusChangedEventArgs(RunningStatuses oldState, RunningStatuses newState)
-        {
-            NewState = newState;
-            OldState = oldState;
-        }
-
-        public RunningStatuses NewState
-        {
-            get;
-            private set;
-        }
-
-        public RunningStatuses OldState
-        {
-            get;
-            private set;
-        }
-    }
-
     public class InstigatorCommand : ICommandWrapper
     {
         CommandExecuteHandler exectutor;
@@ -74,7 +45,6 @@ namespace Fishbulb.Common.UI
     public class ControlPanelVM : BaseNESViewModel
     {
 
-        public event EventHandler<RunStatusChangedEventArgs> RunStatusChangedEvent;
 
         public override string CurrentView
         {
@@ -114,7 +84,6 @@ namespace Fishbulb.Common.UI
                     new CommandCanExecuteHandler(o => true)));
             Commands.Add("BrowseRom",
                 new InstigatorCommand(new CommandExecuteHandler(BrowseFile), new CommandCanExecuteHandler(CanInsertCart)));
-            runstate = RunningStatuses.Unloaded;
         }
 
         GetFileDelegate fileGetter;
@@ -125,6 +94,18 @@ namespace Fishbulb.Common.UI
             if (filename != null)
                 InsertCart(filename);
         }
+
+        protected override void OnAttachTarget()
+        {
+            TargetMachine.RunStatusChangedEvent += new EventHandler<EventArgs>(TargetMachine_RunStatusChangedEvent);
+            base.OnAttachTarget();
+        }
+
+        void TargetMachine_RunStatusChangedEvent(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("PowerStatusText");
+        }
+
 
         bool CanInsertCart(object o)
         {
@@ -152,21 +133,22 @@ namespace Fishbulb.Common.UI
         {
             get
             {
-                switch (runstate)
+                switch (TargetMachine.RunState)
                 {
-                    case RunningStatuses.Unloaded:
+                    case NES.Machine.ControlPanel.RunningStatuses.Unloaded:
                         return "";
-                    case RunningStatuses.Off:
+                    case NES.Machine.ControlPanel.RunningStatuses.Off:
                         return "off";
-                    case RunningStatuses.Paused:
+                    case NES.Machine.ControlPanel.RunningStatuses.Paused:
                         return "paused";
-                    case RunningStatuses.Running:
+                    case NES.Machine.ControlPanel.RunningStatuses.Running:
                         return "on";
                     default:
                         return "";
                 }
             }
         }
+
 
         CartInfo _cartInfo;
 
@@ -176,15 +158,6 @@ namespace Fishbulb.Common.UI
             set { _cartInfo = value; }
         }
 
-        RunningStatuses runstate = RunningStatuses.Unloaded;
-
-        public RunningStatuses RunState
-        {
-            get
-            {
-                return runstate;
-            }
-        }
 
         void InsertCart(string fileName)
         {
@@ -201,46 +174,33 @@ namespace Fishbulb.Common.UI
                 RomInfoString = string.Format("Prg Rom Count: {0}, Chr Rom Count: {1}", TargetMachine.Cart.NumberOfPrgRoms, TargetMachine.Cart.NumberOfChrRoms)
             };
 
-            runstate = RunningStatuses.Off;
             NotifyPropertyChanged("CurrentCartName");
-            NotifyPropertyChanged("PowerStatusText");
             NotifyPropertyChanged("CartInfo");
         }
 
-        void OnRunStatusChanged(RunningStatuses oldState, RunningStatuses newState)
-        {
-            if (RunStatusChangedEvent != null)
-                RunStatusChangedEvent(this, new RunStatusChangedEventArgs(oldState, newState));
-        }
 
 
         void PowerOn()
         {
             TargetMachine.IsDebugging = false;
-            RunningStatuses oldState = runstate;
-            switch (runstate)
+
+            switch (TargetMachine.RunState)
             {
-                case RunningStatuses.Off:
+                case NES.Machine.ControlPanel.RunningStatuses.Running:
+                    break;
+
+                default:
+                    TargetMachine.Paused = false;
                     TargetMachine.Reset();
                     TargetMachine.ThreadRuntendo();
                     break;
-                case RunningStatuses.Paused:
-                    Paused=false;
-                    break;
-                case RunningStatuses.Unloaded:
-                    return;
             }
 
-            runstate = RunningStatuses.Running;
-
-            OnRunStatusChanged(oldState, runstate);
-            NotifyPropertyChanged("PowerStatusText");
-            
         }
 
         void PowerToggle()
         {
-            if (runstate == RunningStatuses.Running)
+            if (TargetMachine.RunState == NES.Machine.ControlPanel.RunningStatuses.Running)
             {
                 PowerOff();
             }
@@ -252,38 +212,20 @@ namespace Fishbulb.Common.UI
 
         void PowerOff()
         {
-            TargetMachine.IsDebugging = false;
-
-            RunningStatuses oldState = runstate;
 
             if (TargetMachine.IsRunning)
                 TargetMachine.ThreadStoptendo();
 
-            runstate = RunningStatuses.Off;
-            NotifyPropertyChanged("PowerStatusText");
-            OnRunStatusChanged(oldState, runstate);
-
         }
 
-        RunningStatuses prePauseState;
-
+        
         public bool Paused
         {
             get { return TargetMachine.Paused; }
             set {
                 TargetMachine.IsDebugging = false;
 
-                RunningStatuses oldState = runstate;
                 TargetMachine.Paused = value;
-                if (runstate == RunningStatuses.Paused)
-                    runstate = prePauseState;
-                else
-                {
-                    prePauseState = runstate;
-                    runstate = RunningStatuses.Paused;
-                }
-
-                OnRunStatusChanged(oldState, runstate);
                 
             }
         }

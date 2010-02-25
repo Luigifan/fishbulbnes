@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NES.CPU.PPUClasses
 {
-    public class NESSprite
+    public struct NESSprite
     {
 
         public int YPosition;

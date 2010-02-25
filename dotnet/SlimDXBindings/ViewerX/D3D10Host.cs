@@ -101,6 +101,7 @@ namespace SlimDXBindings.Viewer10
 
         public void QuadUp(DirectHost renderHost)
         {
+            //throw new Exception("BORK BORK BORK no d3d today we are out of polygons");
             _renderHost= renderHost;
 
             //RenderForm = new Form();
@@ -135,8 +136,16 @@ namespace SlimDXBindings.Viewer10
             swapChainDescription.SwapEffect = DXGI.SwapEffect.Discard;
             swapChainDescription.Usage = DXGI.Usage.RenderTargetOutput | DXGI.Usage.Shared;
             
+            
             //D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out Device, out SwapChain);
+#if DEBUG
+            SlimDX.Configuration.EnableObjectTracking = true;
+
             D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out _device, out SwapChain);
+#else
+            SlimDX.Configuration.EnableObjectTracking = false;
+            D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.None, swapChainDescription, out _device, out SwapChain);
+#endif
             
             textureBuddy = new TextureBuddy(_device);
 
@@ -241,7 +250,7 @@ namespace SlimDXBindings.Viewer10
             palDesc.SampleDescription = sampleDescription;
 
 
-            nesPalTexture = new Texture2D(_device, palDesc);
+            nesPalTexture = textureBuddy.SetupTexture2D("nesPalTexture", palDesc); // new Texture2D(_device, palDesc);
 
 
             Texture2DDescription targetDesc = new Texture2DDescription();
@@ -288,11 +297,8 @@ namespace SlimDXBindings.Viewer10
 
             disposables.Add(resource);
             disposables.Add(textureView);
-            disposables.Add(texture);
             disposables.Add(tileFilters);
-            disposables.Add(nesPalTexture);
             disposables.Add(targetTexture);
-            disposables.Add(textureBuddy);
             disposables.Add(RenderTarget);
             
 
@@ -319,6 +325,13 @@ namespace SlimDXBindings.Viewer10
            get {
                return resource.ComPointer;
             }
+        }
+
+        public void RequestDump(InstiBulb.PlatformDelegates winDelegates)
+        {
+            string s = winDelegates.BrowseForFolder();
+            if (s != null)
+                tileFilters.DumpFiles(s);
         }
 
         public void RequestResize(int height, int width)
@@ -417,22 +430,7 @@ namespace SlimDXBindings.Viewer10
                 SwapChain.SetFullScreenState(false, null);
                 SwapChain.ResizeTarget(modeDescription);
             }
-            else if (e.KeyCode == Keys.D)
-            {
-                if (tileFilters != null && nes != null && nes.IsRunning)
-                    tileFilters.DumpFiles = true;
-            }
-            else if (e.KeyCode == Keys.F4 )
-            {
-                if (controlVisibility == 0)
-                {
-                    controlVisibilityOffset = 0.05f;
-                }
-                else if (controlVisibility == 1)
-                {
-                    controlVisibilityOffset = -0.05f;
-                }
-            }
+
         }
 
         float controlVisibility = 0;
@@ -592,6 +590,8 @@ namespace SlimDXBindings.Viewer10
 
         public  void Die()
         {
+            textureBuddy.Dispose();
+            tileFilters.Dispose();
             foreach (IDisposable p in disposables)
             {
                 if (p != null) p.Dispose();
@@ -604,7 +604,7 @@ namespace SlimDXBindings.Viewer10
             if (_device != null)  _device.Dispose();
             if (SwapChain != null) SwapChain.Dispose();
 
-            tileFilters.Dispose();
+            
             
         }
 

@@ -8,12 +8,12 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("10NES2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("10Nes Version 2")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("company")]
 [assembly: AssemblyProduct("10NES2")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("copyright")]
+[assembly: AssemblyTrademark("mork")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

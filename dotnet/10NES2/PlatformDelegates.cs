@@ -28,6 +28,11 @@ namespace InstiBulb
             return filename;
         }
 
+        public string BrowseForFolder()
+        {
+            return null;
+        }
+
         public void WriteSRAM(string romID, byte[] sram)
         {
             string fileName =

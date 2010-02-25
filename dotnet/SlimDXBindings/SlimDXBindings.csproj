@@ -142,7 +142,7 @@
     </Reference>
     <Reference Include="SlimDX, Version=2.0.8.42, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\SlimDX SDK (August 2009)\Bin\x64\SlimDX.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\SlimDX SDK (August 2009)\Bin\x86\SlimDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -204,6 +204,9 @@
     <Compile Include="ViewerX\Helpers\DirtyRegion.cs" />
     <Compile Include="ViewerX\Helpers\TextureBuddy.cs" />
     <Compile Include="ViewerX\Helpers\WPFVisualTexture.cs" />
+    <Compile Include="ViewerX\PropertyPanel\PropertyPanel.xaml.cs">
+      <DependentUpon>PropertyPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewerX\XamlModel3dLoader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +268,10 @@
     <Page Include="Viewer9\PropertyPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewerX\PropertyPanel\PropertyPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

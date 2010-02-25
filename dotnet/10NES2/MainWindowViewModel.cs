@@ -40,13 +40,32 @@ namespace _10NES2
             container.RegisterType<FrameworkElement, SoundPanelView>("SoundPanel");
             container.RegisterType<FrameworkElement, DebuggerView>("DebugPanel");
             container.RegisterType<FrameworkElement, SaveStateView>("SaveStatePanel");
+            container.RegisterType<FrameworkElement, ControllerConfig>("ControllerConfigPanel");
 
             nes = container.Resolve<NESMachine>();
+            nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             
             showDialogCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowDialog), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
             showWindowCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowWindow), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
             showBumpOutCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowBumpOut), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
             hideBumpOutCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(HideBumpOut), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
+        }
+
+        void nes_RunStatusChangedEvent(object sender, EventArgs e)
+        {
+            switch (nes.RunState)
+            {
+                case NES.Machine.ControlPanel.RunningStatuses.Running:
+                    spinnerWidthFactor = 0.01;
+                    break;
+                default:
+                    userRequestsToolView = false;
+                    spinnerWidthFactor = 0.25;
+                    break;
+            }
+
+            NotifyPropertyChanged("SpinnerWidth");
+            NotifyPropertyChanged("ToolsVisible");
         }
 
         #region Commands and Implementations
@@ -123,6 +142,7 @@ namespace _10NES2
                     DialogShell w = new DialogShell();
                     w.MainGrid.Children.Add(view);
                     windows.RegisterWindow(s, w);
+                    w.Owner = container.Resolve<Window>("MainWindow");
                     w.Show();
                 }
             }
@@ -133,9 +153,25 @@ namespace _10NES2
             String s = o as String;
             if (s != null)
             {
-                BumpOut = container.Resolve<FrameworkElement>(s);
-                BumpOut.DataContext = container.Resolve<IViewModel>(s);
-                BumpOutVisibility = true;
+                if (s == "DisplaySettings")
+                {
+                    BumpOut = container.Resolve<IDisplayContext>().PropertiesPanel as FrameworkElement;
+                    if (BumpOut == null)
+                    {
+                        BumpOutVisibility = false;
+                    }
+                    else
+                    {
+                        BumpOut.DataContext = container.Resolve<IDisplayContext>();
+                        BumpOutVisibility = true;
+                    }
+                }
+                else
+                {
+                    BumpOut = container.Resolve<FrameworkElement>(s);
+                    BumpOut.DataContext = container.Resolve<IViewModel>(s);
+                    BumpOutVisibility = true;
+                }
                 NotifyPropertyChanged("BumpOutVisibility");
                 NotifyPropertyChanged("BumpOut");
                 
@@ -155,6 +191,46 @@ namespace _10NES2
         {
             return true;
         }
+
+        double winWidth;
+
+        public double WindowWidth
+        {
+            get { return winWidth; }
+            set
+            {
+             winWidth= value;
+             NotifyPropertyChanged("SpinnerWidth");
+             NotifyPropertyChanged("ToolsVisible");
+            }
+        }
+
+        const double spinnerMaxWidth = 0.25;
+        
+
+        double spinnerWidthFactor = 0.25;
+        public double SpinnerWidth
+        {
+            get {
+                if (userRequestsToolView)
+                    return winWidth * spinnerMaxWidth;
+
+                return winWidth * spinnerWidthFactor; 
+            }
+        }
+
+        bool userRequestsToolView = true;
+
+        public bool UserRequestsToolView
+        {
+            get { return userRequestsToolView; }
+            set { userRequestsToolView = value;
+            NotifyPropertyChanged("SpinnerWidth");
+            NotifyPropertyChanged("ToolsVisible");
+            }
+        }
+
+
 
         #endregion
 
@@ -180,12 +256,25 @@ namespace _10NES2
             set;
         }
 
+
         public bool BumpOutVisibility
         {
             get;
             set;
         }
 
+
+        public bool ToolsVisible
+        {
+            get
+            {
+                if (userRequestsToolView)
+                    return true;
+
+                return spinnerWidthFactor == spinnerMaxWidth; 
+            }
+
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -196,6 +285,11 @@ namespace _10NES2
 
         public void Dispose()
         {
+            //foreach (Window w in windows.Values)
+            //{
+            //    w.Close();
+            //}
+            windows = null;
             nes.ThreadStoptendo();
             container.Dispose();
         }

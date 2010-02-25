@@ -238,9 +238,14 @@ namespace SlimDXBindings.Viewer10.Filter
 
             texture.Dispose();
             renderTarget.Dispose();
+            foreach (SpriteInstance d in sprites)
+            {
+                d.Texture.Dispose();
+                
+            }
+            spr.Dispose();
             //quad.Dispose();
             //myMesh.Dispose();
-
         }
 
         #endregion

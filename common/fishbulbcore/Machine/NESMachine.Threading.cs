@@ -88,20 +88,16 @@ namespace NES.CPU.nitenedo
                 }
                 if (!paused)
                 {
-                    runState = NES.Machine.ControlPanel.RunningStatuses.Running;
-                    UnPauseResetEvent.Set();
+                    //runState = NES.Machine.ControlPanel.RunningStatuses.Running;
+                    MachineRunningResetEvent.Set();
                 }
-                else
-                {
-                    runState = NES.Machine.ControlPanel.RunningStatuses.Paused;
-                }
+
 
             }
         }
 
         private volatile int framesRendered;
 
-        private ManualResetEvent UnPauseResetEvent = new ManualResetEvent(false);
         private ManualResetEvent MachineRunningResetEvent = new ManualResetEvent(false);
 
         public int FramesRendered
@@ -124,12 +120,10 @@ namespace NES.CPU.nitenedo
                 
                 if (paused)
                 {
-                    if (RunStatusChangedEvent != null)
-                        RunStatusChangedEvent(this, new EventArgs());
-                    UnPauseResetEvent.WaitOne();
-                    UnPauseResetEvent.Reset();
-                    if (RunStatusChangedEvent != null)
-                        RunStatusChangedEvent(this, new EventArgs());
+                    RunState = NES.Machine.ControlPanel.RunningStatuses.Paused;
+                    MachineRunningResetEvent.WaitOne();
+                    MachineRunningResetEvent.Reset();
+                    RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
                 }
 
                 Work();
@@ -145,6 +139,8 @@ namespace NES.CPU.nitenedo
             }
 
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
+            
+
             //while (machineWorkQueue.Count > 0)
             //{
             //    // make sure it isnt stuck on a pause
@@ -156,18 +152,15 @@ namespace NES.CPU.nitenedo
         private void ReStart()
         {
             Paused = false;
-            while (isStopped)
-            {
+
                 // make sure it isnt stuck on a pause
-                UnPauseResetEvent.Set();
                 MachineRunningResetEvent.Set();
                 System.Threading.Thread.Sleep(0);
-            }
         }
 
         public void ThreadStep()
         {
-            ForceStop();
+            //ForceStop();
             
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneStep, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
@@ -175,7 +168,7 @@ namespace NES.CPU.nitenedo
 
         public void ThreadFrame()
         {
-            ForceStop();
+            //ForceStop();
             
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneFrame, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
@@ -186,6 +179,7 @@ namespace NES.CPU.nitenedo
         {
             Paused = false;
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunContinuously, Result = MachineTaskResults.RunCompletedOK });
+            RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
             ReStart();
         }
 
@@ -193,9 +187,10 @@ namespace NES.CPU.nitenedo
         {
 
             ForceStop();
+            RunState = NES.Machine.ControlPanel.RunningStatuses.Off;
         }
 
-        MachineWorkItem currentWorkItem;
+        MachineWorkItem currentWorkItem = new MachineWorkItem(){ Task = MachineTasks.Stoppit };
         private void Work()
         {
 
@@ -206,7 +201,7 @@ namespace NES.CPU.nitenedo
             else
             {
                 // if the current work item is run, and there are no queued work items, leave it alone, or else stop 
-                if (currentWorkItem == null || currentWorkItem.Task != MachineTasks.RunContinuously)
+                if (currentWorkItem.Task != MachineTasks.RunContinuously)
                     currentWorkItem = new MachineWorkItem() { Task = MachineTasks.Stoppit };
                 
             }
@@ -219,26 +214,30 @@ namespace NES.CPU.nitenedo
 
             switch (task)
             {
-                case MachineTasks.RunOneStep:
-                    this.Step();
-                    break;
-                case MachineTasks.RunOneFrame:
-                    this.RunFrame();
-                    break;
                 case MachineTasks.RunContinuously:
                     this.Runtendo();
+                    //RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
                     break;
+
+                case MachineTasks.RunOneStep:
+                    this.Step();
+                    RunState = NES.Machine.ControlPanel.RunningStatuses.Frozen;
+                    StopMachine();
+                    break;
+
+                case MachineTasks.RunOneFrame:
+                    this.RunFrame();
+                    RunState = NES.Machine.ControlPanel.RunningStatuses.Frozen;
+                    StopMachine();
+                    break;
+
                 case MachineTasks.Stoppit:
-                    isStopped = true;
-                    MachineRunningResetEvent.WaitOne();
-                    isStopped = false;
+                    RunState = NES.Machine.ControlPanel.RunningStatuses.Off;
+                    StopMachine();
                     break;
+
                 default:
                     break;
-            }
-            if (isDebugging)
-            {
-                CreateNewDebugInformation();
             }
             if (breakpointHit)
             {
@@ -249,6 +248,22 @@ namespace NES.CPU.nitenedo
 
             }
 
+        }
+
+        private void StopMachine()
+        {
+            isStopped = true;
+            
+            // RunState = NES.Machine.ControlPanel.RunningStatuses.Off;
+            if (isDebugging)
+            {
+                CreateNewDebugInformation();
+            }
+
+            MachineRunningResetEvent.WaitOne();
+            MachineRunningResetEvent.Reset();
+            isStopped = false;
+            RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
         }
 
 

@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:nesView="clr-namespace:InstiBulb.Integration"
         xmlns:my="clr-namespace:InstiBulb.ThreeDee"
+        xmlns:insWin="clr-namespace:InstiBulb.Windowing"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:sysWin="clr-namespace:System.Windows;assembly=PresentationCore"
         Title="10NES Omega 2" Height="480" Width="720" 
         Closed="Window_Closed"
         Closing="Window_Closing"
-        >
+        SizeChanged="Window_SizeChanged"
+        MouseDoubleClick="Window_MouseDoubleClick" Icon="/10NES2;component/Mario-Dead.ico">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,11 +24,12 @@
     </Window.Resources>
     <Grid Background="Black" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.25*" />
-            <ColumnDefinition Width="0.50*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
-        <Grid Name="SpinnerGrid">
+        <Grid Name="SpinnerGrid" Width="{Binding SpinnerWidth}"  
+              
+              >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -38,7 +41,10 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="5" Grid.ColumnSpan="2" Margin="0 0 50 0">
+            <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="5" Grid.ColumnSpan="3"  
+                Visibility="{Binding ToolsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+
+                              >
                 <my:ToolSpinner3D.Camera >
                     <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
                 </my:ToolSpinner3D.Camera>
@@ -49,6 +55,10 @@
                     </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="SaveStatePanel" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="DisplaySettings" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="ControllerConfigPanel" Model="{StaticResource ResourceKey=controlPad}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
 
@@ -57,58 +67,63 @@
 
             <Button Opacity="0.2" Grid.Row="0" Grid.ColumnSpan="2" Content="Up" Command="{Binding ElementName=toolSpinner3D1, Path=NextCommand}"/>
             <Button Opacity="0.2" Grid.Row="4" Grid.ColumnSpan="2" Content="Down" Command="{Binding ElementName=toolSpinner3D1, Path=PreviousCommand}"/>
-        </Grid>
-        <Grid Grid.Column="0"  Grid.Row="0"   Name="BumpOutGrid"
-                  Visibility="{Binding BumpOutVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+            <Grid Grid.Column="0"  Grid.Row="0"   Name="BumpOutGrid" Grid.RowSpan="5" Grid.ColumnSpan="2"
+              Visibility="{Binding BumpOutVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+              Background="#AAA05050"
+                  IsEnabled="{Binding ToolsVisible, Mode=OneWay}"
                   
-                  >
-            <Grid.Style>
-                <Style>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding BumpOutVisibility}"  Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" From="0" To="1"  />
-                                        <!--<ObjectAnimationUsingKeyFrames Duration="0:0:1" Storyboard.TargetProperty="Visibility" >
-                                                <ObjectKeyFrameCollection>
-                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ResourceKey=Visible}" />
-                                                </ObjectKeyFrameCollection>
-                                            </ObjectAnimationUsingKeyFrames>-->
+              >
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding BumpOutVisibility}"  Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" From="0" To="1"  />
+                                            <!--<ObjectAnimationUsingKeyFrames Duration="0:0:1" Storyboard.TargetProperty="Visibility" >
+                                            <ObjectKeyFrameCollection>
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ResourceKey=Visible}" />
+                                            </ObjectKeyFrameCollection>
+                                        </ObjectAnimationUsingKeyFrames>-->
 
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
 
-                        </DataTrigger>
+                            </DataTrigger>
 
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="20*"/>
-            </Grid.RowDefinitions>
-            <Label HorizontalAlignment="Stretch" Name="BumpOut" VerticalAlignment="Stretch" Margin="0,0,0,12" HorizontalContentAlignment="Stretch"
-                              Content="{Binding BumpOut}" 
-                              
-                              Grid.RowSpan="2"
-                              
-                 />
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
 
-            <Grid HorizontalAlignment="Stretch" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Label Foreground="White" Content="{Binding Path=BumpOut.DataContext.DisplayName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                <Label HorizontalAlignment="Stretch" Name="BumpOut" VerticalAlignment="Stretch" Margin="0,0,0,12" HorizontalContentAlignment="Stretch"
+                          Content="{Binding BumpOut}" 
+                          Grid.RowSpan="2"
+                          
+             />
 
-                </Label>
-                <Button Width="Auto" Command="{Binding HideBumpOutCommand}" HorizontalAlignment="Right" Grid.Column="1" >X</Button>
+                <Grid HorizontalAlignment="Stretch" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Width="Auto" Command="{Binding HideBumpOutCommand}" HorizontalAlignment="Right" Grid.Column="1" >X</Button>
+                </Grid>
             </Grid>
+            <Rectangle Fill="Blue" Grid.ColumnSpan="2" Grid.RowSpan="5" 
+                       Visibility="{Binding ToolsVisible, Converter={StaticResource BooleanToInvisibilityConverter}, Mode=OneWay}"
+                       />
         </Grid>
-        <nesView:NESDisplay x:Name="nesDisplay" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" 
-                         
+        
+        
+        <nesView:NESDisplay x:Name="nesDisplay" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" 
+                            
                             ></nesView:NESDisplay>
     </Grid>
 </Window>

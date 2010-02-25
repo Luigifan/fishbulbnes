@@ -6,6 +6,11 @@ using Microsoft.WindowsAPICodePack.DirectX.Controls;
 using NES.CPU.nitenedo.Interaction;
 using NES.CPU.nitenedo;
 using System.Windows.Controls;
+using System.ComponentModel;
+using SlimDXBindings.ViewerX.PropertyPanel;
+using Fishbulb.Common.UI;
+using InstiBulb.Commands;
+using InstiBulb;
 
 namespace SlimDXBindings.Viewer10
 {
@@ -17,16 +22,38 @@ namespace SlimDXBindings.Viewer10
         }
     }
 
-    public class D3D10NesViewer : Border, IDisplayContext, IDisposable
+    public class D3D10NesViewer : Border, IDisplayContext, IDisposable, INotifyPropertyChanged
     {
         DirectHost dhost;
         D3D10Host host;
-        public D3D10NesViewer()
+        DelegateCommand dumpFilesCommand;
+
+        public DelegateCommand DumpSurfacesCommand
         {
+            get { return dumpFilesCommand; }
+        }
+
+        PlatformDelegates winDelegates;
+
+        public D3D10NesViewer(PlatformDelegates delegates)
+        {
+            winDelegates = delegates;
             dhost = new ShmuckHost();
-            // dhost.Render = new RenderHandler(Render);
+            dumpFilesCommand = new DelegateCommand(
+                o => DumpFiles(),
+                o => CanDumpFiles());
             this.Child = dhost;
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(D3D10NesViewer_SizeChanged);
+        }
+
+        void DumpFiles()
+        {
+            host.RequestDump(winDelegates);
+        }
+
+        bool CanDumpFiles()
+        {
+            return true;
         }
 
         bool initialized = false;
@@ -40,8 +67,17 @@ namespace SlimDXBindings.Viewer10
                 return;
             }
 
-            host = new D3D10Host(machine);
-            host.QuadUp(dhost);
+            try
+            {
+
+                host = new D3D10Host(machine);
+                host.QuadUp(dhost);
+                NotifyPropertyChanged("Host");
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Display Failed", ex);
+            }
             initialized = true;
         }
 
@@ -50,15 +86,6 @@ namespace SlimDXBindings.Viewer10
             
         }
 
-        void Render()
-        {
-            if (host != null)
-            {
-                host.DrawFrame();
-                this.InvalidateVisual();
-                //dhost.InvalidateVisual();
-            }
-        }
 
         NESMachine machine;
         public NES.CPU.nitenedo.NESMachine AttachedMachine
@@ -135,15 +162,30 @@ namespace SlimDXBindings.Viewer10
             get { return this; }
         }
 
+
         public object PropertiesPanel
         {
-            get { return null; }
+            get { return new PropertyPanel(); }
         }
 
         public string DisplayName
         {
             get { return "Direct3D 10 Viewer"; }
         }
+
+        public D3D10Host Host
+        {
+            get
+            {
+                return host;
+            }
+        }
+
+        void NotifyPropertyChanged(string s)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(s));
+        }
+
 
 
         public void Dispose()
@@ -152,5 +194,7 @@ namespace SlimDXBindings.Viewer10
                 host.Dispose();
 
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

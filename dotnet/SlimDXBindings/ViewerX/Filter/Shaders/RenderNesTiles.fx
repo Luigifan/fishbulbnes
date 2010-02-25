@@ -135,7 +135,7 @@ PS_IN VS( VS_IN vertexShaderIn )
 	return vertexShaderOut;
 }
 
-float hue = 0;
+float hue ;
 
 float colorAngles[16] = 
 {0, // sin =  -1.0f, cos = 0
@@ -566,7 +566,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
 	
 	float2 xy = (pixelShaderIn.UV) * 255.0;
-	
+	// xy.y-=1;
 	int ppuByte0 = finalColor.g * 255.0;	
 	int ppuByte1 = finalColor.b * 255.0;	
 
@@ -611,7 +611,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 					return float4(0,0,0,0);
 				int ntPixel = DrawSprite(spriteNum, xy.x , xy.y, ppuByte0, ppuByte1);
 				
-				//float alpha = (ntPixel & 128) ? 1.0 : 0.5;
+				float alpha = (ntPixel & 128) ? 1.0 : 0.5;
 				
 				ntPixel &=31;
 				if ((ntPixel & 3) > 0)
@@ -619,8 +619,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 					// get the nes palette entry (will contain 4 values)
 					float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
 					int pixel = rVal[ntPixel & 3] * 255;
-					//return colorPal[pixel & 63];
-					return float4(DecodePixel(pixel, 0), 1.0);
+					return float4(DecodePixel(pixel, 0), alpha);
 				}
 			}
 		}

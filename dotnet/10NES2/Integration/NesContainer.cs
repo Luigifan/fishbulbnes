@@ -112,7 +112,7 @@ namespace InstiBulb.Integration
 
 
 
-            container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
+            // container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
             container.RegisterType<IControlPad, WpfKeyboardControlPad>("padone", new ContainerControlledLifetimeManager(),
                 new InjectionProperty("Handler", new ResolvedParameter<Window>("MainWindow"))
                 );
@@ -125,17 +125,18 @@ namespace InstiBulb.Integration
                 new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()),
                 new InjectionProperty("Streamer", new ResolvedParameter<IWavStreamer>())
                 );
+
+
             container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             container.RegisterType<IViewModel, WinCheatPanelVM>("CheatPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             container.RegisterType<IViewModel, WinDebuggerVM>("DebugPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             container.RegisterType<IViewModel, SaveStateVM>("SaveStatePanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             
+            container.RegisterType<IViewModel, WpfKeyConfigVM>("ControllerConfigPanel", new ContainerControlledLifetimeManager()
+                , new InjectionConstructor(new ResolvedParameter<WpfKeyboardControlPad>("padone")),
+                new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>())
+                );
 
-            //container.RegisterType<WpfKeyConfigVM>("KeyConfigVM", new ContainerControlledLifetimeManager());
-            // register views
-
-
-            InstibulbWpfUI.TypeRegisterer.RegisterWpfUITypes(container);
 
             return container;
         }

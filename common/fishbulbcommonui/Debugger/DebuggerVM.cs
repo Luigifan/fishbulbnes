@@ -12,6 +12,7 @@ using NES.CPU.FastendoDebugging;
 using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.PPUClasses;
 using fishbulbcommonui;
+using System.Collections.ObjectModel;
 
 namespace Fishbulb.Common.UI
 {
@@ -23,6 +24,14 @@ namespace Fishbulb.Common.UI
         {
             _breakpointHit = true;
             NotifyPropertyChanged("BreakpointHit");
+        }
+
+        protected override void OnAttachTarget()
+        {
+            TargetMachine.IsDebugging = true;
+            TargetMachine.DebugInfoChanged -= _nes_DebugInfoChanged;
+            TargetMachine.DebugInfoChanged += _nes_DebugInfoChanged;
+            base.OnAttachTarget();
         }
 
         private bool _breakpointHit;
@@ -60,6 +69,10 @@ namespace Fishbulb.Common.UI
             Commands.Add("StepFrame", new InstigatorCommand(
                 (o) => StepFrame(),
                 (o) => true));
+            Commands.Add("Continue", new InstigatorCommand(
+                (o) => Continue(),
+                (o) => true));
+
         }
 
 
@@ -68,7 +81,14 @@ namespace Fishbulb.Common.UI
 
             if (TargetMachine == null) return;
             if (TargetMachine.DebugInfo == null) return;
-
+            _frameWrites.Clear();
+            if (TargetMachine.DebugInfo.PPU != null)
+            {
+                foreach (PPUWriteEvent pEv in TargetMachine.DebugInfo.PPU.FrameWriteEvents)
+                {
+                    _frameWrites.Add(pEv);
+                }
+            }
             NotifyPropertyChanged("DebuggerInformation");
             NotifyPropertyChanged("FrameWriteEvents");
         }
@@ -91,7 +111,14 @@ namespace Fishbulb.Common.UI
             UpdateDebugInfo();
         }
 
+        public void Continue()
+        {
+            if (TargetMachine == null) return;
+            TargetMachine.IsDebugging = false;
+            TargetMachine.ThreadRuntendo();
 
+            UpdateDebugInfo();
+        }
         private List<string> _breakpoints = null;
 
         public IEnumerable<string> Breakpoints
@@ -142,14 +169,12 @@ namespace Fishbulb.Common.UI
         }
 
 
-
+        List<PPUWriteEvent> _frameWrites = new List<PPUWriteEvent>();
         public List<PPUWriteEvent> FrameWriteEvents
         {
             get
             {
-                if (TargetMachine == null || TargetMachine.DebugInfo == null || TargetMachine.DebugInfo.PPU == null) return new List<PPUWriteEvent>();
-
-                return TargetMachine.DebugInfo.PPU.FrameWriteEvents;
+                return _frameWrites;
             }
         }
     }
