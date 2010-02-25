@@ -29,7 +29,7 @@
     <ProductName>10NES</ProductName>
     <PublisherName>10NES</PublisherName>
     <SuiteName>10NES</SuiteName>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -98,10 +98,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>AD1E3F6CC73C765CA93545467539D009C5F3E164</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>300D3D004F4E30F50E4F140C8C769FA003C0E984</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>10NES2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>10NES2_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -170,7 +170,6 @@
     <Compile Include="ThreeDee\InteractiveCanvasSpinnerFactory.cs" />
     <Compile Include="ThreeDee\SphereMeshGenerator.cs" />
     <Compile Include="ThreeDee\ToolSpinner3D.cs" />
-    <Compile Include="Windowing\BumpOutHider.cs" />
     <Compile Include="Windowing\WindowCollection.cs" />
     <Compile Include="Windowing\WindowTracker.cs" />
     <Page Include="DialogShell.xaml">
@@ -220,7 +219,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="10NES2_TemporaryKey.pfx" />
+    <None Include="10NES2_1_TemporaryKey.pfx" />
     <None Include="App.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
