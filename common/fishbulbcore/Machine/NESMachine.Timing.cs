@@ -32,8 +32,6 @@ namespace NES.CPU.nitenedo
 
         }
 
-        bool frameEnded = false;
-
         public void RunFrame()
         {
 

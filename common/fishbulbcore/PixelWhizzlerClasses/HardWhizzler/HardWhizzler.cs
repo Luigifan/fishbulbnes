@@ -223,7 +223,6 @@ namespace NES.CPU.PixelWhizzlerClasses
         {
             if (!_spritesAreVisible) return false;
 
-            byte result = 0;
             int yLine = 0;
             int xPos = 0;
             int tileIndex = 0;

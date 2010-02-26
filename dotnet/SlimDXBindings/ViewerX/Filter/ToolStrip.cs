@@ -13,7 +13,6 @@ namespace SlimDXBindings.Viewer10.Filter
     public class ToolStrip : IFilterChainLink, ISendsMessages
     {
 
-        XamlModel3DMeshFactory myMesh;
 
         bool feedsNextStage = true;
 
@@ -32,7 +31,7 @@ namespace SlimDXBindings.Viewer10.Filter
         
         Sprite spr;
         SpriteInstance[] sprites ;
-        Texture2D[] spriteTex ;
+        
         List<string> commands = new List<string>();
 
         public List<string> Commands
@@ -43,19 +42,16 @@ namespace SlimDXBindings.Viewer10.Filter
         FakeEventThrower thrower ;
 
 
-        DepthBuffer dBuffer;
 
         public RenderTargetView RenderTarget
         {
             get { return renderTarget; }
             set { renderTarget = value; }
         }
-        FullscreenQuad quad;
+
         Viewport vp;
 
         SlimDX.DXGI.SampleDescription sampleDescription = new SlimDX.DXGI.SampleDescription(1, 0);
-        string shaderName;
-        string techniqueName;
         readonly internal int width, height;
 
         private List<string> boundScalars = new List<string>();
@@ -84,7 +80,6 @@ namespace SlimDXBindings.Viewer10.Filter
             set { neededResources = value; }
         }
 
-        public event EventHandler<EventArgs> MenuItemClicked;
 
         /// <summary>
         /// returns the sprite hit, -1 if none hit
@@ -309,8 +304,6 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
         #endregion
-
-        int lastItem = -1;
 
         void thrower_FakeThisEvent(object sender, FakeEventArgs e)
         {

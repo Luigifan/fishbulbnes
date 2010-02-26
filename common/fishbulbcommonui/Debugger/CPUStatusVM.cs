@@ -76,15 +76,6 @@ namespace Fishbulb.Common.UI
 
 		#endregion
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-        public void NotifyPropertyChanged(string PropertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
-        }
 
-		#endregion
 	}
 }

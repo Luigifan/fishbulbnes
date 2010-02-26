@@ -109,10 +109,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\Unity\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.dll</HintPath>
@@ -248,12 +244,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RedrawEventArgs.cs" />
-    <Compile Include="ToolStrip\MenuItemEnumeration.cs" />
-    <Compile Include="ToolStrip\MenuItemVM.cs" />
-    <Compile Include="ToolStrip\ToolStrip.xaml.cs">
-      <DependentUpon>ToolStrip.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ToolStrip\ToolStripVM.cs" />
     <Compile Include="TypeRegisterer.cs" />
     <Compile Include="WinViewModels\DisplayNameTablesCommand.cs" />
     <Compile Include="WinViewModels\DisplayTilesCommand.cs" />
@@ -337,10 +327,6 @@
     <Page Include="ControlPanel\SoundPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ToolStrip\ToolStrip.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

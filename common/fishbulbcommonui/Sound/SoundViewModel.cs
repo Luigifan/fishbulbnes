@@ -48,7 +48,6 @@ namespace fishbulbcommonui
         }
 
 
-        private int volume;
         /// <summary>
         /// Volume is from 0 to 100
         /// </summary>

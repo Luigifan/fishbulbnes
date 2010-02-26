@@ -565,7 +565,6 @@ namespace SlimDXBindings.Viewer
         }
 
         Camera camera = new Camera();
-        bool pointLight = false;
 
         public void InitializeScene()
         {

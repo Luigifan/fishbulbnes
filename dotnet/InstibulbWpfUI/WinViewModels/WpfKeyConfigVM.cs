@@ -28,6 +28,12 @@ namespace InstiBulb.WinViewModels
 
         public event EventHandler CanExecuteChanged;
 
+        public void UpdateCanExecute()
+        {
+            if (CanExecuteChanged != null) CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+
         public void Execute(object parameter)
         {
             var par = parameter as NesKeyBinding;
@@ -86,11 +92,7 @@ namespace InstiBulb.WinViewModels
             set { keyBindings = value; }
         }
 
-        #region INotifyPropertyChanged Members
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
 
         public override string CurrentView
         {

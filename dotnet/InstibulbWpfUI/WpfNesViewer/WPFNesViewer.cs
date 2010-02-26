@@ -118,17 +118,10 @@ namespace InstiBulb.WpfNESViewer
         }
 
 
-        string properties;
         public object PropertiesPanel
         {
             get
             {
-                //if (properties == null)
-                //{
-                //    //XamlReader reader = new XamlReader();
-                //    TextReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfNESViewer.WpfControls.xaml"));
-                //    properties = reader.ReadToEnd();
-                //}
                 return null;
             }
         }

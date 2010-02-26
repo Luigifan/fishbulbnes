@@ -27,6 +27,10 @@ namespace InstiBulb.WinViewModels
         {
             return true;
         }
+        public void UpdateCanExecute()
+        {
+            if (CanExecuteChanged != null) CanExecuteChanged(this, EventArgs.Empty);
+        }
 
         public event EventHandler CanExecuteChanged;
 

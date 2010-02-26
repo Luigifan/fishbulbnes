@@ -7,8 +7,6 @@ namespace NES.CPU.PPUClasses
 {
 	public partial class PixelWhizzler
 	{
-        int latchedBGColor;
-
         bool NMIOccurred
         {
             get { return (_PPUStatus & 0x80) == 0x80; }

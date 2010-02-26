@@ -39,7 +39,6 @@ namespace InstiBulb.Views
         {
             var p = DataContext as WinDebuggerVM;
             var img = sender as Image;
-            TileInformation tile; 
 
             if (p != null && img != null)
             {

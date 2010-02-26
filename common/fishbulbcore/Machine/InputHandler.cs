@@ -11,7 +11,6 @@ namespace NES.CPU.nitenedo
     {
         private int currentByte;
         private int nextByte;
-        private int readNumber=0;
 
         private IControlPad controlPad;
         private bool isZapper = false;

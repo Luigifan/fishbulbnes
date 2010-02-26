@@ -61,7 +61,6 @@ namespace SlimDXBindings.Viewer10
          Texture2D targetTexture;
          Texture2D bankSwitchCache;
 
-         ApplicationContext context;
 
          DirectHost _renderHost;
 
@@ -523,20 +522,6 @@ namespace SlimDXBindings.Viewer10
             if (zapper != null)
             {
                 zapper.TriggerDown();
-            }
-        }
-
-        int oldHeight;
-        int oldWidth;
-
-
-        float controlVisibility = 0;
-        float controlVisibilityOffset = 0;
-
-        internal  bool IsRunning
-        {
-            get {
-                return context != null;
             }
         }
 

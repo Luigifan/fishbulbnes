@@ -233,7 +233,6 @@ namespace SlimDXBindings.Viewer
                 {
                     
                     CompositionTarget.Rendering += OnRendering;
-                    doRender = true;
                     _d3dimage.IsFrontBufferAvailableChanged += new DependencyPropertyChangedEventHandler(OnIsFrontBufferAvailableChanged);
                 }
                 _d3dimage.Lock();
@@ -248,7 +247,6 @@ namespace SlimDXBindings.Viewer
                 return false;
             }
         }
-        bool doRender = false;
 
         public void ReleaseDevice()
         {

@@ -28,9 +28,6 @@ namespace InstibulbWpfUI
             InitializeComponent();
         }
 
-        public event EventHandler<EventArgs> UpdateKeyhandlingEvent;
-
-
 
         public bool SuppressKeystrokes
         {

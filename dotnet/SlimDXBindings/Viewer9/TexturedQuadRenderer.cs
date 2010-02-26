@@ -317,7 +317,6 @@ namespace SlimDXBindings.Viewer
 
         Effect effectC;
 
-        VertexBuffer vertices;
         protected void LoadContent()
         {
             InitializeScene();
@@ -357,7 +356,6 @@ namespace SlimDXBindings.Viewer
         }
 
         Camera camera = new Camera();
-        bool pointLight = false;
 
         public void InitializeScene()
         {

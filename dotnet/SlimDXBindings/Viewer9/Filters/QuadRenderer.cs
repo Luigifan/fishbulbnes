@@ -111,9 +111,6 @@ namespace SlimDXBindings.Viewer.Filters
 
         }
 
-        VertexBuffer _vb;
-        int _totalNumberOfVertices;
-
 
 
         #region IDisposable Members

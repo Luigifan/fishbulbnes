@@ -52,8 +52,9 @@ namespace NES.CPU.Machine.Carts
                 }
             }
 
-            public int MaskBankAddress(int bank)
+            internal override int MaskBankAddress(int bank)
             {
+                
                 if (bank >= PrgRomCount * 2)
                 {
                     int i = 0xFF;

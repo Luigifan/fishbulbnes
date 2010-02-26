@@ -163,7 +163,7 @@ namespace NES.CPU.Fastendo
             set;
         }
 
-        int nonOpCodeticks = 0;
+        int nonOpCodeticks;
 
         public void NonMaskableInterrupt()
         {

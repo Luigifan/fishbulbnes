@@ -13,8 +13,6 @@ namespace NES.CPU.PPUClasses
         public int XOffset { get; set; }
         public int YOffset { get; set; }
 
-        private NESSprite sprite0 = new NESSprite();
-
         public TileDoodler(IPPU ppu)
         {
             _ppu = ppu;

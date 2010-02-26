@@ -372,7 +372,7 @@ namespace NES.CPU.Machine.Carts
 
         #endregion
 
-        private int mirroring;
+        protected int mirroring;
 
         public string CartName { get; protected set; }
         public int NumberOfPrgRoms { get { return prgRomCount; } }

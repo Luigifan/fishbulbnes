@@ -58,7 +58,6 @@ namespace NES.CPU.PPUClasses
 
 //3	-	scanline pixel coordite of most left-hand side of object.
 
-        public event EventHandler HBlank;
 
 
         private bool shouldRender = false;

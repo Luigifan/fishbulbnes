@@ -37,6 +37,10 @@ namespace Fishbulb.Common.UI
 
             public event PropertyChangedEventHandler PropertyChanged;
             #endregion
+            public void NotifyPropertyChanged(string propName)
+            {
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs( propName));
+            }
 
             public override string ToString()
             {

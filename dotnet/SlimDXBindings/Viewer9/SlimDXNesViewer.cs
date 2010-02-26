@@ -121,7 +121,6 @@ namespace SlimDXNESViewer
             get { return 8; }
         }
 
-        string properties;
         
         public object PropertiesPanel
         {

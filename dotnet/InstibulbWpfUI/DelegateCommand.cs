@@ -30,6 +30,10 @@ namespace InstiBulb.Commands
             return canExecutor(param);
         }
 
+        public void UpdateCanExecute()
+        {
+            if (CanExecuteChanged != null) CanExecuteChanged(this, EventArgs.Empty);
+        }
 
 
         public event EventHandler CanExecuteChanged;

@@ -7,9 +7,6 @@ namespace NES.CPU.Fastendo
 {
     public partial class CPU2A03
     {
-        bool zeroResult;
-        bool negativeResult;
-
 
         void SetZNFlags(int data)
         {

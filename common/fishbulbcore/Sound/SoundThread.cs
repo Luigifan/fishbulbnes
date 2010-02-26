@@ -18,7 +18,7 @@ namespace NES.Sound
             set { _wavePlayer = value; }
         }
 
-        Thread myThread;
+        
         public SoundThreader(IWavStreamer streamer)
         {
 

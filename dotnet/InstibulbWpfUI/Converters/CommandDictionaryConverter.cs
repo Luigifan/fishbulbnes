@@ -58,6 +58,12 @@ namespace InstiBulb.Converters
 
         public event EventHandler CanExecuteChanged;
 
+        public void UpdateCanExecute()
+        {
+            if (CanExecuteChanged != null) CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+
         public void Execute(object parameter)
         {
             Exception error = null;

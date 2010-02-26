@@ -36,7 +36,6 @@ namespace SlimDXNESViewer
         IntPtr _scene;
 
         // this one is our only child
-        System.Windows.Controls.Image image;
         D3DImage d3dimage;
         public bool StartThread = false;
         bool sizeChanged = false;

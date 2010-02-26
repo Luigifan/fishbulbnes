@@ -25,7 +25,7 @@ namespace _10NES2
             {
                 MakeWin();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 
                 MessageBox.Show("Could not set up display, reverting to software rendering");

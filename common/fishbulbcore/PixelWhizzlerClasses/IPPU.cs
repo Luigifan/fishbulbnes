@@ -22,7 +22,6 @@ namespace NES.CPU.PixelWhizzlerClasses
         int GetByte(int Clock, int address);
         void HandleEvent(int Clock);
         bool HandleVBlankIRQ { get; set; }
-        event EventHandler HBlank;
         int HScroll { get; }
         void Initialize();
         bool IRQAsserted { get; set; }

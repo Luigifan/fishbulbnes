@@ -30,8 +30,6 @@ namespace InstiBulb.Integration
             doTheDraw = new NoArgDelegate(DrawScreen);
         }
 
-        bool _suspendNESDisplay = false;
-
         internal void StopDisplaying()
         {
             if (Target != null)
@@ -232,7 +230,6 @@ namespace InstiBulb.Integration
         }
 
 
-        bool disposing = false;
         public void Dispose()
         {
 

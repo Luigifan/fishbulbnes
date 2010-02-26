@@ -26,6 +26,11 @@ namespace InstiBulb.WinViewModels
 
         public event EventHandler CanExecuteChanged;
 
+        public void UpdateCanExecute()
+        {
+            if (CanExecuteChanged != null) CanExecuteChanged(this, EventArgs.Empty);
+        }
+
         public void Execute(object parameter)
         {
             debuggerVM.DrawNameTableZero();

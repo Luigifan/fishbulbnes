@@ -9,7 +9,6 @@ namespace InstiBulb.Popups
 {
     public class PopupFactory
     {
-        readonly Icon3D currentIcon;
         Window mainWindow;
         PopupPanel panel;
 

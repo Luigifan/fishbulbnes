@@ -14,7 +14,6 @@ namespace SlimDXBindings.Viewer10.Filter
     {
         readonly FakeEventThrower thrower;
         readonly WPFVisualTexture visTexture;
-        bool isVisible = false;
 
         public WpfEmbeddedControl(Device device, string name, int Width, int Height, string shader, string technique, EffectBuddy effectBuddy, FakeEventThrower thrower, WPFVisualTexture visTexture, string resourceName)
             :base(device, name, Width, Height, shader, technique, effectBuddy)
