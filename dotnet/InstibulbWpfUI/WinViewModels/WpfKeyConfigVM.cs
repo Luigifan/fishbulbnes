@@ -52,9 +52,9 @@ namespace InstiBulb.WinViewModels
             
         }
 
-        private WpfKeyboardInput.WpfKeyboardControlPad dataModel;
+        private IKeyBindingConfigTarget dataModel;
 
-        public WpfKeyConfigVM(WpfKeyboardControlPad model)
+        public WpfKeyConfigVM(IKeyBindingConfigTarget model)
         {
             dataModel = model;
             keyCommand = new BindKeyCommand(this);
@@ -64,17 +64,9 @@ namespace InstiBulb.WinViewModels
 
         internal void SetBinding(NesKeyBinding binding)
         {
-            if (!dataModel.NesKeyBindings.ContainsKey(binding.Key))
-            {
-                dataModel.NesKeyBindings.Add(binding.Key, binding.BoundValue);
-                RefreshKeys();
-            }
-            else
-            {
-                dataModel.NesKeyBindings.Remove(binding.Key);
-                dataModel.NesKeyBindings.Add(binding.Key, binding.BoundValue);
-                RefreshKeys();
-            }
+            dataModel.SetKeyBinding(binding);
+            RefreshKeys();
+
         }
 
         void RefreshKeys()

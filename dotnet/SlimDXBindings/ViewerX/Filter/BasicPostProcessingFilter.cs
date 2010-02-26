@@ -304,11 +304,11 @@ namespace SlimDXBindings.Viewer10.Filter
         bool notMyTexture = false;
         public void RenderToTexture(Texture2D texture)
         {
-            if (this.texture != null && !this.texture.Disposed)
-            {
-                this.texture.Dispose();
-            }
-            notMyTexture = true;
+            //if (this.texture != null && !this.texture.Disposed)
+            //{
+            //    this.texture.Dispose();
+            //}
+            //notMyTexture = true;
             this.texture = texture;
         }
 

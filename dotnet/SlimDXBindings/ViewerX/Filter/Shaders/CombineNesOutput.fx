@@ -78,9 +78,9 @@ float4 Combine( PS_IN pixelShaderIn ) : SV_Target
 {
 
 
-    float4 finalColor = screenOne.Sample( linearSampler, pixelShaderIn.UV );
-    float4 finalSpriteColor = screenTwo.Sample( linearSampler, pixelShaderIn.UV );
-    float4 spriteMaskColor = spriteMask.Sample( linearSampler, pixelShaderIn.UV );
+    float4 finalColor = screenOne.Sample( nesSampler, pixelShaderIn.UV );
+    float4 finalSpriteColor = screenTwo.Sample( nesSampler, pixelShaderIn.UV );
+    float4 spriteMaskColor = spriteMask.Sample( nesSampler, pixelShaderIn.UV );
     
 	finalSpriteColor.a = 0;
 	

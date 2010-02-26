@@ -9,10 +9,11 @@ using SlimDX;
 using System.Windows;
 using NES.CPU.nitenedo.Interaction;
 using SlimDXBindings.Viewer10;
+using InstiBulb.WpfKeyboardInput;
 
 namespace SlimDXBindings
 {
-    public class SlimDXKeyboardControlPad: IControlPad, IDisposable
+    public class SlimDXKeyboardControlPad : IControlPad, IDisposable, IBindToDisplayContext,  IKeyBindingConfigTarget
     {
         #region IControlPad Members
 
@@ -20,6 +21,19 @@ namespace SlimDXBindings
         Keyboard keyboard;
 
         bool exclusive = false, foreground = true, disable = false;
+
+
+        public Dictionary<Key, PadValues> DXKeyBindings
+        {
+            get;
+            set;
+        }
+
+        public Dictionary<System.Windows.Input.Key, PadValues> NesKeyBindings
+        {
+            get;
+            set;
+        }
 
         //SlimDXBindings.Viewer10.DirectX10NesViewer viewer;
 
@@ -35,13 +49,39 @@ namespace SlimDXBindings
         //    }
         //}
 
+        private DXKeyToWpfKey keyConverter = new DXKeyToWpfKey();
+
         public SlimDXKeyboardControlPad()
         {
             // make sure that DirectInput has been initialized
 
             
             keyboard = new Keyboard(dInput);
+
+            DXKeyBindings = new Dictionary<Key, PadValues>();
+            NesKeyBindings = new Dictionary<System.Windows.Input.Key, PadValues>();
             
+            NesKeyBindings.Add(System.Windows.Input.Key.X, PadValues.A);
+            NesKeyBindings.Add(System.Windows.Input.Key.Z, PadValues.B);
+            NesKeyBindings.Add(System.Windows.Input.Key.Space, PadValues.Select);
+            NesKeyBindings.Add(System.Windows.Input.Key.Enter, PadValues.Start);
+            NesKeyBindings.Add(System.Windows.Input.Key.Up, PadValues.Up);
+            NesKeyBindings.Add(System.Windows.Input.Key.Down, PadValues.Down);
+            NesKeyBindings.Add(System.Windows.Input.Key.Left, PadValues.Left);
+            NesKeyBindings.Add(System.Windows.Input.Key.Right, PadValues.Right);
+
+            NesKeyBindings.Add(System.Windows.Input.Key.F12, PadValues.FullScreen);
+
+            RemapKeysToDX();
+        }
+
+        private void RemapKeysToDX()
+        {
+            DXKeyBindings.Clear();
+            foreach (var p in NesKeyBindings)
+            {
+                UpdateKeyBinding(new NesKeyBinding() { BoundValue = p.Value, Key = p.Key });
+            }
         }
 
         public void CreateDevice(Window host)
@@ -103,37 +143,51 @@ namespace SlimDXBindings
 
             foreach (Key key in state.PressedKeys)
             {
-                switch (key)
+                if (DXKeyBindings.ContainsKey(key))
                 {
-                    case Key.X:
-                        PadOneState = PadOneState | 1;
-                        break;
-                    case Key.Z:
-                        PadOneState = PadOneState | 2;
-                        break;
-                    case Key.Space:
-                        PadOneState = PadOneState | 4;
-                        break;
-                    case Key.Return:
-                        PadOneState = PadOneState | 8;
-                        break;
-                    case Key.UpArrow:
-                        PadOneState = PadOneState | 16;
-                        PadOneState = PadOneState & ~32;
-                        break;
-                    case Key.DownArrow:
-                        PadOneState = PadOneState | 32;
-                        PadOneState = PadOneState & ~16;
-                        break;
-                    case Key.LeftArrow:
-                        PadOneState = PadOneState | 64;
-                        PadOneState = PadOneState & ~128;
-                        break;
-                    case Key.RightArrow:
-                        PadOneState = PadOneState | 128;
-                        PadOneState = PadOneState & ~64;
-                        break;
+                    PadValues val = DXKeyBindings[key];
+                    switch (val)
+                    {
+                        case PadValues.FullScreen:
+                            if (DisplayContext != null)
+                                DisplayContext.ToggleFullScreen();
+                            break;
+                        default:
+                            PadOneState |= (int)val & 0xFF;
+                            break;
+                    }
                 }
+                //switch (key)
+                //{
+                //    case Key.X:
+                //        PadOneState = PadOneState | 1;
+                //        break;
+                //    case Key.Z:
+                //        PadOneState = PadOneState | 2;
+                //        break;
+                //    case Key.Space:
+                //        PadOneState = PadOneState | 4;
+                //        break;
+                //    case Key.Return:
+                //        PadOneState = PadOneState | 8;
+                //        break;
+                //    case Key.UpArrow:
+                //        PadOneState = PadOneState | 16;
+                //        PadOneState = PadOneState & ~32;
+                //        break;
+                //    case Key.DownArrow:
+                //        PadOneState = PadOneState | 32;
+                //        PadOneState = PadOneState & ~16;
+                //        break;
+                //    case Key.LeftArrow:
+                //        PadOneState = PadOneState | 64;
+                //        PadOneState = PadOneState & ~128;
+                //        break;
+                //    case Key.RightArrow:
+                //        PadOneState = PadOneState | 128;
+                //        PadOneState = PadOneState & ~64;
+                //        break;
+                //}
             }
 
             if (NextControlByteSet != null)
@@ -205,5 +259,30 @@ namespace SlimDXBindings
         }
 
         #endregion
+
+        public IDisplayContext DisplayContext
+        {
+            get;
+            set;
+        }
+
+        public void SetKeyBinding(NesKeyBinding binding)
+        {
+            NesKeyBindings.Add(binding.Key, binding.BoundValue);
+            RemapKeysToDX();
+        }
+
+        void UpdateKeyBinding(NesKeyBinding binding)
+        {
+            var p = keyConverter.ConvertWPFKey(binding.Key);
+
+            if (p != null)
+            {
+                if (DXKeyBindings.ContainsKey(p.Value))
+                    DXKeyBindings.Remove(p.Value);
+                DXKeyBindings.Add(p.Value, binding.BoundValue);
+            }
+
+        }
     }
 }

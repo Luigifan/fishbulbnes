@@ -135,16 +135,22 @@ namespace SlimDXBindings.Viewer10
 
         public void UpdateNESScreen()
         {
-            host.DrawScreen();
+            lock (this)
+            {
+                if (isToggling) return;
+                host.DrawScreen();
+            }
         }
 
         public void UpdateNESScreen(int[] pixels)
         {
+            if (isToggling) return;
             host.DrawScreen();
         }
 
         public void UpdateNESScreen(IntPtr pixelData)
         {
+            if (isToggling) return;
             host.DrawScreen();
         }
 
@@ -196,5 +202,21 @@ namespace SlimDXBindings.Viewer10
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private delegate void NoArgDelegate();
+
+        volatile bool isToggling = false;
+        
+        public void ToggleFullScreen()
+        {
+            lock (this)
+            {
+                if (isToggling) return;
+                isToggling = true;
+                Dispatcher.Invoke(new NoArgDelegate(host.ToggleFullScreen), null);
+
+                isToggling = false;
+            }
+        }
     }
 }

@@ -168,5 +168,11 @@ namespace InstiBulb.WpfNESViewer
         #endregion
 
 
+
+
+        public void ToggleFullScreen()
+        {
+            
+        }
     }
 }

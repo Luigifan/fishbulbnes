@@ -154,5 +154,11 @@ namespace SlimDXBindings.Viewer10
                 host.Dispose();
 
         }
+
+
+        public void ToggleFullScreen()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

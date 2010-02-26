@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using NES.CPU.nitenedo.Interaction;
 
 namespace InstiBulb.WpfKeyboardInput
 {
@@ -19,27 +20,11 @@ namespace InstiBulb.WpfKeyboardInput
         Up = 16,
         Down = 32,
         Left = 64,
-        Right = 128
+        Right = 128,
+        FullScreen=256,
     }
 
-    public class NesKeyBinding
-    {
-        public System.Windows.Input.Key Key
-        {
-            get;
-            set;
-        }
-
-        public PadValues BoundValue
-        {
-            get;
-            set;
-        }
-
-    }
-
-
-    public class WpfKeyboardControlPad : IControlPad,INotifyPropertyChanged
+    public class WpfKeyboardControlPad : IControlPad,INotifyPropertyChanged, IBindToDisplayContext, IKeyBindingConfigTarget
     {
         int PadOneState = 0;
 
@@ -56,6 +41,8 @@ namespace InstiBulb.WpfKeyboardInput
             NesKeyBindings.Add(Key.Down, PadValues.Down);
             NesKeyBindings.Add(Key.Left, PadValues.Left);
             NesKeyBindings.Add(Key.Right, PadValues.Right);
+            
+            NesKeyBindings.Add(Key.F12, PadValues.FullScreen);
 
         }
 
@@ -65,6 +52,19 @@ namespace InstiBulb.WpfKeyboardInput
         {
             get;
             set;
+        }
+
+        public void SetKeyBinding(NesKeyBinding binding)
+        {
+            if (!NesKeyBindings.ContainsKey(binding.Key))
+            {
+                NesKeyBindings.Add(binding.Key, binding.BoundValue);
+            }
+            else
+            {
+                NesKeyBindings.Remove(binding.Key);
+                NesKeyBindings.Add(binding.Key, binding.BoundValue);
+            }
         }
 
         public DependencyObject Handler
@@ -83,7 +83,8 @@ namespace InstiBulb.WpfKeyboardInput
 
             if (NesKeyBindings.ContainsKey(e.Key))
             {
-                PadOneState |= (int)NesKeyBindings[e.Key];
+                int key = (int)NesKeyBindings[e.Key];
+                PadOneState |= key & 0xFF;
             }
 
         }
@@ -92,8 +93,24 @@ namespace InstiBulb.WpfKeyboardInput
         {
             if (NesKeyBindings.ContainsKey(e.Key))
             {
-                PadOneState &= ~(int)NesKeyBindings[e.Key];
+                var key = NesKeyBindings[e.Key];
+                switch (key)
+                {
+                    case PadValues.FullScreen:
+                        if (DisplayContext != null)
+                            DisplayContext.ToggleFullScreen();
+                        break;
+                    default:
+                        PadOneState &= ~(int)key;
+                        break;
+                }
             }
+        }
+
+        public IDisplayContext DisplayContext
+        {
+            get;
+            set;
         }
 
         #region IControlPad Members

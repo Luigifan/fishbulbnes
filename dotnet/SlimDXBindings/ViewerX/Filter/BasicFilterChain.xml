@@ -90,7 +90,7 @@
     </Filter>-->
 
     <!--Put it all together now-->
-    <Filter Name="combined" Height="1024" Width="1024" Effect="CombineNesOutput" Technique="CombineNesOut">
+    <Filter Name="combined" Height="255" Width="255" Effect="CombineNesOutput" Technique="CombineNesOut">
       <Inputs>
         <Input Type="FilterOutput" Filter="tiles" EffectVariable="screenOne" />
         <Input Type="FilterOutput" Filter="spriteSetup" EffectVariable="screenTwo" />

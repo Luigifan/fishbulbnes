@@ -43,6 +43,11 @@ namespace _10NES2
             container.RegisterType<FrameworkElement, ControllerConfig>("ControllerConfigPanel");
 
             nes = container.Resolve<NESMachine>();
+
+            var p = container.Resolve<NES.CPU.Machine.IControlPad>("padone") as InstiBulb.WpfKeyboardInput.IBindToDisplayContext;
+            if (p != null)
+                p.DisplayContext = container.Resolve<IDisplayContext>();
+            
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             
             showDialogCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowDialog), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));

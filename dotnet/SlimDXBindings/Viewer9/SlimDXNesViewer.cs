@@ -185,5 +185,11 @@ namespace SlimDXNESViewer
                 SetupViewer(nes);
             }
         }
+
+
+        public void ToggleFullScreen()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

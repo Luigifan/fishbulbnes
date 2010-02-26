@@ -167,6 +167,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DXKeyToWpfKey.cs" />
     <Compile Include="InlineWavStreamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlimDXKeyboardControlPad.cs" />

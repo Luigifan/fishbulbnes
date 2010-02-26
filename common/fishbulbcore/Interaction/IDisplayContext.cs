@@ -58,6 +58,8 @@ namespace NES.CPU.nitenedo.Interaction
 
         void DrawDefaultDisplay();
 
+        void ToggleFullScreen();
+
         void SetPausedState(bool state);
 
         object UIControl { get; }

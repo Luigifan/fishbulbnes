@@ -39,6 +39,9 @@
                     <Slider Maximum="1.0" Minimum="0" TickFrequency="0.02" Grid.Column="1" Value="{Binding Path=Host.Contrast}" />
                 </Grid>
                 <Button Content="Dump DDS Surfaces" Command="{Binding DumpSurfacesCommand}"/>
+                <TextBlock Text=" "/>
+                <TextBlock Text=" "/>
+                <Button Content="Switch to Full Screen" Command="{Binding FullScreenCommand}"/>
             </StackPanel>
         </ScrollViewer>
 

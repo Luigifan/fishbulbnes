@@ -113,12 +113,14 @@ namespace InstiBulb.Integration
 
 
             // container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IControlPad, WpfKeyboardControlPad>("padone", new ContainerControlledLifetimeManager(),
-                new InjectionProperty("Handler", new ResolvedParameter<Window>("MainWindow"))
+            //container.RegisterType<IControlPad, WpfKeyboardControlPad>("padone", new ContainerControlledLifetimeManager(),
+            //    new InjectionProperty("Handler", new ResolvedParameter<Window>("MainWindow"))
+            //    );
+            container.RegisterType<IControlPad, SlimDXKeyboardControlPad>("padone", new ContainerControlledLifetimeManager()
                 );
+            container.RegisterType<IKeyBindingConfigTarget, SlimDXKeyboardControlPad>("padone");
 
             container.RegisterType<IControlPad, SlimDXZapper>("padtwo", new ContainerControlledLifetimeManager());
-
 
             //// register view models
             container.RegisterType<IViewModel, SoundViewModel>("SoundPanel", new ContainerControlledLifetimeManager(),  
@@ -133,7 +135,7 @@ namespace InstiBulb.Integration
             container.RegisterType<IViewModel, SaveStateVM>("SaveStatePanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             
             container.RegisterType<IViewModel, WpfKeyConfigVM>("ControllerConfigPanel", new ContainerControlledLifetimeManager()
-                , new InjectionConstructor(new ResolvedParameter<WpfKeyboardControlPad>("padone")),
+                , new InjectionConstructor(new ResolvedParameter<IKeyBindingConfigTarget>("padone")),
                 new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>())
                 );
 
