@@ -255,7 +255,8 @@ namespace NES.CPU.Machine.Carts
                         _mmc3IrqVal = _mmc3TmpVal;
                         irqRaised = false;
                         
-                        updateIRQ();
+                        if (updateIRQ != null)
+                            updateIRQ();
                         
                         break; 
                     case 0xE001:

@@ -296,6 +296,7 @@ namespace _10NES2
             //}
             windows = null;
             nes.ThreadStoptendo();
+            NESDisplayContext.TearDownDisplay();
             container.Dispose();
         }
     }

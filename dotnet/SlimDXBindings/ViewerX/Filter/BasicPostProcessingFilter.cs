@@ -98,6 +98,7 @@ namespace SlimDXBindings.Viewer10.Filter
             SetupFilter();
         }
 
+        bool origTexture = true;
         void SetupFilter()
         {
 
@@ -304,12 +305,15 @@ namespace SlimDXBindings.Viewer10.Filter
         bool notMyTexture = false;
         public void RenderToTexture(Texture2D texture)
         {
+            if (origTexture && this.texture!= null)
+                this.texture.Dispose();
             //if (this.texture != null && !this.texture.Disposed)
             //{
             //    this.texture.Dispose();
             //}
             //notMyTexture = true;
             this.texture = texture;
+            origTexture = false;
         }
 
         #endregion

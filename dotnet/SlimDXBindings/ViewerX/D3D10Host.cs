@@ -71,6 +71,7 @@ namespace SlimDXBindings.Viewer10
          }
 
          Viewport ViewArea;
+         bool fullSwapCreated = false;
          DXGI.SwapChain WindowedSwapChain;
          DXGI.SwapChain FullSwapChain;
          DXGI.SwapChain ActiveSwapChain;
@@ -149,14 +150,10 @@ namespace SlimDXBindings.Viewer10
 
             D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.Debug, swapChainDescription, out _device, out WindowedSwapChain);
 
-
-            
-            
 #else
             SlimDX.Configuration.EnableObjectTracking = false;
             D3D10.Device.CreateWithSwapChain(null, D3D10.DriverType.Hardware, D3D10.DeviceCreationFlags.None, swapChainDescription, out _device, out WindowedSwapChain);
 #endif
-            dxgiFactory = new DXGI.Factory();
 
 
             ActiveSwapChain = WindowedSwapChain;
@@ -313,31 +310,50 @@ namespace SlimDXBindings.Viewer10
             //Application.Run(context);
         }
 
-        private void SetupFullScreenSwapChain(int width, int height)
+        List<DXGI.ModeDescription> _modeList;
+
+        public List<DXGI.ModeDescription> AvailableFullScreenModes
+        {
+            get
+            {
+                return _modeList;
+            }
+        }
+
+        private DXGI.ModeDescription SetupFullScreenSwapChain(int width, int height)
         {
             fullForm = new Form();
+            dxgiFactory = new DXGI.Factory();
+            dxgiFactory.SetWindowAssociation(fullForm.Handle, DXGI.WindowAssociationFlags.IgnoreAltEnter);
+            var c = dxgiFactory.GetAdapter(0).GetOutput(0).GetDisplayModeList(DXGI.Format.R8G8B8A8_UNorm, DXGI.DisplayModeEnumerationFlags.Scaling | DXGI.DisplayModeEnumerationFlags.Interlaced);
 
-            SlimDX.DXGI.ModeDescription fullDesc = new DXGI.ModeDescription()
-            {
-                Format = DXGI.Format.R8G8B8A8_UNorm,
-                Height = height,
-                Width = width,
-                RefreshRate = new Rational(60, 1),
-                ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Unspecified,
-                Scaling = DXGI.DisplayModeScaling.Unspecified
-            };
+
+            DXGI.ModeDescription desc = c[c.Count() - 1];
+
+            //SlimDX.DXGI.ModeDescription fullDesc = new DXGI.ModeDescription()
+            //{
+            //    Format = DXGI.Format.R8G8B8A8_UNorm,
+            //    Height = 0,
+            //    Width = 0,
+            //    RefreshRate = new Rational(0, 1),
+            //    ScanlineOrdering = DXGI.DisplayModeScanlineOrdering.Unspecified,
+            //    Scaling = DXGI.DisplayModeScaling.Unspecified
+            //};
+
 
             fullSwapChainDescription = new DXGI.SwapChainDescription();
-            fullSwapChainDescription.ModeDescription = fullDesc;
+            fullSwapChainDescription.ModeDescription = desc;
             fullSwapChainDescription.SampleDescription = sampleDescription;
-            fullSwapChainDescription.BufferCount = 2;
-            fullSwapChainDescription.Flags = DXGI.SwapChainFlags.None;
+            fullSwapChainDescription.BufferCount = 3;
+            fullSwapChainDescription.Flags = DXGI.SwapChainFlags.AllowModeSwitch;
             fullSwapChainDescription.IsWindowed = false;
             fullSwapChainDescription.OutputHandle = fullForm.Handle;
             fullSwapChainDescription.SwapEffect = DXGI.SwapEffect.Discard;
-            fullSwapChainDescription.Usage = DXGI.Usage.RenderTargetOutput | DXGI.Usage.Shared;
+            fullSwapChainDescription.Usage = DXGI.Usage.RenderTargetOutput;
 
             FullSwapChain = new DXGI.SwapChain(dxgiFactory, _device, fullSwapChainDescription);
+            fullSwapCreated = true;
+            return desc;
         }
 
         private void SetResourceAndRenderTarget()
@@ -379,17 +395,19 @@ namespace SlimDXBindings.Viewer10
         {
 
 
-            changeFullScreenState = true;
-            needResizing = true;
             fullScreen = !fullScreen;
             if (fullScreen)
             {
                 Screen s = Screen.FromHandle(_renderHost.Handle);
                 newWidth = s.Bounds.Width;
                 newHeight = s.Bounds.Height;
-                if (FullSwapChain == null)
+                if (!fullSwapCreated)
                 {
-                    SetupFullScreenSwapChain(newWidth, newHeight);
+                    var desc = SetupFullScreenSwapChain(newWidth, newHeight);
+                    FullSwapChain.SetFullScreenState(true, null);
+                    newWidth = desc.Width;
+                    newHeight = desc.Height;
+
                 }
 
                 ActiveSwapChain = FullSwapChain;
@@ -408,13 +426,22 @@ namespace SlimDXBindings.Viewer10
             }
             else 
             {
-                
+
+                if (fullSwapCreated)
+                {
+                    FullSwapChain.SetFullScreenState(false, null);
+                    FullSwapChain.Dispose();
+                    dxgiFactory.Dispose();
+                    fullForm.Close();
+                    fullSwapCreated = false;
+                }
+
+
                 ActiveSwapChain = WindowedSwapChain;
                 newWidth = (int)_renderHost.ActualWidth;
                 newHeight = (int)_renderHost.ActualHeight;
                 System.Threading.Thread.Sleep(500);
-                fullForm.Hide();
-
+                
                 ViewArea = new Viewport();
                 ViewArea.X = 0;
                 ViewArea.Y = 0;
@@ -426,6 +453,9 @@ namespace SlimDXBindings.Viewer10
 
             }
             SetResourceAndRenderTarget();
+            changeFullScreenState = true;
+            needResizing = true;
+
         }
 
         public void RequestResize(int height, int width)
@@ -670,6 +700,7 @@ namespace SlimDXBindings.Viewer10
 
         public  void Die()
         {
+
             textureBuddy.Dispose();
             tileFilters.Dispose();
             foreach (IDisposable p in disposables)
@@ -679,11 +710,9 @@ namespace SlimDXBindings.Viewer10
 
             if (texView != null) texView.Dispose();
 
-            _device.ClearState();
             RenderTarget.Dispose();
-            dxgiFactory.Dispose();
             WindowedSwapChain.Dispose();
-            if (FullSwapChain != null) FullSwapChain.Dispose();
+
             _device.Dispose();
             // ActiveSwapChain = null; 
             

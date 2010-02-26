@@ -130,7 +130,8 @@ namespace SlimDXBindings.Viewer10
 
         public void TearDownDisplay()
         {
-            
+            if (host != null)
+                host.Dispose();
         }
 
         public void UpdateNESScreen()
