@@ -20,7 +20,30 @@ namespace InstiBulb.ThreeDee
             prevCmd = new DelegateCommand(new CommandExecuteHandler(MovePrevious), new CommandCanExecuteHandler(CanMovePrevious));
             nextCmd = new DelegateCommand(new CommandExecuteHandler(MoveNext), new CommandCanExecuteHandler(CanMoveNext));
             Icons = new List<Visual3D>();
+            this.IsVisibleChanged += new DependencyPropertyChangedEventHandler(ToolSpinner3D_IsVisibleChanged);
             
+        }
+
+        void ToolSpinner3D_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            bool? visible = e.NewValue as bool?;
+
+            if (visible.GetValueOrDefault(true) )
+            {
+                foreach (Icon3D p in Icons)
+                {
+                    p.ReActivate();
+                }
+                Console.WriteLine("Icons reactivated");
+            }
+            else
+            {
+                foreach (Icon3D p in Icons)
+                {
+                    p.DeActivate();
+                }
+                Console.WriteLine("Icons deactivated"); 
+            }
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -93,5 +116,6 @@ namespace InstiBulb.ThreeDee
                 this.Children.Add(spinnerContainer);
             }
         }
+
     }
 }

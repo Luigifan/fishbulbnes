@@ -42,17 +42,17 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="5" Grid.ColumnSpan="3"  
-                Visibility="{Binding ToolsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+                Visibility="{Binding ToolsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                               >
                 <my:ToolSpinner3D.Camera >
                     <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
                 </my:ToolSpinner3D.Camera>
                 <my:ToolSpinner3D.Icons>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="ControlPanel" Model="{StaticResource ResourceKey=nes}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Controls" CommandParameter="ControlPanel" Model="{StaticResource ResourceKey=nes}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="SoundPanel" Model="{StaticResource ResourceKey=Headphones}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Sound" CommandParameter="SoundPanel" Model="{StaticResource ResourceKey=Headphones}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="SaveStatePanel" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Saves" CommandParameter="SaveStatePanel" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="DisplaySettings" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>

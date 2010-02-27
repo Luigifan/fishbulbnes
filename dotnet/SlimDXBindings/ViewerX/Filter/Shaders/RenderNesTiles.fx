@@ -402,7 +402,7 @@ int GetTilePixel(float2 texposition)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i, 0);
+		ppuBankStarts[i] = PPUBankStarts(i, bnk[0]);
 	}
 	
 	uint ntBits = finalColor[0] * 255.0;

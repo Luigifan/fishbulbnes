@@ -68,8 +68,20 @@ namespace InstiBulb.ThreeDee
             new PropertyMetadata(null, new PropertyChangedCallback(OnTitleChanged))
             );
 
+
+        public Icon3D()
+        {
+            
+        }
+
+
+
+
         static void OnTitleChanged(object o, DependencyPropertyChangedEventArgs args)
         {
+            var p = o as Icon3D;
+            p.CreateTitleBrush(args.NewValue as string);
+            //p.Rebuild();
         }
 
         static void OnCommandChanged(object o, DependencyPropertyChangedEventArgs args)
@@ -113,6 +125,7 @@ namespace InstiBulb.ThreeDee
         }
 
         GeometryModel3D billboardModel = new GeometryModel3D();
+        GeometryModel3D titleModel = null;
         
         public bool IsActivatable
         {
@@ -187,6 +200,29 @@ namespace InstiBulb.ThreeDee
             }
         }
 
+        Brush _titleBrush;
+
+        void CreateTitleBrush(string Title)
+        {
+            TextBlock l = new TextBlock();
+            l.Text = Title;
+            l.Background = new SolidColorBrush(Colors.Transparent);
+            l.Foreground = new SolidColorBrush(Colors.Yellow);
+
+            UniformGrid g = new UniformGrid();
+            g.Rows = 4;
+            g.Columns = 4;
+            for (int i = 0; i < 4; ++i)
+            {
+                g.Children.Add(new TextBlock());
+            }
+            g.Children.Add(l);
+            g.Background = new SolidColorBrush(Colors.Transparent);
+
+            _titleBrush = new VisualBrush(g);
+            
+        }
+
         public Brush Billboard
         {
             get { return (Brush)GetValue(Icon3D.BillboardProperty); }
@@ -239,6 +275,8 @@ namespace InstiBulb.ThreeDee
             //Make a bubble
             GeometryModel3D sphereModel = new GeometryModel3D();
 
+            GeometryModel3D titleModel = new GeometryModel3D();
+
             SphereMeshGenerator gen2 = new SphereMeshGenerator();
             gen2.Slices = 64;
             gen2.Stacks = 32;
@@ -247,12 +285,29 @@ namespace InstiBulb.ThreeDee
             sphereModel.Geometry = gen2.Geometry;
 
             var matGrp = new MaterialGroup();
-
             matGrp.Children.Add(new DiffuseMaterial(Billboard));
-
             matGrp.Children.Add(new SpecularMaterial(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 0.8));
             sphereModel.Material = matGrp;
             sphereModel.BackMaterial = matGrp;
+
+            if (_titleBrush != null)
+            {
+
+                gen2.Slices = 64;
+                gen2.Stacks = 32;
+                gen2.Center = new Point3D(0, 0, 0);
+                gen2.Radius = radius * 1.25;
+                titleModel.Geometry = gen2.Geometry;
+
+                var titleMatGrp = new MaterialGroup();
+                titleMatGrp.Children.Add(new DiffuseMaterial(_titleBrush));
+                titleModel.Material = titleMatGrp;
+                titleModel.BackMaterial = titleMatGrp;
+                this.titleModel = titleModel;
+
+                titleModel.Transform = new RotateTransform3D(titleRotation, new Point3D(0,0,0));
+            }
+
 
             // put some trouble in the bubble
             RotateTransform3D rotSphere = new RotateTransform3D();
@@ -312,14 +367,31 @@ namespace InstiBulb.ThreeDee
 
         }
 
-        internal void Activate()
+
+        DoubleAnimation titleAnimation = new DoubleAnimation(0, 360, new Duration(new TimeSpan(0, 0, 3)), FillBehavior.HoldEnd);
+        public void Activate()
         {
+            titleAnimation.RepeatBehavior = RepeatBehavior.Forever;
+            titleAnimation.By = 1.0f;
+
+            titleRotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, titleAnimation);
+
             UpdateColors();
         }
 
-        internal void DeActivate()
+        public void DeActivate()
         {
+            titleRotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, null);
+            
             UpdateColors();
+        }
+
+        public void ReActivate()
+        {
+            if (IsActivatable) 
+                Activate(); 
+            else 
+                DeActivate();
         }
 
 
@@ -351,6 +423,10 @@ namespace InstiBulb.ThreeDee
 
         TranslateTransform3D modelTranslation = new TranslateTransform3D(0, 0, 0);
         RotateTransform3D rotateTransform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), -90), new Point3D(0, 0, 0));
+
+        AxisAngleRotation3D titleRotation = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 90);
+
+        
 
         private Model3DGroup _models = new Model3DGroup();
         private Model3D model;
@@ -385,9 +461,13 @@ namespace InstiBulb.ThreeDee
             // this one makes it wiggle
             group.Children.Add(modelTranslation);
             model.Transform = group;
+
             _models.Children.Add(model);
             _models.Children.Add(billboardModel);
-            
+
+            if (titleModel != null)
+                _models.Children.Add(titleModel);
+
             // rotate the whole thing if vertical
             _models.Transform = rotateTransform;
 

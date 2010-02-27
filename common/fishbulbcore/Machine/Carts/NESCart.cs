@@ -73,8 +73,7 @@ namespace NES.CPU
                     chrRamStart = (oneKsrc + i) * 0x400;
                 }
             }
-            Mirror(-1, mirroring);
-
+            //Mirror(-1, mirroring);
             bankSwitchesChanged = true;
             // Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
         }

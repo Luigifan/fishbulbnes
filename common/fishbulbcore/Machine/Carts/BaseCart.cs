@@ -466,8 +466,8 @@ namespace NES.CPU.Machine.Carts
             if (bankSwitchesChanged)
             {
 
-                currentBank++;
                 Array.Copy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16);
+                currentBank++;
                 bankSwitchesChanged = false;
             }
             return (int)currentBank;
