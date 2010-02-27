@@ -32,9 +32,9 @@ namespace NES.CPU
                 case 3:
                     if (ChrRomCount > 0)
                     {
-                        CopyBanks(0, 0, 0, 2);
+                        CopyBanks(0, 0, 0, 1);
                     }
-                    // SetupBanks(0, 1, prgRomCount * 2 - 2, prgRomCount * 2 - 1);
+                    
                     SetupBankStarts(0, 1, PrgRomCount * 2 - 2, PrgRomCount * 2 - 1);
                     break;
 
@@ -42,7 +42,7 @@ namespace NES.CPU
 
                     //SetupBanks(0, 1, 2, 3);
                     SetupBankStarts(0, 1, 2, 3);
-                    Mirror( 0);
+                    Mirror(0, 0);
                     break;
 
                 default:
@@ -57,17 +57,25 @@ namespace NES.CPU
         // note, this function originally worked with 8k banks
         private void CopyBanks(int clock, int dest, int src, int numberOf8kBanks)
         {
-
+            whizzler.DrawTo(clock);
+            
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
-
+            
+            int oneKsrc = src * 8;
             int oneKdest = dest * 8;
             //TODO: get whizzler reading ram from INesCart.GetPPUByte then be calling this
             //  setup ppuBankStarts in 0x400 block chunks 
             for (int i = 0; i < (numberOf8kBanks * 8); ++i)
-                PpuBankStarts[oneKdest + i] = (src + i) * 0x400;
+            {
+                ppuBankStarts[oneKdest + i] = (oneKsrc + i) * 0x400;
+                if (oneKdest + i == 8)
+                {
+                    chrRamStart = (oneKsrc + i) * 0x400;
+                }
+            }
+            Mirror(-1, mirroring);
 
-
-            BankSwitchesChanged = true;
+            bankSwitchesChanged = true;
             // Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
         }
 
@@ -92,7 +100,7 @@ namespace NES.CPU
                 newbank8 = 4 * (val & 0xF);
 
                 SetupBankStarts(newbank8, newbank8 + 1, newbank8 + 2, newbank8 + 3);
-                whizzler.DrawTo(clock);
+                // whizzler.DrawTo(clock);
                 if ((val & 16) == 16)
                 {
                     OneScreenOffset = 0x400;
@@ -101,12 +109,11 @@ namespace NES.CPU
                 {
                     OneScreenOffset = 0;
                 }
-                Mirror( 0);
+                Mirror(clock, 0);
             }
 
-            if (mapperId == 3)
+            if (mapperId == 3 && address >= 0x8000)
             {
-                whizzler.DrawTo(clock);
 
                 CopyBanks(clock, 0, val, 1);
             }

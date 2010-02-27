@@ -10,10 +10,12 @@ using System.Windows;
 using NES.CPU.nitenedo.Interaction;
 using SlimDXBindings.Viewer10;
 using InstiBulb.WpfKeyboardInput;
+using InstiBulb.Commanding;
+using System.Threading;
 
 namespace SlimDXBindings
 {
-    public class SlimDXKeyboardControlPad : IControlPad, IDisposable, IBindToDisplayContext,  IKeyBindingConfigTarget
+    public class SlimDXKeyboardControlPad : IControlPad, IDisposable, IKeyBindingConfigTarget, ISendCommands
     {
         #region IControlPad Members
 
@@ -21,6 +23,36 @@ namespace SlimDXBindings
         Keyboard keyboard;
 
         bool exclusive = false, foreground = true, disable = false;
+
+        public class AvailableCommand
+        {
+            string viewModel;
+
+            public string ViewModel
+            {
+                get { return viewModel; }
+                set { viewModel = value; }
+            }
+
+            string command;
+
+            public string Command
+            {
+                get { return command; }
+                set { command = value; }
+            }
+        }
+
+        Dictionary<Key, AvailableCommand> _keyCommandBindings = new Dictionary<Key, AvailableCommand>();
+
+
+        public Dictionary<Key, AvailableCommand> KeyCommandBindings
+        {
+            get 
+            { 
+                return _keyCommandBindings; 
+            }
+        }
 
 
         public Dictionary<Key, PadValues> DXKeyBindings
@@ -35,27 +67,14 @@ namespace SlimDXBindings
             set;
         }
 
-        //SlimDXBindings.Viewer10.DirectX10NesViewer viewer;
-
-        //public SlimDXBindings.Viewer10.DirectX10NesViewer Viewer
-        //{
-        //    get { return viewer; }
-        //    set { 
-        //        viewer = value;
-        //        if (viewer is DirectX10NesViewer)
-        //        {
-        //            CreateDevice(null);
-        //        }
-        //    }
-        //}
-
         private DXKeyToWpfKey keyConverter = new DXKeyToWpfKey();
+
+        Timer timer;
 
         public SlimDXKeyboardControlPad()
         {
             // make sure that DirectInput has been initialized
 
-            
             keyboard = new Keyboard(dInput);
 
             DXKeyBindings = new Dictionary<Key, PadValues>();
@@ -70,9 +89,14 @@ namespace SlimDXBindings
             NesKeyBindings.Add(System.Windows.Input.Key.Left, PadValues.Left);
             NesKeyBindings.Add(System.Windows.Input.Key.Right, PadValues.Right);
 
-            NesKeyBindings.Add(System.Windows.Input.Key.F12, PadValues.FullScreen);
+            _keyCommandBindings.Add(Key.F12, new AvailableCommand() { ViewModel = "DisplayViewModel", Command = "FullScreenCommand" });
+            _keyCommandBindings.Add(Key.Backslash, new AvailableCommand() { ViewModel = "SoundPanel", Command = "MuteToggle" });
+            _keyCommandBindings.Add(Key.Pause, new AvailableCommand() { ViewModel = "ControlPanel", Command = "PauseToggle" });
 
             RemapKeysToDX();
+
+            timer = new Timer(new TimerCallback(RefreshKeys), null, TimeSpan.Zero, new TimeSpan(0,0,0,0,16) );
+            
         }
 
         private void RemapKeysToDX()
@@ -123,8 +147,14 @@ namespace SlimDXBindings
         int PadOneState=0;
 
         KeyboardState state = new KeyboardState();
-        
+
         public void Refresh()
+        {
+        }
+
+        Key cmdKey = Key.Unknown;
+
+        public void RefreshKeys(object o)
         {
             if (keyboard == null)
                 return;
@@ -148,46 +178,26 @@ namespace SlimDXBindings
                     PadValues val = DXKeyBindings[key];
                     switch (val)
                     {
-                        case PadValues.FullScreen:
-                            if (DisplayContext != null)
-                                DisplayContext.ToggleFullScreen();
-                            break;
                         default:
                             PadOneState |= (int)val & 0xFF;
                             break;
                     }
                 }
-                //switch (key)
-                //{
-                //    case Key.X:
-                //        PadOneState = PadOneState | 1;
-                //        break;
-                //    case Key.Z:
-                //        PadOneState = PadOneState | 2;
-                //        break;
-                //    case Key.Space:
-                //        PadOneState = PadOneState | 4;
-                //        break;
-                //    case Key.Return:
-                //        PadOneState = PadOneState | 8;
-                //        break;
-                //    case Key.UpArrow:
-                //        PadOneState = PadOneState | 16;
-                //        PadOneState = PadOneState & ~32;
-                //        break;
-                //    case Key.DownArrow:
-                //        PadOneState = PadOneState | 32;
-                //        PadOneState = PadOneState & ~16;
-                //        break;
-                //    case Key.LeftArrow:
-                //        PadOneState = PadOneState | 64;
-                //        PadOneState = PadOneState & ~128;
-                //        break;
-                //    case Key.RightArrow:
-                //        PadOneState = PadOneState | 128;
-                //        PadOneState = PadOneState & ~64;
-                //        break;
-                //}
+
+                if (_keyCommandBindings.ContainsKey(key))
+                {
+                    cmdKey = key;
+                }
+
+            }
+
+            if (cmdKey != Key.Unknown && state.ReleasedKeys.Contains(cmdKey))
+            {
+                string vm = _keyCommandBindings[cmdKey].ViewModel;
+                string cmd = _keyCommandBindings[cmdKey].Command;
+                if (this.CommandSender != null && this.CommandSender.CanExecuteCommand(vm, cmd, null))
+                    this.CommandSender.ExecuteCommand(vm, cmd, null);
+                cmdKey = Key.Unknown;
             }
 
             if (NextControlByteSet != null)
@@ -218,11 +228,11 @@ namespace SlimDXBindings
             }
         }
 
-
         public event EventHandler<ControlByteEventArgs> NextControlByteSet;
 
         public void Dispose()
         {
+            timer.Dispose();
             ReleaseDevice();
             dInput.Dispose();
         }
@@ -260,12 +270,6 @@ namespace SlimDXBindings
 
         #endregion
 
-        public IDisplayContext DisplayContext
-        {
-            get;
-            set;
-        }
-
         public void SetKeyBinding(NesKeyBinding binding)
         {
             NesKeyBindings.Add(binding.Key, binding.BoundValue);
@@ -283,6 +287,12 @@ namespace SlimDXBindings
                 DXKeyBindings.Add(p.Value, binding.BoundValue);
             }
 
+        }
+
+        public CommandSender CommandSender
+        {
+            get;
+            set;
         }
     }
 }

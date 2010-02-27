@@ -84,7 +84,12 @@ namespace Fishbulb.Common.UI
                     new CommandCanExecuteHandler(o => true)));
             Commands.Add("BrowseRom",
                 new InstigatorCommand(new CommandExecuteHandler(BrowseFile), new CommandCanExecuteHandler(CanInsertCart)));
-        }
+            Commands.Add("PauseToggle",
+                new InstigatorCommand(new CommandExecuteHandler(o =>
+                    PauseToggle()
+                    ),
+                    new CommandCanExecuteHandler(o => true)));
+                    }
 
         GetFileDelegate fileGetter;
 
@@ -208,6 +213,11 @@ namespace Fishbulb.Common.UI
             {
                 PowerOn();
             }
+        }
+
+        void PauseToggle()
+        {
+            Paused = !Paused;
         }
 
         void PowerOff()

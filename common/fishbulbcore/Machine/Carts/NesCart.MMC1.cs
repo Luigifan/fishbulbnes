@@ -205,17 +205,17 @@ namespace NES.CPU.Machine.Carts
                 {
                     case 0:
                         OneScreenOffset = 0;
-                        Mirror(0);
+                        Mirror(clock, 0);
                         break;
                     case 1:
                         OneScreenOffset = 0x400;
-                        Mirror(0);
+                        Mirror(clock, 0);
                         break;
                     case 2:
-                        Mirror(1); // vertical
+                        Mirror(clock, 1); // vertical
                         break;
                     case 3:
-                        Mirror(2); // horizontal
+                        Mirror(clock, 2); // horizontal
                         break;
                 }
                 BankSwitchesChanged = true;

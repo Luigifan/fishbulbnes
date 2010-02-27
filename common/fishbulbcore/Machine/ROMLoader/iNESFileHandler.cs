@@ -86,7 +86,25 @@ namespace NES.CPU.Machine.ROMLoader
             INESCart _cart = null;
             byte[] iNesHeader = new byte[16];
             int bytesRead = zipStream.Read(iNesHeader, 0, 16);
-
+            /*
+ .NES file format
+---------------------------------------------------------------------------
+0-3      String "NES^Z" used to recognize .NES files.
+4        Number of 16kB ROM banks.
+5        Number of 8kB VROM banks.
+6        bit 0     1 for vertical mirroring, 0 for horizontal mirroring
+         bit 1     1 for battery-backed RAM at $6000-$7FFF
+         bit 2     1 for a 512-byte trainer at $7000-$71FF
+         bit 3     1 for a four-screen VRAM layout 
+         bit 4-7   Four lower bits of ROM Mapper Type.
+7        bit 0-3   Reserved, must be zeroes!
+         bit 4-7   Four higher bits of ROM Mapper Type.
+8-15     Reserved, must be zeroes!
+16-...   ROM banks, in ascending order. If a trainer is present, its
+         512 bytes precede the ROM bank contents.
+...-EOF  VROM banks, in ascending order.
+---------------------------------------------------------------------------
+*/
             int mapperId = (iNesHeader[6] & 0xF0);
             mapperId = mapperId / 16;
             mapperId += iNesHeader[7];
@@ -102,7 +120,7 @@ namespace NES.CPU.Machine.ROMLoader
             bytesRead = zipStream.Read(theRom, 0, theRom.Length);
             chrOffset = (int)zipStream.Position;
             bytesRead = zipStream.Read(chrRom, 0, chrRom.Length);
-
+            Console.WriteLine("{0} chr rom bytes read", bytesRead);
             switch (mapperId)
             {
                 case 0:

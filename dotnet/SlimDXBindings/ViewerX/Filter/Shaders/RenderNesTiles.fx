@@ -258,12 +258,8 @@ uint4 FetchSpriteRam(int spriteIndex)
 int PPUBankStarts(int index, int currentBank)
 {
 	uint ppuBankStart; 
-	int y = currentBank ;//currentBank /( 16 * 256);
-	int x = 0;// (currentBank & (255)) * 16;
 
-	float4 bank = bankSwitches.Load(int3(x + index,
-	y,
-	0));
+	float4 bank = bankSwitches.Load(int3(index, currentBank , 0));
 	
 	uint4 banks = bank * 255.0;
 	ppuBankStart = banks[3] << 24 ;
@@ -401,12 +397,12 @@ int GetTilePixel(float2 texposition)
 	
 	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
-	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	uint curBank = bnk[1] << 8 | bnk[0];
 	for (int i = 0; i < 15; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i, bnk[1]);
+		ppuBankStarts[i] = PPUBankStarts(i, 0);
 	}
 	
 	uint ntBits = finalColor[0] * 255.0;
@@ -663,7 +659,7 @@ float4 DrawTogetherFromRAM(PS_IN pixelShaderIn) : SV_Target
 }
 
 int nametable;
-int patterntable;
+int patterntable ;
 
 float4 DumpNameTable(PS_IN pixelShaderIn) : SV_Target
 {

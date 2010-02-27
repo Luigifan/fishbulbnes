@@ -92,11 +92,15 @@ namespace NES.CPU.Machine.Carts
 
         int chrRomOffset = 0;
 
-        int chrRamStart = 0;
+        protected int chrRamStart = 0;
 
         public void LoadiNESCart(byte[] header, int prgRoms, int chrRoms, byte[] prgRomData, byte[] chrRomData, int chrRomOffset)
         {
+            romControlBytes[0] = header[6];
+            romControlBytes[1] = header[7];
 
+            mapperId = (romControlBytes[0] & 0xF0) >> 4;
+            mapperId += romControlBytes[1] & 0xF0;
             this.chrRomOffset = chrRomOffset;
             /*
              .NES file format
@@ -112,7 +116,7 @@ namespace NES.CPU.Machine.Carts
             7        bit 0-3   Reserved, must be zeroes!
                      bit 4-7   Four higher bits of ROM Mapper Type.
             8-15     Reserved, must be zeroes!
-            16-...   ROM banks, in ascending order. If a trainer is present, its
+            16-...   ROM banks, in ascending order. If a trainer i6s present, its
                      512 bytes precede the ROM bank contents.
             ...-EOF  VROM banks, in ascending order.
             ---------------------------------------------------------------------------
@@ -128,8 +132,9 @@ namespace NES.CPU.Machine.Carts
             if (chrRomCount == 0)
             {
                 // chrRom is going to be RAM
-                chrRomData = new byte[0x4000];
+                chrRomData = new byte[0x8000];
             }
+
             
             chrRom = new byte[chrRomData.Length + 0x1000];
 
@@ -146,25 +151,24 @@ namespace NES.CPU.Machine.Carts
 
             SRAMCanSave = (romControlBytes[0] & 0x02) == 0x02;
             SRAMEnabled = true;
-            mapperId = (romControlBytes[0] & 0xF0) >> 4;
-            mapperId += romControlBytes[1] & 0xF0;
+
 
             // rom0.0=0 is horizontal mirroring, rom0.0=1 is vertical mirroring
 
             // by default we have to call Mirror() at least once to set up the bank offsets
-            Mirror(0);
+            Mirror(0, 0);
             if ((romControlBytes[0] & 0x01) == 1)
             {
-                Mirror( 1);
+                Mirror(0, 1);
             }
             else
             {
-                Mirror(2);
+                Mirror(0, 2);
             }
 
             if ((romControlBytes[0] & 0x08) == 0x08)
             {
-                Mirror(3);
+                Mirror(0, 3);
             }
 
 
@@ -372,7 +376,7 @@ namespace NES.CPU.Machine.Carts
 
         #endregion
 
-        protected int mirroring;
+        protected int mirroring = -1;
 
         public string CartName { get; protected set; }
         public int NumberOfPrgRoms { get { return prgRomCount; } }
@@ -423,7 +427,7 @@ namespace NES.CPU.Machine.Carts
 
         #endregion
 
-        private int[] ppuBankStarts = new int[16];
+        protected int[] ppuBankStarts = new int[16];
 
         public int[] PpuBankStarts
         {
@@ -446,8 +450,14 @@ namespace NES.CPU.Machine.Carts
         }
         public void ResetBankStartCache()
         {
+            // if (currentBank > 0)
             currentBank = 0;
-            Buffer.BlockCopy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16 * 4);
+            Array.Copy(ppuBankStarts, 0, bankStartCache[0], 0, 16);
+
+            //Mirror(-1, this.mirroring);
+            //chrRamStart = ppuBankStarts[8];
+            //Buffer.BlockCopy(ppuBankStarts, 0, bankStartCache[0], 0, 16 * 4);
+            //bankSwitchesChanged = false;
         }
         
         //gets called by the ppu 
@@ -455,14 +465,15 @@ namespace NES.CPU.Machine.Carts
         {
             if (bankSwitchesChanged)
             {
+
                 currentBank++;
-                Buffer.BlockCopy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16 * 4);
+                Array.Copy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16);
                 bankSwitchesChanged = false;
             }
             return (int)currentBank;
         }
 
-        bool bankSwitchesChanged = false;
+        protected bool bankSwitchesChanged = false;
 
         public bool BankSwitchesChanged
         {
@@ -474,6 +485,7 @@ namespace NES.CPU.Machine.Carts
         {
             int bank = address / 0x400;
             int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+
             //while (newAddress > chrRamStart)
             //{
             //    newAddress -= chrRamStart;
@@ -517,7 +529,7 @@ namespace NES.CPU.Machine.Carts
             set { oneScreenOffset = value; }
         }
 
-        internal void Mirror(int mirroring)
+        internal void Mirror(int clockNum, int mirroring)
         {
             //    //            A11 A10 Effect
             //    //----------------------------------------------------------
@@ -538,6 +550,14 @@ namespace NES.CPU.Machine.Carts
             //    // 0x400 = 010000000000
             //    // 0x000 = 000000000000
 
+            // if (mirroring == this.mirroring) return;
+
+            this.mirroring = mirroring;
+            
+            if (clockNum > -1)
+                whizzler.DrawTo(clockNum);
+
+            //Console.WriteLine("Mirroring set to {0}", mirroring);
 
             switch (mirroring)
             {

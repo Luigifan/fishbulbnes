@@ -63,6 +63,15 @@ namespace InstiBulb.ThreeDee
             new PropertyMetadata(null, new PropertyChangedCallback(OnCommandParameterChanged))
             );
 
+        public static DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title", typeof(string), typeof(Icon3D),
+            new PropertyMetadata(null, new PropertyChangedCallback(OnTitleChanged))
+            );
+
+        static void OnTitleChanged(object o, DependencyPropertyChangedEventArgs args)
+        {
+        }
+
         static void OnCommandChanged(object o, DependencyPropertyChangedEventArgs args)
         {
         }
@@ -164,6 +173,18 @@ namespace InstiBulb.ThreeDee
             //model.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 90));
             return model;
 
+        }
+
+        public string Title
+        {
+            get
+            {
+                return (string)GetValue(Icon3D.TitleProperty); 
+            }
+            set
+            {
+                SetValue(Icon3D.TitleProperty, value);
+            }
         }
 
         public Brush Billboard

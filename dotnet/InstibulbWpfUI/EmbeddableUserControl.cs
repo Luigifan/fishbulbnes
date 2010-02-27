@@ -15,7 +15,6 @@ namespace InstibulbWpfUI
     {
         public event EventHandler<RedrawEventArgs> RedrawRequested;
         private delegate void NoArgDelegate();
-        Window window;
 
         public EmbeddableUserControl()
         {

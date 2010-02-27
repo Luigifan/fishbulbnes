@@ -130,7 +130,7 @@ namespace NES.CPU.PPUClasses
                         if (!frameOn || (frameOn && !isRendering))
                         {
                             lockedVScroll = _vScroll;
-                            UpdatePixelInfo();
+                            //UpdatePixelInfo();
                         }
                         
                         // fineVerticalScroll = data & 0x7;
@@ -175,12 +175,13 @@ namespace NES.CPU.PPUClasses
                         nameTableMemoryStart = ((_PPUAddress >> 10) & 0x3) * 0x400;
                         if (frameOn)
                         {
+
                             lockedHScroll = _hScroll;
                             lockedVScroll = _vScroll;
                             lockedVScroll -= currentYPosition;
                             
                         }
-                        UpdatePixelInfo();
+                        //UpdatePixelInfo();
                         // relock vscroll during render when this happens
                     }
 

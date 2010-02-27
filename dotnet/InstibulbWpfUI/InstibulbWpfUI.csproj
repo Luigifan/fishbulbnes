@@ -161,6 +161,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanding\CommandSender.cs" />
+    <Compile Include="Commanding\ISendCommands.cs" />
     <Compile Include="ControlPanel\CartInfoPanel.xaml.cs">
       <DependentUpon>CartInfoPanel.xaml</DependentUpon>
     </Compile>

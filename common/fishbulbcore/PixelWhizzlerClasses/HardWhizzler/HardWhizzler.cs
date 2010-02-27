@@ -90,10 +90,7 @@ namespace NES.CPU.PixelWhizzlerClasses
 
         protected override void UpdatePixelInfo()
         {
-            if (chrRomHandler.BankSwitchesChanged)
-            {
-                chrRomHandler.UpdateBankStartCache();
-            }
+            int curBank =    chrRomHandler.UpdateBankStartCache();
             int ntbits = nameTableBits & 0x3;
             int vScroll = lockedVScroll;
             if (lockedVScroll < 0)
@@ -117,7 +114,7 @@ namespace NES.CPU.PixelWhizzlerClasses
                 (
                     vScroll << 24 | // a
                     lockedHScroll << 16 |  // r
-                    (int)(chrRomHandler.CurrentBank & 0xFFFF)
+                    (int)(curBank & 0xFFFF)
                 );
         }
 
@@ -127,14 +124,13 @@ namespace NES.CPU.PixelWhizzlerClasses
             {
                 case 0:
                     //frameFinished();
+                    // chrRomHandler.ResetBankStartCache();
                     break;
                 case 6820:
 
                     FrameOn = true;
                     //
-                    chrRomHandler.ResetBankStartCache();
-                    currentPalette = 0;
-                    Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
+                    
                     // setFrameOn();
                     if (spriteChanges)
                     {
@@ -143,13 +139,23 @@ namespace NES.CPU.PixelWhizzlerClasses
                     }
 
                     ClearVINT();
+
+                    currentPalette = 0;
+                    Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
+                    
+                    chrRomHandler.ResetBankStartCache();
+
                     UpdatePixelInfo();
                     break;
                 //304 pixels into pre-render scanline
                 case 7125:
+
+                    //UpdatePixelInfo();
                     break;
 
                 case 7161:
+
+
                     vbufLocation = 0;
                     currentXPosition = 0;
                     currentYPosition = 0;
@@ -161,6 +167,9 @@ namespace NES.CPU.PixelWhizzlerClasses
                     FrameOn = false;
                     frameClock = 0;
                     UpdatePixelInfo();
+
+
+
                     break;
             }
 

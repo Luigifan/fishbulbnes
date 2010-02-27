@@ -7,6 +7,7 @@ using System.Windows;
 using Microsoft.Practices.Unity;
 using InstiBulb.Integration;
 using NES.CPU.nitenedo;
+using Fishbulb.Common.UI;
 
 namespace _10NES2
 {
@@ -50,6 +51,7 @@ namespace _10NES2
 
             win.nesDisplay.Target = vm.Container.Resolve<NESMachine>();
             win.nesDisplay.Context = vm.Container.Resolve<NES.CPU.nitenedo.Interaction.IDisplayContext>();
+
 
             //            container.RegisterInstance<NESDisplay>(new ContainerControlledLifetimeManager(),
             //    new InjectionProperty("Target", new ResolvedParameter<NESMachine>()),

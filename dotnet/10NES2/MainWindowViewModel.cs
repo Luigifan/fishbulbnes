@@ -15,6 +15,8 @@ using InstiBulb.Windowing;
 using InstibulbWpfUI.ControlPanel;
 using InstiBulb.Views;
 using NES.CPU.nitenedo.Interaction;
+using InstiBulb.Commanding;
+using InstiBulb.WinViewModels;
 
 namespace _10NES2
 {
@@ -22,12 +24,9 @@ namespace _10NES2
     {
         IUnityContainer container;
         NESMachine nes;
+        CommandSender commandSender;
 
-        public IUnityContainer Container
-        {
-            get { return container; }
-            set { container = value; }
-        }
+
 
         public MainWindowViewModel(Window window, string nesType)
         {
@@ -41,12 +40,13 @@ namespace _10NES2
             container.RegisterType<FrameworkElement, DebuggerView>("DebugPanel");
             container.RegisterType<FrameworkElement, SaveStateView>("SaveStatePanel");
             container.RegisterType<FrameworkElement, ControllerConfig>("ControllerConfigPanel");
+            container.RegisterType<FrameworkElement, CheatControl>("CheatPanel");
+
+            container.RegisterType<IViewModel, WinCheatPanelVM>("CheatPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
+
 
             nes = container.Resolve<NESMachine>();
 
-            var p = container.Resolve<NES.CPU.Machine.IControlPad>("padone") as InstiBulb.WpfKeyboardInput.IBindToDisplayContext;
-            if (p != null)
-                p.DisplayContext = container.Resolve<IDisplayContext>();
             
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             
@@ -54,6 +54,27 @@ namespace _10NES2
             showWindowCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowWindow), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
             showBumpOutCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(ShowBumpOut), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
             hideBumpOutCommand = new DelegateCommand(new Fishbulb.Common.UI.CommandExecuteHandler(HideBumpOut), new Fishbulb.Common.UI.CommandCanExecuteHandler(CanShowDialog));
+
+            commandSender = new CommandSender();
+            commandSender.Container = container;
+
+
+            var p = container.Resolve<NES.CPU.Machine.IControlPad>("padone") as InstiBulb.Commanding.ISendCommands;
+            if (p != null)
+                p.CommandSender = commandSender;
+
+            
+        }
+
+        public CommandSender CommandSender
+        {
+            get { return commandSender; }
+            set { commandSender = value; }
+        }
+        public IUnityContainer Container
+        {
+            get { return container; }
+            set { container = value; }
         }
 
         void nes_RunStatusChangedEvent(object sender, EventArgs e)

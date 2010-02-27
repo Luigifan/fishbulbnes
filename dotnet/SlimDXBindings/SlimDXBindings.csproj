@@ -188,6 +188,7 @@
     <Compile Include="Viewer9\SlimDXRenderer.cs" />
     <Compile Include="Viewer9\TexturedQuadRenderer.cs" />
     <Compile Include="Viewer9\VertexBasedRenderer.cs" />
+    <Compile Include="ViewerX\D3D10DisplayViewModel.cs" />
     <Compile Include="ViewerX\D3D10EmbeddableNesViewer.cs" />
     <Compile Include="ViewerX\D3D10Host.cs" />
     <Compile Include="ViewerX\D3D10NesViewer.cs" />

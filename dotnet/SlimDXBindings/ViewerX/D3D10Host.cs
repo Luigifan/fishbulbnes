@@ -20,7 +20,7 @@ using Microsoft.WindowsAPICodePack.DirectX.Controls;
 
 namespace SlimDXBindings.Viewer10 
 {
-    public class D3D10Host : IDisposable
+    public class D3D10Host : IDisposable, INotifyPropertyChanged
     {
         NESMachine nes;
          
@@ -95,8 +95,127 @@ namespace SlimDXBindings.Viewer10
              }
          }
 
+         public class OutputInfo
+         {
+             public OutputInfo()
+             {
+                 _currentMode = 0;
+                 _ModeList = new List<DXGI.ModeDescription>();
+             }
 
-        D3D10.Texture2D resource;
+             public DXGI.OutputDescription Description;
+             private List<DXGI.ModeDescription> _ModeList;
+
+             public List<DXGI.ModeDescription> ModeList
+             {
+                 get
+                 {
+                     return _ModeList;
+                 }
+             }
+
+             int _currentMode;
+
+             public int CurrentMode
+             {
+                 get { return _currentMode; }
+                 set { _currentMode = value; }
+             }
+
+             public override string ToString()
+             {
+                 return Description.Name;
+             }
+
+
+         }
+
+         public class AdapterInfo
+         {
+             public AdapterInfo()
+             {
+                 _DisplayList = new List<OutputInfo>();
+                 _currentDisplay = 0;
+             }
+
+             public DXGI.AdapterDescription Description;
+             private List<OutputInfo> _DisplayList;
+
+             public List<OutputInfo> DisplayList
+             {
+                 get
+                 {
+                     return _DisplayList;
+                 }
+             }
+
+             int _currentDisplay ;
+
+             public int CurrentDisplay
+             {
+                 get { return _currentDisplay; }
+                 set { _currentDisplay = value; }
+             }
+
+             public override string ToString()
+             {
+                 return Description.Description;
+             }
+         }
+
+         private List<AdapterInfo> _adapterList;
+
+         public List<AdapterInfo> AdapterList
+         {
+             get
+             {
+                 return _adapterList;
+             }
+         }
+
+         int _currentAdapter;
+
+         public int CurrentAdapter
+         {
+             get { return _currentAdapter; }
+             set { _currentAdapter = value; }
+         }
+
+         private void EnumerateAdaptersDisplaysAndModes()
+         {
+             DXGI.Factory tempFact = new DXGI.Factory();
+             int aCount = tempFact.GetAdapterCount();
+             
+             _adapterList = new List<AdapterInfo>();
+             for (int adapter = 0; adapter < aCount ; ++adapter)
+             {
+                 AdapterInfo adaptInfo = new AdapterInfo();
+                 adaptInfo.Description = tempFact.GetAdapter(adapter).Description;
+                 int oCount = tempFact.GetAdapter(adapter).GetOutputCount();
+                 if (oCount == 0) oCount = 1;
+
+                 for (int output = 0; output < oCount; ++output)
+                 {
+                     OutputInfo outInfo = new OutputInfo();
+                     outInfo.Description = tempFact.GetAdapter(adapter).GetOutput(output).Description;
+                     var c = tempFact.GetAdapter(adapter).GetOutput(output).GetDisplayModeList(DXGI.Format.R8G8B8A8_UNorm, DXGI.DisplayModeEnumerationFlags.Scaling);
+                     foreach (var mode in c)
+                     {
+                         outInfo.ModeList.Add(mode);
+                     }
+
+                     adaptInfo.DisplayList.Add(outInfo);
+                 }
+
+                 _adapterList.Add(adaptInfo);
+             }
+             tempFact.Dispose();
+             NotifyPropertyChanged("AdapterList");
+
+         }
+
+
+         D3D10.Texture2D resource;
 
         DXGI.SwapChainDescription swapChainDescription = new SlimDX.DXGI.SwapChainDescription();
 
@@ -109,18 +228,9 @@ namespace SlimDXBindings.Viewer10
 
         public void QuadUp(DirectHost renderHost)
         {
-            //throw new Exception("BORK BORK BORK no d3d today we are out of polygons");
             _renderHost= renderHost;
 
-            //RenderForm.ClientSize = new Size(720, 480);
-            //RenderForm.Text = "10NES";
-            
-            //RenderForm.KeyDown += new KeyEventHandler(RenderForm_KeyDown);
-            //RenderForm.MouseDown += new MouseEventHandler(RenderForm_MouseDown);
-            //RenderForm.MouseUp += new MouseEventHandler(RenderForm_MouseUp);
-            //RenderForm.MouseMove += new MouseEventHandler(RenderForm_MouseMove);
-            //RenderForm.FormClosed += new FormClosedEventHandler(RenderForm_FormClosed);
-            //RenderForm.ResizeEnd += new EventHandler(RenderForm_ResizeEnd);
+            EnumerateAdaptersDisplaysAndModes();
 
             //RenderForm.Mouse
             modeDescription.Format = DXGI.Format.R8G8B8A8_UNorm;
@@ -323,11 +433,14 @@ namespace SlimDXBindings.Viewer10
         {
             fullForm = new Form();
             dxgiFactory = new DXGI.Factory();
+            
             dxgiFactory.SetWindowAssociation(fullForm.Handle, DXGI.WindowAssociationFlags.IgnoreAltEnter);
-            var c = dxgiFactory.GetAdapter(0).GetOutput(0).GetDisplayModeList(DXGI.Format.R8G8B8A8_UNorm, DXGI.DisplayModeEnumerationFlags.Scaling | DXGI.DisplayModeEnumerationFlags.Interlaced);
+            // var c = dxgiFactory.GetAdapter(0).GetOutput(0).GetDisplayModeList(DXGI.Format.R8G8B8A8_UNorm, DXGI.DisplayModeEnumerationFlags.Scaling | DXGI.DisplayModeEnumerationFlags.Interlaced);
 
+            AdapterInfo aInfo = _adapterList[_currentAdapter];
+            OutputInfo oInfo = aInfo.DisplayList[aInfo.CurrentDisplay];
 
-            DXGI.ModeDescription desc = c[c.Count() - 1];
+            DXGI.ModeDescription desc = oInfo.ModeList[oInfo.CurrentMode];
 
             //SlimDX.DXGI.ModeDescription fullDesc = new DXGI.ModeDescription()
             //{
@@ -552,7 +665,7 @@ namespace SlimDXBindings.Viewer10
 
 
         float timer = 0.0f;
-        ShaderResourceView texView;
+        //ShaderResourceView texView;
 
 
         public void UpdateTextures()
@@ -594,8 +707,11 @@ namespace SlimDXBindings.Viewer10
             DataRectangle bankRect = bankSwitchCache.Map(0, MapMode.WriteDiscard, MapFlags.None);
             bankRect.Data.Position = 0;
             for (int i = 0; i <= nes.Cart.CurrentBank; ++i )
-                bankRect.Data.WriteRange<int>(nes.Cart.BankStartCache[i]);
+                bankRect.Data.WriteRange<int>(nes.Cart.BankStartCache[i], 0, nes.Cart.BankStartCache[i].Length);
+
             bankSwitchCache.Unmap(0);
+
+            // nes.Cart.ResetBankStartCache();
 
             if (nes.Cart.CurrentBank > biggestBSCount)
             {
@@ -693,7 +809,7 @@ namespace SlimDXBindings.Viewer10
                 if (p != null) p.Dispose();
             }
 
-            if (texView != null) texView.Dispose();
+            //if (texView != null) texView.Dispose();
 
             RenderTarget.Dispose();
             WindowedSwapChain.Dispose();
@@ -730,5 +846,15 @@ namespace SlimDXBindings.Viewer10
             Die();
             
         }
+
+        void NotifyPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

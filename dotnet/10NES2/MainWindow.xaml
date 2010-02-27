@@ -43,7 +43,6 @@
             </Grid.ColumnDefinitions>
             <my:ToolSpinner3D x:Name="toolSpinner3D1" Grid.RowSpan="5" Grid.ColumnSpan="3"  
                 Visibility="{Binding ToolsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
-
                               >
                 <my:ToolSpinner3D.Camera >
                     <PerspectiveCamera x:Name="camera"  Position="0,1.1,10" LookDirection="0,-0.2,-1" FarPlaneDistance="15"  FieldOfView="30" UpDirection="1,0,0" />
@@ -58,6 +57,8 @@
                     <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="DisplaySettings" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="ControllerConfigPanel" Model="{StaticResource ResourceKey=controlPad}" Billboard="{StaticResource BubbleColor}" >
+                    </my:Icon3D>
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="CheatPanel" Model="{StaticResource ResourceKey=controlPadRed}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>

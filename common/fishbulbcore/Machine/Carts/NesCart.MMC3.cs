@@ -220,11 +220,11 @@ namespace NES.CPU.Machine.Carts
                     case 0xA000:
                         if ((val & 1) == 1)
                         {
-                            Mirror(2);
+                            Mirror(clock, 2);
                         }
                         else
                         {
-                            Mirror(1);
+                            Mirror(clock, 1);
                         }
                         break;
                     case 0xA001:

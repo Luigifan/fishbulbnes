@@ -16,6 +16,14 @@ namespace fishbulbcommonui
         IWavStreamer streamer;
         Bopper SoundBopper;
 
+        public SoundViewModel() : base()
+        {
+            Commands.Add("MuteToggle", new InstigatorCommand(
+                o => ToggleMute(null),
+                o => true));
+        }
+
+
         protected override void OnAttachTarget()
         {
             SoundBopper = TargetMachine.SoundBopper;
@@ -30,6 +38,11 @@ namespace fishbulbcommonui
             }
         }
 
+
+        void ToggleMute(object o)
+        {
+            Muted = !Muted;
+        }
 
         string currentView = "SoundView";
         public override string CurrentView

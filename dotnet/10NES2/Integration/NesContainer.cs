@@ -24,6 +24,7 @@ using fishbulbcommonui;
 using InstiBulb.WpfNESViewer;
 using SlimDXBindings.Viewer10;
 using System.Windows;
+using SlimDXBindings.ViewerX;
 
 
 namespace InstiBulb.Integration
@@ -32,7 +33,7 @@ namespace InstiBulb.Integration
     {
         PlatformDelegates delegates = new PlatformDelegates();
 
-        public IUnityContainer RegisterNESCommon(IUnityContainer container)
+         IUnityContainer RegisterNESCommon(IUnityContainer container)
         {
 
             container.RegisterType<WavSharer>(new ContainerControlledLifetimeManager());
@@ -41,13 +42,7 @@ namespace InstiBulb.Integration
 
             // the component that creates the sound thread
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
-
-            //container.RegisterType<InputHandler>(new ContainerControlledLifetimeManager());
-
-
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
-
-
 
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
@@ -71,21 +66,19 @@ namespace InstiBulb.Integration
             return container;
         }
 
-        public IUnityContainer RegisterHardwareNES(IUnityContainer container)
+         IUnityContainer RegisterHardwareNES(IUnityContainer container)
         {
             container.RegisterType<IPPU, NES.CPU.PixelWhizzlerClasses.HardWhizzler>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IViewModel, D3D10DisplayViewModel>("DisplayViewModel", new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, D3D10NesViewer>(new ContainerControlledLifetimeManager()
                 , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
+                , new InjectionProperty("ViewModel", new ResolvedParameter<IViewModel>("DisplayViewModel"))
                 );
-
-            //container.RegisterType<IDisplayContext, D3D10EmbeddableNesViewer>(new ContainerControlledLifetimeManager()
-            //    , new InjectionProperty("AttachedMachine", new ResolvedParameter<NESMachine>())
-            //    );
 
             return container;
         }
 
-        public IUnityContainer RegisterSoftwareNES(IUnityContainer container)
+         IUnityContainer RegisterSoftwareNES(IUnityContainer container)
         {
             container.RegisterType<IPPU, SoftWhizzler>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDisplayContext, WPFNesViewer>(new ContainerControlledLifetimeManager()

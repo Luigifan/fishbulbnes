@@ -38,10 +38,14 @@
                     <Label Content="Contrast"/>
                     <Slider Maximum="1.0" Minimum="0" TickFrequency="0.02" Grid.Column="1" Value="{Binding Path=Host.Contrast}" />
                 </Grid>
+                <ComboBox x:Name="Adapters"  ItemsSource="{Binding Path=Host.AdapterList}" SelectedIndex="{Binding Path=Host.CurrentAdapter}" />
+                <ComboBox x:Name="Outputs" ItemsSource="{Binding ElementName=Adapters, Path=SelectedValue.DisplayList}" SelectedIndex="{Binding ElementName=Adapters, Path=SelectedValue.CurrentDisplay}"  />
+                <ComboBox x:Name="Modes" ItemsSource="{Binding ElementName=Outputs, Path=SelectedValue.ModeList}" SelectedIndex="{Binding ElementName=Outputs, Path=SelectedValue.CurrentMode}"  />
+                <Button Content="Switch to full screen" Command="{Binding Path=FullScreenCommand}"/>
+                <TextBlock Text=" "/>
+                <TextBlock Text=" "/>
                 <Button Content="Dump DDS Surfaces" Command="{Binding DumpSurfacesCommand}"/>
-                <TextBlock Text=" "/>
-                <TextBlock Text=" "/>
-                <Button Content="Switch to Full Screen" Command="{Binding FullScreenCommand}"/>
+
             </StackPanel>
         </ScrollViewer>
 

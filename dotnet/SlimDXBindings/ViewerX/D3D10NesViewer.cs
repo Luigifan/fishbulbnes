@@ -11,6 +11,7 @@ using SlimDXBindings.ViewerX.PropertyPanel;
 using Fishbulb.Common.UI;
 using InstiBulb.Commands;
 using InstiBulb;
+using SlimDXBindings.ViewerX;
 
 namespace SlimDXBindings.Viewer10
 {
@@ -27,11 +28,18 @@ namespace SlimDXBindings.Viewer10
         DirectHost dhost;
         D3D10Host host;
         DelegateCommand dumpFilesCommand;
+        DelegateCommand fullScreenCommand;
 
         public DelegateCommand DumpSurfacesCommand
         {
             get { return dumpFilesCommand; }
         }
+
+        public DelegateCommand FullScreenCommand
+        {
+            get { return fullScreenCommand; }
+        }
+
 
         PlatformDelegates winDelegates;
 
@@ -42,16 +50,35 @@ namespace SlimDXBindings.Viewer10
             dumpFilesCommand = new DelegateCommand(
                 o => DumpFiles(),
                 o => CanDumpFiles());
+
+            fullScreenCommand = new DelegateCommand(
+                o => ToggleFullScreen(),
+                o => true);
+
+
+
             this.Child = dhost;
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(D3D10NesViewer_SizeChanged);
         }
 
-        void DumpFiles()
+        private D3D10DisplayViewModel viewModel;
+
+        public IViewModel ViewModel
+        {
+            get { return viewModel; }
+            set { viewModel = value as D3D10DisplayViewModel;
+                     if (viewModel != null)
+                        viewModel.Viewer = this;
+            }
+        }
+
+
+        public void DumpFiles()
         {
             host.RequestDump(winDelegates);
         }
 
-        bool CanDumpFiles()
+        public bool CanDumpFiles()
         {
             return true;
         }
@@ -210,14 +237,13 @@ namespace SlimDXBindings.Viewer10
         
         public void ToggleFullScreen()
         {
-            lock (this)
-            {
-                if (isToggling) return;
-                isToggling = true;
-                Dispatcher.Invoke(new NoArgDelegate(host.ToggleFullScreen), null);
 
-                isToggling = false;
-            }
+            if (isToggling) return;
+            isToggling = true;
+            Dispatcher.Invoke(new NoArgDelegate(host.ToggleFullScreen), null);
+
+            isToggling = false;
         }
+
     }
 }

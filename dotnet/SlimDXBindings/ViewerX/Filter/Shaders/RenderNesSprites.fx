@@ -9,7 +9,6 @@ Texture2D tileStage;
 
 Texture2D bankSwitches;
 
-int nesRamStart;
 int NameTableMemoryStart;
 int HScroll;
 int VScroll;
@@ -257,12 +256,8 @@ uint4 FetchSpriteRam(int spriteIndex)
 int PPUBankStarts(int index, int currentBank)
 {
 	uint ppuBankStart; 
-	int y = currentBank ;//currentBank /( 16 * 256);
-	int x = 0;// (currentBank & (255)) * 16;
 
-	float4 bank = bankSwitches.Load(int3(x + index,
-	y,
-	0));
+	float4 bank = bankSwitches.Load(int3(index, currentBank , 0));
 	
 	uint4 banks = bank * 255.0;
 	ppuBankStart = banks[3] << 24 ;
@@ -272,6 +267,7 @@ int PPUBankStarts(int index, int currentBank)
 
 	return ppuBankStart;
 }
+
 
 static int ppuBankStarts[16] = 
 	{-1, -1, -1, -1,
@@ -438,12 +434,12 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
 	
-	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	uint curBank = bnk[1] << 8 | bnk[0];
 	for (int i = 0; i < 15; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
+		ppuBankStarts[i] = PPUBankStarts(i,  curBank);
 	}
 
 			
@@ -495,12 +491,12 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
 	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
-	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
+	uint curBank = bnk[1] << 8 | bnk[0];
 	for (int i = 0; i < 15; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
-		// should be as many as is needed until i add some crazier mappers
-		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
+		// should be as many as needed though
+		ppuBankStarts[i] = PPUBankStarts(i,  curBank);
 	}
 	float2 xy = (pixelShaderIn.UV) * 255.0;
 	xy.y-=1;
