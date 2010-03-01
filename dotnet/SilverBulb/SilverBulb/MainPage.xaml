@@ -3,16 +3,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:SilverlightBindings.Views;assembly=SilverlightBindings"
     mc:Ignorable="d"
      Loaded="UserControl_Loaded"
 
     d:DesignHeight="300" d:DesignWidth="400">
 
     <Grid x:Name="LayoutRoot" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Canvas Background="Black" Name="DrawArea" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="9*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Padding="3" BorderThickness="25" CornerRadius="5" IsHitTestVisible="false"  >
+            <Grid>
+                <Canvas Background="Black" Name="DrawArea" Cursor="None" IsHitTestVisible="false" CacheMode="BitmapCache" />
+            </Grid>
         </Border>
         <MediaElement x:Name="NintendoSound"
-                      AutoPlay="True" />
+                      AutoPlay="True" Visibility="Collapsed" />
+        <StackPanel Orientation="Vertical" Grid.Column="1" >
+            <!--<StackPanel Orientation="Horizontal">
+                <Button Content="Load Rom" Click="Button_Click" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}"  />
+                <Button Content="Power" Click="Button_Click" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" />
+            </StackPanel>-->
+            <views:ControlPanel x:Name="ControlPanel" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" />
+            <CheckBox x:Name="EnableControls" Content="Enable Controls" />
+        </StackPanel>
     </Grid>
 </UserControl>

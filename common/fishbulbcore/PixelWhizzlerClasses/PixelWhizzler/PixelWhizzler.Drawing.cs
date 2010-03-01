@@ -86,7 +86,9 @@ namespace NES.CPU.PPUClasses
 
                 case frameClockEnd:
                     if (fillRGB) FillBuffer();
-                    FrameFinishHandler();
+                    shouldRender = true;
+                    if (frameFinished != null)
+                        frameFinished();
                     SetupVINT();
                     frameOn = false;
                     frameClock = 0;

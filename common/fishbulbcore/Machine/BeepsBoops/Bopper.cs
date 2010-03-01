@@ -67,10 +67,18 @@ namespace NES.CPU.Machine.BeepsBoops
             RebuildSound();
         }
 
-        private void RebuildSound()
+        public void RebuildSound()
         {
             myBlipper = new Blip(_sampleRate / 5);
             myBlipper.blip_set_rates(clock_rate, _sampleRate);
+
+
+            registers.Clear();
+            _interruptRaised = false;
+            square0Gain = master_vol * 20 / 100;
+            square1Gain = master_vol * 20 / 100;
+            triangleGain = master_vol * 23 / 100;
+            noiseGain = master_vol * 13 / 100;
 
             square0 = new SquareChannel(myBlipper, 0) { Gain = square0Gain, Period = 10, SweepComplement = true };
             square1 = new SquareChannel(myBlipper, 1) { Gain = square1Gain, Period = 10, SweepComplement = false };

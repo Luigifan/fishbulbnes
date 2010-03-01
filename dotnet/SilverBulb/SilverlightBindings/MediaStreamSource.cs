@@ -37,6 +37,17 @@ namespace SilverlightBindings
         private Dictionary<MediaSampleAttributeKeys, string> _emptySampleDict =
             new Dictionary<MediaSampleAttributeKeys, string>();
 
+        private byte[] ShushBuffer = new byte[1500];
+
+        bool shushed = false;
+
+        public bool Shushed
+        {
+            get { return shushed; }
+            set { shushed = value; }
+        }
+
+
 
         public NesMediaStreamSource()
         {
@@ -120,27 +131,22 @@ namespace SilverlightBindings
             throw new NotImplementedException();
         }
 
-        //private int AlignUp(int a, int b)
-        //{
-        //    int tmp = a + b - 1;
-        //    return tmp - (tmp % b);
-        //}
 
-        byte[][] buffers = new byte[2][];
-        int[] bufferLen = new int[2];
+        byte[][] buffers = new byte[4][];
+        int[] bufferLen = new int[4];
         int bufferPlaying = 0;
 
-        volatile bool waitingForSamples = true;
+        IWavReader reader;
 
-        public void WriteSamples(byte[] samples, int len)
+        public IWavReader Reader
         {
+          get { return reader; }
+          set { reader = value; }
+        }
 
-
-            Buffer.BlockCopy(samples, 0, buffers[bufferPlaying], 0, len);
-            bufferLen[bufferPlaying] = len;
-
-            waitingForSamples = false;
-            
+        public void WriteSamples()
+        {
+            bufferLen[bufferPlaying] = reader.SharedBufferLength;
             
         }
 
@@ -161,30 +167,43 @@ namespace SilverlightBindings
 
 
             if (ending) return;
-            _stream.Write(buffers[bufferPlaying], 0, bufferLen[bufferPlaying]);
-            bufferByteCount = bufferLen[bufferPlaying];
 
-            bufferPlaying++;
-            if (bufferPlaying > 1) bufferPlaying = 0;
+            if (shushed)
+            {
+                _stream.Write(ShushBuffer, 0, ShushBuffer.Length);
+                bufferByteCount = ShushBuffer.Length;
+
+            }
+            else
+            {
+
+                _stream.Write(buffers[bufferPlaying], 0, bufferLen[bufferPlaying]);
+                bufferByteCount = bufferLen[bufferPlaying];
+
+                bufferPlaying++;
+                if (bufferPlaying >= buffers.Length) bufferPlaying = 0;
+
+                reader.SharedBuffer = buffers[bufferPlaying];
+            }
+            waitEvent.Set();
 
             // Send out the next sample
-            MediaStreamSample msSamp = new MediaStreamSample(
+            ReportGetSampleCompleted(
+                new MediaStreamSample(
                 _audioDesc,
                 _stream,
                 _currentPosition,
                 bufferByteCount,
                 _currentTimeStamp,
-                _emptySampleDict);
+                _emptySampleDict)
+            );
 
-            
             // Move our timestamp and position forward
             _currentTimeStamp += _waveFormat.AudioDurationFromBufferSize(
                                     (uint)bufferByteCount);
             _currentPosition += bufferByteCount;
 
-            ReportGetSampleCompleted(msSamp);
-            waitEvent.Set();
-            
+
             
         }
 

@@ -17,7 +17,7 @@ namespace SilverBulb
 
     public class PlatformDelegates
     {
-        public string BrowseForFile(string defaultExt, string Filter)
+        public string BrowseForFile(string defaultExt, string filter)
         {
             return null;
         }

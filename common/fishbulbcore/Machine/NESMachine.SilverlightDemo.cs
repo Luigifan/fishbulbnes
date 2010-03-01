@@ -18,18 +18,76 @@ namespace NES.CPU.nitenedo
     {
         const string cartResName = "CPU6502.Silverlight.testcart.nes";
 
-        public void StartDemo()
+        private Stream GetMeAStream(string filter)
         {
+            OpenFileDialog dlg = new OpenFileDialog();
+            Stream filename = null;
+            //dlg.InitialDirectory = NESConfigManager.LastROMFolder;
+            //dlg.DefaultExt = defaultExt; // Default file extension
+            dlg.Filter = filter; // Filter files by extension
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
 
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(cartResName))
+            // Process open file dialog box results
+            if (result == true)
             {
+                // Open document
+                if (dlg.File.Extension.ToLower() == ".zip")
+                {
+                    using (var zipStream = new ICSharpCode.SharpZipLib.Zip.ZipInputStream(dlg.File.OpenRead()))
+                    {
+                        var entry = zipStream.GetNextEntry();
+
+                        if (entry.Name.IndexOf(".nes") > 0)
+                        {
+                            byte[] data;//= new byte[entry.Size];
+
+                            BinaryReader reader = new BinaryReader(zipStream);
+                            data = reader.ReadBytes((int)entry.Size);
+
+                            //int len = zipStream.Read(data, 0, (int)entry.Size);
+                            //reader.Close();
+                            filename = new MemoryStream(data);
+                        }
+                    }
+
+                }
+                else
+                {
+
+                    filename = dlg.File.OpenRead();
+                }
+            }
+            return filename;
+
+        }
+
+        public void SilverlightStart()
+        {
+            EjectCart();
+            
+            using (Stream stream = GetMeAStream("NES Files (*.nes,*.zip)|*.nes;*.zip"))
+            {
+
+                if (stream == null) return;
+
+                if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
                 _cart = iNESFileHandler.LoadROM(PPU, stream);
+
+                if (_cart == null)
+                    return;
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
                 _ppu.ChrRomHandler = _cart;
                 PowerOn();
+                //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
                 ThreadRuntendo();
+
             }
+            
         }
+
+        
     }
 }

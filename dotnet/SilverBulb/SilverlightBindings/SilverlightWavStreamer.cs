@@ -19,6 +19,7 @@ namespace SilverlightBindings
         public SilverlightWavStreamer(IWavReader wavSource)
         {
             mediaSource = new NesMediaStreamSource();
+            mediaSource.Reader = wavSource;
             _wavSource = wavSource;
             wavSource.SharedBuffer = new byte[4096];
             _wavSource.BytesWritten += new EventHandler(_wavSource_BytesWritten);
@@ -26,7 +27,8 @@ namespace SilverlightBindings
 
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
-            mediaSource.WriteSamples(_wavSource.SharedBuffer, _wavSource.SharedBufferLength);
+            
+            mediaSource.WriteSamples();
             _wavSource.ReadWaves();
             mediaSource.Wait();
         }
@@ -39,9 +41,10 @@ namespace SilverlightBindings
             get { return mediaSource; }
         }
 
+
         public bool IsRunning
         {
-            set {  }
+            set { mediaSource.Shushed = !value ; }
         }
 
         public bool Muted

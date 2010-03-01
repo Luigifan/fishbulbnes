@@ -27,6 +27,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        
         <Grid Name="SpinnerGrid" Width="{Binding SpinnerWidth}"  
               
               >

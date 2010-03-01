@@ -95,9 +95,9 @@ namespace Fishbulb.Common.UI
 
         void BrowseFile(object o)
         {
-            string filename = fileGetter("*.nes", "NES Games (*.nes, *.nsf, *.zip)|*.nes;*.nsf;*.zip");
-            if (filename != null)
-                InsertCart(filename);
+            if (TargetMachine != null)
+            TargetMachine.SilverlightStart();
+
         }
 
         protected override void OnAttachTarget()

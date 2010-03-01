@@ -24,9 +24,10 @@ namespace NES.CPU.nitenedo
 
         public void Reset()
         {
-            if (_cpu != null)
+            if (_cpu != null && _cart != null)
             {
                 ForceStop();
+                soundBopper.RebuildSound();
                 _ppu.Initialize();
                 _cart.InitializeCart();
                 _cpu.ResetCPU();
@@ -38,9 +39,10 @@ namespace NES.CPU.nitenedo
 
         public void PowerOn()
         {
-            if (_cpu != null)
+            if (_cpu != null && _cart != null)
             {
 
+                soundBopper.RebuildSound();
                 _ppu.Initialize();
                 _cart.InitializeCart();
                 _cpu.ResetCPU();
@@ -79,11 +81,11 @@ namespace NES.CPU.nitenedo
 
         public void EjectCart()
         {
-            SRAMWriter(_cart.CheckSum, _cart.SRAM);
+            if (_cart != null)
+                SRAMWriter(_cart.CheckSum, _cart.SRAM);
 
             ForceStop();
             _cart = null;
-            _cart = new NESCart();
             _currCartName = null;
             RunState = RunningStatuses.Unloaded;
             //_ppu.CurrentScanLine = 0;

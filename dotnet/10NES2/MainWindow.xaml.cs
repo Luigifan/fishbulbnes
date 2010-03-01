@@ -23,6 +23,7 @@ namespace _10NES2
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         

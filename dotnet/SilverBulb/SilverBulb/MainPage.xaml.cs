@@ -14,6 +14,8 @@ using NES.CPU.nitenedo;
 using Microsoft.Practices.Unity;
 using NES.Sound;
 using SilverlightBindings;
+using NES.CPU.Machine;
+using Fishbulb.Common.UI;
 
 namespace SilverBulb
 {
@@ -29,6 +31,10 @@ namespace SilverBulb
         }
 
         WriteableBitmap bmp = new WriteableBitmap(256, 256);
+
+        bool nesUpdated = false;
+
+        ControlPanelVM controlVM;
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -47,28 +53,47 @@ namespace SilverBulb
             }
             NintendoSound.SetSource( src.MediaSource);
 
-            nes.PPU.FillRGB = true;
-            
+            var pad = container.Resolve<IControlPad>("padone") as SilverlightControlPad;
+            if (pad != null)
+            {
+                pad.BoundControl = this;
+            }
+
+            nes.PPU.FillRGB = false;
+            nes.PPU.SetVideoBuffer( bmp.Pixels);
+
+            nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             nes.Drawscreen += new EventHandler(nes_Drawscreen);
-            nes.StartDemo();
-            
+
+            //CompositionTarget.Rendering += CompositionTarget_Rendering;
+            controlVM = new ControlPanelVM(new PlatformDelegates().BrowseForFile);
+            controlVM.TargetMachine = nes;
+            controlVM.Dispatcher = this.Dispatcher;
+            this.ControlPanel.DataContext = controlVM;
+        }
+
+        void nes_RunStatusChangedEvent(object sender, EventArgs e)
+        {
+
+            if (nes.RunState != NES.Machine.ControlPanel.RunningStatuses.Running)
+            {
+                Dispatcher.BeginInvoke(NintendoSound.Pause);
+            }
+            else
+            {
+                Dispatcher.BeginInvoke( NintendoSound.Play);
+            }
 
         }
 
         void nes_Drawscreen(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(Draw));
+            Dispatcher.BeginInvoke(bmp.Invalidate);    
         }
 
-        void Draw()
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < nes.PPU.VideoBuffer.Length; ++i)
-            {
-                bmp.Pixels[i] = nes.PPU.VideoBuffer[i];
-            }
-
-            bmp.Invalidate();
-
+            nes.SilverlightStart();
         }
 
     }
