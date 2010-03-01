@@ -700,15 +700,15 @@ namespace SlimDXBindings.Viewer10
             nesPalTexture.Unmap(0);
 
             DataRectangle ramRect = chrRomTex.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom, 0, this.nes.Cart.ChrRom.Length);
+            ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom);
+            //ramRect.Data.Position = 0;
+            //ramRect.Data.WriteRange<byte>(this.nes.Cart.ChrRom, 0, this.nes.Cart.ChrRom.Length);
             //ramRect.Data.WriteRange<byte>(new byte[1048576 - nes.Cart.ChrRom.Length]);
             chrRomTex.Unmap(0);
 
             DataRectangle bankRect = bankSwitchCache.Map(0, MapMode.WriteDiscard, MapFlags.None);
-            bankRect.Data.Position = 0;
-            for (int i = 0; i <= nes.Cart.CurrentBank; ++i )
-                bankRect.Data.WriteRange<int>(nes.Cart.BankStartCache[i], 0, nes.Cart.BankStartCache[i].Length);
-
+            bankRect.Data.WriteRange<int>(nes.Cart.BankStartCache);
+            
             bankSwitchCache.Unmap(0);
 
             // nes.Cart.ResetBankStartCache();

@@ -143,7 +143,7 @@ namespace SlimDXBindings.Viewer10
         {
             get
             {
-                return NESPixelFormats.BGR;
+                return NESPixelFormats.Indexed;
             }
             set
             {

@@ -58,6 +58,7 @@ namespace NES.CPU.PPUClasses
                     frameOn = true;
                     //
                     ClearNESPalette();
+                    chrRomHandler.ResetBankStartCache();
                     // setFrameOn();
                     if (spriteChanges)
                     {
@@ -100,14 +101,15 @@ namespace NES.CPU.PPUClasses
 
                 if (currentXPosition < 256 && vbufLocation < 256 * 240)
                 {
-
                     UpdateXPosition();
-
                     DrawPixel();
 
                     vbufLocation++;
                 }
-
+                if (currentXPosition == 256)
+                {
+                    chrRomHandler.UpdateScanlineCounter();
+                }
                 currentXPosition++;
 
                 if (currentXPosition > 340)

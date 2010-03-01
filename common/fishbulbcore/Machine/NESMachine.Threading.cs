@@ -161,22 +161,29 @@ namespace NES.CPU.nitenedo
         public void ThreadStep()
         {
             //ForceStop();
-            
+            _ppu.FrameFinishHandler = StartDraw;
+
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneStep, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
+            _ppu.FrameFinishHandler = null;
+
         }
 
         public void ThreadFrame()
         {
             //ForceStop();
-            
+            _ppu.FrameFinishHandler = StartDraw;
+
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneFrame, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
+            _ppu.FrameFinishHandler = null;
             
         }
 
         public void ThreadRuntendo()
         {
+            _ppu.FrameFinishHandler = StartDraw;
+
             Paused = false;
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunContinuously, Result = MachineTaskResults.RunCompletedOK });
             RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
@@ -185,6 +192,7 @@ namespace NES.CPU.nitenedo
 
         public void ThreadStoptendo()
         {
+            _ppu.FrameFinishHandler = null;
 
             ForceStop();
             RunState = NES.Machine.ControlPanel.RunningStatuses.Off;

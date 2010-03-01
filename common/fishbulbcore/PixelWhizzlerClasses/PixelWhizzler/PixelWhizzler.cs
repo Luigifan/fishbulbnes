@@ -205,11 +205,26 @@ namespace NES.CPU.PPUClasses
 
         private bool PPUAddressLatchIsHigh = true;
 
+        private static string palResString
+        {
+            get { 
+
+                 foreach (string s in  System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                 {
+                     if (s.EndsWith("bnes.pal"))
+                     {
+                         return s;
+                     }
+                 }
+                return null;
+            }
+        }
+
         public int[] LoadPalABGR()
         {
         //Open App.Path & "\" + file For Binary As #FileNum
 
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal") )
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(palResString))
             {
                 for (int n = 0 ; n < 64; ++n)
                 {
@@ -234,7 +249,7 @@ namespace NES.CPU.PPUClasses
         {
             //Open App.Path & "\" + file For Binary As #FileNum
             int[] tPal = new int[256];
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal"))
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(palResString))
             {
                 for (int n = 0; n < 64; ++n)
                 {
@@ -254,7 +269,7 @@ namespace NES.CPU.PPUClasses
         {
             //Open App.Path & "\" + file For Binary As #FileNum
             int[] tPal = new int[256];
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal"))
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(palResString))
             {
                 for (int n = 0; n < 64; ++n)
                 {
@@ -278,7 +293,7 @@ namespace NES.CPU.PPUClasses
         {
             //Open App.Path & "\" + file For Binary As #FileNum
 
-            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("NES.CPU.bnes.pal"))
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(palResString))
             {
                 for (int n = 0; n < 64; ++n)
                 {

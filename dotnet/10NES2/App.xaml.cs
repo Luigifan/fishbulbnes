@@ -21,7 +21,8 @@ namespace _10NES2
         private void Application_Startup(object sender, StartupEventArgs e)
         {
 
-            renderMode = "hard";
+            renderMode = _10NES2.Properties.Settings.Default.RenderMode;
+            
             try
             {
                 MakeWin();

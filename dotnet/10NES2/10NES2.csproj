@@ -29,7 +29,7 @@
     <ProductName>10NES</ProductName>
     <PublisherName>10NES</PublisherName>
     <SuiteName>10NES</SuiteName>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

@@ -102,7 +102,6 @@ namespace NES.CPU.nitenedo
             
             _cpu = cpu;
             _ppu = ppu;
-            _ppu.FrameFinishHandler = StartDraw;
             this.tiler = tiler;
 
             DebugStream = null;

@@ -257,13 +257,13 @@ uint4 FetchSpriteRam(int spriteIndex)
 
 int PPUBankStarts(int index, int currentBank)
 {
-	uint ppuBankStart; 
+	int ppuBankStart; 
 
 	float4 bank = bankSwitches.Load(int3(index, currentBank , 0));
 	
-	uint4 banks = bank * 255.0;
+	int4 banks = bank * 255.0;
 	ppuBankStart = banks[3] << 24 ;
-	ppuBankStart |= banks[2] << 16 ;
+	ppuBankStart = banks[2] << 16 ;
 	ppuBankStart |= banks[1] << 8 ;
 	ppuBankStart |= banks[0]  ;
 
@@ -396,13 +396,16 @@ int GetTilePixel(float2 texposition)
 		return 0;
 	
 	
-	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
-	uint curBank = bnk[1] << 8 | bnk[0];
-	for (int i = 0; i < 15; ++i)
+	// int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
+	
+	int curBank =  (nesOutdata2[1] * 65280.0) + nesOutdata2[0] * 255.0 ;
+	
+	for (int i = 0; i < 16; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i, bnk[0]);
+		ppuBankStarts[i] = PPUBankStarts(i, curBank);
+		
 	}
 	
 	uint ntBits = finalColor[0] * 255.0;
@@ -574,11 +577,11 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
 	
 	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
-	for (int i = 0; i < 15; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i,  bnk[1]);
+		ppuBankStarts[i] = PPUBankStarts(i,  bnk[0]);
 	}
 
 			
@@ -668,11 +671,11 @@ float4 DumpNameTable(PS_IN pixelShaderIn) : SV_Target
 	float4 nesOutdata2 = nesOut2.Load(texPos);	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
 	//uint curBank = nesOutData[1] << 8 | nesOutData[0];
-	for (int i = 0; i < 15; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
-		ppuBankStarts[i] = PPUBankStarts(i, 0);
+		ppuBankStarts[i] = PPUBankStarts(i, bnk);
 	}	
 	
 	uint ntPixel = 	GetNameTablePixel(texPos.x,	texPos.y, 4096 * patterntable, 

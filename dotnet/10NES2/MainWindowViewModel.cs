@@ -20,13 +20,11 @@ using InstiBulb.WinViewModels;
 
 namespace _10NES2
 {
-    public class MainWindowViewModel : INotifyPropertyChanged, IDisposable
+    public class MainWindowViewModel : INotifyPropertyChanged, IDisposable, IViewModel
     {
         IUnityContainer container;
         NESMachine nes;
         CommandSender commandSender;
-
-
 
         public MainWindowViewModel(Window window, string nesType)
         {
@@ -95,6 +93,26 @@ namespace _10NES2
         }
 
         #region Commands and Implementations
+
+        void SetRenderingType(object o)
+        {
+            string s = o as string;
+            if (s != null)
+            {
+                if (s != "soft")
+                {
+                    s = "hard";
+                }
+                _10NES2.Properties.Settings.Default.RenderMode = s;
+            }
+        }
+
+        bool CanSetRenderingType(object o)
+        {
+            return true;
+        }
+
+
         
         ICommand showDialogCommand;
         public ICommand ShowDialogCommand
@@ -317,8 +335,48 @@ namespace _10NES2
             //}
             windows = null;
             nes.ThreadStoptendo();
-            NESDisplayContext.TearDownDisplay();
+            
+            //NESDisplayContext.TearDownDisplay();
             container.Dispose();
+        }
+
+        public string CurrentView
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        Dictionary<string, ICommandWrapper> _commands = new Dictionary<string, ICommandWrapper>();
+
+        public Dictionary<string, ICommandWrapper> Commands
+        {
+            get { return _commands; }
+        }
+
+        public IEnumerable<IViewModel> ChildViewModels
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string CurrentRegion
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string Header
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public NESMachine TargetMachine
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

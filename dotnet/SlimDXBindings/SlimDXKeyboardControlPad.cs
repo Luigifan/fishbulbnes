@@ -156,52 +156,59 @@ namespace SlimDXBindings
 
         public void RefreshKeys(object o)
         {
-            if (keyboard == null)
-                return;
-
-            if (keyboard.Acquire().IsFailure)
-                return ;
-
-            if (keyboard.Poll().IsFailure)
-                return ;
-            
-            keyboard.GetCurrentState(ref state);
-            if (Result.Last.IsFailure)
-                return ;
-
-            PadOneState = 0;
-
-            foreach (Key key in state.PressedKeys)
+            try
             {
-                if (DXKeyBindings.ContainsKey(key))
+                if (keyboard == null)
+                    return;
+
+                if (keyboard.Acquire().IsFailure)
+                    return;
+
+                if (keyboard.Poll().IsFailure)
+                    return;
+
+                keyboard.GetCurrentState(ref state);
+                if (Result.Last.IsFailure)
+                    return;
+
+                PadOneState = 0;
+
+                foreach (Key key in state.PressedKeys)
                 {
-                    PadValues val = DXKeyBindings[key];
-                    switch (val)
+                    if (DXKeyBindings.ContainsKey(key))
                     {
-                        default:
-                            PadOneState |= (int)val & 0xFF;
-                            break;
+                        PadValues val = DXKeyBindings[key];
+                        switch (val)
+                        {
+                            default:
+                                PadOneState |= (int)val & 0xFF;
+                                break;
+                        }
                     }
+
+                    if (_keyCommandBindings.ContainsKey(key))
+                    {
+                        cmdKey = key;
+                    }
+
                 }
 
-                if (_keyCommandBindings.ContainsKey(key))
+                if (cmdKey != Key.Unknown && state.ReleasedKeys.Contains(cmdKey))
                 {
-                    cmdKey = key;
+                    string vm = _keyCommandBindings[cmdKey].ViewModel;
+                    string cmd = _keyCommandBindings[cmdKey].Command;
+                    if (this.CommandSender != null && this.CommandSender.CanExecuteCommand(vm, cmd, null))
+                        this.CommandSender.ExecuteCommand(vm, cmd, null);
+                    cmdKey = Key.Unknown;
                 }
 
-            }
-
-            if (cmdKey != Key.Unknown && state.ReleasedKeys.Contains(cmdKey))
+                if (NextControlByteSet != null)
+                    NextControlByteSet(this, new ControlByteEventArgs((byte)PadOneState));
+            } catch(Exception e)
             {
-                string vm = _keyCommandBindings[cmdKey].ViewModel;
-                string cmd = _keyCommandBindings[cmdKey].Command;
-                if (this.CommandSender != null && this.CommandSender.CanExecuteCommand(vm, cmd, null))
-                    this.CommandSender.ExecuteCommand(vm, cmd, null);
-                cmdKey = Key.Unknown;
+                Console.WriteLine("Error in keyboard loop");
+                Console.WriteLine(e.ToString());
             }
-
-            if (NextControlByteSet != null)
-                NextControlByteSet(this, new ControlByteEventArgs((byte) PadOneState));
         }
 
         void ReleaseDevice()

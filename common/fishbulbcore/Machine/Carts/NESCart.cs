@@ -59,6 +59,7 @@ namespace NES.CPU
         {
             whizzler.DrawTo(clock);
             
+            UpdateBankStartCache();
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
             
             int oneKsrc = src * 8;
@@ -72,6 +73,7 @@ namespace NES.CPU
                 {
                     chrRamStart = (oneKsrc + i) * 0x400;
                 }
+
             }
             //Mirror(-1, mirroring);
             bankSwitchesChanged = true;

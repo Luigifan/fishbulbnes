@@ -10,7 +10,7 @@ namespace NES.CPU.Machine.ROMLoader
     {
         public static string HashFunction(byte[] nesCart, byte[] chrRom)
         {
-            MD5 md5 = MD5.Create();
+            MD5Managed md5 = new MD5Managed();
 
             byte[] data = (from b in nesCart
                            select b).Union(

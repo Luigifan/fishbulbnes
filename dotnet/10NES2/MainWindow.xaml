@@ -54,13 +54,13 @@
                     </my:Icon3D>
                     <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Saves" CommandParameter="SaveStatePanel" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="DisplaySettings" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Display Settings" CommandParameter="DisplaySettings" Model="{StaticResource ResourceKey=Heart}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="ControllerConfigPanel" Model="{StaticResource ResourceKey=controlPad}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Controller Config" CommandParameter="ControllerConfigPanel" Model="{StaticResource ResourceKey=controlPad}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" CommandParameter="CheatPanel" Model="{StaticResource ResourceKey=controlPadRed}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowBumpOutCommand}" Title="Cheating" CommandParameter="CheatPanel" Model="{StaticResource ResourceKey=controlPadRed}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
-                    <my:Icon3D Command="{Binding ShowWindowCommand}" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
+                    <my:Icon3D Command="{Binding ShowWindowCommand}" Title="Debugging" CommandParameter="DebugPanel" Model="{StaticResource ResourceKey=Sword}" Billboard="{StaticResource BubbleColor}" >
                     </my:Icon3D>
 
                 </my:ToolSpinner3D.Icons>

@@ -20,12 +20,29 @@ namespace NES.CPU.Machine.Carts
 
         private Dictionary<int, byte[]> pixelEffects = new Dictionary<int, byte[]>();
 
+        bool debugging = false;
+
+        public bool Debugging
+        {
+            get { return debugging; }
+            set { debugging = value; }
+        }
+
+        List<CartDebugEvent> debugEvents = new List<CartDebugEvent>();
+
+        public void ClearDebugEvents()
+        {
+            debugEvents.Clear();
+        }
+
+        public List<CartDebugEvent> DebugEvents
+        {
+            get { return debugEvents; }
+            set { debugEvents = value; }
+        }
+
         public BaseCart()
         {
-            for (int i = 0; i < bankStartCache.Length; ++i)
-            {
-                bankStartCache[i] = new int[16];
-            }
 
             byte[] effect = new byte[8] { 1, 1, 1, 1, 1, 1, 1, 1};
             pixelEffects.Add(0xD50, effect);
@@ -435,24 +452,26 @@ namespace NES.CPU.Machine.Carts
             set { ppuBankStarts = value; }
         }
 
-        int[][] bankStartCache = new int[256 * 256][];
+        int[] bankStartCache = new int[256 * 16];
 
-        public int[][] BankStartCache
+        public int[] BankStartCache
         {
             get { return bankStartCache; }
         }
 
-        uint currentBank = 0;
+        int currentBank = 0;
 
-        public uint CurrentBank
+        public int CurrentBank
         {
             get { return currentBank; }
         }
+
         public void ResetBankStartCache()
         {
             // if (currentBank > 0)
             currentBank = 0;
-            Array.Copy(ppuBankStarts, 0, bankStartCache[0], 0, 16);
+            // Array.Clear(bankStartCache, 0, 16 * 256 * 256);
+            Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
 
             //Mirror(-1, this.mirroring);
             //chrRamStart = ppuBankStarts[8];
@@ -465,12 +484,11 @@ namespace NES.CPU.Machine.Carts
         {
             if (bankSwitchesChanged)
             {
-
-                Array.Copy(ppuBankStarts, 0, bankStartCache[currentBank], 0, 16);
                 currentBank++;
+                Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
                 bankSwitchesChanged = false;
             }
-            return (int)currentBank;
+            return currentBank;
         }
 
         protected bool bankSwitchesChanged = false;
@@ -498,6 +516,8 @@ namespace NES.CPU.Machine.Carts
         {
             int bank = address / 0x400;
             int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            //int newAddress = bankStartCache[(currentBank * 16) + bank] + (address & 0x3FF);
+
             return newAddress;
         }
 
@@ -549,8 +569,11 @@ namespace NES.CPU.Machine.Carts
             //    // 0x800 = 100000000000
             //    // 0x400 = 010000000000
             //    // 0x000 = 000000000000
+            UpdateBankStartCache();
+            if (debugging)
+                DebugEvents.Add(new CartDebugEvent() { Clock = clockNum, EventType = string.Format( "Mirror set to {0}", mirroring) });
 
-            // if (mirroring == this.mirroring) return;
+            if (mirroring == this.mirroring) return;
 
             this.mirroring = mirroring;
             

@@ -47,8 +47,8 @@ namespace NES.CPU.Machine.Carts
         bool BankSwitchesChanged { get; set; }
         int UpdateBankStartCache();
         void ResetBankStartCache();
-        int[][] BankStartCache { get; }
-        uint CurrentBank { get; }
+        int[] BankStartCache { get; }
+        int CurrentBank { get; }
 
     }
 }

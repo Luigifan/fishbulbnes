@@ -208,7 +208,8 @@ namespace InstiBulb.ThreeDee
             l.Text = Title;
             l.Background = new SolidColorBrush(Colors.Transparent);
             l.Foreground = new SolidColorBrush(Colors.Yellow);
-
+            l.Margin = new Thickness(0, 16, 0, 0);
+            l.VerticalAlignment = VerticalAlignment.Center;
             UniformGrid g = new UniformGrid();
             g.Rows = 4;
             g.Columns = 4;
@@ -296,7 +297,7 @@ namespace InstiBulb.ThreeDee
                 gen2.Slices = 64;
                 gen2.Stacks = 32;
                 gen2.Center = new Point3D(0, 0, 0);
-                gen2.Radius = radius * 1.25;
+                gen2.Radius = radius ;
                 titleModel.Geometry = gen2.Geometry;
 
                 var titleMatGrp = new MaterialGroup();
@@ -304,8 +305,12 @@ namespace InstiBulb.ThreeDee
                 titleModel.Material = titleMatGrp;
                 titleModel.BackMaterial = titleMatGrp;
                 this.titleModel = titleModel;
+                Transform3DGroup titleTrans = new Transform3DGroup();
+                titleTrans.Children.Add(new RotateTransform3D(titleRotation, new Point3D(0, 0, 0)));
+                titleTrans.Children.Add(new ScaleTransform3D(1.5,1.0,1.1));
 
-                titleModel.Transform = new RotateTransform3D(titleRotation, new Point3D(0,0,0));
+                
+                titleModel.Transform = titleTrans;
             }
 
 
@@ -368,11 +373,11 @@ namespace InstiBulb.ThreeDee
         }
 
 
-        DoubleAnimation titleAnimation = new DoubleAnimation(0, 360, new Duration(new TimeSpan(0, 0, 3)), FillBehavior.HoldEnd);
+        DoubleAnimation titleAnimation = new DoubleAnimation(0, -360, new Duration(new TimeSpan(0, 0, 3)), FillBehavior.HoldEnd);
         public void Activate()
         {
             titleAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            titleAnimation.By = 1.0f;
+            titleAnimation.By = -5.0f;
 
             titleRotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, titleAnimation);
 

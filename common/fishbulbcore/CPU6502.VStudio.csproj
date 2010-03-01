@@ -156,6 +156,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Machine\Carts\CartDebugEvent.cs" />
     <Compile Include="Machine\Carts\NesCart.MMC3.cs" />
     <Compile Include="Machine\Carts\INESCart.cs" />
     <Compile Include="Machine\Carts\NesCart.MMC1.cs" />
@@ -182,6 +183,8 @@
     <Compile Include="Machine\NESMachine.Threading.cs" />
     <Compile Include="Machine\NESMachineDebugger.cs" />
     <Compile Include="Machine\ROMLoader\iNESFileHandler.cs" />
+    <Compile Include="MD5.cs" />
+    <Compile Include="MD5Managed.cs" />
     <Compile Include="PixelWhizzlerClasses\HardWhizzler\HardWhizzler.cs">
       <SubType>Code</SubType>
     </Compile>

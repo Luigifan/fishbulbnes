@@ -81,7 +81,7 @@ namespace NES.CPU.Machine.ROMLoader
             return _cart;
         }
 
-        private static INESCart LoadROM(IPPU ppu, Stream zipStream)
+        public static INESCart LoadROM(IPPU ppu, Stream zipStream)
         {
             INESCart _cart = null;
             byte[] iNesHeader = new byte[16];

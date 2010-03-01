@@ -434,8 +434,8 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
 	
-	uint curBank = bnk[1] << 8 | bnk[0];
-	for (int i = 0; i < 15; ++i)
+	uint curBank = bnk[0] ;
+	for (int i = 0; i < 16; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
@@ -491,8 +491,8 @@ float4 CreateSpriteMask( PS_IN pixelShaderIn ) : SV_Target
 	float4 nesOutdata2 = nesOut2.Load( int3( pixelShaderIn.UV * 255.0,0) );
 	
 	int2 bnk = int2(nesOutdata2[0] * 255.0, nesOutdata2[1] * 255.0);
-	uint curBank = bnk[1] << 8 | bnk[0];
-	for (int i = 0; i < 15; ++i)
+	uint curBank = bnk[0];
+	for (int i = 0; i < 16; ++i)
 	{
 		// hack: right now i'm really only tracking 256 switches per frame,
 		// should be as many as needed though
