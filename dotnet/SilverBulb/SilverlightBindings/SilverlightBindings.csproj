@@ -55,6 +55,7 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NesVideoStreamSource.cs" />
     <Compile Include="MediaStreamSource.cs" />
     <Compile Include="NESKeyBinding.cs" />
     <Compile Include="SilverlightControlPad.cs" />

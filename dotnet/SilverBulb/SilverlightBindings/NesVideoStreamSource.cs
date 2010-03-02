@@ -17,12 +17,16 @@ using NES.CPU.nitenedo;
 
 namespace SilverlightBindings
 {
-    public class NesMediaStreamSource : MediaStreamSource, IDisposable
+    public class NesVideoStreamSource : MediaStreamSource, IDisposable
     {
         private WaveFormatEx _waveFormat;
         private MediaStreamDescription _audioDesc;
+        private MediaStreamDescription _videoDesc;
 
         private long _currentTimeStamp;
+        private long _currentVideoTimeStamp;
+        private long _frameTime = TimeSpan.FromMilliseconds((double)1000/120).Ticks;
+        long _framePosition =0;
 
         private long _currentPosition;
         private long _startPosition;
@@ -33,13 +37,22 @@ namespace SilverlightBindings
         private const int ByteRate =
             SampleRate * ChannelCount * BitsPerSample / 8;
 
-        private MemoryStream _stream;
+        private MemoryStream _stream, _frameStream;
+        private Random _random = new Random();
 
         // you only need sample attributes for video
         private Dictionary<MediaSampleAttributeKeys, string> _emptySampleDict =
             new Dictionary<MediaSampleAttributeKeys, string>();
 
-        public NesMediaStreamSource()
+        private Dictionary<MediaSampleAttributeKeys, string> _vidSampleDict =
+            new Dictionary<MediaSampleAttributeKeys, string>();
+
+
+        byte[][] frames = new byte[2][];
+        int currentFrame = 0;
+
+
+        public NesVideoStreamSource()
         {
 
             _waveFormat = new WaveFormatEx();
@@ -55,13 +68,19 @@ namespace SilverlightBindings
             _waveFormat.ValidateWaveFormat();
 
             _stream = new MemoryStream();
+            _frameStream = new MemoryStream();
 
             for (int i = 0; i < buffers.Length; ++i)
             {
                 buffers[i] = new byte[4096];
             }
 
-            base.AudioBufferLength = 45;
+            for (int i = 0; i < frames.Length; ++i)
+            {
+                frames[i] = new byte[256 * 256 * 4];
+            }
+
+            base.AudioBufferLength = 30;
         }
 
 
@@ -87,9 +106,11 @@ namespace SilverlightBindings
                 new MediaStreamDescription(MediaStreamType.Audio,
                                             streamAttributes);
             _audioDesc = msd;
+            _videoDesc = PrepareVideo();
             // next, add the description so that Silverlight will
             // actually request samples for it
             availableStreams.Add(_audioDesc);
+            availableStreams.Add(_videoDesc);
 
             // Tell silverlight we have an endless stream
             sourceAttributes[MediaSourceAttributesKeys.Duration] =
@@ -107,12 +128,30 @@ namespace SilverlightBindings
             //System.Diagnostics.Debug.WriteLine("Completed OpenMediaAsync");
         }
 
+        private MediaStreamDescription PrepareVideo()
+        {
+            _frameStream = new MemoryStream();
+
+            // Stream Description 
+            Dictionary<MediaStreamAttributeKeys, string> streamAttributes =
+                new Dictionary<MediaStreamAttributeKeys, string>();
+
+            streamAttributes.Add(MediaStreamAttributeKeys.VideoFourCC, "RGBA");
+            streamAttributes.Add(MediaStreamAttributeKeys.Height, "240");
+            streamAttributes.Add( MediaStreamAttributeKeys.Width , "256");
+
+            return
+                new MediaStreamDescription(MediaStreamType.Video, streamAttributes);
+        }
+
+
         protected override void CloseMedia()
         {
             System.Diagnostics.Debug.WriteLine("CloseMedia");
             // Close the stream
             _startPosition = _currentPosition = 0;
             _audioDesc = null;
+            _videoDesc = null;
         }
 
         protected override void GetDiagnosticAsync(
@@ -134,10 +173,25 @@ namespace SilverlightBindings
           set { reader = value; }
         }
 
+        NESMachine targetMachine;
+
+        public NESMachine TargetMachine
+        {
+            get { return targetMachine; }
+            set { targetMachine = value;
+            //    targetMachine.Drawscreen += new EventHandler(targetMachine_Drawscreen);
+            }
+        }
+
+        void targetMachine_Drawscreen(object sender, EventArgs e)
+        {
+            Buffer.BlockCopy(TargetMachine.PPU.VideoBuffer, 0, frames[currentFrame], 0, 256 * 240 * 4);
+        }
 
         public void WriteSamples()
         {
             bufferLen[bufferPlaying] = reader.SharedBufferLength;
+            Buffer.BlockCopy(TargetMachine.PPU.VideoBuffer, 0, frames[currentFrame], 0, 256 * 240 * 4);
         }
 
         public void Wait()
@@ -187,6 +241,26 @@ namespace SilverlightBindings
                                         (uint)bufferByteCount);
                 _currentPosition += bufferByteCount;
 
+            }
+            else if (mediaStreamType == MediaStreamType.Video)
+            {
+                
+                _frameStream.Position = 0;
+                _frameStream.Write(frames[currentFrame], 0, 256 * 240 * 4);
+                currentFrame++;
+                if (currentFrame >= frames.Length)
+                    currentFrame = 0;
+
+
+                ReportGetSampleCompleted(new MediaStreamSample(
+                    _videoDesc,
+                    _frameStream,
+                    0,
+                    256 * 240 * 4,
+                    _currentVideoTimeStamp,
+                    _emptySampleDict));
+
+                _currentVideoTimeStamp += _frameTime;
             }
             
         }

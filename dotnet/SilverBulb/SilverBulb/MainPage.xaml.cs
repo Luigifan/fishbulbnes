@@ -30,27 +30,32 @@ namespace SilverBulb
             InitializeComponent();
         }
 
-        WriteableBitmap bmp = new WriteableBitmap(256, 256);
+        WriteableBitmap bmp = new WriteableBitmap(256, 240);
 
-        bool nesUpdated = false;
+        volatile bool nesUpdated = false;
 
         ControlPanelVM controlVM;
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+
+            NES.CPU.FastendoDebugging.DisassemblyExtensions.SetupOpcodes();
             
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = bmp;
             DrawArea.Background = brush;
             container = new UnityContainer();
             new UnityRegistration().RegisterNesTypes(container, "soft");
-            
             nes = container.Resolve<NESMachine>();
+            
             var src = container.Resolve<IWavStreamer>() as SilverlightWavStreamer;
             if (src == null)
             {
                 return;
             }
+            
+            // src.MediaSource.TargetMachine = nes;
+            
             NintendoSound.SetSource( src.MediaSource);
 
             var pad = container.Resolve<IControlPad>("padone") as SilverlightControlPad;
@@ -60,12 +65,12 @@ namespace SilverBulb
             }
 
             nes.PPU.FillRGB = false;
+            // nes.PPU.LoadPalRGBA();
             nes.PPU.SetVideoBuffer( bmp.Pixels);
 
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             nes.Drawscreen += new EventHandler(nes_Drawscreen);
 
-            //CompositionTarget.Rendering += CompositionTarget_Rendering;
             controlVM = new ControlPanelVM(new PlatformDelegates().BrowseForFile);
             controlVM.TargetMachine = nes;
             controlVM.Dispatcher = this.Dispatcher;
@@ -77,24 +82,52 @@ namespace SilverBulb
 
             if (nes.RunState != NES.Machine.ControlPanel.RunningStatuses.Running)
             {
-                Dispatcher.BeginInvoke(NintendoSound.Pause);
+                Dispatcher.BeginInvoke(Pause);
             }
             else
             {
-                Dispatcher.BeginInvoke( NintendoSound.Play);
+                Dispatcher.BeginInvoke(Play);
             }
 
         }
 
-        void nes_Drawscreen(object sender, EventArgs e)
+        void Pause()
         {
-            Dispatcher.BeginInvoke(bmp.Invalidate);    
+            NintendoSound.Pause();
+            CompositionTarget.Rendering -= new EventHandler(CompositionTarget_Rendering);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Play()
         {
-            nes.SilverlightStart();
+            NintendoSound.Play();
+            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
         }
+
+
+        void CompositionTarget_Rendering(object o, EventArgs e)
+        {
+            if (nesUpdated)
+                bmp.Invalidate();
+        }
+
+
+        void nes_Drawscreen(object sender, EventArgs e)
+        {
+            nesUpdated = true;
+        }
+
+        private void DrawArea_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ControlPane.Visibility == System.Windows.Visibility.Visible)
+            {
+                ControlPane.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                ControlPane.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
 
     }
 }

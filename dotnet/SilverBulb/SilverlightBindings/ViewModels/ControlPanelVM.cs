@@ -236,11 +236,15 @@ namespace Fishbulb.Common.UI
         {
             get { return TargetMachine.Paused; }
             set {
-                TargetMachine.IsDebugging = false;
+                if (TargetMachine != null && TargetMachine.Cart != null)
+                {
+                    TargetMachine.IsDebugging = false;
 
-                TargetMachine.Paused = value;
+                    TargetMachine.Paused = value;
+                }
                 
             }
         }
+
     }
 }

@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using NES.Sound;
 using NES.CPU.Machine.BeepsBoops;
+using NES.CPU.nitenedo;
 
 namespace SilverlightBindings
 {
@@ -44,7 +45,7 @@ namespace SilverlightBindings
 
         public bool IsRunning
         {
-            set { mediaSource.Shushed = !value ; }
+            set {  }
         }
 
         public bool Muted
