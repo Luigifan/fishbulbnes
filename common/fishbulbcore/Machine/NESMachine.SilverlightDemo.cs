@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using NES.CPU.Machine.ROMLoader;
 using NES.CPU.Fastendo;
 using System.IO;
+using System.Reflection;
 
 namespace NES.CPU.nitenedo
 {
@@ -61,6 +62,31 @@ namespace NES.CPU.nitenedo
             }
             return filename;
 
+        }
+
+        public void SilverlightStartDemo()
+        {
+            EjectCart();
+
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(cartResName) )
+            {
+
+                if (stream == null) return;
+
+                if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
+                _cart = iNESFileHandler.LoadROM(PPU, stream);
+
+                if (_cart == null)
+                    return;
+
+                _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _ppu.ChrRomHandler = _cart;
+                PowerOn();
+                //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
+                ThreadRuntendo();
+
+            }
         }
 
         public void SilverlightStart()

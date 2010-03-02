@@ -75,6 +75,8 @@ namespace SilverBulb
             controlVM.TargetMachine = nes;
             controlVM.Dispatcher = this.Dispatcher;
             this.ControlPanel.DataContext = controlVM;
+
+            nes.SilverlightStartDemo();
         }
 
         void nes_RunStatusChangedEvent(object sender, EventArgs e)
