@@ -22,6 +22,7 @@ namespace NES.CPU.nitenedo
         {
             OpenFileDialog dlg = new OpenFileDialog();
             Stream filename = null;
+            dlg.Multiselect = false;
             //dlg.InitialDirectory = NESConfigManager.LastROMFolder;
             //dlg.DefaultExt = defaultExt; // Default file extension
             dlg.Filter = filter; // Filter files by extension

@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Utils, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fastendo\FastCPU6502.cs" />
@@ -98,7 +101,7 @@
     <Compile Include="Machine\FastendoDebugging\DebugInformation.cs" />
     <Compile Include="Machine\FastendoDebugging\InstructionRollout\InstructionRollout.cs" />
     <Compile Include="Machine\FastendoDebugging\InstructionRollout\InstructionRolloutItem.cs" />
-    <Compile Include="Machine\FastendoDebugging\opDisassembler.Silverlight.cs" />
+    <Compile Include="Machine\FastendoDebugging\opDisassembler.cs" />
     <Compile Include="Machine\FastendoDebugging\PPUStatus.cs" />
     <Compile Include="Machine\IControlPad.cs" />
     <Compile Include="Machine\InputHandler.cs" />
@@ -141,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="testcart.nes" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="6502OpCodes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

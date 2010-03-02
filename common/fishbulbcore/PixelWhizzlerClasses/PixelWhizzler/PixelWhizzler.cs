@@ -58,7 +58,21 @@ namespace NES.CPU.PPUClasses
 
 //3	-	scanline pixel coordite of most left-hand side of object.
 
+        private static string palResString
+        {
+            get
+            {
 
+                foreach (string s in System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                {
+                    if (s.EndsWith("bnes.pal"))
+                    {
+                        return s;
+                    }
+                }
+                return null;
+            }
+        }
 
         private bool shouldRender = false;
 
@@ -205,20 +219,7 @@ namespace NES.CPU.PPUClasses
 
         private bool PPUAddressLatchIsHigh = true;
 
-        private static string palResString
-        {
-            get { 
 
-                 foreach (string s in  System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
-                 {
-                     if (s.EndsWith("bnes.pal"))
-                     {
-                         return s;
-                     }
-                 }
-                return null;
-            }
-        }
 
         public int[] LoadPalABGR()
         {

@@ -157,16 +157,19 @@ namespace NES.CPU.nitenedo
             {
                 SRAMWriter(_cart.CheckSum, _cart.SRAM);
             }
-            machineWorkQueue.Clear();
-            machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
 
-            while (!isStopped) Thread.Sleep(1);
-            //while (machineWorkQueue.Count > 0)
-            //{
-            //    // make sure it isnt stuck on a pause
-            //    UnPauseResetEvent.Set();
-            //    System.Threading.Thread.Sleep(0);
-            //}
+            if (currentWorkItem.Task != MachineTasks.Stoppit)
+            {
+                machineWorkQueue.Clear();
+                machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
+
+                while (!isStopped) 
+                {
+                    //    // make sure it isnt stuck on a pause
+
+                    System.Threading.Thread.Sleep(1);
+                }
+            }
         }
 
         private void ReStart()
@@ -237,8 +240,13 @@ namespace NES.CPU.nitenedo
             switch (task)
             {
                 case MachineTasks.RunContinuously:
-                    while (!breakpointHit && !paused && machineWorkQueue.Count == 0)
+                    while (machineWorkQueue.Count == 0)
+                    {
+                        if (breakpointHit || paused)
+                            break;
+
                         this.Runtendo();
+                    }
                     StopMachine();
                     //RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
                     break;

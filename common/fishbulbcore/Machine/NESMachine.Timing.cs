@@ -41,7 +41,7 @@ namespace NES.CPU.nitenedo
             do
             {
                 _cpu.Step();
-            } while (frameOn);
+            } while (_cpu.Clock < 29780);
 
             _totalCPUClocks = _cpu.Clock;
             lock (_sharedWave)
