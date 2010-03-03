@@ -41,7 +41,7 @@ namespace NES.CPU.nitenedo
             do
             {
                 _cpu.Step();
-            } while (_cpu.Clock < 29780);
+            } while (frameOn);
 
             _totalCPUClocks = _cpu.Clock;
             lock (_sharedWave)
@@ -50,7 +50,6 @@ namespace NES.CPU.nitenedo
                 soundBopper.EndFrame(_totalCPUClocks);
 
             }
-
 
             PadOne.Refresh();
 
@@ -69,9 +68,15 @@ namespace NES.CPU.nitenedo
             if (Drawscreen != null)
                 Drawscreen(this, new EventArgs());
 
-            frameOn = false;
 
+        }
+
+        void FrameFinished()
+        {
+            frameOn = false;
             framesRendered = framesRendered + 1;
+            if (doDraw)
+                StartDraw();
         }
     }
 }

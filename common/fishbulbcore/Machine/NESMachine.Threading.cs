@@ -163,7 +163,7 @@ namespace NES.CPU.nitenedo
                 machineWorkQueue.Clear();
                 machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.Stoppit });
 
-                while (!isStopped) 
+                while (currentWorkItem.Task != MachineTasks.Stoppit) 
                 {
                     //    // make sure it isnt stuck on a pause
 
@@ -180,36 +180,38 @@ namespace NES.CPU.nitenedo
         public void ThreadStep()
         {
             //ForceStop();
-            _ppu.FrameFinishHandler = StartDraw;
+            doDraw = true;
 
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneStep, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
-            _ppu.FrameFinishHandler = null;
+            doDraw = false; 
 
         }
 
         public void ThreadFrame()
         {
             //ForceStop();
-            _ppu.FrameFinishHandler = StartDraw;
+            doDraw = true;
 
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunOneFrame, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
-            _ppu.FrameFinishHandler = null;
+            doDraw = false;
             
         }
 
         public void ThreadRuntendo()
         {
-            _ppu.FrameFinishHandler = StartDraw;
+
+            doDraw = true;
             machineWorkQueue.Enqueue(new MachineWorkItem() { Task = MachineTasks.RunContinuously, Result = MachineTaskResults.RunCompletedOK });
             MachineRunningResetEvent.Set();
             RunState = NES.Machine.ControlPanel.RunningStatuses.Running;
+            // doDraw = false;
         }
 
         public void ThreadStoptendo()
         {
-            _ppu.FrameFinishHandler = null;
+            doDraw = false;
 
             ForceStop();
             RunState = NES.Machine.ControlPanel.RunningStatuses.Off;

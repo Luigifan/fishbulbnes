@@ -166,7 +166,7 @@ namespace Fishbulb.Common.UI
 
         void InsertCart(string fileName)
         {
-            if (TargetMachine.IsRunning) PowerOff();
+            //if (TargetMachine.IsRunning) PowerOff();
 
             TargetMachine.GoTendo(fileName);
 

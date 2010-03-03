@@ -471,7 +471,7 @@ namespace NES.CPU.Machine.Carts
             // if (currentBank > 0)
             currentBank = 0;
             // Array.Clear(bankStartCache, 0, 16 * 256 * 256);
-            Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
+            Array.Copy(ppuBankStarts, 0, bankStartCache, 0, 16);
 
             //Mirror(-1, this.mirroring);
             //chrRamStart = ppuBankStarts[8];
@@ -482,12 +482,8 @@ namespace NES.CPU.Machine.Carts
         //gets called by the ppu 
         public int UpdateBankStartCache()
         {
-            if (bankSwitchesChanged)
-            {
-                currentBank++;
-                Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
-                bankSwitchesChanged = false;
-            }
+            currentBank++;
+            Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
             return currentBank;
         }
 
@@ -515,8 +511,8 @@ namespace NES.CPU.Machine.Carts
         public int ActualChrRomOffset(int address)
         {
             int bank = address / 0x400;
-            int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
-            //int newAddress = bankStartCache[(currentBank * 16) + bank] + (address & 0x3FF);
+            //int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            int newAddress = bankStartCache[(currentBank * 16) + bank] + (address & 0x3FF);
 
             return newAddress;
         }
@@ -524,7 +520,7 @@ namespace NES.CPU.Machine.Carts
         public void SetPPUByte(int clock, int address, byte data)
         {
             int bank = address / 0x400;
-            int newAddress = ppuBankStarts[bank] + (address & 0x3FF);
+            int newAddress = bankStartCache[(currentBank * 16) + bank] + (address & 0x3FF);// ppuBankStarts[bank] + (address & 0x3FF);
             chrRom[newAddress] = data;
         }
 
@@ -569,11 +565,11 @@ namespace NES.CPU.Machine.Carts
             //    // 0x800 = 100000000000
             //    // 0x400 = 010000000000
             //    // 0x000 = 000000000000
-            UpdateBankStartCache();
+
             if (debugging)
                 DebugEvents.Add(new CartDebugEvent() { Clock = clockNum, EventType = string.Format( "Mirror set to {0}", mirroring) });
 
-            if (mirroring == this.mirroring) return;
+            //if (mirroring == this.mirroring) return;
 
             this.mirroring = mirroring;
             
@@ -612,7 +608,9 @@ namespace NES.CPU.Machine.Carts
                     ppuBankStarts[11] = chrRamStart + 0xC00;
                     break;
             }
-            bankSwitchesChanged = true;
+            UpdateBankStartCache();
+
+            
         }
 
         #region INESCart Members

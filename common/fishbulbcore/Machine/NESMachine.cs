@@ -96,12 +96,14 @@ namespace NES.CPU.nitenedo
         TextWriter debug;
 
         SoundThreader soundThreader;
+        bool doDraw = false;
         //zzzz bloop;
         public NESMachine(CPU2A03 cpu, IPPU ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper, SoundThreader soundThread)
         {
             
             _cpu = cpu;
             _ppu = ppu;
+            _ppu.FrameFinishHandler = new MachineEvent(FrameFinished);
             this.tiler = tiler;
 
             DebugStream = null;

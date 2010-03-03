@@ -94,6 +94,10 @@ namespace NES.CPU.nitenedo
 
         public void GoTendo(string fileName)
         {
+            EjectCart();
+
+            if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
             _currCartName = Path.GetFileName(fileName);
 
             _cart = iNESFileHandler.GetCart(fileName, _ppu);
@@ -104,7 +108,9 @@ namespace NES.CPU.nitenedo
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
                 _ppu.ChrRomHandler = _cart;
+
                 PowerOn();
+                //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
                 ThreadRuntendo();
             }
             else

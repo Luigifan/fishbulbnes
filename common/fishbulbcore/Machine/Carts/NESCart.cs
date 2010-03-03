@@ -57,9 +57,9 @@ namespace NES.CPU
         // note, this function originally worked with 8k banks
         private void CopyBanks(int clock, int dest, int src, int numberOf8kBanks)
         {
+
             whizzler.DrawTo(clock);
             
-            UpdateBankStartCache();
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
             
             int oneKsrc = src * 8;
@@ -69,15 +69,9 @@ namespace NES.CPU
             for (int i = 0; i < (numberOf8kBanks * 8); ++i)
             {
                 ppuBankStarts[oneKdest + i] = (oneKsrc + i) * 0x400;
-                if (oneKdest + i == 8)
-                {
-                    chrRamStart = (oneKsrc + i) * 0x400;
-                }
 
             }
-            //Mirror(-1, mirroring);
-            bankSwitchesChanged = true;
-            // Array.Copy(chrRom, src * 0x2000, whizzler.cartCopyVidRAM, dest * 0x2000, numberOf8kBanks * 0x2000);
+            UpdateBankStartCache();
         }
 
         #region IMemoryMappable Members
