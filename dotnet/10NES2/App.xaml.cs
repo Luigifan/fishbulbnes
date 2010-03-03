@@ -51,8 +51,9 @@ namespace _10NES2
             MainWindowViewModel vm = new MainWindowViewModel(win, renderMode);
 
             win.nesDisplay.Target = vm.Container.Resolve<NESMachine>();
+            
             win.nesDisplay.Context = vm.Container.Resolve<NES.CPU.nitenedo.Interaction.IDisplayContext>();
-
+            vm.NESDisplayContext = win.nesDisplay.Context;
 
             //            container.RegisterInstance<NESDisplay>(new ContainerControlledLifetimeManager(),
             //    new InjectionProperty("Target", new ResolvedParameter<NESMachine>()),

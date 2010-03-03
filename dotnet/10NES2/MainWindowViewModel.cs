@@ -22,6 +22,7 @@ namespace _10NES2
 {
     public class MainWindowViewModel : INotifyPropertyChanged, IDisposable, IViewModel
     {
+        IDisplayContext _context;
         IUnityContainer container;
         NESMachine nes;
         CommandSender commandSender;
@@ -63,6 +64,7 @@ namespace _10NES2
 
             
         }
+
 
         public CommandSender CommandSender
         {
@@ -278,11 +280,18 @@ namespace _10NES2
 
         #endregion
 
+        IDisplayContext _displayContext;
+
         public IDisplayContext NESDisplayContext
         {
             get
             {
-                return container.Resolve<IDisplayContext>();
+                return _displayContext;
+            }
+
+            set
+            {
+                _displayContext = value;
             }
         }
 
@@ -334,8 +343,8 @@ namespace _10NES2
             //    w.Close();
             //}
             windows = null;
-            nes.ThreadStoptendo();
-            
+            NESDisplayContext.TearDownDisplay();
+            //nes.ThreadStoptendo();
             //NESDisplayContext.TearDownDisplay();
             container.Dispose();
         }

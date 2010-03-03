@@ -201,6 +201,7 @@ namespace InstiBulb.ThreeDee
         }
 
         Brush _titleBrush;
+        RenderTargetBitmap titleBitmap;
 
         void CreateTitleBrush(string Title)
         {
@@ -219,8 +220,15 @@ namespace InstiBulb.ThreeDee
             }
             g.Children.Add(l);
             g.Background = new SolidColorBrush(Colors.Transparent);
-
-            _titleBrush = new VisualBrush(g);
+            Size size = new Size(256.0, 128);
+            g.Measure(size);
+            g.Arrange(new Rect( size ));
+            titleBitmap = new RenderTargetBitmap(256, 128, 96, 96, PixelFormats.Pbgra32);
+            titleBitmap.Clear();
+            titleBitmap.Render(g);
+            titleBitmap.Freeze();
+            _titleBrush = new ImageBrush(titleBitmap);
+            _titleBrush.Freeze();
             
         }
 
