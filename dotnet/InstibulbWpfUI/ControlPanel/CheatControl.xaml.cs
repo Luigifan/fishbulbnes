@@ -22,6 +22,7 @@ namespace InstiBulb
 		public CheatControl()
 		{
 			this.InitializeComponent();
+             
 		}
 
 

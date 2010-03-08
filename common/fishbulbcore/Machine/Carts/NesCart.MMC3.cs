@@ -342,7 +342,8 @@ namespace NES.CPU.Machine.Carts
                     if (_mmc3IrcOn)
                     {
                         irqRaised = true;
-                        updateIRQ();
+                        if (updateIRQ != null)
+                            updateIRQ();
                     }
                     if (_mmc3IrqVal > 0)
                         scanlineCounter = _mmc3IrqVal;

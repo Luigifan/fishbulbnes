@@ -16,14 +16,9 @@
   </Variables>
 
   <Filters>
-    <!--Tile RAM-->
-    <Filter Name="tiles" Height="255" Width="255" Effect="RenderNesTiles" Technique="RenderTileRAM" >
+
+    <Filter Name="palette" Height="8" Width="256" Effect="PaletteGen" Technique="MakePalette" >
       <Inputs>
-        <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
-        <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
-        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
-        <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
-        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
         <Input Type="Scalar" EffectVariable="hue" Source="hue"/>
         <Input Type="Scalar" EffectVariable="brightness" Source="brightness"/>
         <Input Type="Scalar" EffectVariable="contrast" Source="contrast"/>
@@ -31,21 +26,30 @@
       </Inputs>
     </Filter>
 
-
-    
-    <Filter Name="spriteSetup" Height="255" Width="255" Effect="RenderNesSprites" Technique="RenderSpriteRAM" >
+    <!--Tile RAM-->
+    <Filter Name="tiles" Height="255" Width="255" Effect="RenderNesTiles" Technique="RenderTileRAM" >
       <Inputs>
+        <Input Type="FilterOutput" Filter="palette" EffectVariable="gennedPalette"/>
         <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
         <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
         <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
         <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
         <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
-        <Input Type="Scalar" EffectVariable="hue" Source="hue"/>
+        <!--<Input Type="Scalar" EffectVariable="hue" Source="hue"/>
         <Input Type="Scalar" EffectVariable="brightness" Source="brightness"/>
-        <Input Type="Scalar" EffectVariable="contrast" Source="contrast"/>        
-        <!--<Input Type="FilterOutput" Filter="tiles" EffectVariable="tileStage" />-->
+        <Input Type="Scalar" EffectVariable="contrast" Source="contrast"/>-->
+        <!--<Input Type="Scalar" EffectVariable="timer" Source="Timer"/>-->
+      </Inputs>
+    </Filter>
 
-        <Input Type="Scalar" EffectVariable="ppuBankStarts" Source="ppuBankStarts"/>
+    <Filter Name="spriteSetup" Height="255" Width="255" Effect="RenderNesSprites" Technique="RenderSpriteRAM" >
+      <Inputs>
+        <Input Type="FilterOutput" Filter="palette" EffectVariable="gennedPalette"/>
+        <Input Type="FilterOutput" Filter="NesOutput" EffectVariable="texture2d"/>
+        <Input Type="FilterOutput" Filter="NesPalette" EffectVariable="nesPal" />
+        <Input Type="FilterOutput" Filter="ChrRAM" EffectVariable="chrRam" />
+        <Input Type="FilterOutput" Filter="NesOutput2" EffectVariable="nesOut2" />
+        <Input Type="FilterOutput" Filter="BankSwitches" EffectVariable="bankSwitches" />
       </Inputs>
     </Filter>
 

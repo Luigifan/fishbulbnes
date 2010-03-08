@@ -11,8 +11,6 @@ namespace NES.CPU.Machine.Carts
         IPPU Whizzler { get; set; }
         CPU2A03 CPU { get; set; }
 
-        bool IrqRaised { get; set; }
-
         void InitializeCart();
 
         void UpdateScanlineCounter();

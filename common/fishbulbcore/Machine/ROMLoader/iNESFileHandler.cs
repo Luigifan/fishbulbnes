@@ -18,19 +18,19 @@ namespace NES.CPU.Machine.ROMLoader
         public static INESCart GetCart(string fileName, IPPU ppu)
         {
             INESCart _cart = null;
-            if (fileName.IndexOf(".zip") > 0)
+            if (fileName.ToLower().IndexOf(".zip") > 0)
             {
                 return GetZippedCart(fileName, ppu);
             }
 
-            if (fileName.IndexOf(".nsf") > 0)
+            if (fileName.ToLower().IndexOf(".nsf") > 0)
             {
-                throw new CartLoadException("NSF SUPPORT IS NOT SUPPORTED.  please fund development the ultimate edition for full nsf support.");
-                //using (FileStream stream = File.Open(fileName, FileMode.Open))
-                //{
-                //    _cart = LoadNSF(stream);
-                //}
-                //return _cart;
+                //throw new CartLoadException("NSF SUPPORT IS NOT SUPPORTED.  please fund development the ultimate edition for full nsf support.");
+                using (FileStream stream = File.Open(fileName, FileMode.Open))
+                {
+                    _cart = LoadNSF(stream, ppu);
+                }
+                return _cart;
             }
 
             using (FileStream stream = File.Open(fileName, FileMode.Open))
@@ -151,29 +151,70 @@ namespace NES.CPU.Machine.ROMLoader
 
         }
 
-        //private static INESCart LoadNSF(Stream zipStream)
-        //{
-        //    INESCart _cart = null;
-        //    byte[] iNesHeader = new byte[0x7F];
-        //    int bytesRead = zipStream.Read(iNesHeader, 0, 0x7F);
-
-        //    byte[] theRom = new byte[zipStream.Length - 0x7F];
-
-
-        //    bytesRead = zipStream.Read(theRom, 0, theRom.Length);
-
-        //    _cart = new NSFCart();
-        //    _cart.LoadiNESCart(iNesHeader, 0, 0, theRom, null, 0);
+        private static INESCart LoadNSF(Stream zipStream, IPPU ppu)
+        {
+            //NSFCart _cart = null;
+            byte[] iNesHeader = new byte[16];
             
-        //    if (_cart != null)
-        //    {
-        //        _cart.Whizzler = null;
-        //        _cart.ROMHashFunction = Hashers.HashFunction;
-        //    }
 
-        //    return _cart;
+            iNesHeader[0] = 0x4E;
+            iNesHeader[1] = 0x45;
+            iNesHeader[2] = 0x53; 
+            iNesHeader[3] = 0x1A;
+            iNesHeader[4] = 0x02;
+            iNesHeader[5] = 0x00;
 
-        //}
+            using (MemoryStream s = new MemoryStream())
+            {
+                s.Write(iNesHeader,0,16);
+                using (Stream codes = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(NES.CPU.FastendoDebugging.DisassemblyExtensions.GetResourceName("nsfPlay.out")))
+                {
+                    int newByte = codes.ReadByte();
+                    while (newByte > -1)
+                    {
+                        s.WriteByte((byte)newByte);
+                        newByte = codes.ReadByte();
+                    }
+                }
+
+                byte[] nsfHeader = new byte[0x80];
+                zipStream.Read(nsfHeader, 0, 0x80);
+                s.Write(nsfHeader, 0, 0x80);
+                int loadAddress = (ushort)(nsfHeader[0x8] | (nsfHeader[0x9] << 8));
+
+                // needs to get to 8003
+                int initAddress = (ushort)(nsfHeader[0xa] | (nsfHeader[0xb] << 8));
+                
+                // needs to get to 8000
+                int playAddress = (ushort)(nsfHeader[0xc] | (nsfHeader[0xd] << 8));
+                 zipStream.Seek(0, SeekOrigin.Begin);
+                Console.WriteLine("Init {0}", initAddress);
+                Console.WriteLine("Play {0}", playAddress);
+                int nsfByte = zipStream.ReadByte();
+                while (nsfByte > -1)
+                {
+                    s.WriteByte((byte)nsfByte);
+                    nsfByte = zipStream.ReadByte();
+                }
+
+
+
+
+                s.Seek(0, SeekOrigin.Begin);
+
+                //using( FileStream file = new FileStream("c:\\shared\\out.nes", FileMode.Create))
+                //{
+                //    s.WriteTo(file);
+
+                //}
+
+                //s.Seek(0, SeekOrigin.Begin);
+
+                return LoadROM(ppu,s);
+
+            }
+            
+        }
 
 
 

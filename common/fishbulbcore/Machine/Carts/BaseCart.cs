@@ -484,7 +484,9 @@ namespace NES.CPU.Machine.Carts
         {
             currentBank++;
             Array.Copy(ppuBankStarts, 0, bankStartCache, currentBank * 16, 16);
+            whizzler.UpdatePixelInfo();
             return currentBank;
+
         }
 
         protected bool bankSwitchesChanged = false;

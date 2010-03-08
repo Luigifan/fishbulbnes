@@ -9,25 +9,25 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Fishbulb.Common.UI;
 
 namespace SilverlightBindings.Views
 {
-    public partial class ControlPanel : CommandingUserControl
+    public partial class ToolPopout : ChildWindow
     {
-        public ControlPanel()
+        public ToolPopout()
         {
             InitializeComponent();
-            
-            
         }
 
-        public void CommandButton_Click(object sender, RoutedEventArgs e)
+        private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            SendCommand(button.Name, button.Tag);
+            this.DialogResult = true;
         }
 
-
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
     }
 }
+

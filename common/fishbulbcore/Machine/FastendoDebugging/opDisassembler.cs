@@ -69,7 +69,7 @@ namespace NES.CPU.FastendoDebugging
             foreach (var kode in codes)
             {
                 int code = 0;
-                if (int.TryParse(kode.Hex.Trim('$'), out code))
+                if (int.TryParse(kode.Hex.Trim('$'), System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out code))
                 {
                     mnemnonics[code] = kode.Name;
                 }

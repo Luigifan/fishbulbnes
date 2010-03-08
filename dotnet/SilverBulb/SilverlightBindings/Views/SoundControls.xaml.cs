@@ -9,25 +9,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Fishbulb.Common.UI;
 
 namespace SilverlightBindings.Views
 {
-    public partial class ControlPanel : CommandingUserControl
+    public partial class SoundControls : CommandingUserControl
     {
-        public ControlPanel()
+        public SoundControls()
         {
             InitializeComponent();
-            
-            
         }
-
-        public void CommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            SendCommand(button.Name, button.Tag);
-        }
-
-
     }
 }

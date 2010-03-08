@@ -11,6 +11,54 @@ using SlimDXBindings.Viewer10.Helpers;
 
 namespace SlimDXBindings.Viewer10.Filter
 {
+
+    public class ScalarBindingBase
+    {
+        bool isChanged;
+        internal Type type;
+        public Type ScalarType
+        {
+            get
+            {
+                return type;
+            }
+        }
+
+        EffectScalarVariable variable;
+
+        public EffectScalarVariable Variable
+        {
+            get { return variable; }
+            set { variable = value; }
+        }
+
+        public bool IsChanged
+        {
+            get { return isChanged; }
+            set { isChanged = value; }
+        }
+    }
+
+    public class ScalarBinding<T> : ScalarBindingBase
+    {
+        T newValue;
+
+        public ScalarBinding()
+        {
+            type = typeof(T);
+        }
+
+        public T NewValue
+        {
+            get { return newValue; }
+            set { newValue = value; }
+        }
+
+
+
+    }
+
+
     public class BasicPostProcessingFilter :  IDisposable, SlimDXBindings.Viewer10.Filter.IFilterChainLink
     {
 
@@ -18,9 +66,64 @@ namespace SlimDXBindings.Viewer10.Filter
 
         internal bool isUpdated = true;
 
+        bool hasShaderResources = false;
+        bool scalarsUpdated = true;
+
         public virtual void Update()
         {
+            isUpdated = hasShaderResources;
+
+            foreach (var p in GetScalarList<bool>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
+
+            foreach (var p in GetScalarList<bool[]>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
+
+
+            foreach (var p in GetScalarList<float>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
+
+            foreach (var p in GetScalarList<int>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
+
+            foreach (var p in GetScalarList<int[]>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
+
+            foreach (var p in GetScalarList<float[]>())
+            {
+                p.Value.Variable.Set(p.Value.NewValue);
+                isUpdated = true;
+                p.Value.IsChanged = false;
+            }
         }
+
+        IEnumerable<KeyValuePair<string, ScalarBinding<T> >> GetScalarList<T>()
+        {
+            var list = (from sc in scalars where sc.Value.ScalarType == typeof(T) && sc.Value.IsChanged 
+                        select new KeyValuePair<string, ScalarBinding<T>>(sc.Key, sc.Value as ScalarBinding<T>) ).ToList();
+            return list ;
+        }
+
 
         public virtual void AfterDraw()
         {
@@ -58,13 +161,12 @@ namespace SlimDXBindings.Viewer10.Filter
         string techniqueName;
         internal int width, height;
 
-        private List<string> boundScalars = new List<string>();
+        //Dictionary<string, ScalarBinding<bool>> scalarBools = new Dictionary<string, ScalarBinding<bool>>();
+        //Dictionary<string, ScalarBinding<float>> scalarFloats = new Dictionary<string, ScalarBinding<float>>();
+        //Dictionary<string, ScalarBinding<int>> scalarInts = new Dictionary<string, ScalarBinding<int>>();
+        //Dictionary<string, ScalarBinding<int[]>> scalarIntArrays = new Dictionary<string, ScalarBinding<int[]>>();
 
-        public List<string> BoundScalars
-        {
-            get { return boundScalars; }
-            set { boundScalars = value; }
-        }
+        Dictionary<string, ScalarBindingBase> scalars = new Dictionary<string, ScalarBindingBase>();
 
         string filterName = "none";
 
@@ -101,6 +203,8 @@ namespace SlimDXBindings.Viewer10.Filter
         bool origTexture = true;
         void SetupFilter()
         {
+
+            
 
             Effect = effectBuddy.GetEffect(shaderName);
 
@@ -143,14 +247,17 @@ namespace SlimDXBindings.Viewer10.Filter
         {
             get { return texture; }
         }
+
         Dictionary<string, ShaderResourceView> shaderResources = new Dictionary<string, ShaderResourceView>();
         public void SetShaderResource(string variableName, Resource resource)
         {
+
             if (!shaderResources.ContainsKey(variableName) && resource != null)
             {
                 EffectResourceVariable variable = Effect.GetVariableByName(variableName).AsResource();
                 var shaderRes = new ShaderResourceView(device, resource);
                 shaderResources.Add(variableName, shaderRes);
+                hasShaderResources = true;
                 variable.SetResource(shaderRes);
             }
         }
@@ -188,39 +295,27 @@ namespace SlimDXBindings.Viewer10.Filter
         }
 
 
-        public IFilterChainLink SetScalar(string variableName, float constant) 
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
-        }
-
-        public IFilterChainLink SetScalar(string variableName, int[] constant)
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
-        }
-
         public IFilterChainLink SetScalar<T>(string variableName, T constant) 
         {
-            if (boundScalars.Contains(variableName))
+            if (scalars.ContainsKey(variableName) )
             {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                if (typeof(T) == typeof(bool))
-                    variable.Set((constant as bool?).GetValueOrDefault(false));
-                if (typeof(T) == typeof(float))
-                    variable.Set((constant as float?).Value);
-                if (typeof(T) == typeof(int[]))
-                    variable.Set((constant as int[]));
-                
+                if (scalars[variableName] == null)
+                {
+                    scalars[variableName] = new ScalarBinding<T>();
+                    scalars[variableName].Variable = Effect.GetVariableByName(variableName).AsScalar();
+                }
+
+                ScalarBinding<T> bind = scalars[variableName] as ScalarBinding<T>;
+                if (bind != null)
+                {
+                    if (!constant.Equals(bind.NewValue))
+                    {
+                        bind.IsChanged = true;
+                        bind.NewValue = constant;
+                    } 
+                }
             }
+            
             return this;
         }
 
@@ -265,9 +360,18 @@ namespace SlimDXBindings.Viewer10.Filter
 
         public IFilterChainLink BindScalar(string name)
         {
-            boundScalars.Add(name);
+            scalars.Add(name, null);
             return this;
         }
+
+        public IFilterChainLink BindScalar<T>(string name)
+        {
+            var bind = new ScalarBinding<T>();
+            bind.Variable = Effect.GetVariableByName(name).AsScalar();
+            scalars.Add(name, bind );
+            return this;
+        }
+
 
         public IFilterChainLink SetStaticResource(string name, Resource res)
         {
@@ -318,19 +422,5 @@ namespace SlimDXBindings.Viewer10.Filter
 
         #endregion
 
-        #region IFilterChainLink Members
-
-
-        public IFilterChainLink SetScalar(string variableName, float[] constant)
-        {
-            if (boundScalars.Contains(variableName))
-            {
-                EffectScalarVariable variable = Effect.GetVariableByName(variableName).AsScalar();
-                variable.Set(constant);
-            }
-            return this;
-        }
-
-        #endregion
     }
 }

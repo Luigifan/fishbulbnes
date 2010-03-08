@@ -3,7 +3,9 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
+	xmlns:valid="clr-namespace:InstiBulb.ValidationRules"
+    xmlns:converters="clr-namespace:InstiBulb.Converters"
+    mc:Ignorable="d"
 	x:Class="InstiBulb.CheatControl"
 	x:Name="UserControl"
     >
@@ -12,6 +14,23 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ConvertersAndStuff.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ControlTemplate x:Key="ggCodeInvalidTemplate">
+                <DockPanel>
+                    <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
+                    <AdornedElementPlaceholder/>
+                </DockPanel>
+            </ControlTemplate>
+            <converters:NegeateBooleanConverter x:Key="negateBooleanConverter" />
+            <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip"
+        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
@@ -41,17 +60,32 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Grid>
+                <AdornerDecorator>
+                    <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.717*"/>
                         <ColumnDefinition Width="0.283*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="AddGenieCode" Text="{Binding Path=CurrentCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" ForceCursor="False" />
+                    <TextBox x:Name="AddGenieCode" 
+                                     Validation.ErrorTemplate="{StaticResource ggCodeInvalidTemplate}"
+                                     Style="{StaticResource ResourceKey=textBoxInError}"
+                                     HorizontalAlignment="Stretch"  >
+                        <TextBox.Text>
+                            <Binding Path="CurrentCode" UpdateSourceTrigger="PropertyChanged" 
+                                      >
+                                <Binding.ValidationRules>
+                                    <valid:GameGenieValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     <Button x:Name="NewGenieCode" Content="Add Code"  Grid.Column="1"
                                 Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=AddCheat}" CommandParameter="{Binding CurrentCode}"
                                 ToolTip="Click to add new GameGenie Code" 
+                                IsEnabled="{Binding ElementName=AddGenieCode,  Path=(Validation.HasError), Converter={StaticResource negateBooleanConverter } }"
                                 />
                 </Grid>
+                </AdornerDecorator>
                 <Button x:Name="ClearGenieCode" Content="Clear Codes" 
                                 Command="{Binding Commands, Converter={StaticResource CommandDictionaryConverter}, ConverterParameter=ClearCheats}"
 

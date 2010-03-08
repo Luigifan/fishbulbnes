@@ -54,6 +54,8 @@ namespace Fishbulb.Common.UI
 
 
             gameGenieCodes = new List<string>();
+            NotifyPropertyChanged("GameGenieCodes");
+
         }
 
         private List<CheatVM> cheats = new List<CheatVM>();
@@ -94,18 +96,17 @@ namespace Fishbulb.Common.UI
             }
             set
             {
-                if (_currentCode != value)
-                {
+
                     _currentCode = value;
                     NotifyPropertyChanged("CanAddGenieCode");
                     NotifyPropertyChanged("Commands");
-                }
+                
             }
         }
 
         public bool CanAddGenieCode
         {
-            get { return TargetMachine != null && CurrentCode.Length == 6 || CurrentCode.Length == 8; }
+            get { return TargetMachine != null ; }
         }
 
         public bool Cheating

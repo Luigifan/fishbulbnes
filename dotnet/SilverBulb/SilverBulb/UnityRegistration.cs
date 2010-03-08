@@ -19,6 +19,7 @@ using NES.CPU.PPUClasses;
 using NES.CPU.Machine.BeepsBoops;
 using NES.CPU.Fastendo;
 using SilverlightBindings;
+using Fishbulb.Common.UI;
 
 namespace SilverBulb
 {
@@ -101,7 +102,6 @@ namespace SilverBulb
             //    );
 
 
-            //container.RegisterType<IViewModel, ControlPanelVM>("ControlPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             //container.RegisterType<IViewModel, WinCheatPanelVM>("CheatPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             //container.RegisterType<IViewModel, WinDebuggerVM>("DebugPanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             //container.RegisterType<IViewModel, SaveStateVM>("SaveStatePanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));

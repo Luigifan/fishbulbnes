@@ -9,25 +9,24 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Fishbulb.Common.UI;
+using SilverlightBindings.ViewModels;
 
 namespace SilverlightBindings.Views
 {
-    public partial class ControlPanel : CommandingUserControl
+    public partial class ToolBar : UserControl
     {
-        public ControlPanel()
+        public ToolBar()
         {
             InitializeComponent();
-            
-            
         }
 
-        public void CommandButton_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            SendCommand(button.Name, button.Tag);
+            var p = this.DataContext as ToolstripViewModel;
+            if (p != null)
+            {
+                p.ShowWindow((sender as Button).Tag);
+            }
         }
-
-
     }
 }

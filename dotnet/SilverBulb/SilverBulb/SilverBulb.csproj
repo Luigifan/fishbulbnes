@@ -81,7 +81,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlatformDelegates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnityRegistration.cs" />
   </ItemGroup>

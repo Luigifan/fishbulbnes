@@ -22,9 +22,12 @@ namespace InstiBulb.WpfNESViewer
     [NESDisplayPluginAttribute]
     public class WPFNesViewer : Canvas, IDisplayContext
     {
+
+        PPUDebuggingAdorner adorner;
+        bool adorned = false;
         public WPFNesViewer()
         {
-            
+
         }
 
         
@@ -39,7 +42,7 @@ namespace InstiBulb.WpfNESViewer
             set
             {
                 machine = value;
-
+                
 
             }
         }
@@ -73,6 +76,7 @@ namespace InstiBulb.WpfNESViewer
             nesPalette = new WriteableBitmap(32, 1, 96, 96, PixelFormats.Pbgra32, null);
             bmpBrush = new ImageBrush(bitmap);
             this.Background = bmpBrush;
+
 
         }
 
@@ -160,7 +164,18 @@ namespace InstiBulb.WpfNESViewer
 
         #endregion
 
-
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            if (!adorned)
+            {
+                adorner = new PPUDebuggingAdorner(this);
+                adorner.AttachedMachine = machine;
+                var adornLayer = AdornerLayer.GetAdornerLayer(this);
+                adornLayer.Add(adorner);
+                adorned = true;
+            }
+            base.OnRenderSizeChanged(sizeInfo);
+        }
 
 
         public void ToggleFullScreen()

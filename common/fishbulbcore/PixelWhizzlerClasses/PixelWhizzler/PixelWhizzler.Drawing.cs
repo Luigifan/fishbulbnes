@@ -276,7 +276,7 @@ namespace NES.CPU.PPUClasses
 
         }
 
-        protected virtual void UpdatePixelInfo()
+        public virtual void UpdatePixelInfo()
         {
 
         }

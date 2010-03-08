@@ -9,9 +9,8 @@ Texture2D tileStage;
 
 Texture2D bankSwitches;
 
-int NameTableMemoryStart;
-int HScroll;
-int VScroll;
+
+Texture2D gennedPalette;
 
 
 
@@ -44,77 +43,6 @@ struct PS_IN
 };
 
 
-float4 colorPal[64] = 
-{
-	float4(0.4726563, 0.4804688, 0.4726563, 1.0), 
-	float4(0.046875, 0.1484375, 0.6328125, 1.0), 
-	float4(0.15625, 0.0625, 0.6796875, 1.0), 
-	float4(0.3671875, 0.04296875, 0.6289063, 1.0), 
-	float4(0.5351563, 0.00390625, 0.4609375, 1.0), 
-	float4(0.5742188, 0.01953125, 0.1640625, 1.0), 
-	float4(0.5703125, 0.0625, 0.04296875, 1.0), 
-	float4(0.4335938, 0.1484375, 0.015625, 1.0), 
-	float4(0.2773438, 0.2539063, 0.015625, 1.0), 
-	float4(0.078125, 0.3398438, 0.015625, 1.0), 
-	float4(0.02734375, 0.3671875, 0.04296875, 1.0), 
-	float4(0.0078125, 0.3242188, 0.1796875, 1.0), 
-	float4(0.01953125, 0.2773438, 0.4257813, 1.0), 
-	float4(0, 0, 0, 1.0), 
-	float4(0.0078125, 0.0078125, 0.0078125, 1.0), 
-	float4(0.0078125, 0.0078125, 0.0078125, 1.0), 
-	float4(0.7460938, 0.75, 0.7460938, 1.0), 
-	float4(0.0859375, 0.4101563, 0.8710938, 1.0), 
-	float4(0.2929688, 0.2539063, 0.9296875, 1.0), 
-	float4(0.5546875, 0.1523438, 0.8828125, 1.0), 
-	float4(0.765625, 0.09765625, 0.7265625, 1.0), 
-	float4(0.828125, 0.125, 0.3867188, 1.0), 
-	float4(0.828125, 0.2148438, 0.1289063, 1.0), 
-	float4(0.7070313, 0.3515625, 0.05078125, 1.0), 
-	float4(0.5390625, 0.4765625, 0.015625, 1.0), 
-	float4(0.2265625, 0.5703125, 0.02734375, 1.0), 
-	float4(0.078125, 0.6015625, 0.09375, 1.0), 
-	float4(0.03515625, 0.5976563, 0.3515625, 1.0), 
-	float4(0.03515625, 0.5429688, 0.6601563, 1.0), 
-	float4(0.1757813, 0.1835938, 0.1757813, 1.0), 
-	float4(0.01171875, 0.01171875, 0.01171875, 1.0), 
-	float4(0.01171875, 0.01171875, 0.01171875, 1.0), 
-	float4(0.9570313, 0.9609375, 0.96875, 1.0), 
-	float4(0.2851563, 0.6953125, 0.96875, 1.0), 
-	float4(0.5351563, 0.578125, 0.9882813, 1.0), 
-	float4(0.7578125, 0.4726563, 0.9765625, 1.0), 
-	float4(0.9140625, 0.4335938, 0.9257813, 1.0), 
-	float4(0.953125, 0.4570313, 0.7265625, 1.0), 
-	float4(0.9648438, 0.5117188, 0.421875, 1.0), 
-	float4(0.9296875, 0.6328125, 0.2695313, 1.0), 
-	float4(0.8398438, 0.75, 0.1328125, 1.0), 
-	float4(0.5976563, 0.828125, 0.125, 1.0), 
-	float4(0.3125, 0.8671875, 0.265625, 1.0), 
-	float4(0.2382813, 0.8632813, 0.578125, 1.0), 
-	float4(0.1679688, 0.84375, 0.8671875, 1.0), 
-	float4(0.3867188, 0.3984375, 0.390625, 1.0), 
-	float4(0.015625, 0.015625, 0.015625, 1.0), 
-	float4(0.015625, 0.015625, 0.015625, 1.0), 
-	float4(0.96875, 0.9726563, 0.9765625, 1.0), 
-	float4(0.703125, 0.8671875, 0.9765625, 1.0), 
-	float4(0.796875, 0.8164063, 0.9882813, 1.0), 
-	float4(0.8710938, 0.7734375, 0.9804688, 1.0), 
-	float4(0.9453125, 0.75, 0.9648438, 1.0), 
-	float4(0.9609375, 0.7617188, 0.8867188, 1.0), 
-	float4(0.9648438, 0.796875, 0.7617188, 1.0), 
-	float4(0.9570313, 0.8515625, 0.6757813, 1.0), 
-	float4(0.921875, 0.8984375, 0.5976563, 1.0), 
-	float4(0.8203125, 0.9257813, 0.609375, 1.0), 
-	float4(0.71875, 0.9414063, 0.703125, 1.0), 
-	float4(0.6875, 0.9453125, 0.8476563, 1.0), 
-	float4(0.6484375, 0.9375, 0.9453125, 1.0), 
-	float4(0.78125, 0.7773438, 0.78125, 1.0), 
-	float4(0.1953125, 0.953125, 0.03125, 1.0), 
-	float4(0.1953125, 0.953125, 0.03125, 1.0),
-	//float4(0.01953125, 0.01953125, 0.01953125, 1.0), 
-	//float4(0.01953125, 0.01953125, 0.01953125, 1.0),
-	
-};
-
 //
 // VERTEX SHADER
 //
@@ -133,114 +61,11 @@ PS_IN VS( VS_IN vertexShaderIn )
 	return vertexShaderOut;
 }
 
-float hue = 0;
-//float colorAngles[16] = {0,240,210,180,150,120,90,60,30,0,330,300,270,0,0,0};
-float colorAngles[16] = 
-{0, // sin =  -1.0f, cos = 0
-240, // sin = -0.866, cos = -0.5
-210,  // sin = -0.5, cos = -0.86
-180,  //
-150,
-120,
-90,
-60,
-30,
-0,
-330,
-300,
-270,
-0,
-0,
-0};
 
-float lo_levels [4] = { -0.12f, 0.00f, 0.31f, 0.72f };
-float hi_levels [4] = {  0.40f, 0.68f, 1.00f, 1.00f };
-float phases [0x10 + 3] = {
-		-1.0f, -0.86602540378443864676372317075294, -0.5f, 0.0f,  0.5f,  0.86602540378443864676372317075294,
-		 1.0f,  0.86602540378443864676372317075294,  0.5f, 0.0f, -0.5f, -0.86602540378443864676372317075294,
-		-1.0f, -0.86602540378443864676372317075294, -0.5f, 0.0f,  0.5f,  0.86602540378443864676372317075294,
-		 1.0f
-	};
-	
-#define TO_ANGLE_SIN( color )   phases [color]
-#define TO_ANGLE_COS( color )   phases [(color) + 3]
-
-
-//76543210
-//||||||||
-//||||++++- Hue
-//||++----- Value
-//++------- Unused
-
-float contrast = 0.30;   /* -1 = dark (0.5)       +1 = light (1.5) */
-float brightness = 0.1; /* -1 = dark (0.5)       +1 = light (1.5) */
-
-float3x3 YIQToRGBMatrix = 
+float3 FetchColor(int pixel, int tintBits)
 {
- 1.0, 0.9559999, 0.621000051,
- 1.0, -0.271999955, -0.647, 
- 1.0, -1.10500014, 1.7019999 
-};
-
-
-// 1.0, -9
-float3 DecodePixel(int pixel, int tintBits)
-{
-	int level = pixel >> 4 & 0x03;
+	return gennedPalette.Load(int3( pixel & 63, tintBits & 7, 0)).xyz;
 	
-	float lo = lo_levels [level];
-	float hi = hi_levels [level];
-	
-	int color = pixel & 0x0F;
-	if ( color == 0 )
-		lo = hi;
-	if ( color == 13 )
-		hi = lo;
-	if ( color > 13 )
-		hi = lo = 0.0f;
-		
-	/* Convert raw waveform to YIQ */
-	float sat = (hi - lo) * 0.5f;
-	
-	float3 yiq = float3((hi + lo) * 0.5f, 
-						sin(radians(colorAngles[color] + hue )) * sat, 
-						cos( radians(colorAngles[color] + hue) ) * sat * -1);
-	
-	/* Apply brightness, contrast, and gamma */
-	yiq.x *= (float) (contrast * 0.5f) + 1;
-	/* adjustment reduces error when using input palette */
-	yiq.x += (float) (brightness * 0.5f) - (0.5f / 256.0f);	
-	
-	if ( tintBits > 0 && pixel <= 13 )
-	{
-		float atten_mul = 0.79399f;
-		float atten_sub = 0.0782838f;
-		
-		if ( tintBits == 7 )
-		{
-			yiq.x = yiq.x * (atten_mul * 1.13f) - (atten_sub * 1.13f);
-		}
-		else
-		{
-			int tints [8] = { 0, 6, 10, 8, 2, 4, 0, 0 };
-			int tint_color = tints [tintBits];
-			float sat = hi * (0.5f - atten_mul * 0.5f) + atten_sub * 0.5f;
-			yiq.x -= sat * 0.5f;
-			if ( tintBits >= 3 && tintBits != 4 )
-			{
-				/* combined tint bits */
-				sat *= 0.6f;
-				yiq.x -= sat;
-			}
-			yiq.y += sin(radians(colorAngles[color] + hue )) * sat;
-			yiq.z += cos( radians(colorAngles[color] + hue) ) * sat * -1;
-		}
-	}
-	float3 rgb1 = mul( yiq , YIQToRGBMatrix);
-	// note: i need to figure out what to put here to match a common tv sets 2.65 gamma to a monitors 2.2
-	float gamma = 1/2.2;
-	rgb1 = ((rgb1 * gamma) - gamma) * rgb1 + rgb1;
-	return rgb1 ;
 }
 
 
@@ -476,7 +301,7 @@ float4 DrawSpritesFromRAM(PS_IN pixelShaderIn) : SV_Target
 					// get the nes palette entry (will contain 4 values)
 					float4 rVal = nesPal.Load(int3(ntPixel/4,finalColor.a * 255,0));
 					int pixel = rVal[ntPixel & 3] * 255;
-					return float4(DecodePixel(pixel, 0), alpha);
+					return float4(FetchColor(pixel, 0), alpha);
 				}
 			}
 		}
@@ -565,7 +390,7 @@ float4 DrawSpriteSquaresFromRAM(PS_IN pixelShaderIn) : SV_Target
 		if (IsSpriteOnLine(xy.y, spriteNum) )
 		{
 			if (PeepSprite(spriteNum, xy.x, xy.y))
-				return colorPal[spriteNum + 1];
+				return float4(FetchColor(spriteNum + 1,0),0);
 		}
 	}
 	return float4(0,0,0,1);

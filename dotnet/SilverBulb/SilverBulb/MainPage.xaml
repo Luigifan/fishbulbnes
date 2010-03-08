@@ -14,22 +14,41 @@
             <ColumnDefinition Width="9*" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Padding="3" BorderThickness="25" CornerRadius="5" IsHitTestVisible="false"  >
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Padding="3" BorderThickness="15" CornerRadius="7" IsHitTestVisible="false" Grid.RowSpan="2" >
             <Grid>
-                <Canvas Background="Black" Name="DrawArea" Cursor="None" IsHitTestVisible="false" CacheMode="BitmapCache" MouseLeftButtonUp="DrawArea_MouseLeftButtonUp" />
+                <Image Name="NesOut" CacheMode="BitmapCache" />
+                <!--<Canvas Background="Black" Name="DrawArea" Cursor="None" IsHitTestVisible="false" CacheMode="BitmapCache"  >
+                    <Canvas.Effect>
+                        <views:RasterizeEffect />
+                    </Canvas.Effect>
+                </Canvas>-->
             </Grid>
         </Border>
+        
         <MediaElement x:Name="NintendoSound" 
                       AutoPlay="True" Visibility="Collapsed"  />
-        <Rectangle Grid.Column="1" Fill="Blue" MouseLeftButtonUp="DrawArea_MouseLeftButtonUp"  />
+        <views:ToolBar Name="ToolBar" Grid.Column="1"  Grid.RowSpan="2"/>
 
-        <StackPanel Orientation="Vertical" Grid.Column="1" x:Name="ControlPane" Background="LightGray" MouseLeftButtonUp="DrawArea_MouseLeftButtonUp" >
-            <!--<StackPanel Orientation="Horizontal">
-                <Button Content="Load Rom" Click="Button_Click" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}"  />
-                <Button Content="Power" Click="Button_Click" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" />
-            </StackPanel>-->
+        <!--<StackPanel Orientation="Vertical" Grid.Column="1" x:Name="ControlPane" Background="LightGray" >
+
             <views:ControlPanel x:Name="ControlPanel" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" />
-            <CheckBox x:Name="EnableControls" Content="Enable Controls" />
+            <CheckBox x:Name="EnableControls" Content="Enable" IsChecked="True" KeyDown="EnableControls_KeyDown" />
+
         </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Background="LightGray">
+            <TextBlock FontSize="12" FontWeight="Bold" >Controls</TextBlock>
+            <TextBlock>Q: Start</TextBlock>
+            <TextBlock>W: Select</TextBlock>
+            <TextBlock>Z: B</TextBlock>
+            <TextBlock>Z: A</TextBlock>
+            <TextBlock MinHeight="12"/>
+            <TextBlock>I,J,K,L:</TextBlock>
+            <TextBlock>Arrows: D-Pad</TextBlock>
+        </StackPanel>-->
+        
     </Grid>
 </UserControl>

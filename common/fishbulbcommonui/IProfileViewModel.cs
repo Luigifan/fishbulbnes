@@ -24,6 +24,7 @@ namespace Fishbulb.Common.UI
             get;
         }
 
+
         Dictionary<string, ICommandWrapper> Commands { get; }
 
         IEnumerable<IViewModel> ChildViewModels

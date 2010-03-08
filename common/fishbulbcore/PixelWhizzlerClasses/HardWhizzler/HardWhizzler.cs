@@ -88,7 +88,7 @@ namespace NES.CPU.PixelWhizzlerClasses
         
         }
 
-        protected override void UpdatePixelInfo()
+        public override void UpdatePixelInfo()
         {
             int curBank = chrRomHandler.CurrentBank;
             int ntbits = nameTableBits & 0x3;
@@ -114,101 +114,14 @@ namespace NES.CPU.PixelWhizzlerClasses
                 (
                     vScroll << 24 | // a
                     lockedHScroll << 16 |  // r
-                    (int)(curBank & 0xFF)
+                    (int)(curBank & 0xFFFF)
                 );
         }
 
-        //protected override void BumpScanline()
-        //{
-        //    switch (frameClock++)
-        //    {
-        //        case 0:
-        //            //frameFinished();
-        //            // chrRomHandler.ResetBankStartCache();
-        //            break;
-        //        case 6820:
-
-
-        //            FrameOn = true;
-        //            //
-                    
-        //            // setFrameOn();
-        //            if (spriteChanges)
-        //            {
-        //                UnpackSprites();
-        //                spriteChanges = false;
-        //            }
-
-        //            ClearVINT();
-
-
-        //            break;
-        //        //304 pixels into pre-render scanline
-        //        case 7125:
-
-        //            //UpdatePixelInfo();
-        //            break;
-
-        //        case 7161:
-        //            currentPalette = 0;
-        //            Buffer.BlockCopy(_palette, 0, palCache[currentPalette], 0, 32);
-        //            chrRomHandler.ResetBankStartCache();
-        //            vbufLocation = 0;
-        //            currentXPosition = 0;
-        //            currentYPosition = 0;
-        //            break;
-
-        //        case frameClockEnd:
-        //            FrameFinishHandler();
-        //            SetupVINT();
-        //            FrameOn = false;
-        //            frameClock = 0;
-
-
-
-
-        //            break;
-        //    }
-
-
-
-        //    if (frameClock >= 7161 && frameClock <= 89342)
-        //    {
-
-
-        //        if (currentXPosition < 256 && vbufLocation < 256 * 240)
-        //        {
-
-        //            DrawPixel();
-
-        //            vbufLocation++;
-        //        }
-
-        //        if (currentXPosition == 256)
-        //        {
-        //            chrRomHandler.UpdateScanlineCounter();
-        //        }
-        //        currentXPosition++;
-
-        //        if (currentXPosition > 340)
-        //        {
-        //            currentXPosition = 0;
-        //            currentYPosition++;
-
-        //            PreloadSprites(currentYPosition);
-
-        //            lockedHScroll = _hScroll;
-        //            UpdatePixelInfo();
-        //        }
-
-        //    }
-
-
-        //}
 
         protected override void UpdateXPosition()
         {
-            UpdatePixelInfo();
+            // UpdatePixelInfo();
         }
 
         protected override void RunNewScanlineEvents()

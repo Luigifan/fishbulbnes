@@ -107,8 +107,10 @@ namespace NES.CPU.nitenedo
                     _cart.SRAM = SRAMReader(_cart.CheckSum);
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _cpu.Cart.NMIHandler = _cpu.InterruptRequest;
                 _ppu.ChrRomHandler = _cart;
-
+                
+                
                 PowerOn();
                 //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
                 ThreadRuntendo();

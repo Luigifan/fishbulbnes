@@ -4,6 +4,8 @@ namespace NES.CPU.PixelWhizzlerClasses
 {
     public interface IPPU
     {
+        void UpdatePixelInfo();
+
         bool BackgroundVisible { get; }
         void CheckVBlank();
         NES.CPU.Machine.Carts.INESCart ChrRomHandler { get; set; }

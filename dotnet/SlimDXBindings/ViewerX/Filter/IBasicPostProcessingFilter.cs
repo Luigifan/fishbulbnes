@@ -45,12 +45,11 @@ namespace SlimDXBindings.Viewer10.Filter
         //fluent interface
         IFilterChainLink AddNeededResource(string name, string bindsTo);
         IFilterChainLink BindScalar(string name);
+        IFilterChainLink BindScalar<T>(string name);
         IFilterChainLink SetStaticResource(string name, Resource res);
         IFilterChainLink ClearNeededResources();
         IFilterChainLink DontFeedNextStage();
-        IFilterChainLink SetScalar(string variableName, float constant);
-        IFilterChainLink SetScalar(string variableName, float[] constant);
-        IFilterChainLink SetScalar(string variableName, int[] constant);
+
         IFilterChainLink SetScalar<T>(string variableName, T constant);
         IFilterChainLink SetMatrix(string variableName, Matrix matrix);
         IFilterChainLink SetViewport(Viewport viewport);

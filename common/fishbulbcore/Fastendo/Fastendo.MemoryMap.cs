@@ -215,6 +215,9 @@ namespace NES.CPU.Fastendo
                     Rams[address & 0x7FF] = (byte)data;
                     break;
                 // cart saveram 
+                case 0x05000:
+                    Cart.SetByte(clock, address, data);
+                    break;
                 case 0x06000:
                 case 0x07000:
                 // cart rom banks
@@ -274,7 +277,9 @@ namespace NES.CPU.Fastendo
 
         public void FindNextEvent()
         {
+            // it'll either be the ppu's NMI, or an irq from either the apu or the cart
             nextEvent =  clock + _pixelWhizzler.NextEventAt;
+            
         }
 
         private void HandleNextEvent()

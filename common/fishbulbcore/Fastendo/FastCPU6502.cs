@@ -289,7 +289,7 @@ namespace NES.CPU.Fastendo
             {
                 clock += 7; 
                 InterruptRequest();
-                _handleIRQ = false;
+                // _handleIRQ = false;
             }
 
             FetchNextInstruction();

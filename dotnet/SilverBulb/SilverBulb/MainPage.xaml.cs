@@ -16,6 +16,7 @@ using NES.Sound;
 using SilverlightBindings;
 using NES.CPU.Machine;
 using Fishbulb.Common.UI;
+using SilverlightBindings.ViewModels;
 
 namespace SilverBulb
 {
@@ -41,9 +42,10 @@ namespace SilverBulb
 
             NES.CPU.FastendoDebugging.DisassemblyExtensions.SetupOpcodes();
             
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = bmp;
-            DrawArea.Background = brush;
+            //ImageBrush brush = new ImageBrush();
+            //brush.ImageSource = bmp;
+            NesOut.Source = bmp;
+            // DrawArea.Background = brush;
             container = new UnityContainer();
             new UnityRegistration().RegisterNesTypes(container, "soft");
             nes = container.Resolve<NESMachine>();
@@ -53,7 +55,7 @@ namespace SilverBulb
             {
                 return;
             }
-            
+            src.MediaHost = NintendoSound;
             // src.MediaSource.TargetMachine = nes;
             
             NintendoSound.SetSource( src.MediaSource);
@@ -71,10 +73,8 @@ namespace SilverBulb
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             nes.Drawscreen += new EventHandler(nes_Drawscreen);
 
-            controlVM = new ControlPanelVM(new PlatformDelegates().BrowseForFile);
-            controlVM.TargetMachine = nes;
-            controlVM.Dispatcher = this.Dispatcher;
-            this.ControlPanel.DataContext = controlVM;
+
+            this.ToolBar.DataContext = new ToolstripViewModel(container);
 
             nes.SilverlightStartDemo();
         }
@@ -93,15 +93,17 @@ namespace SilverBulb
 
         }
 
+
+        double vol = 1.0;
         void Pause()
         {
-            NintendoSound.Pause();
+            NintendoSound.Volume = 0;
             CompositionTarget.Rendering -= new EventHandler(CompositionTarget_Rendering);
         }
 
         void Play()
         {
-            NintendoSound.Play();
+            NintendoSound.Volume = vol;
             CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
         }
 
@@ -120,14 +122,18 @@ namespace SilverBulb
 
         private void DrawArea_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (ControlPane.Visibility == System.Windows.Visibility.Visible)
+            if (ToolBar.Visibility == System.Windows.Visibility.Visible)
             {
-                ControlPane.Visibility = System.Windows.Visibility.Collapsed;
+                ToolBar.Visibility = System.Windows.Visibility.Collapsed;
             }
             else
             {
-                ControlPane.Visibility = System.Windows.Visibility.Visible;
+                ToolBar.Visibility = System.Windows.Visibility.Visible;
             }
+        }
+
+        private void EnableControls_KeyDown(object sender, KeyEventArgs e)
+        {
         }
 
 

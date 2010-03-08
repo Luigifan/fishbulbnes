@@ -17,6 +17,7 @@ using InstiBulb.Views;
 using NES.CPU.nitenedo.Interaction;
 using InstiBulb.Commanding;
 using InstiBulb.WinViewModels;
+using System.Windows.Controls;
 
 namespace _10NES2
 {
@@ -194,6 +195,8 @@ namespace _10NES2
             }
         }
 
+
+
         void ShowBumpOut(object o)
         {
             String s = o as String;
@@ -215,8 +218,10 @@ namespace _10NES2
                 else
                 {
                     BumpOut = container.Resolve<FrameworkElement>(s);
-                    BumpOut.DataContext = container.Resolve<IViewModel>(s);
+                    IViewModel context = container.Resolve<IViewModel>(s);
+                    BumpOut.DataContext  = context;
                     BumpOutVisibility = true;
+                    
                 }
                 NotifyPropertyChanged("BumpOutVisibility");
                 NotifyPropertyChanged("BumpOut");
@@ -224,8 +229,12 @@ namespace _10NES2
             }
         }
 
+
+
+
         void HideBumpOut(object o)
         {
+            BumpOut.DataContext = null;
             BumpOut = null;    
             BumpOutVisibility = false;
             NotifyPropertyChanged("BumpOutVisibility");

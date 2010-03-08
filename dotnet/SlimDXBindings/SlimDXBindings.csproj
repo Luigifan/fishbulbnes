@@ -264,6 +264,7 @@
     <EmbeddedResource Include="ViewerX\Filter\Shaders\RenderNesSprites.fx" />
     <EmbeddedResource Include="ViewerX\Filter\Shaders\RenderNesTiles.fx" />
     <EmbeddedResource Include="ViewerX\Filter\Shaders\simpleBlur.fx" />
+    <EmbeddedResource Include="ViewerX\Filter\Shaders\PaletteGen.fx" />
     <None Include="ViewerX\RenderNesOutput.fx" />
   </ItemGroup>
   <ItemGroup>

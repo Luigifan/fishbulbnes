@@ -46,10 +46,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Unity Application Block 1.2 for Silverlight\Bin\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
@@ -58,6 +62,14 @@
     <Compile Include="NesVideoStreamSource.cs" />
     <Compile Include="MediaStreamSource.cs" />
     <Compile Include="NESKeyBinding.cs" />
+    <Compile Include="PlatformDelegates.cs" />
+    <Compile Include="ViewModels\SoundViewModel.cs" />
+    <Compile Include="ViewModels\ToolstripViewModel.cs" />
+    <Compile Include="Views\CommandingUserControl.cs" />
+    <Compile Include="Views\ToolPopout.xaml.cs">
+      <DependentUpon>ToolPopout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RasterizeEffect.cs" />
     <Compile Include="SilverlightControlPad.cs" />
     <Compile Include="SilverlightWavStreamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +81,12 @@
     <Compile Include="Views\ControlPanel.xaml.cs">
       <DependentUpon>ControlPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SoundControls.xaml.cs">
+      <DependentUpon>SoundControls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolBar.xaml.cs">
+      <DependentUpon>ToolBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WaveFormatEx.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +95,26 @@
       <Name>CPU6502.Silverlight</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <None Include="Views\Rasterize.fx" />
+    <Resource Include="rasterize.ps">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\ToolPopout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SoundControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -26,6 +26,14 @@ namespace SilverlightBindings
             _wavSource.BytesWritten += new EventHandler(_wavSource_BytesWritten);
         }
 
+        MediaElement mediaHost;
+
+        public MediaElement MediaHost
+        {
+            get { return mediaHost; }
+            set { mediaHost = value; }
+        }
+
         void _wavSource_BytesWritten(object sender, EventArgs e)
         {
             
@@ -52,11 +60,11 @@ namespace SilverlightBindings
         {
             get
             {
-                return false;
+                return mediaHost.IsMuted;
             }
             set
             {
-                
+                mediaHost.IsMuted = value;
             }
         }
 
@@ -69,11 +77,11 @@ namespace SilverlightBindings
         {
             get
             {
-                return 1.0f;
+                return (float)mediaHost.Volume;
             }
             set
             {
-             
+                mediaHost.Volume = value;
             }
         }
 

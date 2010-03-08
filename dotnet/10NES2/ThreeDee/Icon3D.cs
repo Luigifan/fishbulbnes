@@ -329,6 +329,7 @@ namespace InstiBulb.ThreeDee
             sphereModel.Transform = rotSphere;
 
             this.billboardModel = sphereModel;
+            billboardModel.Freeze();
         }
 
         private List<Point3D> GetAllPositions(Model3D model)
@@ -445,19 +446,21 @@ namespace InstiBulb.ThreeDee
         private Model3D model;
         public Model3D Model
         {
-            get { return Visual3DModel; }
+            get { return model; }
             set
             {
                 model = value;
+                //model.Freeze();
                 // Rebuild();
             }
         }
 
         public void Rebuild()
         {
+            
             MakeSphere();
 
-            _models.Children.Clear();
+            _models = new Model3DGroup();
 
             Transform3DGroup group = new Transform3DGroup();
             // preserve any pre-transform transforms (in the model itself)
@@ -483,8 +486,8 @@ namespace InstiBulb.ThreeDee
 
             // rotate the whole thing if vertical
             _models.Transform = rotateTransform;
-
             base.Visual3DModel = _models;
+            //base.Visual3DModel.Freeze();
         }
 
 

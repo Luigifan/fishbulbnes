@@ -315,5 +315,11 @@ namespace SlimDXBindings.Viewer10.Filter
 
         #endregion
 
+
+
+        public IFilterChainLink BindScalar<T>(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
