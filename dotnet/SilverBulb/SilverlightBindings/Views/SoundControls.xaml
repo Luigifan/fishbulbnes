@@ -14,7 +14,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <StackPanel Orientation="Vertical" Grid.Row="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Stretch" >
             <Slider Minimum="0" Maximum="1" Value="{Binding Volume, Mode=TwoWay}"/>
             <CheckBox IsChecked="{Binding Path=Muted, Mode=TwoWay}" Content="Muted" />
             <Border BorderBrush="Black" BorderThickness="2" CornerRadius="2" Background="Goldenrod">
@@ -29,6 +29,16 @@
                     </CheckBox>
                 </StackPanel>
             </Border>
+            <Grid HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock>BufLen</TextBlock>
+            <Slider Minimum="15" Maximum="1000" Value="{Binding Path=Streamer.MediaSource.AudioBufferLength, Mode=TwoWay}" Grid.Column="1"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=Streamer.MediaSource.AudioBufferLength, Mode=TwoWay}"/>
+            </Grid>
         </StackPanel>
     </Grid>
 </views:CommandingUserControl>

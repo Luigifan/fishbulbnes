@@ -45,6 +45,9 @@ namespace SilverlightBindings.ViewModels
                 new InjectionProperty("DataContext", new ResolvedParameter<IViewModel>("SoundPanel"))
                 );
 
+            container.RegisterType<FrameworkElement, About>("AboutPanel");
+
+
             return container;
         }
 

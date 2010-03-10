@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="SilverlightBindings.Views.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300" d:DesignWidth="400">
+    
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock>SilverBulb! (beta)</TextBlock>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Orientation="Vertical">
+                <TextBlock>Controls: </TextBlock>
+                <TextBlock>Q - Start</TextBlock>
+                <TextBlock >W - Select</TextBlock>
+                <TextBlock>Z - B Button</TextBlock>
+                <TextBlock>X - A Button</TextBlock>
+                <TextBlock>I,J,K,L or Arrows - D-Pad</TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock>Written by Joe Hartrick</TextBlock>
+                <TextBlock>Bandlimited audio algorithm courtesy of Blaarg</TextBlock>
+                <TextBlock ></TextBlock>
+                <TextBlock>Special thanks to the nesdev crew</TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

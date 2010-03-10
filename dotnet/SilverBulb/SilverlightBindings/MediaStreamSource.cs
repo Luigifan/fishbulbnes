@@ -14,10 +14,11 @@ using System.Globalization;
 using NES.CPU.Machine.BeepsBoops;
 using System.Threading;
 using NES.CPU.nitenedo;
+using System.ComponentModel;
 
 namespace SilverlightBindings
 {
-    public class NesMediaStreamSource : MediaStreamSource, IDisposable
+    public class NesMediaStreamSource : MediaStreamSource, IDisposable, INotifyPropertyChanged
     {
         private WaveFormatEx _waveFormat;
         private MediaStreamDescription _audioDesc;
@@ -64,6 +65,14 @@ namespace SilverlightBindings
             base.AudioBufferLength = 45;
         }
 
+        public int AudioBufferLength
+        {
+            get { return base.AudioBufferLength; }
+            set { base.AudioBufferLength = value;
+                
+            NotifyPropertyChanged("AudioBufferLength");
+            }
+        }
 
         protected override void OpenMediaAsync()
         {
@@ -100,7 +109,6 @@ namespace SilverlightBindings
             sourceAttributes[MediaSourceAttributesKeys.CanSeek] =
                 false.ToString();
 
-            
             // tell Silverlight we're done opening our media
             ReportOpenMediaCompleted(sourceAttributes, availableStreams);
 
@@ -214,5 +222,13 @@ namespace SilverlightBindings
             _stream.Dispose();
 
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void NotifyPropertyChanged(string s)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(s));
+        }
+
     }
 }

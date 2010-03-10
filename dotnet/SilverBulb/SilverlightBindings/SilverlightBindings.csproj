@@ -65,6 +65,9 @@
     <Compile Include="PlatformDelegates.cs" />
     <Compile Include="ViewModels\SoundViewModel.cs" />
     <Compile Include="ViewModels\ToolstripViewModel.cs" />
+    <Compile Include="Views\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CommandingUserControl.cs" />
     <Compile Include="Views\ToolPopout.xaml.cs">
       <DependentUpon>ToolPopout.xaml</DependentUpon>
@@ -102,6 +105,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ToolPopout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
