@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows.Input;
+using FishBulb;
 
 namespace InstiBulb.WinViewModels
 {
@@ -78,8 +79,8 @@ namespace InstiBulb.WinViewModels
     public class WinDebuggerVM : DebuggerVM
     {
 
-        public WinDebuggerVM()
-            : base()
+        public WinDebuggerVM(IPlatformDelegates delegates) : base(delegates)
+
         {
             base.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(WinDebuggerVM_PropertyChanged);
             this.DrawNameTables = new DisplayNameTablesCommand(this);

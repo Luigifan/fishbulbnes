@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 using System.IO;
+using FishBulb;
 
 namespace InstiBulb
 {
-    public class PlatformDelegates
+    public class PlatformDelegates : IPlatformDelegates
     {
         public string BrowseForFile(string defaultExt, string filter)
         {
@@ -90,5 +91,20 @@ namespace InstiBulb
             return sram;
         }
 
+
+        public event EventHandler<RomLoadedEventArgs> RomLoadedEvent;
+
+        public Stream LoadFile(string filelocation)
+        {
+            Stream s = null;
+            try
+            {
+                s = File.Open(filelocation, FileMode.Open);
+            }
+            catch
+            {
+            }
+            return s;
+        }
     }
 }

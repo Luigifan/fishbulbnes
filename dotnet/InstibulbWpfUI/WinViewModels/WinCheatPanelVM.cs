@@ -5,11 +5,17 @@ using System.Text;
 using Fishbulb.Common.UI;
 using System.Collections.ObjectModel;
 using NES.CPU.nitenedo;
+using FishBulb;
 
 namespace InstiBulb.WinViewModels
 {
     public class WinCheatPanelVM : CheatPanelVM
     {
+
+        public WinCheatPanelVM(IPlatformDelegates delegates) : base(delegates)
+        {
+
+        }
 
         ObservableCollection<CheatVM> activeCheats = new ObservableCollection<CheatVM>();
 

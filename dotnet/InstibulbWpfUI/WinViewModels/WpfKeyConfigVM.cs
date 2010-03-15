@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using fishbulbcommonui;
+using FishBulb;
 
 namespace InstiBulb.WinViewModels
 {
@@ -60,7 +61,7 @@ namespace InstiBulb.WinViewModels
 
         private IKeyBindingConfigTarget dataModel;
 
-        public WpfKeyConfigVM(IKeyBindingConfigTarget model)
+        public WpfKeyConfigVM(IKeyBindingConfigTarget model, IPlatformDelegates delegates ) : base(delegates)
         {
             dataModel = model;
             keyCommand = new BindKeyCommand(this);

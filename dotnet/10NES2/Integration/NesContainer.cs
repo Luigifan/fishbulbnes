@@ -25,6 +25,7 @@ using InstiBulb.WpfNESViewer;
 using SlimDXBindings.Viewer10;
 using System.Windows;
 using SlimDXBindings.ViewerX;
+using FishBulb;
 
 
 namespace InstiBulb.Integration
@@ -43,7 +44,7 @@ namespace InstiBulb.Integration
             // the component that creates the sound thread
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
-
+            container.RegisterType<IPlatformDelegates, PlatformDelegates>();
             container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
             container.RegisterInstance<SRAMReaderDelegate>(delegates.ReadSRAM, new ContainerControlledLifetimeManager());
@@ -128,8 +129,8 @@ namespace InstiBulb.Integration
             container.RegisterType<IViewModel, SaveStateVM>("SaveStatePanel", new ContainerControlledLifetimeManager(), new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>()));
             
             container.RegisterType<IViewModel, WpfKeyConfigVM>("ControllerConfigPanel", new ContainerControlledLifetimeManager()
-                , new InjectionConstructor(new ResolvedParameter<IKeyBindingConfigTarget>("padone")),
-                new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>())
+                , new InjectionConstructor(new ResolvedParameter<IKeyBindingConfigTarget>("padone"), new ResolvedParameter<IPlatformDelegates>())
+                , new InjectionProperty("TargetMachine", new ResolvedParameter<NESMachine>())
                 );
 
 

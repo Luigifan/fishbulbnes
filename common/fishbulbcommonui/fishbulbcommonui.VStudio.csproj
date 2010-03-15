@@ -130,13 +130,16 @@
     <Compile Include="ControlPanel\CartInfo.cs" />
     <Compile Include="ControlPanel\CheatPanelVM.cs" />
     <Compile Include="ControlPanel\ControlPanelVM.cs" />
+    <Compile Include="ControlPanel\PatternTablesViewModel.cs" />
     <Compile Include="Debugger\CPUStatusVM.cs" />
     <Compile Include="Debugger\DebuggerVM.cs" />
     <Compile Include="Debugger\FutureInstructions.cs" />
+    <Compile Include="IPlatformDelegates.cs" />
     <Compile Include="IProfileView.cs" />
     <Compile Include="IProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveStates\SaveStateVM.cs" />
+    <Compile Include="Sound\DummyWavStreamer.cs" />
     <Compile Include="Sound\SoundViewModel.cs" />
     <Compile Include="UIInstigator.cs" />
     <Compile Include="Unity\CommonUIRegisterer.cs" />
