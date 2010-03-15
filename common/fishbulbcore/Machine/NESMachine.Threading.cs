@@ -115,18 +115,18 @@ namespace NES.CPU.nitenedo
         {
 
             //ThreadPool.QueueUserWorkItem(NESThreadStarter, null);
-#if SILVERLIGHT
+//#if SILVERLIGHT || MONO
             System.Threading.Thread nesThread =
                 new System.Threading.Thread(NESThreadStarter);
             
             nesThread.Name = "NESThread";
             nesThread.IsBackground = true;
             nesThread.Start(null);
-#else
-            System.Threading.Tasks.Task task = new System.Threading.Tasks.Task(NESThreadStarter, System.Threading.Tasks.TaskCreationOptions.LongRunning);
-            task.Start();
-            //nesThread.Priority = ThreadPriority.AboveNormal;
-#endif
+//#else
+ //           System.Threading.Tasks.Task task = new System.Threading.Tasks.Task(NESThreadStarter, System.Threading.Tasks.TaskCreationOptions.LongRunning);
+//            task.Start();
+//            //nesThread.Priority = ThreadPriority.AboveNormal;
+//#endif
 
         }
 

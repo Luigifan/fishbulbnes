@@ -16,6 +16,8 @@ namespace GtkNes
 		
 		public FrontPanel()
 		{
+			Console.WriteLine("FrontPanel.ctor");
+			
 			this.Build();
 		}
 		private IViewModel model;

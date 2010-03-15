@@ -5,6 +5,7 @@ using System.Threading;
 using NES.CPU.Machine.BeepsBoops;
 using Tao.OpenAl;
 using System.Diagnostics;
+using NES.Sound;
 
 namespace WPFamicom.Sound
 {

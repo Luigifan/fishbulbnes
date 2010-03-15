@@ -91,7 +91,7 @@ namespace testproject
             //BitmapImage bitmap = new BitmapImage(new Uri(@"D:\Projects\Fastendu\GLFamicom\Artwork\MMYouGot.JPG"));
 
  			           
-            Gl.ReloadFunctions();
+            //Gl.ReloadFunctions();
             //base.AutoSwapBuffers = false;
             Gl.glClearColor(0, 0, 0, 0.5f);
             Gl.glClearDepth(1.0f);
@@ -128,7 +128,8 @@ namespace testproject
                     break;
             }
             Gl.glPixelStorei(Gl.GL_UNPACK_ALIGNMENT, 1);
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, 256, 256, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, null);
+            
+			Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, 256, 256, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, null as string);
 
             SetupPaletteTexture();
 
@@ -136,12 +137,12 @@ namespace testproject
             program = Gl.glCreateProgram();
 
             vShaderIndex = Gl.glCreateShader(Gl.GL_VERTEX_SHADER);
-            Gl.glShaderSource(vShaderIndex, 1, vertShader, new int[1] { vertShader[0].Length });
+            Gl.glShaderSource(vShaderIndex, 1, ref vertShader, new int[1] { vertShader[0].Length });
             Gl.glCompileShader(vShaderIndex);
             Gl.glAttachShader(program, vShaderIndex);
 
             fShaderIndex = Gl.glCreateShader(Gl.GL_FRAGMENT_SHADER);
-            Gl.glShaderSource(fShaderIndex, 1, fragShader, new int[1] { fragShader[0].Length });
+            Gl.glShaderSource(fShaderIndex, 1, ref fragShader, new int[1] { fragShader[0].Length });
             Gl.glCompileShader(fShaderIndex);
             Gl.glAttachShader(program, fShaderIndex);
 
@@ -155,13 +156,15 @@ namespace testproject
             //Gl.glActiveTexture(Gl.GL_TEXTURE0 + 0);
             //Gl.glBindTexture(Gl.GL_TEXTURE_2D, textureHandle[0]);
             //Gl.glUniform1i(loc, 0);
-            fragShaderPassNumber = Gl.glGetUniformLocation(program, "passNumber");
+            string passNoLoc = "passNumber";
+			fragShaderPassNumber = Gl.glGetUniformLocation(program, ref passNoLoc);
             Gl.glUniform1i(fragShaderPassNumber, 1);
 
             if (engine == RenderStyles.NESPaletted)
             {
                 Gl.glUniform1i(fragShaderPassNumber, 0);
-                int loc = Gl.glGetUniformLocation(program, "myPalette");
+                string palLoc = "myPalette";
+				int loc = Gl.glGetUniformLocation(program, ref palLoc);
                 Gl.glActiveTexture(Gl.GL_TEXTURE0 + 1);
                 Gl.glBindTexture(Gl.GL_TEXTURE_1D, textureHandle[1]);
                 Gl.glUniform1i(loc, 1);
@@ -257,7 +260,7 @@ namespace testproject
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, frameBufferWidth, frameBufferHeight, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, null);
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, frameBufferWidth, frameBufferHeight, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, null as string);
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, passOneFBTex, 0);
 
             /// Gl.glTexEnvf(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE);

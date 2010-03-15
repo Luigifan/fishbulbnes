@@ -52,7 +52,7 @@ public partial class MainWindow {
         this.notebook1 = new Gtk.Notebook();
         this.notebook1.CanFocus = true;
         this.notebook1.Name = "notebook1";
-        this.notebook1.CurrentPage = 1;
+        this.notebook1.CurrentPage = 0;
         // Container child notebook1.Gtk.Notebook+NotebookChild
         this.controlPanel = new Gtk.VBox();
         this.controlPanel.Name = "controlPanel";

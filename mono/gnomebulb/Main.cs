@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity;
 using GtkNes;
 using Microsoft.Practices.Unity.Configuration;
 using System.Configuration;
+using InstiBulb.Integration;
 
 namespace testproject
 {
@@ -11,10 +12,10 @@ namespace testproject
 	{
 		public static void Main (string[] args)
 		{
+	        NesContainerFactory fact = new NesContainerFactory();
             IUnityContainer container = new UnityContainer();
-
-            UnityConfigurationSection section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
-            section.Containers.Default.Configure(container);
+			
+			fact.RegisterNesTypes(container, "soft");
 
 			Application.Init ();
 

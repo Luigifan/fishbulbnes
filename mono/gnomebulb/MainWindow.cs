@@ -12,51 +12,51 @@ using TestGtkInstigation;
 using Fishbulb.Common.UI;
 using System.Collections.Generic;
 using GtkNes;
-using GtkNes.SDL;
 using System.Runtime.InteropServices;
+using NES.Sound;
 
 public partial class MainWindow: Gtk.Window
 {	
 	
-	NESMachine machine = new NESMachine();
+	NESMachine machine;
 	SoundThreader sndThread;
     IUnityContainer container;
 
-	Video sdlVideo;
 	public MainWindow (IUnityContainer container): base (Gtk.WindowType.Toplevel)
 	{
         this.container = container;
 
-        
+ 		machine = container.Resolve<NESMachine>();       
+		machine.PPU.LoadPalRGBA();
         Build ();
 		
-		sndThread = new SoundThreader(machine);
-
+        List<IViewModel> viewModels = new List<IViewModel>();
+		
+		viewModels.Add(container.Resolve<IViewModel>("ControlPanel") );
+		
+		container.RegisterType<Widget, FrontPanel>("FrontPanel");
+		
         GTKInstigator instigator = new GTKInstigator(container);
         
-        List<IViewModel> viewModels = new List<IViewModel>();
-		viewModels.Add(new ControlPanelVM(machine));
-        viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
-        viewModels.Add(new CheatPanelVM(machine));
-		viewModels.Add(new CPUStatusVM(machine));
-		viewModels.Add(new DebuggerVM(machine));
-        viewModels.Add(new FutureInstructions(machine));
+		
+//        viewModels.Add(new SoundViewModel(machine, sndThread.WavePlayer));
+//        viewModels.Add(new CheatPanelVM(machine));
+//		viewModels.Add(new CPUStatusVM(machine));
+//		viewModels.Add(new DebuggerVM(machine));
+//        viewModels.Add(new FutureInstructions(machine));
 
+		
         instigator.Bootstrap(this.notebook1, viewModels);
-
 
 		this.KeyPressEvent += HandleKeyPressEvent;
 		this.KeyReleaseEvent += HandleKeyReleaseEvent;
 		
 		
-		machine.PPU.PixelWidth=32;
-		machine.PPU.FillRGB = true;
-		machine.PPU.LoadPalRGBA();
-		machine.PPU.ShouldRender = true;
+
 		
 		for(int i = 0; i < 2; ++i)
 		{
-			vidBuffers[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)) * 256*256);
+			vidBuffers[i] = new int[256*256];
 		}
 		SwapNesBuffer();
 		vidBuffer = vidBuffers[curBuffer];
@@ -74,9 +74,8 @@ public partial class MainWindow: Gtk.Window
 	}
 
 
-
-	IntPtr vidBuffer;
-	IntPtr[] vidBuffers = new IntPtr[2];
+	int[] vidBuffer;
+	int[][] vidBuffers = new int[2][];
 	int curBuffer=0;
 	//  int[] vidBuffer = new int[256*256];
 
@@ -192,7 +191,7 @@ public partial class MainWindow: Gtk.Window
 	{
 
 		
-		machine.PadOne.SetNextControlByte(padOneState);
+		// machine.PadOne.SetNextControlByte(padOneState);
 		vidBuffer = vidBuffers[curBuffer];
 		SwapNesBuffer();
  		
@@ -221,7 +220,7 @@ public partial class MainWindow: Gtk.Window
 			pixels[i]=255;
 		}
 		
-        Gl.ReloadFunctions();
+        
         Gl.glClearColor(0, 0, 0, 0.5f);
         Gl.glClearDepth(1.0f);
         //Gl.glShadeModel(Gl.GL_SMOOTH);
@@ -331,24 +330,8 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
-		Console.WriteLine("StartDestroy");
-		machine.ThreadStoptendo();
-		machine.Dispose();
-		Console.WriteLine("\tmachine disposed");
-		sndThread.Dispose();
-		Console.WriteLine("\tsound disposed");
-		Tao.Sdl.Sdl.SDL_Quit();
-		Console.WriteLine("\tSDL closed");
-		for(int i = 0; i < 2; ++i)
-		{
-			Marshal.FreeHGlobal(vidBuffers[i]);
-		}
-		Console.WriteLine("\t buffers destroyed");
-		
-		Console.WriteLine("Destroyed");
-		Application.Quit ();
-		
-		a.RetVal = true;
+		container.Dispose();
+
 	}	
 
 

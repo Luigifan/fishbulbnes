@@ -26,7 +26,7 @@ namespace WPFamicom.Sound
 		byte[][] buffers = new byte[BUFFER_COUNT][];
         int frequency;
 		int currentBuffer=0;
-
+		
         Sdl.AudioSpecCallbackDelegate audioCallback;
 
 		bufDef playingBuf = null;
