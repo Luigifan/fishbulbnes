@@ -22,11 +22,11 @@ namespace NES.CPU.PPUClasses
 
         public void SetByte(int Clock, int address, int data)
         {
-            DrawTo(Clock);
+            // DrawTo(Clock);
 
             if (_isDebugging)
             {
-                Events.Enqueue(new PPUWriteEvent { DataWritten = data, FrameClock = frameClock, RegisterAffected = address, ScanlineNum = frameClock / 341, ScanlinePos = frameClock % 341 });
+                Events.Enqueue(new PPUWriteEvent { IsWrite = true, DataWritten = data, FrameClock = frameClock, RegisterAffected = address, ScanlineNum = frameClock / 341, ScanlinePos = frameClock % 341 });
             }
             needToDraw = true;
             //Writable 2C02 registers
@@ -53,17 +53,20 @@ namespace NES.CPU.PPUClasses
                 //      6	EXT bus direction (0:input; 1:output)
                 //      7	/VBL disable (when 0)
                 case 0x0:
+
+                    DrawTo(Clock);
+
                     _PPUControlByte0 = data;
 
-                    nameTableMemoryStart = (0x400 * (_PPUControlByte0 & 0x3));
-                    nameTableBits = (byte)(_PPUControlByte0 & 0x3);
+                    nameTableBits = _PPUControlByte0 & 0x3;
                     _backgroundPatternTableIndex = ((_PPUControlByte0 & 0x10) >> 4) * 0x1000;
-
+                    
                     // if we toggle /vbl we can throw multiple NMIs in a vblank period
-                    if ((data & 0x80) == 0x80 && NMIHasBeenThrownThisFrame)
-                    {
-                        // NMIHasBeenThrownThisFrame = false;
-                    }
+                    //if ((data & 0x80) == 0x80 && NMIHasBeenThrownThisFrame)
+                    //{
+                    //     NMIHasBeenThrownThisFrame = false;
+                    //}
+                    UpdatePixelInfo();
                     break;
                 case 0x1:
                     //1	    0	disable composite colorburst (when 1). Effectively causes gfx to go black & white.
@@ -74,14 +77,14 @@ namespace NES.CPU.PPUClasses
                     //      5	R (to be documented)
                     //      6	G (to be documented)
                     //      7	B (to be documented)
-
+                    DrawTo(Clock);
                     isRendering = (data & 0x18)!=0;
                     _PPUControlByte1 = data;
-                    
                     _spritesAreVisible = (_PPUControlByte1 & 0x10) == 0x10;
                     _tilesAreVisible = (_PPUControlByte1 & 0x08) == 0x08;
                     _clipTiles = (_PPUControlByte1 & 0x2) != 0x2;
                     _clipSprites = (_PPUControlByte1 & 0x4) != 0x4;
+                    UpdatePixelInfo();
 
                     break;
                 case 0x2:
@@ -113,29 +116,32 @@ namespace NES.CPU.PPUClasses
                         //    fineHorizontalScroll = data & 0x7;
                         //    horizontalTileIndex = data >> 3;
                         //}  
+                        DrawTo(Clock);
                         _hScroll = data;
+                        
                         lockedHScroll = _hScroll & 0x7;
+                        UpdatePixelInfo();
+
                         PPUAddressLatchIsHigh = false;
                     }
                     else
                     {
                         // during rendering, a write here will not post to the rendering counter
-
+                        DrawTo(Clock);
                         _vScroll = data;
                         if (data > 240)
                         {
                             _vScroll = data - 256;
                         }
-                        //note: i shouldnt need this once the scanlineevent timing is fixed
+
                         if (!frameOn || (frameOn && !isRendering))
                         {
                             lockedVScroll = _vScroll;
-                            //UpdatePixelInfo();
                         }
-                        
-                        // fineVerticalScroll = data & 0x7;
-                        // verticalTileIndex = data >> 3;
+
                         PPUAddressLatchIsHigh = true;
+                        UpdatePixelInfo();
+
                     }
                     break;
 
@@ -167,12 +173,13 @@ namespace NES.CPU.PPUClasses
                         //   +-------------- Additional vertical scroll in pixels (0..3)
                         
                         // on second write during frame, loopy t (_hscroll, _vscroll) is copied to loopy_v (lockedHscroll, lockedVScroll)
+
+                        DrawTo(Clock);
                         _hScroll = ((_PPUAddress & 0x1F) << 3); // +(currentXPosition & 7);
                         _vScroll = (((_PPUAddress >> 5) & 0x1F) << 3);
                         _vScroll |= ((_PPUAddress >> 12) & 0x3);
 
                         nameTableBits = ((_PPUAddress >> 10) & 0x3);
-                        nameTableMemoryStart = ((_PPUAddress >> 10) & 0x3) * 0x400;
                         if (frameOn)
                         {
 
@@ -181,7 +188,7 @@ namespace NES.CPU.PPUClasses
                             lockedVScroll -= currentYPosition;
                             
                         }
-                        //UpdatePixelInfo();
+                        UpdatePixelInfo();
                         // relock vscroll during render when this happens
                     }
 
@@ -196,10 +203,10 @@ namespace NES.CPU.PPUClasses
                     // ppuLatch = data;
                     if ((_PPUAddress & 0xFF00) == 0x3F00)
                     {
-
+                        DrawTo(Clock);
                         WriteToNESPalette(_PPUAddress, (byte)data);
                         // these palettes are all mirrored every 0x10 bytes
-
+                        UpdatePixelInfo();
 
                         // _vidRAM[_PPUAddress ^ 0x1000] = (byte)data;
                     }
@@ -233,11 +240,14 @@ namespace NES.CPU.PPUClasses
                     PPUAddress = (PPUAddress & 0x3FFF);
                     break;
             }
-            UpdatePixelInfo();
         }
 
         public int GetByte(int Clock, int address)
         {
+            if (_isDebugging)
+            {
+                Events.Enqueue(new PPUWriteEvent { IsWrite = false, DataWritten = 0, FrameClock = frameClock, RegisterAffected = address, ScanlineNum = frameClock / 341, ScanlinePos = frameClock % 341 });
+            }
 
             switch (address & 0x7)
             {
@@ -247,7 +257,6 @@ namespace NES.CPU.PPUClasses
                 case 0x6:
                     return ppuReadBuffer;
                 case 0x2:
-                    DrawTo(Clock);
 
                     int ret;
                     PPUAddressLatchIsHigh = true;
@@ -263,9 +272,16 @@ namespace NES.CPU.PPUClasses
                     //    nameTableMemoryStart = 0;
                     //}
                     // clear vblank flag if read
+                    DrawTo(Clock);
                     if ((ret & 0x80) == 0x80)
-                        _PPUStatus = _PPUStatus & ~0x80;
+                    {
+                        
 
+                        _PPUStatus = _PPUStatus & ~0x80;
+                        
+                    }
+                    UpdatePixelInfo();
+                    
                     //}
                     return ret;
                 case 0x4:
@@ -308,7 +324,7 @@ namespace NES.CPU.PPUClasses
                             ppuReadBuffer = chrRomHandler.GetPPUByte(Clock, _PPUAddress & 0x3FFF);
                         }
                     }
-                    if ((PPUControlByte0 & 0x4) == 0x4)
+                    if ((_PPUControlByte0 & 0x4) == 0x4)
                     {
                         _PPUAddress = _PPUAddress + 32;
                     }
@@ -402,10 +418,10 @@ namespace NES.CPU.PPUClasses
         {
             get
             {
-                //if (frameClock > 6823)
-                //{
-
-                     return (89345 - frameClock) / 3;
+                if (frameClock < 6820)
+                    return (6820 - frameClock) / 3;
+                else
+                     return (((89345 - frameClock) / 341) / 3);
                 //}
                 //else
                 //{

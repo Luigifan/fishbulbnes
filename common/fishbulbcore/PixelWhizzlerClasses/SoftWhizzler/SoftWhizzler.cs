@@ -11,12 +11,9 @@ namespace NES.CPU.PixelWhizzlerClasses.SoftWhizzler
         protected override void DrawPixel()
         {
 
-
             byte tilePixel = _tilesAreVisible ? GetNameTablePixel() : (byte)0;
             bool foregroundPixel =false;
             byte spritePixel = _spritesAreVisible ? GetSpritePixel(out foregroundPixel) : (byte)0;
-
-
 
             if (!hitSprite && spriteZeroHit && tilePixel != 0)
             {
@@ -25,9 +22,7 @@ namespace NES.CPU.PixelWhizzlerClasses.SoftWhizzler
             }
 
             int pixel = (foregroundPixel || (tilePixel == 0 && spritePixel != 0)) ? spritePixel : tilePixel;
-
             rgb32OutBuffer[vbufLocation] = pal[_palette[pixel]];
-
         }
 
         public override void FillBuffer()
@@ -56,6 +51,7 @@ namespace NES.CPU.PixelWhizzlerClasses.SoftWhizzler
         {
             
         }
+
 
     }
 }

@@ -5,11 +5,15 @@ using System.Text;
 using Fishbulb.Common.UI;
 using NES.CPU.nitenedo;
 using System.ComponentModel;
+using FishBulb;
 
 namespace fishbulbcommonui.SaveStates
 {
     public class SaveStateVM : BaseNESViewModel
     {
+
+        public SaveStateVM(IPlatformDelegates delegates) : base(delegates) {}
+
         #region IViewModel Members
 
         protected override void OnAttachTarget()

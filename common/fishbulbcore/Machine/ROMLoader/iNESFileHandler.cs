@@ -81,6 +81,62 @@ namespace NES.CPU.Machine.ROMLoader
             return _cart;
         }
 
+
+        public static INESCart LoadStream(IPPU ppu, Stream stream)
+        {
+            byte[] header = new byte[2];
+
+            int cnt = stream.Read(header, 0, 2);
+            stream.Seek(0, SeekOrigin.Begin);
+            if (header[0] == 0x50 && header[1] == 0x4B)
+            {
+                return LoadZipROM(ppu, stream);
+            }
+            else
+            {
+                return LoadROM(ppu, stream);
+            }
+
+        }
+
+        public static INESCart LoadZipROM(IPPU ppu, Stream stream)
+        {
+            ZipInputStream zipStream = new ZipInputStream(stream);
+            INESCart _cart = null;
+            ZipEntry entry = zipStream.GetNextEntry();
+            try
+            {
+
+                if (entry.Name.IndexOf(".nes") > 0)
+                {
+                    Console.WriteLine("Loading " + entry.Name + " " + entry.Size.ToString() + " bytes");
+                    byte[] data;//= new byte[entry.Size];
+
+                    BinaryReader reader = new BinaryReader(zipStream);
+                    data = reader.ReadBytes((int)entry.Size);
+
+                    //int len = zipStream.Read(data, 0, (int)entry.Size);
+                    Console.WriteLine("BodyRead " + data.Length.ToString() + " bytes");
+                    //reader.Close();
+                    MemoryStream mstream = new MemoryStream(data);
+                    _cart = LoadROM(ppu, mstream);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failure reading zip file.", e);
+            }
+            finally
+            {
+                zipStream.CloseEntry();
+                zipStream.Close();
+                stream.Close();
+            }
+
+            return _cart;
+        }
+
+
         public static INESCart LoadROM(IPPU ppu, Stream zipStream)
         {
             INESCart _cart = null;

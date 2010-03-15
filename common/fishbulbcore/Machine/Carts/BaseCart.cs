@@ -169,6 +169,7 @@ namespace NES.CPU.Machine.Carts
             SRAMCanSave = (romControlBytes[0] & 0x02) == 0x02;
             SRAMEnabled = true;
 
+             UsesSRAM = (romControlBytes[0] & 0x02) == 0x02;
 
             // rom0.0=0 is horizontal mirroring, rom0.0=1 is vertical mirroring
 
@@ -611,8 +612,14 @@ namespace NES.CPU.Machine.Carts
                     break;
             }
             UpdateBankStartCache();
-
+            whizzler.UpdatePixelInfo();
             
+        }
+
+        public virtual bool UsesSRAM
+        {
+            get;
+            set;
         }
 
         #region INESCart Members

@@ -38,8 +38,9 @@ namespace SilverlightBindings
         {
             
             mediaSource.WriteSamples();
-            _wavSource.ReadWaves();
+            
             mediaSource.Wait();
+            
         }
 
         IWavReader _wavSource;

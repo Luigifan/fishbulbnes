@@ -19,15 +19,28 @@ namespace SilverlightBindings.Views
             InitializeComponent();
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
+        
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            this.DialogResult = true;
+
+            
+            base.OnClosing(e);
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+
+        private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            foreach (FrameworkElement p in LayoutRoot.Children.Where(p => p is FrameworkElement))
+            {
+                var dc = p.DataContext as IDisposable;
+                if (dc != null)
+                    dc.Dispose();
+            }
+            //this.DialogResult = true;
+            this.Close();
         }
+
     }
 }
 

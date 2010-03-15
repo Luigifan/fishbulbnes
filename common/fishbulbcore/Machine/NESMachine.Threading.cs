@@ -22,14 +22,8 @@ namespace NES.CPU.nitenedo
             set 
             { 
                 isDebugging = value;
-                if (_cpu.Debugging != value)
-                {
-                    _cpu.Debugging = value;
-                }
-                if (_ppu.IsDebugging != value)
-                {
-                    _ppu.IsDebugging = value;
-                }
+                _cpu.Debugging = value;
+                _ppu.IsDebugging = value;
             }
         }
 
@@ -124,6 +118,7 @@ namespace NES.CPU.nitenedo
 #if SILVERLIGHT
             System.Threading.Thread nesThread =
                 new System.Threading.Thread(NESThreadStarter);
+            
             nesThread.Name = "NESThread";
             nesThread.IsBackground = true;
             nesThread.Start(null);
@@ -157,10 +152,7 @@ namespace NES.CPU.nitenedo
 
         private void ForceStop()
         {
-            if (_cart != null && _cart.CheckSum != null && SRAMWriter != null)
-            {
-                SRAMWriter(_cart.CheckSum, _cart.SRAM);
-            }
+
 
             if (currentWorkItem.Task != MachineTasks.Stoppit)
             {

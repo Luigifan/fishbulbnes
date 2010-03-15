@@ -7,6 +7,7 @@ using NES.Machine;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.ROMLoader;
 using fishbulbcommonui;
+using FishBulb;
 
 namespace Fishbulb.Common.UI
 {
@@ -71,9 +72,11 @@ namespace Fishbulb.Common.UI
         }
 
 
-        public ControlPanelVM(GetFileDelegate fileGetter)
+
+            public ControlPanelVM(IPlatformDelegates delegates) : base(delegates) 
+
         {
-            this.fileGetter = fileGetter;
+            
             Commands.Add("LoadRom",
                 new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)),
                     new CommandCanExecuteHandler(CanInsertCart)));
@@ -91,11 +94,10 @@ namespace Fishbulb.Common.UI
                     new CommandCanExecuteHandler(o => true)));
                     }
 
-        GetFileDelegate fileGetter;
 
         void BrowseFile(object o)
         {
-            string filename = fileGetter("*.nes", "NES Games (*.nes, *.nsf, *.zip)|*.nes;*.nsf;*.zip");
+            string filename = PlatformDelegates.BrowseForFile("*.nes", "NES Games (*.nes, *.nsf, *.zip)|*.nes;*.nsf;*.zip");
             if (filename != null)
                 InsertCart(filename);
         }

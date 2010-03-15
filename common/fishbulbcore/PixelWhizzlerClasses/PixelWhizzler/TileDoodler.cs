@@ -532,14 +532,13 @@ namespace NES.CPU.PPUClasses
             {
                 for (int j = 0; j < 30; ++j)
                 {
-                    //int TileIndex = (byte)_ppu.NameTable[_ppu.Mirror[nt2], i + (j * 32)];
+                    
                     int address = 0x2000 + NameTable + i + (j * 32);
                     int TileIndex = (byte)_ppu.ChrRomHandler.GetPPUByte(0, address );
 
                     int addToCol = GetAttributeTableEntry(NameTable, i, j);
                     int[] tile = GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol, out currentNameTableEntries[i][j]);
                     DrawTile(ref result, 256, 240, tile, i * 8, j * 8);
-                    //DrawRect(GetPatternTableEntry(_ppu.PatternTableIndex, TileIndex, addToCol), 8, 8, (i * 8) + XOffset, (j * 8) + YOffset);
                 }
             }
             return result;

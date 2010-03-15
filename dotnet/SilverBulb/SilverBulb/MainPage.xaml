@@ -6,49 +6,39 @@
              xmlns:views="clr-namespace:SilverlightBindings.Views;assembly=SilverlightBindings"
     mc:Ignorable="d"
      Loaded="UserControl_Loaded"
-
+x:Name="HostControl"
     d:DesignHeight="300" d:DesignWidth="400">
 
     <Grid x:Name="LayoutRoot" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="9*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition  />
+            <ColumnDefinition  />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Padding="3" BorderThickness="15" CornerRadius="7" IsHitTestVisible="false" Grid.RowSpan="2" >
-            <Grid>
-                <Image Name="NesOut" CacheMode="BitmapCache" />
-                <!--<Canvas Background="Black" Name="DrawArea" Cursor="None" IsHitTestVisible="false" CacheMode="BitmapCache"  >
-                    <Canvas.Effect>
-                        <views:RasterizeEffect />
-                    </Canvas.Effect>
-                </Canvas>-->
-            </Grid>
+        <Border Name="NesBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Padding="3" BorderThickness="15" CornerRadius="7" IsHitTestVisible="false" Grid.RowSpan="2" >
+            <Image HorizontalAlignment="Stretch" Name="NesOut" CacheMode="BitmapCache" Stretch="Uniform" UseLayoutRounding="True" >
+            </Image>
         </Border>
         
         <MediaElement x:Name="NintendoSound" 
-                      AutoPlay="True" Visibility="Collapsed"  />
-        <views:ToolBar Name="ToolBar" Grid.Column="1"  Grid.RowSpan="2"/>
-
-        <!--<StackPanel Orientation="Vertical" Grid.Column="1" x:Name="ControlPane" Background="LightGray" >
-
-            <views:ControlPanel x:Name="ControlPanel" IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" />
-            <CheckBox x:Name="EnableControls" Content="Enable" IsChecked="True" KeyDown="EnableControls_KeyDown" />
-
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Background="LightGray">
-            <TextBlock FontSize="12" FontWeight="Bold" >Controls</TextBlock>
-            <TextBlock>Q: Start</TextBlock>
-            <TextBlock>W: Select</TextBlock>
-            <TextBlock>Z: B</TextBlock>
-            <TextBlock>Z: A</TextBlock>
-            <TextBlock MinHeight="12"/>
-            <TextBlock>I,J,K,L:</TextBlock>
-            <TextBlock>Arrows: D-Pad</TextBlock>
-        </StackPanel>-->
+                      AutoPlay="True" Visibility="Collapsed" CacheMode="BitmapCache" />
+        <views:ToolBar Name="ToolBar" Grid.Column="1"  Grid.RowSpan="1"/>
         
+        <Grid Grid.Row="1" Grid.Column="1"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--<TextBlock Text="FPS" />-->
+            <!--<ScrollBar Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="FrameRate"
+                       Maximum="75" Minimum="5" Value="{Binding ElementName=HostControl, Path=FPS,Mode=TwoWay}"
+                        Grid.Column="1" 
+                       />
+            <TextBlock Text="{Binding ElementName=HostControl, Path=FPS }" Grid.Column="2" />-->
+        </Grid>
     </Grid>
 </UserControl>

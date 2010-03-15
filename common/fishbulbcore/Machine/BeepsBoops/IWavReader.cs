@@ -12,11 +12,14 @@ namespace NES.CPU.Machine.BeepsBoops
         void ReadWaves();
         //byte[] ReadWaveBytes();
         byte[] SharedBuffer { get; set; }
+        
+        void SetSharedBuffer(byte[] values);
+        
         int SharedBufferLength { get; set; }
 		float Frequency { get; }
 		
         bool BufferAvailable { get; }
 
-        event EventHandler BytesWritten;
+        EventHandler BytesWritten { get; set; }
     }
 }

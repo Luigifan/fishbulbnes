@@ -28,5 +28,29 @@ namespace SilverlightBindings.Views
                 p.ShowWindow((sender as Button).Tag);
             }
         }
+
+        private void BumpOutShownEvent(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            if (element == null) return;
+
+            ContentControl host = element.DataContext as ContentControl;
+            if (host == null) return;
+
+            if (host.Visibility == System.Windows.Visibility.Collapsed)
+            {
+                var p = this.DataContext as ToolstripViewModel;
+                if (p != null)
+                {
+                    host.Visibility = System.Windows.Visibility.Visible;
+                    p.FillBumpout(host, (sender as Button).Tag);
+                }
+            }
+            else
+            {
+                host.Visibility = System.Windows.Visibility.Collapsed;
+                host.Content = null;
+            }
+        }
     }
 }

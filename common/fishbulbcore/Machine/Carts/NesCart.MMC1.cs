@@ -62,8 +62,6 @@ namespace NES.CPU.Machine.Carts
             // copy from dest to dest + count
             private void CopyBanks(int dest, int src, int numberOf4kBanks)
             {
-                whizzler.DrawTo(lastClock);
-                
                 if (ChrRomCount > 0)
                 {
                     int oneKdest = dest * 4;
@@ -156,7 +154,7 @@ namespace NES.CPU.Machine.Carts
                 }
                 BankSwitchesChanged = true;
 
-
+                whizzler.UpdatePixelInfo();
             }
 
             private void SetMMC1PrgBanking()
@@ -220,6 +218,7 @@ namespace NES.CPU.Machine.Carts
                         break;
                 }
                 BankSwitchesChanged = true;
+                whizzler.UpdatePixelInfo();
             }
             
             #endregion

@@ -72,21 +72,19 @@ namespace NES.CPU.FastendoDebugging
 
             for (int i = _cpu.InstructionHistoryPointer & 0xFF; i >= 0; --i)
             {
-                if (_cpu.InstructionHistory[i] != null)
-                {
+
                     string nesCPUInstructionHistoryDisassemble = _cpu.InstructionHistory[i].Disassemble();
                     if (nesCPUInstructionHistoryDisassemble.Trim() != string.Empty)
                         _instructionHistory.Add(nesCPUInstructionHistoryDisassemble);
-                }
+
             }
             for (int i = 0xFF; i > (_cpu.InstructionHistoryPointer & 0xFF); --i)
             {
-                if (_cpu.InstructionHistory[i] != null)
-                {
+
                     string nesCPUInstructionHistoryDisassemble = _cpu.InstructionHistory[i].Disassemble();
                     if (nesCPUInstructionHistoryDisassemble.Trim() != string.Empty)
                         _instructionHistory.Add(nesCPUInstructionHistoryDisassemble);
-                }
+
             }
 
             return _instructionHistory;

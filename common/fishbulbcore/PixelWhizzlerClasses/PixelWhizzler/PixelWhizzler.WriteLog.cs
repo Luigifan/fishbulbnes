@@ -8,7 +8,15 @@ namespace NES.CPU.PPUClasses
 {
     public class PPUWriteEvent : INotifyPropertyChanged
     {
-        // note: there's some redundancy here for the purpose of sanity checks
+
+        private bool isWrite;
+
+        public bool IsWrite
+        {
+            get { return isWrite; }
+            set { isWrite = value; }
+        }
+
         private int scanlineNum;
 
         public int ScanlineNum

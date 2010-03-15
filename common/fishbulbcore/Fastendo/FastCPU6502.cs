@@ -140,6 +140,7 @@ namespace NES.CPU.Fastendo
             //  set is pushed on the stack, then the I flag is set. 
             if (GetFlag(CPUStatusMasks.InterruptDisableMask)) { return; }
             SetFlag(CPUStatusMasks.InterruptDisableMask, true);
+            
             int newStatusReg = _statusRegister & ~0x10 | 0x20;
 
             // if enabled
@@ -154,7 +155,7 @@ namespace NES.CPU.Fastendo
 
             ProgramCounter = GetByte(0xFFFE)+ (GetByte(0xFFFF) << 8);
 
-            nonOpCodeticks = 7;
+            // nonOpCodeticks = 7;
         }
 
         public bool MemoryLock
@@ -287,9 +288,10 @@ namespace NES.CPU.Fastendo
             }
             else if (_handleIRQ)
             {
+                _handleIRQ = false;
                 clock += 7; 
                 InterruptRequest();
-                // _handleIRQ = false;
+                
             }
 
             FetchNextInstruction();

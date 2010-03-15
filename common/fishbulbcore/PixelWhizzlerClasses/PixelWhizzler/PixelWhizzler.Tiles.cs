@@ -56,14 +56,9 @@ namespace NES.CPU.PPUClasses
             int patternTableYOffset = yPosition & 7;
 
             int patternID = _backgroundPatternTableIndex + (TileIndex * 16) + patternTableYOffset;
-            //patternEntry = _vidRAM[patternID];
-            //patternEntryByte2 = _vidRAM[patternID + 8];
-
 
             patternEntry = chrRomHandler.GetPPUByte(0, patternID);
             patternEntryByte2 = chrRomHandler.GetPPUByte(0, patternID + 8);
-
-            currentTileIndex = chrRomHandler.ActualChrRomOffset(patternID);
 
             currentAttributeByte = GetAttributeTableEntry(ppuNameTableMemoryStart, xTilePosition, yPosition >> 3);
         }

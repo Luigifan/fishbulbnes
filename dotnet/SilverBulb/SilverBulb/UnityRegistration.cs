@@ -19,28 +19,24 @@ using NES.CPU.PPUClasses;
 using NES.CPU.Machine.BeepsBoops;
 using NES.CPU.Fastendo;
 using SilverlightBindings;
-using Fishbulb.Common.UI;
+
 
 namespace SilverBulb
 {
     public class UnityRegistration
     {
-        PlatformDelegates delegates = new PlatformDelegates();
 
         IUnityContainer RegisterNESCommon(IUnityContainer container)
         {
 
             container.RegisterType<WavSharer>(new ContainerControlledLifetimeManager());
-            container.Configure<InjectedMembers>().ConfigureInjectionFor<WavSharer>(new InjectionConstructor((float)44100.0));
+            container.Configure<InjectedMembers>().ConfigureInjectionFor<WavSharer>(new InjectionConstructor((float)22050.0));
             container.RegisterType<IWavReader, WavSharer>();
 
             // the component that creates the sound thread
             container.RegisterType<SoundThreader>(new ContainerControlledLifetimeManager());
             container.RegisterType<CPU2A03>(new ContainerControlledLifetimeManager());
 
-            container.RegisterInstance<GetFileDelegate>(delegates.BrowseForFile, new ContainerControlledLifetimeManager());
-            container.RegisterInstance<SRAMWriterDelegate>(delegates.WriteSRAM, new ContainerControlledLifetimeManager());
-            container.RegisterInstance<SRAMReaderDelegate>(delegates.ReadSRAM, new ContainerControlledLifetimeManager());
 
             container.RegisterType<NESMachine>(new ContainerControlledLifetimeManager());
             container.Configure<InjectedMembers>().ConfigureInjectionFor<NESMachine>(
@@ -80,11 +76,10 @@ namespace SilverBulb
             // register types needed to build a NES
             // platform specific wavestreamer
             // container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IWavStreamer, SilverlightWavStreamer>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IWavStreamer, SilverlightWavStreamer>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IWavStreamer, WPFamicom.Sound.DummyWavStreamer>(new ContainerControlledLifetimeManager());
+
             // Select and setup the default PPU engine
-
-
-
             // container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());
             //container.RegisterType<IControlPad, WpfKeyboardControlPad>("padone", new ContainerControlledLifetimeManager(),
             //    new InjectionProperty("Handler", new ResolvedParameter<Window>("MainWindow"))

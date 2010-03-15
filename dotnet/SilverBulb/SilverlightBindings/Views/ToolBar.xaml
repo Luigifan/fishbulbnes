@@ -3,16 +3,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:SilverlightBindings.Views"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
         <SolidColorBrush x:Key="RedBrush" Color="DarkGray" />
         <SolidColorBrush x:Key="GrayBrush" Color="Navy" />
         <Style x:Key="CommandButton" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource RedBrush}"/>
+            <!--<Setter Property="Background" Value="{StaticResource RedBrush}"/>
             <Setter Property="Foreground" Value="{StaticResource GrayBrush}"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontWeight" Value="Bold"/>-->
             <Setter Property="Margin" Value="16,4,16,4"/>
+        </Style>
+        <Style x:Key="BumpoutStyle" TargetType="ScrollViewer">
+            <Setter Property="BorderThickness" Value="4,4,4,4"/>
+            <Setter Property="BorderBrush" >
+                <Setter.Value>
+                    <SolidColorBrush Color="MediumBlue"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" >
+                <Setter.Value>
+                    <SolidColorBrush Color="PaleGoldenrod"/>
+                </Setter.Value>
+            </Setter>
+
         </Style>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot" Background="White">
@@ -20,10 +35,24 @@
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}">
+        <ScrollViewer IsEnabled="{Binding ElementName=EnableControls, Path=IsChecked}" Background="LightGray">
             <StackPanel Orientation="Vertical">
-                <Button  Tag="ControlPanel" Click="Button_Click" Content="Controls" Style="{StaticResource CommandButton}" />
-                <Button Tag="SoundPanel" Click="Button_Click" Content="Sound" Style="{StaticResource CommandButton}" />
+                <StackPanel>
+                    <Button  Tag="ControlPanel" Click="BumpOutShownEvent" DataContext="{Binding ElementName=ConsoleHolder}" Content="Controls" Style="{StaticResource CommandButton}" />
+                    <ScrollViewer Style="{StaticResource BumpoutStyle}" Visibility="Collapsed" x:Name="ConsoleHolder" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+                <StackPanel>
+                    <Button Tag="SoundPanel" Click="BumpOutShownEvent" DataContext="{Binding ElementName=SoundHolder}" Content="Sound" Style="{StaticResource CommandButton}" />
+                    <ScrollViewer Style="{StaticResource BumpoutStyle}" Visibility="Collapsed" x:Name="SoundHolder" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+                <StackPanel>
+                    <Button Tag="CPUPanel" Click="BumpOutShownEvent" DataContext="{Binding ElementName=CPUHolder}"  Content="Debug" Style="{StaticResource CommandButton}" />
+                    <ScrollViewer Style="{StaticResource BumpoutStyle}" Visibility="Collapsed" x:Name="CPUHolder" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+                <StackPanel>
+                    <Button Tag="PPUViewer" Click="BumpOutShownEvent" Content="PPU Viewer" DataContext="{Binding ElementName=PPUHolder}" Style="{StaticResource CommandButton}" />
+                    <ScrollViewer Style="{StaticResource BumpoutStyle}"  Visibility="Collapsed" x:Name="PPUHolder" Height="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
                 <Button Tag="AboutPanel" Click="Button_Click" Content="Help/About" Style="{StaticResource CommandButton}" />
             </StackPanel>
         </ScrollViewer>

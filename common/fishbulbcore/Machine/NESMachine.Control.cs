@@ -45,11 +45,22 @@ namespace NES.CPU.nitenedo
                 soundBopper.RebuildSound();
                 _ppu.Initialize();
                 _cart.InitializeCart();
+                if (SRAMReader != null && _cart.UsesSRAM)
+                    _cart.SRAM = SRAMReader(_cart.CheckSum);
                 _cpu.ResetCPU();
                 ClearGenieCodes();
                 _cpu.PowerOn();
                 RunState = RunningStatuses.Running;
             }
+        }
+
+        public void PowerOff()
+        {
+            if (_cart != null && SRAMWriter != null && _cart.UsesSRAM)
+            {
+                SRAMWriter(_cart.CheckSum, _cart.SRAM);
+            }
+            ThreadStoptendo();
         }
 
         string _currCartName = string.Empty;
@@ -81,9 +92,10 @@ namespace NES.CPU.nitenedo
 
         public void EjectCart()
         {
-            if (_cart != null)
+            if (_cart != null && SRAMWriter != null && _cart.UsesSRAM)
+            {
                 SRAMWriter(_cart.CheckSum, _cart.SRAM);
-
+            }
             ForceStop();
             _cart = null;
             _currCartName = null;
@@ -91,6 +103,63 @@ namespace NES.CPU.nitenedo
             //_ppu.CurrentScanLine = 0;
         }
 
+
+        public void GoTendo(Stream rom)
+        {
+            EjectCart();
+
+            if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
+            _currCartName = "Streamed";
+
+            _cart = iNESFileHandler.LoadROM(_ppu,rom);
+            if (_cart != null)
+            {
+
+
+                _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _cpu.Cart.NMIHandler = _cpu.InterruptRequest;
+                _ppu.ChrRomHandler = _cart;
+
+
+                PowerOn();
+                //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
+                ThreadRuntendo();
+            }
+            else
+            {
+                throw new CartLoadException("Unsupported ROM type - load failed.");
+            }
+        }
+
+        public void LoadCart(Stream rom)
+        {
+            EjectCart();
+
+
+
+            if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
+            _currCartName = "Streamed";
+
+
+            _cart = iNESFileHandler.LoadStream(_ppu, rom);
+            if (_cart != null)
+            {
+
+
+                _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _cpu.Cart.NMIHandler = _cpu.InterruptRequest;
+                _ppu.ChrRomHandler = _cart;
+
+                Reset();
+
+            }
+            else
+            {
+                throw new CartLoadException("Unsupported ROM type - load failed.");
+            }
+        }
 
         public void GoTendo(string fileName)
         {
@@ -103,8 +172,7 @@ namespace NES.CPU.nitenedo
             _cart = iNESFileHandler.GetCart(fileName, _ppu);
             if (_cart != null)
             {
-                if (SRAMReader != null)
-                    _cart.SRAM = SRAMReader(_cart.CheckSum);
+
 
                 _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
                 _cpu.Cart.NMIHandler = _cpu.InterruptRequest;

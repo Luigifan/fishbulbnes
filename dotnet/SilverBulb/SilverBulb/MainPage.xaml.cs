@@ -17,18 +17,47 @@ using SilverlightBindings;
 using NES.CPU.Machine;
 using Fishbulb.Common.UI;
 using SilverlightBindings.ViewModels;
+using System.ComponentModel;
+using System.Windows.Browser;
+using SilverlightCommonUI.ScriptViews;
 
 namespace SilverBulb
 {
-    public partial class MainPage : UserControl
+    public partial class MainPage : UserControl, INotifyPropertyChanged
     {
         IUnityContainer container;
 
         NESMachine nes;
 
+        System.Windows.Interop.Settings settings;
+        System.Windows.Interop.SilverlightHost host;
+
+        ScriptControlPanelVM scriptView;
+            
         public MainPage()
         {
+
+            host = Application.Current.Host;
+
+            settings = host.Settings;
+
+
+
             InitializeComponent();
+        }
+
+        public int FPS
+        {
+            get
+            {
+                return settings.MaxFrameRate;
+            }
+            set
+            {
+                settings.MaxFrameRate = value;
+                NotifyPropertyChanged("FPS");
+                
+            }
         }
 
         WriteableBitmap bmp = new WriteableBitmap(256, 240);
@@ -41,24 +70,28 @@ namespace SilverBulb
         {
 
             NES.CPU.FastendoDebugging.DisassemblyExtensions.SetupOpcodes();
-            
+
             //ImageBrush brush = new ImageBrush();
             //brush.ImageSource = bmp;
             NesOut.Source = bmp;
             // DrawArea.Background = brush;
             container = new UnityContainer();
             new UnityRegistration().RegisterNesTypes(container, "soft");
+
+
+            this.ToolBar.DataContext = new ToolstripViewModel(container, this.Dispatcher);
+
+            scriptView = container.Resolve<IViewModel>("ScriptControlPanel") as ScriptControlPanelVM;
+
             nes = container.Resolve<NESMachine>();
-            
+
             var src = container.Resolve<IWavStreamer>() as SilverlightWavStreamer;
-            if (src == null)
+            if (src != null)
             {
-                return;
+                src.MediaHost = NintendoSound;
+                // src.MediaSource.TargetMachine = nes;
+                NintendoSound.SetSource(src.MediaSource);
             }
-            src.MediaHost = NintendoSound;
-            // src.MediaSource.TargetMachine = nes;
-            
-            NintendoSound.SetSource( src.MediaSource);
 
             var pad = container.Resolve<IControlPad>("padone") as SilverlightControlPad;
             if (pad != null)
@@ -68,15 +101,66 @@ namespace SilverBulb
 
             nes.PPU.FillRGB = false;
             // nes.PPU.LoadPalRGBA();
-            nes.PPU.SetVideoBuffer( bmp.Pixels);
+            nes.PPU.SetVideoBuffer(bmp.Pixels);
 
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             nes.Drawscreen += new EventHandler(nes_Drawscreen);
 
+            //WebClient client = new WebClient();
+            ////client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
+            //client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
+            //UriKind kind = UriKind.Relative;
+            //string resName = null;
 
-            this.ToolBar.DataContext = new ToolstripViewModel(container);
+            if (host.InitParams.ContainsKey("ShowControls"))
+            {
+                string val = host.InitParams["ShowControls"];
+                bool showControls = true;
+                if (bool.TryParse(val, out showControls))
+                {
+                    
+                }
 
-            nes.SilverlightStartDemo();
+                if (!showControls)
+                {
+                    ToolBar.Visibility = Visibility.Collapsed;
+                    NesBorder.SetValue(Grid.ColumnSpanProperty, 2);
+                }
+            }
+
+            //if (host.InitParams.ContainsKey("Cart"))
+            //{
+            //    resName = host.InitParams["Cart"];
+            //}
+
+            //if (resName != null)
+            //    client.OpenReadAsync(new Uri(resName, kind));
+
+
+            //nes.SilverlightStartDemo();
+        }
+
+//        void client_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+//        {
+//            if (e.Error == null)
+//            {
+//                nes.LoadCart(e.Result);
+//            }
+//            else
+//            {
+
+////                e.Error.Message;
+//            }
+//        }
+
+        void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                
+            }
+
+            //throw new NotImplementedException();
         }
 
         void nes_RunStatusChangedEvent(object sender, EventArgs e)
@@ -107,11 +191,12 @@ namespace SilverBulb
             CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
         }
 
-
         void CompositionTarget_Rendering(object o, EventArgs e)
         {
             if (nesUpdated)
+            {
                 bmp.Invalidate();
+            }
         }
 
 
@@ -136,6 +221,16 @@ namespace SilverBulb
         {
         }
 
+        private void FullScreen_Checked(object sender, RoutedEventArgs e)
+        {
+        }
 
+        void NotifyPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

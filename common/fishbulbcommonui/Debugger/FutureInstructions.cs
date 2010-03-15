@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using NES.CPU.Machine.FastendoDebugging;
 using Fishbulb.Common.UI;
 using NES.CPU.FastendoDebugging;
+using FishBulb;
 
 namespace fishbulbcommonui
 {
@@ -14,6 +15,8 @@ namespace fishbulbcommonui
 	/// </summary>
     public class FutureInstructions : BaseNESViewModel
 	{
+
+        public FutureInstructions(IPlatformDelegates delegates) : base(delegates) { }
 
         protected override void OnAttachTarget()
         {

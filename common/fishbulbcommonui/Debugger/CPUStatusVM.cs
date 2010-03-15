@@ -6,6 +6,7 @@ using NES.CPU.nitenedo;
 using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.FastendoDebugging;
 using fishbulbcommonui;
+using FishBulb;
 
 namespace Fishbulb.Common.UI
 {
@@ -13,6 +14,10 @@ namespace Fishbulb.Common.UI
 
     public class CPUStatusVM : BaseNESViewModel
 	{
+
+
+        public CPUStatusVM(IPlatformDelegates delegates) : base(delegates) { }
+
 
 		protected override void  OnAttachTarget()
 		{

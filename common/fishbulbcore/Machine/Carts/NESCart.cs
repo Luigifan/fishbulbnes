@@ -58,8 +58,6 @@ namespace NES.CPU
         private void CopyBanks(int clock, int dest, int src, int numberOf8kBanks)
         {
 
-            whizzler.DrawTo(clock);
-            
             if (dest >= ChrRomCount) dest = ChrRomCount - 1;
             
             int oneKsrc = src * 8;

@@ -18,17 +18,18 @@ using System.ComponentModel;
 
 namespace SilverlightBindings
 {
+
     public class NesMediaStreamSource : MediaStreamSource, IDisposable, INotifyPropertyChanged
     {
         private WaveFormatEx _waveFormat;
         private MediaStreamDescription _audioDesc;
-
+        
         private long _currentTimeStamp;
 
         private long _currentPosition;
         private long _startPosition;
 
-        private const int SampleRate = 44100;
+        private const int SampleRate = 22050;
         private const int ChannelCount = 1;
         private const int BitsPerSample = 16;
         private const int ByteRate =
@@ -39,6 +40,10 @@ namespace SilverlightBindings
         // you only need sample attributes for video
         private Dictionary<MediaSampleAttributeKeys, string> _emptySampleDict =
             new Dictionary<MediaSampleAttributeKeys, string>();
+
+        byte[][] buffers = new byte[2][];
+        int[] bufferLen = new int[2];
+        int bufferPlaying = 0;
 
         public NesMediaStreamSource()
         {
@@ -69,8 +74,7 @@ namespace SilverlightBindings
         {
             get { return base.AudioBufferLength; }
             set { base.AudioBufferLength = value;
-                
-            NotifyPropertyChanged("AudioBufferLength");
+                  NotifyPropertyChanged("AudioBufferLength");
             }
         }
 
@@ -130,9 +134,6 @@ namespace SilverlightBindings
         }
 
 
-        byte[][] buffers = new byte[4][];
-        int[] bufferLen = new int[4];
-        int bufferPlaying = 0;
 
         IWavReader reader;
 
@@ -176,7 +177,7 @@ namespace SilverlightBindings
                 if (bufferPlaying >= buffers.Length) bufferPlaying = 0;
 
                 reader.SharedBuffer = buffers[bufferPlaying];
-
+                reader.ReadWaves();
                 waitEvent.Set();
 
                 // Send out the next sample
@@ -194,6 +195,8 @@ namespace SilverlightBindings
                 _currentTimeStamp += _waveFormat.AudioDurationFromBufferSize(
                                         (uint)bufferByteCount);
                 _currentPosition += bufferByteCount;
+
+
 
             }
             

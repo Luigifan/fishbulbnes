@@ -48,5 +48,12 @@ namespace NES.CPU.Machine.Carts
         int[] BankStartCache { get; }
         int CurrentBank { get; }
 
+
+        bool UsesSRAM
+        {
+            get;
+            set;
+        }
+
     }
 }

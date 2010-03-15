@@ -358,5 +358,18 @@ namespace NES.CPU.Machine.Carts
         {
             throw new NotImplementedException();
         }
+
+
+        public bool UsesSRAM
+        {
+            get
+            {
+                return false;
+            }
+            set
+            {
+                
+            }
+        }
     }
 }

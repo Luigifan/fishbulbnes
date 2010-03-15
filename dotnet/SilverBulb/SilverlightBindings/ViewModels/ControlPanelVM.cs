@@ -7,42 +7,13 @@ using NES.Machine;
 using NES.CPU.nitenedo;
 using NES.CPU.Machine.ROMLoader;
 using fishbulbcommonui;
+using System.IO;
+using FishBulb;
 
 namespace Fishbulb.Common.UI
 {
 
-    public delegate void CommandExecuteHandler(object parm);
-    public delegate bool CommandCanExecuteHandler(object parm);
-    public delegate string GetFileDelegate(string defaultExt, string Filter);
-
-    public class InstigatorCommand : ICommandWrapper
-    {
-        CommandExecuteHandler exectutor;
-        CommandCanExecuteHandler canExecutor;
-
-
-        public InstigatorCommand(CommandExecuteHandler exectutor, CommandCanExecuteHandler canExecutor)
-        {
-            this.exectutor = exectutor;
-            this.canExecutor = canExecutor;
-        }
-
-        #region ICommandWrapper Members
-
-        public void Execute(object param)
-        {
-            exectutor(param);
-        }
-
-        public bool CanExecute(object param)
-        {
-            return canExecutor(param);
-        }
-
-        #endregion
-    }
-
-    public class ControlPanelVM : BaseNESViewModel
+    public class SilverlightControlPanelVM : BaseNESViewModel
     {
 
 
@@ -71,9 +42,8 @@ namespace Fishbulb.Common.UI
         }
 
 
-        public ControlPanelVM(GetFileDelegate fileGetter)
+        public SilverlightControlPanelVM(IPlatformDelegates delegates ) : base(delegates)
         {
-            this.fileGetter = fileGetter;
             Commands.Add("LoadRom",
                 new InstigatorCommand(new CommandExecuteHandler(o => InsertCart(o as string)),
                     new CommandCanExecuteHandler(CanInsertCart)));
@@ -91,8 +61,6 @@ namespace Fishbulb.Common.UI
                     new CommandCanExecuteHandler(o => true)));
                     }
 
-        GetFileDelegate fileGetter;
-
         void BrowseFile(object o)
         {
             if (TargetMachine != null)
@@ -102,9 +70,14 @@ namespace Fishbulb.Common.UI
 
         protected override void OnAttachTarget()
         {
-            TargetMachine.RunStatusChangedEvent += new EventHandler<EventArgs>(TargetMachine_RunStatusChangedEvent);
-            base.OnAttachTarget();
+            TargetMachine.RunStatusChangedEvent += TargetMachine_RunStatusChangedEvent;
         }
+
+        protected override void OnDetachTarget()
+        {
+            TargetMachine.RunStatusChangedEvent -= TargetMachine_RunStatusChangedEvent;
+        }
+
 
         void TargetMachine_RunStatusChangedEvent(object sender, EventArgs e)
         {
@@ -168,19 +141,32 @@ namespace Fishbulb.Common.UI
         {
             if (TargetMachine.IsRunning) PowerOff();
 
-            TargetMachine.GoTendo(fileName);
-
-
-            this.CartInfo = new CartInfo()
+            Stream s = PlatformDelegates.LoadFile(fileName);
+            if (s != null)
             {
-                CartName = TargetMachine.CurrentCartName,
-                MapperID = TargetMachine.Cart.MapperID,
-                Mirroring = TargetMachine.Cart.Mirroring,
-                RomInfoString = string.Format("Prg Rom Count: {0}, Chr Rom Count: {1}", TargetMachine.Cart.NumberOfPrgRoms, TargetMachine.Cart.NumberOfChrRoms)
-            };
+                using (s)
+                    TargetMachine.LoadCart(s);
+            }
 
-            NotifyPropertyChanged("CurrentCartName");
-            NotifyPropertyChanged("CartInfo");
+            UpdateCartInfo();
+        }
+
+        protected void UpdateCartInfo()
+        {
+            if (TargetMachine.Cart != null)
+            {
+
+                this.CartInfo = new CartInfo()
+                {
+                    CartName = TargetMachine.CurrentCartName,
+                    MapperID = TargetMachine.Cart.MapperID,
+                    Mirroring = TargetMachine.Cart.Mirroring,
+                    RomInfoString = string.Format("Prg Rom Count: {0}, Chr Rom Count: {1}", TargetMachine.Cart.NumberOfPrgRoms, TargetMachine.Cart.NumberOfChrRoms)
+                };
+
+                NotifyPropertyChanged("CurrentCartName");
+                NotifyPropertyChanged("CartInfo");
+            }
         }
 
 
@@ -225,10 +211,8 @@ namespace Fishbulb.Common.UI
 
         void PowerOff()
         {
-
             if (TargetMachine.IsRunning)
-                TargetMachine.ThreadStoptendo();
-
+                TargetMachine.PowerOff();
         }
 
         

@@ -37,8 +37,8 @@ namespace NES.CPU.PPUClasses
             _PPUStatus = 0;
             hitSprite = false;
             spriteSize = ((_PPUControlByte0 & 0x20) == 0x20) ? 16 : 8;
-            //if ((_PPUControlByte1 & 0x18) != 0)
-            //    isRendering = true;
+            if ((_PPUControlByte1 & 0x18) != 0)
+                isRendering = true;
             //scanlineNum = ScanlinePreRenderDummyScanline;
             //scanlinePos = 0;
 

@@ -62,7 +62,7 @@ namespace NES.CPU.Fastendo
         {
             get { return _cart; }
             set { _cart = value;
-                //_cart.NMIHandler = irqUpdater;
+                _cart.NMIHandler = irqUpdater;
             }
         }
 
@@ -263,7 +263,7 @@ namespace NES.CPU.Fastendo
                             break;
                         case 0x4014:
                             _pixelWhizzler.CopySprites(ref Rams, data * 0x100);
-                            CurrentInstruction.ExtraTiming = CurrentInstruction.ExtraTiming + 512;
+                            _currentInstruction.ExtraTiming = _currentInstruction.ExtraTiming + 512;
                             break;
                         case 0x4016:
                             _padOne.SetByte(clock, address, data & 1);

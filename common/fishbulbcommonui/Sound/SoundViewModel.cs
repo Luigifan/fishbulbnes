@@ -5,6 +5,7 @@ using NES.CPU.nitenedo;
 using NES.CPU.Machine.BeepsBoops;
 using NES.Sound;
 using System.Collections.Generic;
+using FishBulb;
 
 namespace fishbulbcommonui
 {
@@ -16,7 +17,8 @@ namespace fishbulbcommonui
         IWavStreamer streamer;
         Bopper SoundBopper;
 
-        public SoundViewModel() : base()
+        public SoundViewModel(IPlatformDelegates delegates)
+            : base(delegates) 
         {
             Commands.Add("MuteToggle", new InstigatorCommand(
                 o => ToggleMute(null),

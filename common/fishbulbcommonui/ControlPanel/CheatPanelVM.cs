@@ -9,6 +9,7 @@ using NES.CPU.nitenedo;
 using System.ComponentModel;
 using NES.CPU.Fastendo.Hacking;
 using fishbulbcommonui;
+using FishBulb;
 
 namespace Fishbulb.Common.UI
 {
@@ -16,7 +17,8 @@ namespace Fishbulb.Common.UI
 
     public class CheatPanelVM : BaseNESViewModel
     {
-        public CheatPanelVM()
+        public CheatPanelVM(IPlatformDelegates delegates)
+            : base(delegates) 
         {
             Commands.Add("AddCheat", new InstigatorCommand(
                 new CommandExecuteHandler(o => AddGenieCode()),
@@ -81,7 +83,7 @@ namespace Fishbulb.Common.UI
 
         public void ClearGenieCodes()
         {
-            cheats.RemoveAll(p => gameGenieCodes.Contains(p.Name));
+            cheats.Clear();
             TargetMachine.ClearGenieCodes();
             NotifyPropertyChanged("GameGenieCodes");
             NotifyPropertyChanged("Cheats");

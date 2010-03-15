@@ -58,7 +58,6 @@ namespace NES.CPU.Machine.BeepsBoops
             }
         }
         
-
         public Bopper(WavSharer output)
         {
 
@@ -283,7 +282,6 @@ namespace NES.CPU.Machine.BeepsBoops
         }
 
         #endregion
-
 
         public bool EnableSquare0
         {

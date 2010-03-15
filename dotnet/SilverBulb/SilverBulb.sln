@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilverlightBindings", "Silv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPU6502.Silverlight", "..\..\common\fishbulbcore\CPU6502.Silverlight.csproj", "{E2026B6C-3E2B-4AB8-A22E-729AAA0FBCAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilverlightCommonUI", "..\..\common\fishbulbcommonui\SilverlightCommonUI.csproj", "{6F52479E-4B00-4554-BF99-4B01145B7DF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{E2026B6C-3E2B-4AB8-A22E-729AAA0FBCAA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E2026B6C-3E2B-4AB8-A22E-729AAA0FBCAA}.Release|x64.ActiveCfg = Release|Any CPU
 		{E2026B6C-3E2B-4AB8-A22E-729AAA0FBCAA}.Release|x86.ActiveCfg = Release|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Release|x64.ActiveCfg = Release|Any CPU
+		{6F52479E-4B00-4554-BF99-4B01145B7DF5}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

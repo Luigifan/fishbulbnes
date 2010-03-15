@@ -121,56 +121,11 @@ namespace NES.CPU.Machine.BeepsBoops
         {
             int remain = _blipBuffer.avail + buf_extra - count;
             _blipBuffer.avail -= count;
-            //for (int i = 0; i < remain; ++i)
-            //{
-            //    _blipBuffer.samples[i] = _blipBuffer.samples[i + count];
-            //}
-            //for (int i = 0; i < count; ++i)
-            //{
-            //    _blipBuffer.samples[i + remain] = 0;
-            //}
-            
+
             Array.Copy(_blipBuffer.samples, count, _blipBuffer.samples, 0, remain);
             Array.Clear(_blipBuffer.samples, remain, count);
 
             _blipBuffer.arrayLength = count;
-            //memmove( &buf [0], &buf [count], remain * sizeof buf [0] );
-            //memset( &buf [remain], 0, count * sizeof buf [0] );
-        }
-
-        public int blip_read_samples(short[] outbuf, int count, int stereo)
-        {
-            if (count > _blipBuffer.avail)
-                count = _blipBuffer.avail;
-
-            if (count != 0)
-            {
-                int step = (stereo != 0) ? 2 : 1;
-                //int inPtr  = BLIP_SAMPLES( s );
-                //buf_t const* end = in + count;
-                int inPtr = 0, outPtr = 0;
-                int endPtr = inPtr + count;
-                int sum = _blipBuffer.integrator;
-
-                do
-                {
-                    int st = sum >> delta_bits; /* assumes right shift preserves sign */
-                    sum = sum + _blipBuffer.samples[inPtr];
-                    inPtr++;
-                    if ((short)st != st) /* assumes signed cast merely truncates */
-                        st = (st >> 31) ^ 0x7FFF;
-                    outbuf[outPtr] = (short)(st);
-                    outPtr += step;
-                    sum = sum - (st << (delta_bits - bass_shift));
-                }
-                while (inPtr != endPtr);
-
-                _blipBuffer.integrator = sum;
-
-                remove_samples(count);
-            }
-
-            return count;
         }
 
         public int ReadBytes(byte[] outbuf, int count, int stereo)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace NES.CPU.Fastendo
 {
@@ -22,7 +23,7 @@ namespace NES.CPU.Fastendo
         }
 
 
-        public class Instruction
+        public class Instruction 
         {
             public Instruction(){}
             public Instruction(Instruction inst)
@@ -34,6 +35,7 @@ namespace NES.CPU.Fastendo
                 Parameters1 = inst.Parameters1;
                 ExtraTiming = inst.ExtraTiming;
                 Length = inst.Length;
+                
             }
 
             public AddressingModes AddressingMode;

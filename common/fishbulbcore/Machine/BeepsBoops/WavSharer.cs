@@ -76,10 +76,10 @@ namespace NES.CPU.Machine.BeepsBoops
                 n = remain;
             _sharedBufferLength = n * 2;
 
-            if (fileWriting)
-            {
-                    appendToFile.WriteWaves(_sharedBuffer, _sharedBufferLength);
-            }
+            //if (fileWriting)
+            //{
+            //        appendToFile.WriteWaves(_sharedBuffer, _sharedBufferLength);
+            //}
             bufferWasRead = false;
             _bufferAvailable = true;
             WroteBytes();
@@ -96,19 +96,7 @@ namespace NES.CPU.Machine.BeepsBoops
         private bool fileWriting;
 
         bool bufferWasRead;
-        private AutoResetEvent bufferReadResetEvent = new AutoResetEvent(false);
 
-
-        public void SyncUp()
-        {
-            // wait until buffer is empty
-
-            while (!bufferWasRead)
-            {
-                bufferReadResetEvent.WaitOne();
-            }
-
-        }
         #endregion
 
         #region IDisposable Members
@@ -131,42 +119,26 @@ namespace NES.CPU.Machine.BeepsBoops
             _bufferAvailable = false;
             _sharedBufferLength = 0;
             bufferWasRead = true;
-            bufferReadResetEvent.Set();
+           // bufferReadResetEvent.Set();
         }
 
-        //public void ReadWaves(ref byte[] destBuffer)
-        //{
-        //    lock (Locker)
-        //    {
-        //        destBuffer = _sharedBuffer;
-        //        bufferWasRead = true;
-        //    }
-        //}
+        private EventHandler bytesWritten;
 
-
-        public event EventHandler BytesWritten;
+        public EventHandler BytesWritten
+        {
+            get { return bytesWritten; }
+            set { bytesWritten = value; }
+        }
 
         private void WroteBytes()
         {
-            if (BytesWritten != null) BytesWritten(this, new EventArgs());
+            if (bytesWritten != null) bytesWritten(this, new EventArgs());
         }
 
 
-        //public byte[] ReadWaveBytes()
-        //{
-        //    lock (Locker)
-        //    {
-        //        //byte[] destBuffer = new byte[pendingWaves.Count];
-        //        //_NESTooFast = (destBuffer.Length > pendingWaves.Count);
-
-        //        //for (int i = 0; i < destBuffer.Length; i++)
-        //        //{
-        //        //    destBuffer[i] = pendingWaves.Count > 0 ? pendingWaves.Dequeue() : (byte)0;
-        //        //}
-        //        bufferWasRead = true;
-        //        return _sharedBuffer;                
-        //    }
-        //}
-
+        public void SetSharedBuffer(byte[] values)
+        {
+            _sharedBuffer = values;
+        }
     }
 }

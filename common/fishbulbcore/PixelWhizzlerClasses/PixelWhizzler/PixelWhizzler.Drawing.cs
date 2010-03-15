@@ -55,6 +55,8 @@ namespace NES.CPU.PPUClasses
                     //frameFinished();
                     break;
                 case 6820:
+                    ClearVINT();
+
                     frameOn = true;
                     //
                     ClearNESPalette();
@@ -66,7 +68,7 @@ namespace NES.CPU.PPUClasses
                         spriteChanges = false;
                     }
 
-                    ClearVINT();
+
                     break;
                 //304 pixels into pre-render scanline
                 case 7125:
@@ -92,6 +94,10 @@ namespace NES.CPU.PPUClasses
                     SetupVINT();
                     frameOn = false;
                     frameClock = 0;
+
+                    if (_isDebugging)
+                        events.Clear();
+
                     break;
             }
 
@@ -128,6 +134,7 @@ namespace NES.CPU.PPUClasses
 
                     lockedHScroll = _hScroll;
 
+                    UpdatePixelInfo();
                     RunNewScanlineEvents();
 
                 }
@@ -140,9 +147,13 @@ namespace NES.CPU.PPUClasses
         protected virtual void UpdateXPosition()
         {
             xPosition = currentXPosition + lockedHScroll;
+
+
             if ((xPosition & 7) == 0)
             {
                 xNTXor = ((xPosition & 0x100) == 0x100) ? 0x400 : 0x00;
+
+
                 xPosition &= 0xFF;
 
                 FetchNextTile();
@@ -238,47 +249,11 @@ namespace NES.CPU.PPUClasses
             set { fillRGB = value; }
         }
 
-        protected virtual void DrawPixel()
-        {
-            byte tilePixel = _tilesAreVisible ? GetNameTablePixel() :(byte)0;
-            bool forePixel = false;
-            byte spritePixel = _spritesAreVisible ? GetSpritePixel(out forePixel) : (byte)0;
-
-            if (!hitSprite && spriteZeroHit && tilePixel != 0)
-            {
-                hitSprite = true;
-                _PPUStatus = _PPUStatus | 0x40;
-            }
-
-            // the int is packed like this:
-            //  byte 0 : the current tile pixel in lower 4 bits, current sprite pixel in upper four bits
-            //  byte 1 : ppuControlByte0
-            //  byte 2 : ppuControlByte1
-            //  byte 4 : current palette  (future project)
-            
-            // shoving isForegroundPixel over top of the ppu output pin (unused)
-            int b0 = _PPUControlByte0 ;
-            if (forePixel || (tilePixel == 0 && spritePixel != 0))
-            {
-                b0 = b0 | 64;
-            }
-            else
-            {
-                b0 = b0 & ~64;
-            }
-
-            outBuffer[vbufLocation] = (
-                currentPalette << 24 |
-                (_PPUControlByte1 ) << 16 |
-                (b0 ) << 8 |
-                (spritePixel & 15) << 4 | tilePixel & 15);
-            
-
-        }
+        protected virtual void DrawPixel() {}
 
         public virtual void UpdatePixelInfo()
         {
-
+            nameTableMemoryStart = nameTableBits * 0x400;
         }
 
         int[] drawInfo= new int[256*256];

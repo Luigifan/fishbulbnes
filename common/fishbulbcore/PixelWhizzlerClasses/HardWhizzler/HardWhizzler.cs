@@ -64,7 +64,6 @@ namespace NES.CPU.PixelWhizzlerClasses
         public override void DrawTo(int cpuClockNum)
         {
             int frClock = (cpuClockNum - lastcpuClock) * 3;
-            UpdatePixelInfo();
             //// if we are in vblank 
             //if (frameClock < 6820)
             //{
@@ -74,11 +73,11 @@ namespace NES.CPU.PixelWhizzlerClasses
             //        frameClock += frClock;
             //        frClock = 0;
             //    }
-            //    else
-            //    {
-            //        frClock += frameClock - 6820;
-            //        frameClock = 6820;
-            //    }
+            //    //else
+            //    //{
+            //    //    frClock += frameClock - 6820;
+            //    //    frameClock = 6820;
+            //    //}
             //}
             for (int i = 0; i < frClock; ++i)
             {
@@ -90,6 +89,9 @@ namespace NES.CPU.PixelWhizzlerClasses
 
         public override void UpdatePixelInfo()
         {
+
+            // base.UpdatePixelInfo();
+
             int curBank = chrRomHandler.CurrentBank;
             int ntbits = nameTableBits & 0x3;
             int vScroll = lockedVScroll;
@@ -118,17 +120,6 @@ namespace NES.CPU.PixelWhizzlerClasses
                 );
         }
 
-
-        protected override void UpdateXPosition()
-        {
-            // UpdatePixelInfo();
-        }
-
-        protected override void RunNewScanlineEvents()
-        {
-            UpdatePixelInfo();
-        }
-
         protected override void ClearNESPalette()
         {
             currentPalette = 0;
@@ -137,7 +128,7 @@ namespace NES.CPU.PixelWhizzlerClasses
         }
 
 
-        public bool SpriteZeroTest()
+        bool SpriteZeroTest()
         {
             if (!_spritesAreVisible) return false;
 
@@ -182,14 +173,14 @@ namespace NES.CPU.PixelWhizzlerClasses
             return false;
         }
 
-        public bool TestNTPixel()
+        bool TestNTPixel()
         {
             if (!_tilesAreVisible) return false;
 
             int xPosition = currentXPosition, yPosition = currentYPosition;
             // int patternTableIndex = PatternTableIndex;
 
-            int ppuNameTableMemoryStart = NameTableMemoryStart;
+            int ppuNameTableMemoryStart = nameTableBits * 0x400;
             //yPosition = 1;
             xPosition += lockedHScroll;
 
@@ -237,15 +228,10 @@ namespace NES.CPU.PixelWhizzlerClasses
             byte result = (byte)(((patternEntry >> patternTableEntryIndex) & 1)
                 | (((patternEntryByte2 >> patternTableEntryIndex) & 1) * 2))
                                 ;
-
-            if (result > 0)
-            {
-                return true;
-            }
-            return false;
+            return result != 0;
         }
 
-        private bool TestSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
+        bool TestSpritePixel(int patternTableIndex, int x, int y, NESSprite sprite, int tileIndex)
         {
             // 8x8 tile
             int patternEntry;
@@ -267,7 +253,7 @@ namespace NES.CPU.PixelWhizzlerClasses
             return
                 (sprite.FlipX ?
                 ((patternEntry >> x) & 0x1) | (((patternEntryBit2 >> x) << 1) & 0x2)
-                : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2)) > 0;
+                : ((patternEntry >> 7 - x) & 0x1) | (((patternEntryBit2 >> 7 - x) << 1) & 0x2)) != 0;
         }
 
 

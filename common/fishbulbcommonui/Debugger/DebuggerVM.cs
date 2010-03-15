@@ -13,6 +13,7 @@ using NES.CPU.Machine.FastendoDebugging;
 using NES.CPU.PPUClasses;
 using fishbulbcommonui;
 using System.Collections.ObjectModel;
+using FishBulb;
 
 namespace Fishbulb.Common.UI
 {
@@ -29,9 +30,13 @@ namespace Fishbulb.Common.UI
         protected override void OnAttachTarget()
         {
             TargetMachine.IsDebugging = true;
-            TargetMachine.DebugInfoChanged -= _nes_DebugInfoChanged;
             TargetMachine.DebugInfoChanged += _nes_DebugInfoChanged;
-            base.OnAttachTarget();
+        }
+
+        protected override void OnDetachTarget()
+        {
+            TargetMachine.IsDebugging = false;
+            TargetMachine.DebugInfoChanged -= _nes_DebugInfoChanged;
         }
 
         private bool _breakpointHit;
@@ -61,7 +66,9 @@ namespace Fishbulb.Common.UI
         }
 
 
-        public DebuggerVM()
+        public DebuggerVM(IPlatformDelegates delegates)
+            : base(delegates) 
+
         {
             Commands.Add ("Step", new InstigatorCommand( 
                 (o) => Step(), 
