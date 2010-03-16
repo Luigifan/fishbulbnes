@@ -36,7 +36,7 @@ namespace WPFamicom.Sound
 
             int err = 0;
 
-            Alut.alutInit();
+            Alut.alutInit(1, new StringBuilder("--audio-device ALSA"));
 
             err = Al.alGetError();
             Debug.Assert(err == 0, "Error " + err.ToString());
@@ -185,7 +185,7 @@ namespace WPFamicom.Sound
                 processed = 0;
 
                 int err = Al.alGetError();
-                Thread.Sleep(timeSpanFromMilliseconds);
+                Thread.Sleep(1);
                 Al.alGetSourcei(sourceId, Al.AL_BUFFERS_PROCESSED, out processed);
             }
 

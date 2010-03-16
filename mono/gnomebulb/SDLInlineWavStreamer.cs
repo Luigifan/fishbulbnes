@@ -127,7 +127,8 @@ namespace WPFamicom.Sound
 			spec.format = (short)Sdl.AUDIO_S16SYS;
             spec.channels = 1;
             spec.samples = 512; //(short)(_wavSource.Frequency/50),
-		    spec.callback= Marshal.GetFunctionPointerForDelegate(audioCallback);
+		    Tao.Sdl.Sdl.SDL_AudioSpec.callback sdlCallback = new Tao.Sdl.Sdl.SDL_AudioSpec.callback();
+			sdlCallback = Marshal.GetFunctionPointerForDelegate(audioCallback);
             
 
             IntPtr specPtr= Marshal.AllocHGlobal(Marshal.SizeOf(spec));
