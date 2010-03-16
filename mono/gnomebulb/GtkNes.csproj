@@ -131,7 +131,6 @@
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="OpenALWavStreamer.cs" />
     <Compile Include="NesGL.cs" />
     <Compile Include="Planetoid.cs" />
     <Compile Include="OpenALInlineWavStreamer.cs" />

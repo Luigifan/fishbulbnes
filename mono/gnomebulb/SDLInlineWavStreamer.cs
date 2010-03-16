@@ -6,9 +6,13 @@ using NES.CPU.Machine.BeepsBoops;
 using Tao.Sdl;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using NES.Sound;
 
 namespace WPFamicom.Sound
 {
+	
+	public delegate void AudioSpecCallbackDelegate(IntPtr userData, IntPtr stream, int length);
+	
     public unsafe class SDLInlineWavStreamer : IDisposable, IWavStreamer
     {
         // each buffer should contain 1/60th of a second of audio
@@ -27,7 +31,7 @@ namespace WPFamicom.Sound
         int frequency;
 		int currentBuffer=0;
 		
-        Sdl.AudioSpecCallbackDelegate audioCallback;
+        AudioSpecCallbackDelegate audioCallback;
 
 		bufDef playingBuf = null;
 		int lastPlayPos = 0;
@@ -116,14 +120,15 @@ namespace WPFamicom.Sound
             Sdl.SDL_Init(Sdl.SDL_INIT_AUDIO);
             audioCallback = DoCallback;
 			
-            Sdl.SDL_AudioSpec spec = new Sdl.SDL_AudioSpec()
-            {
-                freq = (int)_wavSource.Frequency,
-                format = (short)Sdl.AUDIO_S16SYS,
-                channels = 1,
-                samples = 512, //(short)(_wavSource.Frequency/50),
-                callback = Marshal.GetFunctionPointerForDelegate(audioCallback),
-            };
+            Sdl.SDL_AudioSpec spec = new Sdl.SDL_AudioSpec();
+            
+		    
+            spec.freq = (int)_wavSource.Frequency;
+			spec.format = (short)Sdl.AUDIO_S16SYS;
+            spec.channels = 1;
+            spec.samples = 512; //(short)(_wavSource.Frequency/50),
+		    spec.callback= Marshal.GetFunctionPointerForDelegate(audioCallback);
+            
 
             IntPtr specPtr= Marshal.AllocHGlobal(Marshal.SizeOf(spec));
             try
