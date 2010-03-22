@@ -12,6 +12,7 @@ using NES.CPU.Machine;
 using NES.CPU.Machine.ROMLoader;
 using NES.Sound;
 using NES.CPU.PixelWhizzlerClasses;
+using CPU6502.Machine;
 
 namespace NES.CPU.nitenedo
 {
@@ -100,7 +101,9 @@ namespace NES.CPU.nitenedo
         //zzzz bloop;
         public NESMachine(CPU2A03 cpu, IPPU ppu, TileDoodler tiler, WavSharer wavSharer, Bopper soundBopper, SoundThreader soundThread)
         {
-            
+
+            machineWorkQueue = new MachineQueue(UpdateQueue);
+
             _cpu = cpu;
             _ppu = ppu;
             _ppu.FrameFinishHandler = new MachineEvent(FrameFinished);

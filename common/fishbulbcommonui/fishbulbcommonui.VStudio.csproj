@@ -118,12 +118,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.StaticFactory.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseNESViewModel.cs" />
@@ -143,6 +146,16 @@
     <Compile Include="Sound\SoundViewModel.cs" />
     <Compile Include="UIInstigator.cs" />
     <Compile Include="Unity\CommonUIRegisterer.cs" />
+    <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="ValueConverters\BooleanToInvisibilityConverter.cs" />
+    <Compile Include="ValueConverters\CommandDictionaryConverter.cs" />
+    <Compile Include="ValueConverters\ContainerResolverConverter.cs" />
+    <Compile Include="ValueConverters\DisplayTextAttribute.cs" />
+    <Compile Include="ValueConverters\EnumDisplayTextConverter.cs" />
+    <Compile Include="ValueConverters\HexValueConverter.cs" />
+    <Compile Include="ValueConverters\InputKeyToStringConverter.cs" />
+    <Compile Include="ValueConverters\NegateBooleanConverter.cs" />
+    <Compile Include="ValueConverters\ShortFileNameConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

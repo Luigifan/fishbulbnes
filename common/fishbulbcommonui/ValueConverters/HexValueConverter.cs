@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 
-namespace FishBulb.Converters
+namespace FishBulb.ValueConverters
 {
 #if !SILVERLIGHT
     [ValueConversion(typeof(int?), typeof(string))]

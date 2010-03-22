@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 // using System.Windows.Threading;
 using NES.CPU.Machine.FastendoDebugging;
+using CPU6502.Machine;
 
 namespace NES.CPU.nitenedo
 {
@@ -59,7 +60,14 @@ namespace NES.CPU.nitenedo
             }
         }
 
-        private Queue<MachineWorkItem> machineWorkQueue = new Queue<MachineWorkItem>();
+        private MachineQueue machineWorkQueue ;
+
+        volatile bool queuehasItems = false;
+
+        void UpdateQueue(int cnt)
+        {
+            queuehasItems = cnt != 0;
+        }
 
         public MachineTaskResults TaskResult
         {
@@ -217,7 +225,7 @@ namespace NES.CPU.nitenedo
         private void Work()
         {
 
-            if (machineWorkQueue.Count > 0)
+            if (queuehasItems)
             {
                 currentWorkItem = machineWorkQueue.Dequeue();
             }
@@ -238,7 +246,7 @@ namespace NES.CPU.nitenedo
             switch (task)
             {
                 case MachineTasks.RunContinuously:
-                    while (machineWorkQueue.Count == 0)
+                    while (!queuehasItems)
                     {
                         if (breakpointHit || paused)
                             break;
@@ -290,7 +298,7 @@ namespace NES.CPU.nitenedo
                 CreateNewDebugInformation();
             }
 
-            while (paused || machineWorkQueue.Count == 0)
+            while (paused || !queuehasItems)
             {
 
                 if (paused)

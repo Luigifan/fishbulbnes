@@ -105,6 +105,7 @@
     <Compile Include="Machine\FastendoDebugging\PPUStatus.cs" />
     <Compile Include="Machine\IControlPad.cs" />
     <Compile Include="Machine\InputHandler.cs" />
+    <Compile Include="Machine\MachineQueue.cs" />
     <Compile Include="Machine\NESMachine.Control.cs" />
     <Compile Include="Machine\NESMachine.SilverlightDemo.cs" />
     <Compile Include="Machine\NESMachine.cs" />

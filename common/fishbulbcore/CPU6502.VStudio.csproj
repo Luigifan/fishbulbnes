@@ -179,6 +179,7 @@
     <Compile Include="Machine\IControlPad.cs" />
     <Compile Include="Machine\InputHandler.cs" />
     <Compile Include="Machine\Carts\NESCart.cs" />
+    <Compile Include="Machine\MachineQueue.cs" />
     <Compile Include="Machine\NESMachine.cs" />
     <Compile Include="Machine\NESMachine.Threading.cs" />
     <Compile Include="Machine\NESMachineDebugger.cs" />

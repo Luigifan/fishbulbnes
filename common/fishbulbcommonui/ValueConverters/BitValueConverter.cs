@@ -2,7 +2,7 @@
 using System.Net;
 using System.Windows.Data;
 
-namespace FishBulb.Converters
+namespace FishBulb.ValueConverters
 {
     public class BitValueConverter : IValueConverter
     {
