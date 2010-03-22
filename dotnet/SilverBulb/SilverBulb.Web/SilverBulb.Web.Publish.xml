@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\Projects\SilverbulbWebroot" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="localhost:8014" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="True" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="PublishLocal" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="ClientBin/mariobg.png" publishTime="03/15/2010 00:02:49" />
+    <file relUrl="ClientBin/blockbacks.png" publishTime="03/14/2010 21:40:41" />
+    <file relUrl="SilverBulbTestPage.aspx" publishTime="03/15/2010 15:00:06" />
+    <file relUrl="bin/SilverBulb.Web.pdb" publishTime="03/15/2010 15:58:02" />
+    <file relUrl="ClientBin/1943.zip" publishTime="02/21/2009 02:56:25" />
+    <file relUrl="Web.config" publishTime="03/15/2010 16:00:20" />
+    <file relUrl="ClientBin/SilverBulb.xap" publishTime="03/15/2010 15:58:04" />
+    <file relUrl="bin/SilverBulb.Web.dll" publishTime="03/15/2010 15:58:02" />
+    <file relUrl="SilverBulbTestPage.html" publishTime="03/14/2010 21:03:07" />
+    <file relUrl="ClientBin/testcart.nes" publishTime="03/14/2010 19:46:18" />
+    <file relUrl="Site1.Master" publishTime="03/14/2010 20:57:42" />
+    <file relUrl="Silverlight.js" publishTime="02/28/2010 13:20:03" />
+    <file relUrl="ClientBin/smb2.nes" publishTime="12/24/1996 20:32:00" />
+  </publishProfile>
+</publishData>
