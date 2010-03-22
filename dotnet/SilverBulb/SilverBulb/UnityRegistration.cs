@@ -76,8 +76,6 @@ namespace SilverBulb
             // register types needed to build a NES
             // platform specific wavestreamer
             // container.RegisterType<InlineWavStreamer>(new ContainerControlledLifetimeManager());
-            //container.RegisterType<IWavStreamer, SilverlightWavStreamer>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IWavStreamer, WPFamicom.Sound.DummyWavStreamer>(new ContainerControlledLifetimeManager());
 
             // Select and setup the default PPU engine
             // container.RegisterType<WpfKeyboardControlPad>(new ContainerControlledLifetimeManager());

@@ -1,7 +1,20 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script runat="server">
 
+    protected void ShowOpcodeHelpClick(object sender, EventArgs e)
+    {
+
+        OpHelp.Text = SilverBulb.Web.OpcodeDissassembler.GetHelpText(ListBox1.Text);
+    }
+
+    protected void SelectedOpChanged(object sender, EventArgs e)
+    {
+        OpHelp.Text = SilverBulb.Web.OpcodeDissassembler.GetHelpText(ListBox1.SelectedItem.Text);
+        OpDescription.Text = ListBox1.Text;
+    }
+</script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title>SilverBulb</title>
@@ -18,6 +31,10 @@
 	    height: 100%;
 	    text-align:center;
     }
+        .style1
+        {
+            height: 2px;
+        }
     </style>
     <script type="text/javascript" src="Silverlight.js"></script>
     <script type="text/javascript" >
@@ -76,14 +93,16 @@
         ImageUrl="~/ClientBin/mariobg.png"  />
             <input id="Button1" type="button" value="Off" onclick="PowerClicked()" />
             <input id="smb2" type="button" value="1943" onclick="LoadRom('1943.zip')" />
-            <input id="Button2" type="button" value="SMB2" onclick="LoadRom('smb2.nes')" />
-            <div id="silverlightControlHost">
+            <input id="Button2" type="button" value="SMB2" onclick="LoadRom('smb2.nes')" /><asp:ScriptManager 
+        ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+<div id="silverlightControlHost">
         <object id="silverbulbnes"
         data="data:application/x-silverlight-2," 
             type="application/x-silverlight-2" 
-            style="height:60%; width:100%" 
+            style="height:627px; width:84%" 
             >
-          <param name="InitParams" value="Cart=testcart.nes,ShowControls=false" />
+          <param name="InitParams" value="Cart=testcart.nes,ShowControls=true" />
 		  <param name="EnableGPUAcceleration" value="true" />
           <param name="source" value="ClientBin/SilverBulb.xap"/>
 		  <param name="onError" value="onSilverlightError" />
@@ -94,6 +113,40 @@
  			  <img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none"/>
 		  </a>
 	    </object><iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe></div>
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <ContentTemplate>
+        <table cellpadding="1" >
+        <tr>
+            <td >
+                <asp:ListBox ID="ListBox1" runat="server" AutoPostBack="True" 
+                    DataSourceID="OpCodeXML" DataTextField="Name" DataValueField="Description" 
+                    onselectedindexchanged="SelectedOpChanged" Width="99px" Height="256px">
+                </asp:ListBox>
+            <asp:XmlDataSource ID="OpCodeXML" runat="server" DataFile="~/6502OpCodes.xml" 
+                XPath="//Instruction"></asp:XmlDataSource>
+                </td>
+        <td>
+            <asp:Panel ID="Panel1" runat="server" Width="657px" Height="256px" BackColor="#FFFFCC"  ScrollBars="Auto" >
+            <table>
+            <tr>
+            <td>
+            <asp:Label ID="OpDescription"  runat="server" Mode="Encode" BackColor="#FF9933" Font-Bold="True" Font-Italic="True" ></asp:Label>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <asp:Literal ID="OpHelp" runat="server" Mode="Encode"></asp:Literal>
+            </td>
+            </tr>
+
+            </table>
+            </asp:Panel>
+            </td>
+        </tr>
+        </table>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
     </form>
 </body>
 </html>

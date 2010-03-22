@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:valid="clr-namespace:InstiBulb.ValidationRules"
-    xmlns:converters="clr-namespace:InstiBulb.Converters"
+    xmlns:converters="clr-namespace:FishBulb.ValueConverters;assembly=fishbulbcommonui"
     mc:Ignorable="d"
 	x:Class="InstiBulb.CheatControl"
 	x:Name="UserControl"

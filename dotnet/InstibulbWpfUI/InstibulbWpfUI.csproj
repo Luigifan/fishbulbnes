@@ -218,15 +218,6 @@
       <DependentUpon>TileEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters\BooleanToInvisibilityConverter.cs" />
-    <Compile Include="Converters\CommandDictionaryConverter.cs" />
-    <Compile Include="Converters\ContainerResolverConverter.cs" />
-    <Compile Include="Converters\DisplayTextAttribute.cs" />
-    <Compile Include="Converters\EnumDisplayTextConverter.cs" />
-    <Compile Include="Converters\HexValueConverter.cs" />
-    <Compile Include="Converters\InputKeyToStringConverter.cs" />
-    <Compile Include="Converters\NegateBooleanConverter.cs" />
-    <Compile Include="Converters\ShortFileNameConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EmbeddableUserControl.cs" />
     <Compile Include="MouseEventMapper.cs">
@@ -401,6 +392,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Converters\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

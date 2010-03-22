@@ -79,6 +79,13 @@ namespace SilverBulb
             new UnityRegistration().RegisterNesTypes(container, "soft");
 
 
+            container.RegisterType<IWavStreamer, SilverlightWavStreamer>(new ContainerControlledLifetimeManager());
+            if (host.InitParams.ContainsKey("NoSound"))
+            {
+                container.RegisterType<IWavStreamer, WPFamicom.Sound.DummyWavStreamer>(new ContainerControlledLifetimeManager());
+            }
+
+
             this.ToolBar.DataContext = new ToolstripViewModel(container, this.Dispatcher);
 
             scriptView = container.Resolve<IViewModel>("ScriptControlPanel") as ScriptControlPanelVM;
@@ -106,20 +113,16 @@ namespace SilverBulb
             nes.RunStatusChangedEvent += new EventHandler<EventArgs>(nes_RunStatusChangedEvent);
             nes.Drawscreen += new EventHandler(nes_Drawscreen);
 
-            //WebClient client = new WebClient();
-            ////client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
-            //client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
-            //UriKind kind = UriKind.Relative;
-            //string resName = null;
+            WebClient client = new WebClient();
+            client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
+            UriKind kind = UriKind.Relative;
+            string resName = null;
 
             if (host.InitParams.ContainsKey("ShowControls"))
             {
                 string val = host.InitParams["ShowControls"];
                 bool showControls = true;
-                if (bool.TryParse(val, out showControls))
-                {
-                    
-                }
+                bool.TryParse(val, out showControls);
 
                 if (!showControls)
                 {
@@ -128,30 +131,30 @@ namespace SilverBulb
                 }
             }
 
-            //if (host.InitParams.ContainsKey("Cart"))
-            //{
-            //    resName = host.InitParams["Cart"];
-            //}
+            if (host.InitParams.ContainsKey("Cart"))
+            {
+                resName = host.InitParams["Cart"];
+            }
 
-            //if (resName != null)
-            //    client.OpenReadAsync(new Uri(resName, kind));
+            if (resName != null)
+                client.OpenReadAsync(new Uri(resName, kind));
 
 
             //nes.SilverlightStartDemo();
         }
 
-//        void client_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
-//        {
-//            if (e.Error == null)
-//            {
-//                nes.LoadCart(e.Result);
-//            }
-//            else
-//            {
+        void client_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                nes.LoadCart(e.Result);
+            }
+            else
+            {
 
-////                e.Error.Message;
-//            }
-//        }
+                //                e.Error.Message;
+            }
+        }
 
         void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {

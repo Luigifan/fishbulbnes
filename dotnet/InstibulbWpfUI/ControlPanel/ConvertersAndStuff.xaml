@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:InstiBulb.Converters"                    
+    xmlns:converters="clr-namespace:FishBulb.ValueConverters;assembly=fishbulbcommonui"
                     >
     <converters:CommandDictionaryConverter x:Key="CommandDictionaryConverter" />
     <converters:ContainerResolverConverter x:Key="ContainerResolver"/>

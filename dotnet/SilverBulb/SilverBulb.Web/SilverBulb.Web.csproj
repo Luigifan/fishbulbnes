@@ -52,6 +52,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="6502OpCodes.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="ClientBin\blockbacks.png" />
     <Content Include="ClientBin\mariobg.png" />
     <Content Include="ClientBin\SilverBulb.xap" />
@@ -67,6 +70,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyHelp.cs" />
+    <Compile Include="OpcodeDissassembler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
