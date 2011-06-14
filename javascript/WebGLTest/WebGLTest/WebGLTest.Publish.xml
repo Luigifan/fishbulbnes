@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\Projects\Publish\WebGLNes" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Web.config" publishTime="06/08/2011 18:36:40" />
+    <file relUrl="Scripts/tendo.js" publishTime="06/08/2011 23:00:36" />
+    <file relUrl="bin/WebGLTest.pdb" publishTime="06/08/2011 23:06:07" />
+    <file relUrl="Scripts/J3DIMath.js" publishTime="06/08/2011 18:13:59" />
+    <file relUrl="nes.html" publishTime="06/08/2011 23:11:36" />
+    <file relUrl="Scripts/CpuOps.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="Scripts/tendo.debug.js" publishTime="06/08/2011 23:10:13" />
+    <file relUrl="resources/spirit.jpg" publishTime="06/08/2011 18:13:59" />
+    <file relUrl="Scripts/bulbascript.js" publishTime="06/08/2011 19:30:29" />
+    <file relUrl="Scripts/ScriptFX.Core.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="Scripts/mscorlib.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="Scripts/PPU.js" publishTime="06/08/2011 19:42:43" />
+    <file relUrl="Scripts/dkrom.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="Scripts/webgl-utils.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="bin/WebGLTest.dll" publishTime="06/08/2011 23:06:08" />
+    <file relUrl="Scripts/CpuArr.js" publishTime="06/08/2011 18:13:58" />
+    <file relUrl="Scripts/CPU.js" publishTime="06/08/2011 19:34:12" />
+    <file relUrl="Default.aspx" publishTime="06/08/2011 18:13:59" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="06/08/2011 18:13:59" />
+    <file relUrl="Scripts/J3DI.js" publishTime="06/08/2011 22:58:04" />
+  </publishProfile>
+</publishData>
