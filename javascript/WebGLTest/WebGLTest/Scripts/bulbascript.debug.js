@@ -1056,6 +1056,7 @@ NES.CPU.Fastendo.CPU2A03 = function NES_CPU_Fastendo_CPU2A03() {
     this._irqUpdater = ss.Delegate.create(this, this._irqUpdater);
     this.setupticks();
 }
+
 NES.CPU.Fastendo.CPU2A03.prototype = {
     _ticks: 0,
     _operationCounter: 0,

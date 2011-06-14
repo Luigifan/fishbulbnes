@@ -44,27 +44,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
-    <Content Include="nes.aspx" />
+    <Content Include="nes.html" />
     <Content Include="resources\spirit.jpg" />
-    <Content Include="Scripts\bulbascript.debug.js" />
     <Content Include="Scripts\bulbascript.js" />
-    <Content Include="Scripts\CanvasMatrix.js" />
+    <Content Include="Scripts\CPU.js" />
     <Content Include="Scripts\CpuArr.js" />
     <Content Include="Scripts\CpuOps.js" />
     <Content Include="Scripts\dkrom.js" />
     <Content Include="Scripts\J3DI.js" />
     <Content Include="Scripts\J3DIMath.js" />
-    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
-    <Content Include="Scripts\mscorlib.debug.js" />
     <Content Include="Scripts\mscorlib.js" />
     <Content Include="Scripts\PPU.js" />
-    <Content Include="Scripts\ScriptFX.Core.debug.js" />
     <Content Include="Scripts\ScriptFX.Core.js" />
-    <Content Include="Scripts\Scripts.js" />
+    <Content Include="Scripts\tendo.debug.js" />
     <Content Include="Scripts\tendo.js" />
-    <Content Include="Scripts\utils3d.js" />
     <Content Include="Scripts\webgl-utils.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -82,13 +76,6 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="nes.aspx.cs">
-      <DependentUpon>nes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="nes.aspx.designer.cs">
-      <DependentUpon>nes.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +89,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50155</DevelopmentServerPort>
+          <DevelopmentServerPort>50865</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

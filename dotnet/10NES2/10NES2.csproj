@@ -95,7 +95,7 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>300D3D004F4E30F50E4F140C8C769FA003C0E984</ManifestCertificateThumbprint>
@@ -107,7 +107,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
+    <TargetZone>Internet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -136,6 +136,7 @@
     <Reference Include="Microsoft.Practices.Unity.StaticFactory">
       <HintPath>..\..\Libs\Unity\Microsoft.Practices.Unity.StaticFactory.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -172,6 +173,7 @@
     <Compile Include="ThreeDee\ToolSpinner3D.cs" />
     <Compile Include="Windowing\WindowCollection.cs" />
     <Compile Include="Windowing\WindowTracker.cs" />
+    <Compile Include="XNAWavStreamer.cs" />
     <Page Include="DialogShell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -240,10 +242,6 @@
     <ProjectReference Include="..\InstibulbWpfUI\InstibulbWpfUI.csproj">
       <Project>{208FAB3E-468F-4AE0-9848-7D2124625C30}</Project>
       <Name>InstibulbWpfUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SlimDXBindings\SlimDXBindings.csproj">
-      <Project>{8ACDBECE-4418-4454-A0FB-273064F465A1}</Project>
-      <Name>SlimDXBindings</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

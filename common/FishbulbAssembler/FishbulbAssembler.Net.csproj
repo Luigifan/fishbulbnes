@@ -45,6 +45,8 @@
     <Compile Include="AssemblerLine.cs" />
     <Compile Include="AssemblyChunk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringTests.cs" />
+    <Compile Include="ValueResolver.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>

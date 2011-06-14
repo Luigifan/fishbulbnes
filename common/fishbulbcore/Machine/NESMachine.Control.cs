@@ -161,6 +161,35 @@ namespace NES.CPU.nitenedo
             }
         }
 
+        public void GoTendo_NoThread(string fileName)
+        {
+            EjectCart();
+
+            if (runState == NES.Machine.ControlPanel.RunningStatuses.Running) ThreadStoptendo();
+
+            _currCartName = Path.GetFileName(fileName);
+
+            _cart = iNESFileHandler.GetCart(fileName, _ppu);
+            if (_cart != null)
+            {
+
+
+                _cpu.Cart = (IClockedMemoryMappedIOElement)_cart;
+                _cpu.Cart.NMIHandler = _cpu.InterruptRequest;
+                _ppu.ChrRomHandler = _cart;
+
+
+                PowerOn();
+                //while (runState != NES.Machine.ControlPanel.RunningStatuses.Running)
+                // ThreadRuntendo();
+            }
+            else
+            {
+                throw new CartLoadException("Unsupported ROM type - load failed.");
+            }
+
+        }
+
         public void GoTendo(string fileName)
         {
             EjectCart();

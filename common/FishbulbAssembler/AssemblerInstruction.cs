@@ -14,6 +14,11 @@ namespace FishbulbAssembler
 
         static List<string> validOps = new List<string>();
 
+        public AssemblerInstruction(IEnumerable<AssemblerVariable> variables)
+        {
+
+        }
+
         public static List<string> ValidOps
         {
             get { return AssemblerInstruction.validOps; }

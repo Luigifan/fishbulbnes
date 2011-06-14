@@ -56,6 +56,7 @@ namespace FishbulbAssembler
 
         public void Decode()
         {
+            // identify line type, break up into semantic chunks
             string line = Text.ToUpper().Trim();
             var textParts = line.Split(';');
             if (textParts.Count() > 1)

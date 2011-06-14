@@ -277,6 +277,8 @@ namespace AssemblerTests
             bld.AppendLine("BIT $44,X");
         }
 
+
+
         [TestMethod]
         public void AssemblerShouldDecodeWithValidLabels()
         {
