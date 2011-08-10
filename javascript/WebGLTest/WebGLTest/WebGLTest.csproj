@@ -55,6 +55,7 @@
     <Content Include="Scripts\J3DIMath.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="Scripts\mscorlib.js" />
+    <Content Include="Scripts\PPU.Debug.js" />
     <Content Include="Scripts\PPU.js" />
     <Content Include="Scripts\ScriptFX.Core.js" />
     <Content Include="Scripts\tendo.debug.js" />

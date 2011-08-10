@@ -216,24 +216,30 @@
 
 
     function step() {
+        var startClock = cpuClock;
         cpuCurinst_ExtraTiming = 0;
-        if (cpuNextEvent <= cpuClock) {
-            handleNextEvent();
-        }
+        //if (cpuNextEvent <= cpuClock) {
+        //    handleNextEvent();
+        //}
+        
         if (cpuHandleNMI) {
             cpuHandleNMI = false;
             cpuClock += 7;
             nonMaskableInterrupt();
         }
+
         else if (cpuHandleIRQ) {
             cpuHandleIRQ = false;
             cpuClock += 7;
             interruptRequest();
         }
+
         cpuCurinst_Address = cpuProgramCounter;
         cpuCurinst_OpCode = cpuGetByte(cpuProgramCounter++);
         
         cpuOpArray[cpuCurinst_OpCode]();
+
+        drawTo(cpuClock );
     }
 
     function interruptRequest() {

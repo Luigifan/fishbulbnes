@@ -404,6 +404,7 @@ NES.CPU.PPUClasses.NESSprite.prototype = {
         return value;
     }
     
+
     function drawTo(cpuClockNum) {
         /// <summary>
         /// draws from the lastcpuClock to the current one
@@ -496,7 +497,7 @@ NES.CPU.PPUClasses.NESSprite.prototype = {
                     runNewScanlineEvents();
                 }
             }
-        } while (frClock-- > 0);
+        } while (frClock-- );
     }
     
     function get_outBuffer() {

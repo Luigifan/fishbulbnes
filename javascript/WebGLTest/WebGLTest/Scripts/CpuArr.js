@@ -2629,6 +2629,4 @@ function buildCpuOpArray() {
         cpuClock = cpuClock + 7 + cpuCurinst_ExtraTiming;
     }; 
 
-
-
 }

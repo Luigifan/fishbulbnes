@@ -284,7 +284,7 @@ var palette = new Uint8Array([121, 123, 121, 255,
 
         function setGlContext(gl)
         {
-        myGl = gl;
+            myGl = gl;
         }
 
         var needFrame = true;
@@ -296,16 +296,8 @@ var palette = new Uint8Array([121, 123, 121, 255,
         }
 
         function startNes() {
-            //var romName = $('#romname').val();
-            //$.getJSON('romfeeder.svc/getrom/' + romName, function (data) {
-                buildCpuOpArray();
-                bulbascript.bulbascriptApp.loadRom(rom);
-//                element = document.getElementById("canvas1");
-//                c = element.getContext("2d");
-//                curImageData = c.createImageData(256, 240);
-//                alert('NES Ready!');
-
-            // });
+            buildCpuOpArray();
+            bulbascript.bulbascriptApp.loadRom(rom);
         }
 
         var frames = 0;
