@@ -273,8 +273,13 @@ var palette = new Uint8Array([121, 123, 121, 255,
          }
 
         function writePixel(index, pdex ) {
-                    index = index * 4;
+            index = index * 4;
             pdex = pdex * 4;
+            //var palEnt = [palette[pdex], palette[pdex], palette[pdex], palette[pdex]];
+//            glpixels[index] = palette[pdex];
+//            glpixels[index + 1] = palette[pdex + 1];
+//            glpixels[index + 2] = palette[pdex+ 2];
+//            glpixels[index + 3] = palette[pdex + 3];
             glpixels.set(palette.subarray(pdex, pdex + 4), index);
 //            index = index * 4;
 //            glpixels[index] = pdex;
