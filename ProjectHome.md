@@ -1,0 +1,1 @@
+Fishbulbnes is a nes emulator written in managed c# for the .Net and mono platforms.
